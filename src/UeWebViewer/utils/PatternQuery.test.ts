@@ -1,4 +1,4 @@
-import { PatternQuery } from "./pattern-query";
+import { PatternQuery } from "./PatternQuery";
 
 test("basic query", () => {
   const query = new PatternQuery("test");

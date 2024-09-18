@@ -2,7 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import { FileApi } from "./filesystem/FileApi";
 import React, { useEffect } from "react";
 import { AssetReader } from "./unreal/AssetReader";
-import { FPackageFileSummary } from "./unreal/structs";
+import { FPackageFileSummary } from "./unreal/structs/PackageFileSummary";
 import invariant from "tiny-invariant";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "./components/SimpleDetailsView";
 

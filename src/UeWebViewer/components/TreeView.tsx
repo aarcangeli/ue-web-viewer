@@ -4,7 +4,7 @@ import React, { memo, useCallback, useContext, useMemo, useRef } from "react";
 import { Box, IconButton, Text } from "@chakra-ui/react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
 import { searchCtx, SpeedSearch } from "./SpeedSearch";
-import { PatternQuery } from "../utils/pattern-query";
+import { PatternQuery } from "../utils/PatternQuery";
 
 const LINE_HEIGHT = 32;
 const GAP = 1;
@@ -12,6 +12,7 @@ const GAP = 1;
 export interface MinimalNode {
   name: string;
   icon?: React.ReactNode;
+  iconColor?: string;
   isLeaf?: boolean;
   isEmpty?: boolean;
 }
@@ -234,8 +235,9 @@ function NodeView<T extends MinimalNode>(props: NodeRendererProps<Node<T>>) {
   const isExpanded = node.isOpen;
   const isPrevSelected = isSelected && node.prev?.isSelected;
   const isNextSelected = isSelected && node.next?.isSelected;
+  const value = node.data.value;
 
-  const isEmptyFolder = node.isLeaf || node.data.value.isEmpty;
+  const isEmptyFolder = node.isLeaf || value.isEmpty;
 
   const query = useContext(searchCtx);
 
@@ -277,12 +279,20 @@ function NodeView<T extends MinimalNode>(props: NodeRendererProps<Node<T>>) {
           />
         )}
 
-        <Box flexShrink={0} w={"20px"} h={"20px"} fontSize="20px" verticalAlign={"baseline"} mr={2}>
-          {node.data.value.icon}
+        <Box
+          flexShrink={0}
+          w={"20px"}
+          h={"20px"}
+          fontSize="20px"
+          verticalAlign={"baseline"}
+          mr={2}
+          color={value.iconColor}
+        >
+          {value.icon}
         </Box>
         <Text flexGrow={1} fontWeight={isSelected ? "bold" : "normal"} alignSelf={"center"}>
-          {!query && node.data.value.name}
-          {query && <HighlightedText text={node.data.value.name} query={query} isSelected={isSelected} />}
+          {!query && value.name}
+          {query && <HighlightedText text={value.name} query={query} isSelected={isSelected} />}
         </Text>
       </Box>
     </Box>
