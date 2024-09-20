@@ -1,7 +1,7 @@
 import { AssetReader } from "../AssetReader";
 import { FPackageFileSummary } from "./PackageFileSummary";
 import { FGuid } from "./Guid";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versions";
+import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 
 export class FObjectExport {
   ClassIndex: number = 0;

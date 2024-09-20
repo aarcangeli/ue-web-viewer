@@ -1,6 +1,6 @@
 import { AssetReader } from "../AssetReader";
 import { FPackageFileSummary } from "./PackageFileSummary";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versions";
+import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 
 /**
  * struct FObjectImport {

@@ -3,7 +3,7 @@ import { EPackageFlags } from "../enums";
 import { FGuid } from "./Guid";
 import { FEngineVersion } from "./EngineVersion";
 import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "./CustomVersion";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versions";
+import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 
 /**
  * struct FGenerationInfo {

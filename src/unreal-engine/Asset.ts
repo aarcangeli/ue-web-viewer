@@ -3,7 +3,7 @@ import { FPackageFileSummary } from "./structs/PackageFileSummary";
 import { FObjectImport } from "./structs/ObjectImport";
 import { FObjectExport } from "./structs/ObjectExport";
 import invariant from "tiny-invariant";
-import { EUnrealEngineObjectUE4Version } from "./versions";
+import { EUnrealEngineObjectUE4Version } from "./versioning/ue-versions";
 
 /**
  * Permits to read the content of a package file.

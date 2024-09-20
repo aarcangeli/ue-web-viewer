@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versions";
+import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
 
 /**
  * Low level API to read binary data from an ArrayBuffer.
