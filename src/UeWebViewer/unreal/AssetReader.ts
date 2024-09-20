@@ -1,7 +1,32 @@
+import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./enums";
+import invariant from "tiny-invariant";
+
+/**
+ * Low level API to read binary data from an ArrayBuffer.
+ * Only supports reading primitive types (integers, floats, strings, names).
+ * For more complex data structures, use the provided methods to read the data (e.g. use FGuid.fromStream)
+ */
 export class AssetReader {
   private dataView: DataView;
   private offset = 0;
   private littleEndian = true;
+
+  // UE4 and UE5 file versions, filled during the reading of the summary of the asset.
+  protected _fileVersionUE4: EUnrealEngineObjectUE4Version = 0;
+  protected _fileVersionUE5: EUnrealEngineObjectUE5Version = 0;
+
+  // Pool of names filled during the reading of the asset.
+  protected _names: string[] | null = null;
+
+  get fileVersionUE4() {
+    invariant(this._fileVersionUE4 !== 0, "File version UE4 is not set yet");
+    return this._fileVersionUE4;
+  }
+
+  get fileVersionUE5() {
+    invariant(this._fileVersionUE5 !== 0, "File version UE5 is not set yet");
+    return this._fileVersionUE5;
+  }
 
   constructor(private content: ArrayBuffer) {
     this.dataView = new DataView(content);
@@ -24,6 +49,10 @@ export class AssetReader {
 
   getRemaining() {
     return this.content.byteLength - this.offset;
+  }
+
+  readBoolean() {
+    return this.readInt32() !== 0;
   }
 
   readInt8() {
@@ -104,6 +133,18 @@ export class AssetReader {
     return result;
   }
 
+  readFName() {
+    if (this._names === null) {
+      throw new Error("Names are not set yet");
+    }
+    let index = this.readInt32();
+    let number = this.readInt32();
+    if (index < 0 || index >= this._names.length) {
+      throw new Error(`Invalid name index: ${index}`);
+    }
+    return this._names[index] + (number == 0 ? "" : `_${number}`);
+  }
+
   private ensureBytes(number: number) {
     if (this.offset + number > this.content.byteLength) {
       throw new Error("End of file");
@@ -112,5 +153,19 @@ export class AssetReader {
 
   swapEndian() {
     this.littleEndian = !this.littleEndian;
+  }
+}
+
+/**
+ * An enhanced version of AssetReader that permits to edit file version and names.
+ */
+export class FullAssetReader extends AssetReader {
+  setNames(value: string[]) {
+    this._names = value;
+  }
+
+  setVersion(fileVersionUE4: EUnrealEngineObjectUE4Version, fileVersionUE5: EUnrealEngineObjectUE5Version) {
+    this._fileVersionUE4 = fileVersionUE4;
+    this._fileVersionUE5 = fileVersionUE5;
   }
 }

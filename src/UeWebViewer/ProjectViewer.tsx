@@ -1,10 +1,11 @@
 import { FileApi } from "./filesystem/FileApi";
 import { Flex, useColorModeValue } from "@chakra-ui/react";
-import React, { useCallback, useMemo, useState } from "react";
-import { MinimalNode, TreeView } from "./components/TreeView";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { MinimalNode, TreeView, TreeViewApi } from "./components/TreeView";
 import { fakeWait } from "./config";
 import { FileViewer } from "./FileViewer";
 import { BiFileBlank, BiFolder } from "react-icons/bi";
+import { useHistoryState, useNavigate } from "./utils/useHistoryState";
 
 export interface Props {
   project: FileApi;
@@ -43,11 +44,31 @@ export function ProjectViewer(props: Props) {
   const borderColor = useColorModeValue("gray.200", "gray.700");
   // TODO: avoid re-rendering the whole viewer when the file changes
   const [currentFile, setCurrentFile] = useState<FileApi | null>(null);
+  const tree = useRef<TreeViewApi<FileNode>>(null);
 
   const nodes = useMemo(() => [makeNode(props.project)], [props.project]);
 
-  const onSelect = useCallback((node: FileNode[]) => {
+  let onChoosePath = useCallback((path: string | undefined) => {
+    if (path) {
+      console.log("path", path, tree);
+      tree.current?.selectPath(path);
+    } else {
+      console.log("Navigating to blank path");
+      setCurrentFile(null);
+      tree.current?.clearSelection();
+    }
+  }, []);
+
+  useHistoryState(onChoosePath);
+
+  const navigate = useNavigate();
+
+  const onSelect = useCallback((node: FileNode[], isUserAction: boolean) => {
+    // navigate("/nuova-pagina");
     if (node.length === 1) {
+      if (isUserAction) {
+        navigate(node[0].file.fullPath);
+      }
       setCurrentFile(node[0].file);
     } else {
       setCurrentFile(null);
@@ -55,9 +76,9 @@ export function ProjectViewer(props: Props) {
   }, []);
 
   return (
-    <Flex grow={1} basis={0} shrink={1}>
-      <Flex direction={"column"} w={"400px"} borderRight="1px" borderColor={borderColor} p={2} gap={1} shrink={0}>
-        <TreeView<FileNode> nodes={nodes} loadChildren={loadChildNodes} onSelect={onSelect} />
+    <Flex className={"project-viewer"} flex={1}>
+      <Flex direction={"column"} w={"400px"} borderRight="1px" borderColor={borderColor} p={2} gap={1}>
+        <TreeView<FileNode> ref={tree} nodes={nodes} loadChildren={loadChildNodes} onSelect={onSelect} />
       </Flex>
       <Flex direction={"column"} grow={1} shrink={1}>
         {currentFile && currentFile.kind === "file" && <FileViewer file={currentFile}></FileViewer>}

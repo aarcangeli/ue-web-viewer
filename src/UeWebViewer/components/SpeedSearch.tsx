@@ -71,7 +71,6 @@ export function SpeedSearch(props: SpeedSearchProps) {
               const query = new PatternQuery(e.target.value);
               setSearchQuery(query);
               props.onSearch(query);
-              console.log("SpeedSearch", query);
             }}
           />
         </Box>

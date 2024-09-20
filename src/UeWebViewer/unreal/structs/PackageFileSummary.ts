@@ -29,8 +29,6 @@ export class FGenerationInfo {
 
 /**
  * This is the header of all package files.
- * It is not required to sync with UE4's FPackageFileSummary, since we don't use it for serialization and
- * new fields are usually added at the end.
  */
 export class FPackageFileSummary {
   static PACKAGE_FILE_TAG = 0x9e2a83c1;

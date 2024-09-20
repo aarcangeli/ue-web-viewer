@@ -1,6 +1,6 @@
 import { NodeApi, NodeRendererProps, Tree, TreeApi } from "react-arborist";
 import useResizeObserver from "use-resize-observer";
-import React, { memo, useCallback, useContext, useMemo, useRef } from "react";
+import React, { forwardRef, memo, useCallback, useContext, useImperativeHandle, useMemo, useRef } from "react";
 import { Box, IconButton, Text } from "@chakra-ui/react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
 import { searchCtx, SpeedSearch } from "./SpeedSearch";
@@ -17,10 +17,15 @@ export interface MinimalNode {
   isEmpty?: boolean;
 }
 
+export interface TreeViewApi<T> {
+  selectPath(path: string): Promise<boolean>;
+  clearSelection(): void;
+}
+
 interface Props<T extends MinimalNode> {
   nodes: T[];
   loadChildren: (node: T) => Promise<T[]>;
-  onSelect?: (nodes: T[]) => void;
+  onSelect?: (nodes: T[], isUserAction: boolean) => void;
 }
 
 interface Node<T extends MinimalNode> {
@@ -37,11 +42,12 @@ const OVERSCAN_COUNT = 20;
 /**
  * This tree-view manages the scroll and resize of the component.
  */
-function TreeViewFn<T extends MinimalNode>(props: Props<T>) {
-  const { ref, height } = useResizeObserver();
+function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeViewApi<T> | undefined>) {
+  const { ref: treeViewRoot, height } = useResizeObserver();
   const [version, setVersion] = React.useState(0);
   const nextId = React.useRef(0);
   const treeRef = useRef<TreeApi<Node<T>> | null>(null);
+  const isUserAction = useRef(true);
 
   const loadChildren = props.loadChildren;
   const nodes = props.nodes;
@@ -69,7 +75,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>) {
     (node: Node<T>) => {
       if (node.isLoaded || node.currentLoading) {
         // Already loaded or loading
-        return;
+        return node.currentLoading;
       }
 
       let promise = loadAndProcessChildren(node.value)
@@ -108,6 +114,8 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>) {
           isLoaded: false,
         },
       ];
+
+      return promise;
     },
     [generateId, loadAndProcessChildren],
   );
@@ -121,6 +129,42 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>) {
       } as Node<T>;
     });
   }, [generateId, nodes]);
+
+  const selectWithoutUserAction = useCallback((id: string) => {
+    isUserAction.current = false;
+    try {
+      treeRef.current?.select(id);
+    } finally {
+      isUserAction.current = true;
+    }
+  }, []);
+
+  useImperativeHandle(ref, () => ({
+    async selectPath(path: string) {
+      let nodeList = convertedNodes;
+      let foundElement: Node<T> | null = null;
+      for (let part of path.split("/")) {
+        if (foundElement) {
+          treeRef.current?.open(foundElement.id);
+        }
+        const content = nodeList.find((child) => child.value.name === part);
+        if (!content) {
+          return false;
+        }
+        await loadChildrenIfRequired(content);
+        foundElement = content;
+        nodeList = content.children || [];
+      }
+      if (foundElement) {
+        selectWithoutUserAction(foundElement.id);
+        return true;
+      }
+      return false;
+    },
+    clearSelection() {
+      treeRef.current?.deselectAll();
+    },
+  }));
 
   // Everytime the version changes, force the tree to re-render
   // This is the only way to force the tree to re-render
@@ -140,7 +184,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>) {
   const onSelect = useCallback(
     (nodes: NodeApi<Node<T>>[]) => {
       const selectedNodes = nodes.map((n) => n.data.value);
-      propsOnSelect?.(selectedNodes || []);
+      propsOnSelect?.(selectedNodes || [], isUserAction.current);
     },
     [propsOnSelect],
   );
@@ -183,7 +227,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>) {
 
   return (
     <div
-      ref={ref}
+      ref={treeViewRoot}
       style={{ flexGrow: 1, userSelect: "none", position: "relative" }}
       className="treeview-root"
       onKeyDown={(e) => {
@@ -321,4 +365,6 @@ function HighlightedText(props: { text: string; query: PatternQuery; isSelected:
   );
 }
 
-export const TreeView = memo(TreeViewFn) as typeof TreeViewFn;
+export const TreeView = memo(forwardRef(TreeViewFn)) as <T extends MinimalNode>(
+  props: Props<T> & { ref?: React.ForwardedRef<TreeViewApi<T> | undefined> },
+) => ReturnType<typeof TreeViewFn>;

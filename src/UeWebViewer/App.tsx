@@ -73,8 +73,10 @@ function App() {
   }
 
   return (
-    <Flex direction={"column"} h={"100vh"} bg={useColorModeValue("white", "gray.900")} overflow={"hidden"}>
-      <Flex borderBottom="1px" borderColor={borderColor} h={16}>
+    <Flex className={"app"} direction={"column"} h={"100vh"} bg={useColorModeValue("white", "gray.900")}>
+      <DropArea onFileDrop={DoOpenProject}>Drop a project here</DropArea>
+
+      <Flex as={"header"} borderBottom="1px" borderColor={borderColor} h={16}>
         <NavBar />
       </Flex>
 
@@ -93,17 +95,15 @@ function App() {
         </Box>
       )}
 
-      <Flex grow={1} basis={0} shrink={1} direction={"column"}>
-        <DropArea onFileDrop={DoOpenProject}>Drop a project here</DropArea>
-
-        {loading && (
-          <Flex position={"absolute"} top={0} left={0} w={"100%"} h={"100%"} bg={"rgba(0, 0, 0, 0.5)"} zIndex={1000}>
-            <Flex m={"auto"}>
-              <Spinner />
-            </Flex>
+      {loading && (
+        <Flex position={"absolute"} top={0} left={0} w={"100%"} h={"100%"} bg={"rgba(0, 0, 0, 0.5)"} zIndex={1000}>
+          <Flex m={"auto"}>
+            <Spinner />
           </Flex>
-        )}
+        </Flex>
+      )}
 
+      <Flex flex={1} height={"calc(100vh - 64px)"}>
         {!error && !loading && !currentContent && (
           <Box py={10} flexGrow={1}>
             Drop a directory containing a .uproject

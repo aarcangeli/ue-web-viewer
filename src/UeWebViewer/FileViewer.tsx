@@ -1,10 +1,13 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { FileApi } from "./filesystem/FileApi";
-import React, { useEffect } from "react";
-import { AssetReader } from "./unreal/AssetReader";
+import React, { useEffect, useState } from "react";
+import { AssetReader, FullAssetReader } from "./unreal/AssetReader";
 import { FPackageFileSummary } from "./unreal/structs/PackageFileSummary";
 import invariant from "tiny-invariant";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "./components/SimpleDetailsView";
+import { EUnrealEngineObjectUE4Version } from "./unreal/enums";
+import { FObjectImport } from "./unreal/structs/ObjectImport";
+import { FAsset } from "./unreal/Asset";
 
 export interface Props {
   file: FileApi;
@@ -12,13 +15,12 @@ export interface Props {
 
 async function ReadAndParseFile(file: FileApi) {
   const content = await file.read();
-  const reader = new AssetReader(content);
-  let summary = FPackageFileSummary.fromStream(reader);
-  return { summary };
+  const reader = new FullAssetReader(content);
+  return FAsset.fromStream(reader);
 }
 
-export function SummaryDetails(props: { summary: FPackageFileSummary }) {
-  const summary = props.summary;
+export function SummaryDetails(props: { asset: FAsset }) {
+  const summary = props.asset.summary;
 
   return (
     <SimpleDetailsView>
@@ -59,23 +61,103 @@ export function SummaryDetails(props: { summary: FPackageFileSummary }) {
   );
 }
 
+function ImportDetails(props: { asset: FAsset }) {
+  const imports = props.asset.imports;
+
+  return (
+    <SimpleDetailsView>
+      <CollapsableSection name={`Imports (${imports.length})`}>
+        {imports.map((value, index) => (
+          <CollapsableSection name={`Import ${-index - 1}`} key={index}>
+            <IndentedRow>Class Package: {value.ClassPackage}</IndentedRow>
+            <IndentedRow>Class Name: {value.ClassName}</IndentedRow>
+            <IndentedRow>Outer Index: {value.OuterIndex}</IndentedRow>
+            <IndentedRow>ObjectName: {value.ObjectName}</IndentedRow>
+          </CollapsableSection>
+        ))}
+      </CollapsableSection>
+    </SimpleDetailsView>
+  );
+}
+
+function ExportDetails(props: { asset: FAsset }) {
+  console.log("ExportDetails", props.asset);
+  const exports = props.asset.exports;
+
+  return (
+    <SimpleDetailsView>
+      <CollapsableSection name={`Exports (${exports.length})`}>
+        {exports.map((value, index) => (
+          <CollapsableSection name={`Export ${index + 1}`} key={index}>
+            <IndentedRow>Class Index: {value.ClassIndex}</IndentedRow>
+            <IndentedRow>Outer Index: {value.OuterIndex}</IndentedRow>
+            <IndentedRow>ObjectName: {value.ObjectName}</IndentedRow>
+          </CollapsableSection>
+        ))}
+      </CollapsableSection>
+    </SimpleDetailsView>
+  );
+}
+
+const tabNames = [
+  { id: "summary", name: "Summary", component: SummaryDetails },
+  { id: "imports", name: "Imports", component: ImportDetails },
+  { id: "exports", name: "Exports", component: ExportDetails },
+];
+
 export function FileViewer(props: Props) {
   invariant(props.file.kind === "file", "Expected a file");
+  const [tabIndex, setTabIndex] = useState(0);
 
-  const [summary, setSummary] = React.useState<FPackageFileSummary>();
+  const [asset, setAsset] = React.useState<FAsset>();
 
   useEffect(() => {
-    setSummary(undefined);
+    console.log("Reading file", props.file.fullPath);
+    setAsset(undefined);
     ReadAndParseFile(props.file)
-      .then((result) => setSummary(result.summary))
+      .then((asset) => setAsset(asset))
       .catch((error) => {
         console.error(error);
       });
   }, [props.file]);
 
+  useEffect(() => {
+    const hashChange = () => {
+      if (document.location.hash) {
+        let hash = document.location.hash.slice(1);
+        setTabIndex(tabNames.findIndex((tab) => tab.id === hash));
+      } else {
+        setTabIndex(0);
+      }
+    };
+    window.addEventListener("hashchange", hashChange);
+    return () => window.removeEventListener("hashchange", hashChange);
+  }, []);
+
+  const onChange = (index: number) => {
+    document.location.hash = tabNames[index].id;
+    setTabIndex(index);
+  };
+
   return (
     <Flex grow={1} direction={"column"} alignItems={"stretch"} overflowY={"auto"}>
-      {summary && <SummaryDetails summary={summary} />}
+      {asset && (
+        <Tabs isLazy index={tabIndex} onChange={onChange}>
+          <TabList>
+            {tabNames.map((tab, index) => (
+              <Tab key={index}>{tab.name}</Tab>
+            ))}
+          </TabList>
+
+          <TabPanels>
+            {tabNames.map((tab, index) => (
+              <TabPanel key={index}>
+                <tab.component asset={asset} />
+              </TabPanel>
+            ))}
+          </TabPanels>
+        </Tabs>
+      )}
     </Flex>
   );
 }
