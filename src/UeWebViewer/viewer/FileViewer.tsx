@@ -1,13 +1,11 @@
 import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import { FileApi } from "./filesystem/FileApi";
+import { FileApi } from "../filesystem/FileApi";
 import React, { useEffect, useState } from "react";
-import { AssetReader, FullAssetReader } from "./unreal/AssetReader";
-import { FPackageFileSummary } from "./unreal/structs/PackageFileSummary";
+import { FullAssetReader } from "../../unreal-engine/AssetReader";
 import invariant from "tiny-invariant";
-import { CollapsableSection, IndentedRow, SimpleDetailsView } from "./components/SimpleDetailsView";
-import { EUnrealEngineObjectUE4Version } from "./unreal/enums";
-import { FObjectImport } from "./unreal/structs/ObjectImport";
-import { FAsset } from "./unreal/Asset";
+import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
+import { FAsset } from "../../unreal-engine/Asset";
+import { ImportDetails } from "./ImportDetails";
 
 export interface Props {
   file: FileApi;
@@ -61,25 +59,6 @@ export function SummaryDetails(props: { asset: FAsset }) {
   );
 }
 
-function ImportDetails(props: { asset: FAsset }) {
-  const imports = props.asset.imports;
-
-  return (
-    <SimpleDetailsView>
-      <CollapsableSection name={`Imports (${imports.length})`}>
-        {imports.map((value, index) => (
-          <CollapsableSection name={`Import ${-index - 1}`} key={index}>
-            <IndentedRow>Class Package: {value.ClassPackage}</IndentedRow>
-            <IndentedRow>Class Name: {value.ClassName}</IndentedRow>
-            <IndentedRow>Outer Index: {value.OuterIndex}</IndentedRow>
-            <IndentedRow>ObjectName: {value.ObjectName}</IndentedRow>
-          </CollapsableSection>
-        ))}
-      </CollapsableSection>
-    </SimpleDetailsView>
-  );
-}
-
 function ExportDetails(props: { asset: FAsset }) {
   console.log("ExportDetails", props.asset);
   const exports = props.asset.exports;
@@ -105,9 +84,17 @@ const tabNames = [
   { id: "exports", name: "Exports", component: ExportDetails },
 ];
 
+function getTabIndexFromHash() {
+  if (document.location.hash) {
+    let hash = document.location.hash.slice(1).toLowerCase();
+    return tabNames.findIndex((tab) => tab.id === hash);
+  }
+  return 0;
+}
+
 export function FileViewer(props: Props) {
   invariant(props.file.kind === "file", "Expected a file");
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(getTabIndexFromHash);
 
   const [asset, setAsset] = React.useState<FAsset>();
 
@@ -123,12 +110,7 @@ export function FileViewer(props: Props) {
 
   useEffect(() => {
     const hashChange = () => {
-      if (document.location.hash) {
-        let hash = document.location.hash.slice(1);
-        setTabIndex(tabNames.findIndex((tab) => tab.id === hash));
-      } else {
-        setTabIndex(0);
-      }
+      setTabIndex(getTabIndexFromHash());
     };
     window.addEventListener("hashchange", hashChange);
     return () => window.removeEventListener("hashchange", hashChange);

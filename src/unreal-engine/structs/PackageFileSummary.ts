@@ -1,13 +1,9 @@
 import { AssetReader } from "../AssetReader";
-import {
-  ECustomVersionSerializationFormat,
-  EPackageFlags,
-  EUnrealEngineObjectUE4Version,
-  EUnrealEngineObjectUE5Version,
-} from "../enums";
+import { EPackageFlags } from "../enums";
 import { FGuid } from "./Guid";
 import { FEngineVersion } from "./EngineVersion";
-import { FCustomVersionContainer } from "./CustomVersion";
+import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "./CustomVersion";
+import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versions";
 
 /**
  * struct FGenerationInfo {

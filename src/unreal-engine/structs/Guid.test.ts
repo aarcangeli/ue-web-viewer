@@ -26,3 +26,8 @@ test("check all 0", () => {
   expect(guid.D).toBe(0);
   expect(guid.toString()).toBe("{00000000-0000-0000-0000-000000000000}");
 });
+
+test("check from components", () => {
+  const guid = FGuid.fromComponents(0x11223344, 0x55667788, 0x99aabbcc, 0xddeeff00);
+  expect(guid.toString()).toBe("{11223344-5566-7788-99aa-bbccddeeff00}");
+});

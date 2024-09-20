@@ -1,6 +1,20 @@
 import { FGuid } from "./Guid";
 import { AssetReader } from "../AssetReader";
-import { ECustomVersionSerializationFormat } from "../enums";
+
+/**
+ * enum class ECustomVersionSerializationFormat : int8 {
+ *     Unknown,
+ *     Guids = 1,
+ *     Enums = 2,
+ *     Optimized = 3,
+ * };
+ */
+export enum ECustomVersionSerializationFormat {
+  Unknown,
+  Guids,
+  Enums,
+  Optimized,
+}
 
 /**
  * struct FCustomVersion {

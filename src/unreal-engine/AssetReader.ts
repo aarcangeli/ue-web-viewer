@@ -1,5 +1,5 @@
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./enums";
 import invariant from "tiny-invariant";
+import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versions";
 
 /**
  * Low level API to read binary data from an ArrayBuffer.
@@ -12,21 +12,11 @@ export class AssetReader {
   private littleEndian = true;
 
   // UE4 and UE5 file versions, filled during the reading of the summary of the asset.
-  protected _fileVersionUE4: EUnrealEngineObjectUE4Version = 0;
-  protected _fileVersionUE5: EUnrealEngineObjectUE5Version = 0;
+  protected _fileVersionUE4: EUnrealEngineObjectUE4Version | null = null;
+  protected _fileVersionUE5: EUnrealEngineObjectUE5Version | null = null;
 
   // Pool of names filled during the reading of the asset.
   protected _names: string[] | null = null;
-
-  get fileVersionUE4() {
-    invariant(this._fileVersionUE4 !== 0, "File version UE4 is not set yet");
-    return this._fileVersionUE4;
-  }
-
-  get fileVersionUE5() {
-    invariant(this._fileVersionUE5 !== 0, "File version UE5 is not set yet");
-    return this._fileVersionUE5;
-  }
 
   constructor(private content: ArrayBuffer) {
     this.dataView = new DataView(content);
@@ -36,8 +26,22 @@ export class AssetReader {
     return this.offset;
   }
 
-  getFileSize() {
+  get fileSize() {
     return this.content.byteLength;
+  }
+
+  get remaining() {
+    return this.content.byteLength - this.offset;
+  }
+
+  get fileVersionUE4(): EUnrealEngineObjectUE4Version {
+    invariant(this._fileVersionUE4 !== null, "File version UE4 is not set yet");
+    return this._fileVersionUE4;
+  }
+
+  get fileVersionUE5(): EUnrealEngineObjectUE5Version {
+    invariant(this._fileVersionUE5 !== null, "File version UE5 is not set yet");
+    return this._fileVersionUE5;
   }
 
   seek(offset: number) {
@@ -45,10 +49,6 @@ export class AssetReader {
       throw new Error("Invalid offset");
     }
     this.offset = offset;
-  }
-
-  getRemaining() {
-    return this.content.byteLength - this.offset;
   }
 
   readBoolean() {

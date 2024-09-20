@@ -1,9 +1,9 @@
 import { AssetReader, FullAssetReader } from "./AssetReader";
 import { FPackageFileSummary } from "./structs/PackageFileSummary";
-import { EUnrealEngineObjectUE4Version } from "./enums";
 import { FObjectImport } from "./structs/ObjectImport";
 import { FObjectExport } from "./structs/ObjectExport";
 import invariant from "tiny-invariant";
+import { EUnrealEngineObjectUE4Version } from "./versions";
 
 /**
  * Permits to read the content of a package file.

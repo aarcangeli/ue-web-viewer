@@ -3,7 +3,7 @@ import { Flex, useColorModeValue } from "@chakra-ui/react";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { MinimalNode, TreeView, TreeViewApi } from "./components/TreeView";
 import { fakeWait } from "./config";
-import { FileViewer } from "./FileViewer";
+import { FileViewer } from "./viewer/FileViewer";
 import { BiFileBlank, BiFolder } from "react-icons/bi";
 import { useHistoryState, useNavigate } from "./utils/useHistoryState";
 

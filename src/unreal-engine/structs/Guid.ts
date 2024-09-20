@@ -50,12 +50,12 @@ export class FGuid {
   }
 
   toString() {
-    return `{${this.A.toString(16).padStart(8, "0")}-${(this.B >>> 16).toString(16).padStart(4, "0")}-${(
-      this.B & 0xffff
-    )
-      .toString(16)
-      .padStart(4, "0")}-${(this.C >>> 16).toString(16).padStart(4, "0")}-${(this.C & 0xffff)
-      .toString(16)
-      .padStart(4, "0")}${this.D.toString(16).padStart(8, "0")}}`;
+    let block1 = this.A.toString(16).padStart(8, "0");
+    let block2 = (this.B >>> 16).toString(16).padStart(4, "0");
+    let block3 = (this.B & 0xffff).toString(16).padStart(4, "0");
+    let block4 = (this.C >>> 16).toString(16).padStart(4, "0");
+    let block5 = (this.C & 0xffff).toString(16).padStart(4, "0") + this.D.toString(16).padStart(8, "0");
+
+    return `{${block1}-${block2}-${block3}-${block4}-${block5}}`;
   }
 }
