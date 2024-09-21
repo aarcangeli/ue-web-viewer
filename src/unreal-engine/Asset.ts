@@ -36,6 +36,57 @@ export class FAsset {
 
     return result;
   }
+
+  makeFullName(index: number): string {
+    invariant(this.isIndexValid(index), `Invalid index ${index}`);
+
+    if (index == 0) {
+      return "None";
+    }
+
+    const parts = [];
+    while (index != 0) {
+      parts.push(this.getObjectName(index));
+      index = this.getOuterIndex(index);
+    }
+
+    let result = "";
+    parts.reverse().forEach((part, index) => {
+      if (index > 0) {
+        result += index == 2 ? ":" : ".";
+      }
+      result += part;
+    });
+    return result;
+  }
+
+  getObjectName(index: number): string {
+    invariant(this.isIndexValid(index), `Invalid index ${index}`);
+
+    if (index < 0) {
+      return this.imports[-index - 1].ObjectName;
+    } else if (index > 0) {
+      return this.exports[index - 1].ObjectName;
+    } else {
+      return "None";
+    }
+  }
+
+  private isIndexValid(index: number) {
+    return index >= -this.imports.length && index <= this.exports.length;
+  }
+
+  private getOuterIndex(index: number) {
+    invariant(this.isIndexValid(index), `Invalid index ${index}`);
+
+    if (index < 0) {
+      return this.imports[-index - 1].OuterIndex;
+    } else if (index > 0) {
+      return this.exports[index - 1].OuterIndex;
+    } else {
+      return 0;
+    }
+  }
 }
 
 function readNames(reader: AssetReader, summary: FPackageFileSummary) {

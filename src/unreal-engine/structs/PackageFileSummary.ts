@@ -4,6 +4,7 @@ import { FGuid } from "./Guid";
 import { FEngineVersion } from "./EngineVersion";
 import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "./CustomVersion";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
+import { read } from "fs";
 
 /**
  * struct FGenerationInfo {
@@ -32,6 +33,7 @@ export class FPackageFileSummary {
 
   // part 1: magic code and version numbers
   Tag: number = FPackageFileSummary.PACKAGE_FILE_TAG;
+  LittleEndian: boolean = false;
   LegacyFileVersion: number = 0;
   FileVersionUE4: number = 0;
   FileVersionUE5: number = 0;
@@ -111,6 +113,7 @@ export class FPackageFileSummary {
     } else {
       throw new Error("Invalid package file tag");
     }
+    result.LittleEndian = reader.littleEndian;
 
     /// positive number for UE1-UE3; negative for UE4+; < -8 for UE5
     result.LegacyFileVersion = reader.readInt32();

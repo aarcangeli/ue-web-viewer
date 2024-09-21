@@ -9,7 +9,7 @@ import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./
 export class AssetReader {
   private dataView: DataView;
   private offset = 0;
-  private littleEndian = true;
+  private _littleEndian = true;
 
   // UE4 and UE5 file versions, filled during the reading of the summary of the asset.
   protected _fileVersionUE4: EUnrealEngineObjectUE4Version | null = null;
@@ -62,21 +62,21 @@ export class AssetReader {
 
   readInt16() {
     this.ensureBytes(2);
-    const value = this.dataView.getInt16(this.offset, this.littleEndian);
+    const value = this.dataView.getInt16(this.offset, this._littleEndian);
     this.offset += 2;
     return value;
   }
 
   readInt32() {
     this.ensureBytes(4);
-    const value = this.dataView.getInt32(this.offset, this.littleEndian);
+    const value = this.dataView.getInt32(this.offset, this._littleEndian);
     this.offset += 4;
     return value;
   }
 
   readInt64(): number {
     this.ensureBytes(8);
-    const value = this.dataView.getBigInt64(this.offset, this.littleEndian);
+    const value = this.dataView.getBigInt64(this.offset, this._littleEndian);
     this.offset += 8;
     if (value > Number.MAX_SAFE_INTEGER || value < Number.MIN_SAFE_INTEGER) {
       throw new Error("Int64 value is too large to be represented as a number");
@@ -91,21 +91,21 @@ export class AssetReader {
 
   readUInt16() {
     this.ensureBytes(2);
-    const value = this.dataView.getUint16(this.offset, this.littleEndian);
+    const value = this.dataView.getUint16(this.offset, this._littleEndian);
     this.offset += 2;
     return value;
   }
 
   readUInt32() {
     this.ensureBytes(4);
-    const value = this.dataView.getUint32(this.offset, this.littleEndian);
+    const value = this.dataView.getUint32(this.offset, this._littleEndian);
     this.offset += 4;
     return value;
   }
 
   readUInt64(): number {
     this.ensureBytes(8);
-    const value = this.dataView.getBigUint64(this.offset, this.littleEndian);
+    const value = this.dataView.getBigUint64(this.offset, this._littleEndian);
     this.offset += 8;
     if (value > Number.MAX_SAFE_INTEGER) {
       throw new Error("UInt64 value is too large to be represented as a number");
@@ -133,7 +133,7 @@ export class AssetReader {
     return result;
   }
 
-  readFName() {
+  readName() {
     if (this._names === null) {
       throw new Error("Names are not set yet");
     }
@@ -152,7 +152,11 @@ export class AssetReader {
   }
 
   swapEndian() {
-    this.littleEndian = !this.littleEndian;
+    this._littleEndian = !this._littleEndian;
+  }
+
+  get littleEndian() {
+    return this._littleEndian;
   }
 }
 

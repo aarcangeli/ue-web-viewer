@@ -24,13 +24,13 @@ export class FObjectImport {
 
   static fromStream(reader: AssetReader) {
     const result = new FObjectImport();
-    result.ClassPackage = reader.readFName();
-    result.ClassName = reader.readFName();
+    result.ClassPackage = reader.readName();
+    result.ClassName = reader.readName();
     result.OuterIndex = reader.readInt32();
-    result.ObjectName = reader.readFName();
+    result.ObjectName = reader.readName();
 
     if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_NON_OUTER_PACKAGE_IMPORT) {
-      result.PackageName = reader.readFName();
+      result.PackageName = reader.readName();
     }
 
     if (reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.OPTIONAL_RESOURCES) {

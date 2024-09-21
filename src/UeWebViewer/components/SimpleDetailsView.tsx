@@ -1,6 +1,6 @@
 import { Box, Flex, HTMLChakraProps, IconButton, Text } from "@chakra-ui/react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import * as CSS from "csstype";
 
 const INDENT_SIZE = 18;
@@ -43,7 +43,7 @@ export function SimpleDetailsView(props: Props) {
   const viewContext = { indent: 0 };
 
   return (
-    <Flex className={"details-root"} direction={"column"} fontSize={13} gap={"1px"} bg={"black"}>
+    <Flex direction={"column"} fontSize={13} gap={"1px"} bg={"black"}>
       <DetailsViewContext.Provider value={viewContext}>{props.children}</DetailsViewContext.Provider>
     </Flex>
   );
@@ -66,10 +66,10 @@ function useViewContextCopy() {
 }
 
 export function IndentedRow(
-  props: HTMLChakraProps<"div"> & { withPlaceHolder?: boolean; bgHover?: CSS.Property.Color },
+  props: HTMLChakraProps<"div"> & { title?: string; withPlaceHolder?: boolean; bgHover?: CSS.Property.Color },
 ) {
   const viewContext = useViewContext();
-  const { children, withPlaceHolder, bg, bgHover, ...rest } = props;
+  const { children, title, withPlaceHolder, bg, bgHover, ...rest } = props;
 
   return (
     <Flex
@@ -92,14 +92,25 @@ export function IndentedRow(
         />
       ))}
       {(withPlaceHolder ?? true) && <Box w={`24px`} h={`24px`} flexShrink={0} />}
+      {title && (
+        <Text as={"span"} color={"orange.300"} mr={2} userSelect={"none"}>
+          {title}:
+        </Text>
+      )}
       {props.children}
     </Flex>
   );
 }
 
-export function CollapsableSection(props: { name: string; children?: React.ReactNode; initialExpanded?: boolean }) {
-  const [isExpanded, setIsExpanded] = React.useState(props.initialExpanded ?? true);
+export function CollapsableSection(props: {
+  name: React.ReactNode;
+  children?: React.ReactNode;
+  initialExpanded?: boolean;
+  hasChildren?: boolean;
+}) {
+  const hasChildren = props.hasChildren ?? true;
 
+  const [isExpanded, setIsExpanded] = useState(props.initialExpanded ?? true);
   const onClick = useCallback(() => setIsExpanded((e) => !e), []);
 
   const viewContext = useViewContextCopy();
@@ -108,14 +119,13 @@ export function CollapsableSection(props: { name: string; children?: React.React
   viewContext.indent += 1;
 
   return (
-    <Flex className={"details-root"} direction={"column"} gap={"1px"}>
+    <Flex direction={"column"} gap={"1px"}>
       <IndentedRow
-        onClick={onClick}
         bg={originalIndent === 0 ? "gray.700" : undefined}
         bgHover={originalIndent === 0 ? "gray.700" : undefined}
         withPlaceHolder={false}
       >
-        <OptionalTreeHandle isVisible={true} isExpanded={isExpanded} onClick={onClick} />
+        <OptionalTreeHandle isVisible={hasChildren} isExpanded={isExpanded} onClick={onClick} />
         <Text cursor={"default"}>{props.name}</Text>
       </IndentedRow>
       {isExpanded && <DetailsViewContext.Provider value={viewContext}>{props.children}</DetailsViewContext.Provider>}

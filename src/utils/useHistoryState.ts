@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 function getCurrentPath(): string | undefined {
   const search = window.location.search;
@@ -15,7 +15,8 @@ function stupidEncodePath(path: string): string {
 }
 
 export function useHistoryState(onChoosePath: (path: string | undefined) => void) {
-  const lastPathReported = useRef<string | undefined>(undefined);
+  // We useMemo instead of useRef because useMemo discards the value during hot reload.
+  const lastPathReported: { current: string | undefined } = useMemo(() => ({ current: undefined }), []);
 
   const reloadPath = useCallback(() => {
     const currentPath = getCurrentPath();
@@ -33,14 +34,12 @@ export function useHistoryState(onChoosePath: (path: string | undefined) => void
   useEffect(reloadPath, []);
 }
 
-export function useNavigate() {
-  return useCallback((path: string | undefined) => {
-    const currentPath = window.history.state?.path;
-    console.log("navigate: ", path, currentPath);
-    if (currentPath !== path) {
-      let url = path ? "?path=" + stupidEncodePath(path) : "?";
-      const hash = window.location.hash;
-      window.history.pushState({ path }, "", url + hash);
-    }
-  }, []);
+export function navigate(path: string | undefined) {
+  const currentPath = window.history.state?.path;
+  if (currentPath !== path) {
+    let url = path ? "?path=" + stupidEncodePath(path) : "?";
+    const hash = window.location.hash;
+    window.history.pushState({ path }, "", url + hash);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  }
 }

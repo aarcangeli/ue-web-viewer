@@ -4,7 +4,7 @@ import React, { forwardRef, memo, useCallback, useContext, useImperativeHandle, 
 import { Box, IconButton, Text } from "@chakra-ui/react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
 import { searchCtx, SpeedSearch } from "./SpeedSearch";
-import { PatternQuery } from "../utils/PatternQuery";
+import { PatternQuery } from "../../utils/PatternQuery";
 
 const LINE_HEIGHT = 32;
 const GAP = 1;

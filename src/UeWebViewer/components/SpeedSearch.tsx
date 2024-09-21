@@ -1,6 +1,6 @@
 import { Box, Input } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { PatternQuery } from "../utils/PatternQuery";
+import { PatternQuery } from "../../utils/PatternQuery";
 
 export const searchCtx = React.createContext<PatternQuery | undefined>(undefined);
 

@@ -5,7 +5,8 @@ import { MinimalNode, TreeView, TreeViewApi } from "./components/TreeView";
 import { fakeWait } from "./config";
 import { FileViewer } from "./viewer/FileViewer";
 import { BiFileBlank, BiFolder } from "react-icons/bi";
-import { useHistoryState, useNavigate } from "./utils/useHistoryState";
+import { navigate, useHistoryState } from "../utils/useHistoryState";
+import { ProjectApi, ProjectApiProvider } from "./ProjectApi";
 
 export interface Props {
   project: FileApi;
@@ -46,14 +47,15 @@ export function ProjectViewer(props: Props) {
   const [currentFile, setCurrentFile] = useState<FileApi | null>(null);
   const tree = useRef<TreeViewApi<FileNode>>(null);
 
-  const nodes = useMemo(() => [makeNode(props.project)], [props.project]);
+  let project = props.project;
+
+  const nodes = useMemo(() => [makeNode(project)], [project]);
+  const projectApi = useMemo(() => new ProjectApi(project.name), [project]);
 
   let onChoosePath = useCallback((path: string | undefined) => {
     if (path) {
-      console.log("path", path, tree);
       tree.current?.selectPath(path);
     } else {
-      console.log("Navigating to blank path");
       setCurrentFile(null);
       tree.current?.clearSelection();
     }
@@ -61,10 +63,7 @@ export function ProjectViewer(props: Props) {
 
   useHistoryState(onChoosePath);
 
-  const navigate = useNavigate();
-
   const onSelect = useCallback((node: FileNode[], isUserAction: boolean) => {
-    // navigate("/nuova-pagina");
     if (node.length === 1) {
       if (isUserAction) {
         navigate(node[0].file.fullPath);
@@ -76,13 +75,15 @@ export function ProjectViewer(props: Props) {
   }, []);
 
   return (
-    <Flex className={"project-viewer"} flex={1}>
-      <Flex direction={"column"} w={"400px"} borderRight="1px" borderColor={borderColor} p={2} gap={1}>
-        <TreeView<FileNode> ref={tree} nodes={nodes} loadChildren={loadChildNodes} onSelect={onSelect} />
+    <ProjectApiProvider value={projectApi}>
+      <Flex className={"project-viewer"} flex={1}>
+        <Flex direction={"column"} w={"400px"} borderRight="1px" borderColor={borderColor} p={2} gap={1}>
+          <TreeView<FileNode> ref={tree} nodes={nodes} loadChildren={loadChildNodes} onSelect={onSelect} />
+        </Flex>
+        <Flex direction={"column"} grow={1} shrink={1}>
+          {currentFile && currentFile.kind === "file" && <FileViewer file={currentFile}></FileViewer>}
+        </Flex>
       </Flex>
-      <Flex direction={"column"} grow={1} shrink={1}>
-        {currentFile && currentFile.kind === "file" && <FileViewer file={currentFile}></FileViewer>}
-      </Flex>
-    </Flex>
+    </ProjectApiProvider>
   );
 }
