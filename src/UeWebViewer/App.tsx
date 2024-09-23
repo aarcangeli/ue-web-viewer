@@ -103,7 +103,7 @@ function App() {
         </Flex>
       )}
 
-      <Flex flex={1} height={"calc(100vh - 64px)"}>
+      <Flex flex={1} minHeight={0}>
         {!error && !loading && !currentContent && (
           <Box py={10} flexGrow={1}>
             Drop a directory containing a .uproject

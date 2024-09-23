@@ -7,6 +7,7 @@ import { FAsset } from "../../unreal-engine/Asset";
 import { ImportDetails } from "./ImportDetails";
 import { ExportDetails } from "./ExportDetails";
 import { SummaryDetails } from "./SummaryDetails";
+import { AssetPreview } from "./AssetPreview";
 
 export interface Props {
   file: FileApi;
@@ -19,6 +20,7 @@ async function ReadAndParseFile(file: FileApi) {
 }
 
 const tabNames = [
+  { id: "preview", name: "Preview", component: AssetPreview, isFullSize: true },
   { id: "summary", name: "Summary", component: SummaryDetails },
   { id: "imports", name: "Imports", component: ImportDetails },
   { id: "exports", name: "Exports", component: ExportDetails },
@@ -64,16 +66,33 @@ export function FileViewer(props: Props) {
   return (
     <Flex grow={1} direction={"column"} alignItems={"stretch"} overflowY={"auto"}>
       {asset && (
-        <Tabs isLazy index={tabIndex} onChange={onChange}>
+        <Tabs
+          isLazy
+          index={tabIndex}
+          onChange={onChange}
+          flexGrow={1}
+          display={"flex"}
+          flexDirection={"column"}
+          flex={1}
+          minHeight={0}
+        >
           <TabList>
             {tabNames.map((tab, index) => (
               <Tab key={index}>{tab.name}</Tab>
             ))}
           </TabList>
 
-          <TabPanels>
+          <TabPanels flex={1} minHeight={0}>
             {tabNames.map((tab, index) => (
-              <TabPanel key={index}>
+              <TabPanel
+                key={index}
+                p={tab.isFullSize ? 0 : undefined}
+                minHeight={0}
+                flex={1}
+                height={"100%"}
+                display={"flex"}
+                flexDirection={"column"}
+              >
                 <tab.component asset={asset} />
               </TabPanel>
             ))}

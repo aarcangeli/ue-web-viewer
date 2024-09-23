@@ -9,6 +9,9 @@ import { PatternQuery } from "../../utils/PatternQuery";
 const LINE_HEIGHT = 32;
 const GAP = 1;
 
+// Size: header size + top padding + bottom padding
+const HEADER_SIZE = 64 + 8 + 8;
+
 export interface MinimalNode {
   name: string;
   icon?: React.ReactNode;
@@ -39,11 +42,26 @@ interface Node<T extends MinimalNode> {
 // Big number, so when a scroll is performed quickly, the tree doesn't flicker
 const OVERSCAN_COUNT = 20;
 
+function useWindowSize() {
+  const [size, setSize] = React.useState({ width: window.innerWidth, height: window.innerHeight });
+
+  React.useLayoutEffect(() => {
+    function updateSize() {
+      setSize({ width: window.innerWidth, height: window.innerHeight });
+    }
+
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
+  return size;
+}
+
 /**
  * This tree-view manages the scroll and resize of the component.
  */
 function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeViewApi<T> | undefined>) {
-  const { ref: treeViewRoot, height } = useResizeObserver();
+  const { height } = useWindowSize();
   const [version, setVersion] = React.useState(0);
   const nextId = React.useRef(0);
   const treeRef = useRef<TreeApi<Node<T>> | null>(null);
@@ -55,6 +73,9 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
   const generateId = useCallback(() => {
     return String(nextId.current++);
   }, []);
+
+  const treeViewHeight = height - HEADER_SIZE;
+  console.log(`TreeView render height=${treeViewHeight}`);
 
   const loadAndProcessChildren = useCallback(
     async (node: T): Promise<Node<T>[]> => {
@@ -227,7 +248,6 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
 
   return (
     <div
-      ref={treeViewRoot}
       style={{ flexGrow: 1, userSelect: "none", position: "relative" }}
       className="treeview-root"
       onKeyDown={(e) => {
@@ -250,7 +270,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
       >
         <Tree<Node<T>>
           ref={treeRef}
-          height={height}
+          height={treeViewHeight}
           width={"100%"}
           data={data}
           rowHeight={LINE_HEIGHT + GAP}
