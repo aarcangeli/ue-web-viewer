@@ -142,7 +142,7 @@ export class AssetReader {
     if (index < 0 || index >= this._names.length) {
       throw new Error(`Invalid name index: ${index}`);
     }
-    return this._names[index] + (number == 0 ? "" : `_${number}`);
+    return this._names[index] + (number === 0 ? "" : `_${number}`);
   }
 
   private ensureBytes(number: number) {

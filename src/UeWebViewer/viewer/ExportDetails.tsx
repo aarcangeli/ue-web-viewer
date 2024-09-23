@@ -40,7 +40,7 @@ function makeTree(asset: FAsset): Node[] {
       const index = value.objectExport.OuterIndex - 1;
       invariant(index < convertedTable.length, `Invalid index ${index} for node ${value}`);
       convertedTable[index].children.push(value);
-    } else if (value.objectExport.OuterIndex != 0) {
+    } else if (value.objectExport.OuterIndex !== 0) {
       console.log("Detected subobject of import");
     }
   }
@@ -48,7 +48,7 @@ function makeTree(asset: FAsset): Node[] {
   // sort recursively
   sortNodesRecursively(convertedTable);
 
-  return convertedTable.filter((value) => value.objectExport.OuterIndex == 0);
+  return convertedTable.filter((value) => value.objectExport.OuterIndex === 0);
 }
 
 function RawView(props: { asset: FAsset }) {

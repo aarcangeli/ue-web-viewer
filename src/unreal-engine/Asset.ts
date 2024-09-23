@@ -45,7 +45,7 @@ export class FAsset {
     }
 
     const parts = [];
-    while (index != 0) {
+    while (index !== 0) {
       parts.push(this.getObjectName(index));
       index = this.getOuterIndex(index);
     }

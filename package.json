@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "author": "Alessandro Arcangeli <alessandroarcangeli.rm@gmail.com>",
   "repository": "https://github.com/aarcangeli/ue-web-viewer",
+  "homepage": "https://aarcangeli.github.io/ue-web-viewer",
   "license": "MIT",
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",

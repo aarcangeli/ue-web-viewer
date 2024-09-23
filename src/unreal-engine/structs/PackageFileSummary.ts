@@ -4,7 +4,6 @@ import { FGuid } from "./Guid";
 import { FEngineVersion } from "./EngineVersion";
 import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "./CustomVersion";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
-import { read } from "fs";
 
 /**
  * struct FGenerationInfo {

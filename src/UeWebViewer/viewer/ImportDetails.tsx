@@ -60,7 +60,7 @@ function makeTree(imports: FObjectImport[]): Node[] {
   // sort recursively
   sortNodesRecursively(convertedTable);
 
-  return convertedTable.filter((value) => value.objectImport.OuterIndex == 0);
+  return convertedTable.filter((value) => value.objectImport.OuterIndex === 0);
 }
 
 function makeTitle(projectApi: ProjectApi, node: Node) {
