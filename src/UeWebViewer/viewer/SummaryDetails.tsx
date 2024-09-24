@@ -1,8 +1,8 @@
-import { FAsset } from "../../unreal-engine/Asset";
+import { Asset } from "../../unreal-engine/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React from "react";
 
-export function SummaryDetails(props: { asset: FAsset }) {
+export function SummaryDetails(props: { asset: Asset }) {
   const summary = props.asset.summary;
 
   return (
@@ -11,7 +11,7 @@ export function SummaryDetails(props: { asset: FAsset }) {
         <IndentedRow title={"Tag"}>0x{summary.Tag.toString(16)}</IndentedRow>
         <IndentedRow title={"Byte Order"}>{summary.LittleEndian ? "Little Endian" : "Big Endian"}</IndentedRow>
         <IndentedRow title={"LegacyFileVersion"}>
-          {summary.LegacyFileVersion} ({summary.LegacyFileVersion <= -8 ? "UE5+" : "UE4"})
+          {summary.LegacyFileVersion} ({summary.LegacyFileVersion <= -8 ? "UE5" : "UE4"})
         </IndentedRow>
         <IndentedRow title={"FileVersionUE4"}>{summary.FileVersionUE4}</IndentedRow>
         <IndentedRow title={"FileVersionUE5"}>{summary.FileVersionUE5}</IndentedRow>
@@ -21,7 +21,7 @@ export function SummaryDetails(props: { asset: FAsset }) {
         >
           {summary.CustomVersionContainer.Versions.map((version, index) => (
             <IndentedRow key={index}>
-              {version.Key.string} {"=>"} {version.Version}
+              {version.Key.toString()} {"=>"} {version.Version}
             </IndentedRow>
           ))}
         </CollapsableSection>
@@ -35,8 +35,8 @@ export function SummaryDetails(props: { asset: FAsset }) {
         <IndentedRow title={"Import Count"}>{summary.ImportCount}</IndentedRow>
         <IndentedRow title={"Import Offset"}>{summary.ImportOffset}</IndentedRow>
         <IndentedRow title={"Depends Offset"}>{summary.DependsOffset}</IndentedRow>
-        <IndentedRow title={"Guid"}>{summary.Guid.string}</IndentedRow>
-        <IndentedRow title={"Persistent Guid"}>{summary.PersistentGuid.string}</IndentedRow>
+        <IndentedRow title={"Guid"}>{summary.Guid.toString()}</IndentedRow>
+        <IndentedRow title={"Persistent Guid"}>{summary.PersistentGuid.toString()}</IndentedRow>
       </CollapsableSection>
     </SimpleDetailsView>
   );

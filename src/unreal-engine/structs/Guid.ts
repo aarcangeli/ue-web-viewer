@@ -45,10 +45,6 @@ export class FGuid {
     return result;
   }
 
-  get string() {
-    return this.toString();
-  }
-
   toString() {
     let block1 = this.A.toString(16).padStart(8, "0");
     let block2 = (this.B >>> 16).toString(16).padStart(4, "0");
@@ -57,5 +53,9 @@ export class FGuid {
     let block5 = (this.C & 0xffff).toString(16).padStart(4, "0") + this.D.toString(16).padStart(8, "0");
 
     return `{${block1}-${block2}-${block3}-${block4}-${block5}}`;
+  }
+
+  toJSON() {
+    return this.toString();
   }
 }

@@ -35,4 +35,16 @@ export class FEngineVersion {
     result.Branch = branch;
     return result;
   }
+
+  /**
+   * Returns a string representation of the version.
+   * This is equivalent to the `ToString(EVersionComponent::Branch)` method in C++.
+   */
+  toString() {
+    return `${this.Major}.${this.Minor}.${this.Patch}-${this.Changelist}` + (this.Branch ? `+${this.Branch}` : "");
+  }
+
+  toJSON() {
+    return this.toString();
+  }
 }

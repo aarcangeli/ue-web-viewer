@@ -3,7 +3,7 @@ import { FileApi } from "../filesystem/FileApi";
 import React, { useEffect, useState } from "react";
 import { FullAssetReader } from "../../unreal-engine/AssetReader";
 import invariant from "tiny-invariant";
-import { FAsset } from "../../unreal-engine/Asset";
+import { Asset } from "../../unreal-engine/Asset";
 import { ImportDetails } from "./ImportDetails";
 import { ExportDetails } from "./ExportDetails";
 import { SummaryDetails } from "./SummaryDetails";
@@ -16,7 +16,7 @@ export interface Props {
 async function ReadAndParseFile(file: FileApi) {
   const content = await file.read();
   const reader = new FullAssetReader(content);
-  return FAsset.fromStream(reader);
+  return Asset.fromStream(file.name, reader);
 }
 
 const tabNames = [
@@ -38,7 +38,7 @@ export function FileViewer(props: Props) {
   invariant(props.file.kind === "file", "Expected a file");
   const [tabIndex, setTabIndex] = useState(getTabIndexFromHash);
 
-  const [asset, setAsset] = React.useState<FAsset>();
+  const [asset, setAsset] = React.useState<Asset>();
 
   useEffect(() => {
     console.log("Reading file", props.file.fullPath);

@@ -1,4 +1,4 @@
-import { FAsset } from "../../unreal-engine/Asset";
+import { Asset } from "../../unreal-engine/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
 import { FObjectImport } from "../../unreal-engine/structs/ObjectImport";
@@ -89,7 +89,7 @@ function RenderNodes(props: { tree: Node[] }) {
   return <SimpleDetailsView>{props.tree.map(recursiveSection)}</SimpleDetailsView>;
 }
 
-function RawView(props: { asset: FAsset }) {
+function RawView(props: { asset: Asset }) {
   return (
     <SimpleDetailsView>
       {props.asset.imports.map((value, index) => (
@@ -106,7 +106,7 @@ function RawView(props: { asset: FAsset }) {
   );
 }
 
-export function ImportDetails(props: { asset: FAsset }) {
+export function ImportDetails(props: { asset: Asset }) {
   const imports = props.asset.imports;
 
   const tree = useMemo(() => makeTree(imports), [imports]);

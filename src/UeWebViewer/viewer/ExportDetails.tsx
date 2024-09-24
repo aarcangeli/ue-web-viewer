@@ -1,4 +1,4 @@
-import { FAsset } from "../../unreal-engine/Asset";
+import { Asset } from "../../unreal-engine/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
@@ -16,7 +16,7 @@ class Node {
   ) {}
 }
 
-function makeTree(asset: FAsset): Node[] {
+function makeTree(asset: Asset): Node[] {
   const sortNodesRecursively = (convertedTable: Node[]) => {
     convertedTable.sort((a: Node, b: Node) => {
       return (
@@ -51,7 +51,7 @@ function makeTree(asset: FAsset): Node[] {
   return convertedTable.filter((value) => value.objectExport.OuterIndex === 0);
 }
 
-function RawView(props: { asset: FAsset }) {
+function RawView(props: { asset: Asset }) {
   const exports = props.asset.exports;
 
   return (
@@ -91,7 +91,7 @@ function RenderNodes(props: { tree: Node[] }) {
   return <SimpleDetailsView>{props.tree.map(recursiveSection)}</SimpleDetailsView>;
 }
 
-export function ExportDetails(props: { asset: FAsset }) {
+export function ExportDetails(props: { asset: Asset }) {
   const asset = props.asset;
   const tree = useMemo(() => makeTree(asset), [asset]);
 

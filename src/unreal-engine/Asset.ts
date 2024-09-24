@@ -8,7 +8,8 @@ import { EUnrealEngineObjectUE4Version } from "./versioning/ue-versions";
 /**
  * Permits to read the content of a package file.
  */
-export class FAsset {
+export class Asset {
+  packageName: string = "";
   summary: FPackageFileSummary = new FPackageFileSummary();
   imports: FObjectImport[] = [];
   exports: FObjectExport[] = [];
@@ -17,10 +18,12 @@ export class FAsset {
    * Reads the content of the asset from a stream.
    * Note: the reader is mutated.
    */
-  static fromStream(reader: FullAssetReader) {
+  static fromStream(packageName: string, reader: FullAssetReader) {
+    invariant(packageName, "Expected a package name");
     invariant(reader.tell() === 0, "Expected to be at the beginning of the stream");
 
-    const result = new FAsset();
+    const result = new Asset();
+    result.packageName = packageName;
 
     // read summary, and set file version for the reader
     let summary = FPackageFileSummary.fromStream(reader);
@@ -45,9 +48,16 @@ export class FAsset {
     }
 
     const parts = [];
+
+    const initialIndex = index;
     while (index !== 0) {
       parts.push(this.getObjectName(index));
       index = this.getOuterIndex(index);
+    }
+
+    // Exports must begin with the package name
+    if (isExportIndex(initialIndex)) {
+      parts.push(this.packageName);
     }
 
     let result = "";
@@ -124,4 +134,8 @@ function readExportMap(reader: AssetReader, summary: FPackageFileSummary) {
     exports.push(value);
   }
   return exports;
+}
+
+function isExportIndex(index: number) {
+  return index > 0;
 }
