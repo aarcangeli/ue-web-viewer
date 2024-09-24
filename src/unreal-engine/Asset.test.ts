@@ -75,7 +75,7 @@ describe("TestActorUE5-4-4", () => {
 function readAsset(filename: string) {
   const fullPath = path.join(__dirname, filename);
   const fileData = fs.readFileSync(fullPath);
-  const reader = new FullAssetReader(fileData.buffer);
+  const reader = new FullAssetReader(new DataView(fileData.buffer, 0, fileData.byteLength));
   const packageName = path.basename(filename, path.extname(filename));
   return Asset.fromStream(packageName, reader);
 }

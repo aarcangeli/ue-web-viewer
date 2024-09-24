@@ -110,7 +110,7 @@ export class FPackageFileSummary {
       result.Tag = FPackageFileSummary.PACKAGE_FILE_TAG;
       reader.swapEndian();
     } else {
-      throw new Error("Invalid package file tag");
+      throw new Error(`Invalid package file tag 0x${result.Tag.toString(16)}`);
     }
     result.LittleEndian = reader.littleEndian;
 

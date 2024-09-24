@@ -7,7 +7,6 @@ import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./
  * For more complex data structures, use the provided methods to read the data (e.g. use FGuid.fromStream)
  */
 export class AssetReader {
-  private dataView: DataView;
   private offset = 0;
   private _littleEndian = true;
 
@@ -18,20 +17,18 @@ export class AssetReader {
   // Pool of names filled during the reading of the asset.
   protected _names: string[] | null = null;
 
-  constructor(private content: ArrayBuffer) {
-    this.dataView = new DataView(content);
-  }
+  constructor(private dataView: DataView) {}
 
   tell() {
     return this.offset;
   }
 
   get fileSize() {
-    return this.content.byteLength;
+    return this.dataView.byteLength;
   }
 
   get remaining() {
-    return this.content.byteLength - this.offset;
+    return this.dataView.byteLength - this.offset;
   }
 
   get fileVersionUE4(): EUnrealEngineObjectUE4Version {
@@ -45,7 +42,7 @@ export class AssetReader {
   }
 
   seek(offset: number) {
-    if (offset < 0 || offset > this.content.byteLength) {
+    if (offset < 0 || offset > this.dataView.byteLength) {
       throw new Error("Invalid offset");
     }
     this.offset = offset;
@@ -146,7 +143,7 @@ export class AssetReader {
   }
 
   private ensureBytes(number: number) {
-    if (this.offset + number > this.content.byteLength) {
+    if (this.offset + number > this.dataView.byteLength) {
       throw new Error("End of file");
     }
   }

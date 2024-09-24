@@ -15,7 +15,7 @@ export interface Props {
 
 async function ReadAndParseFile(file: FileApi) {
   const content = await file.read();
-  const reader = new FullAssetReader(content);
+  const reader = new FullAssetReader(new DataView(content));
   return Asset.fromStream(file.name, reader);
 }
 
