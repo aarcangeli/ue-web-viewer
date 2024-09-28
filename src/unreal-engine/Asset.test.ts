@@ -28,15 +28,17 @@ describe("TestActorUE4-0-2", () => {
   });
 
   test("getObjectName", () => {
-    expect(asset.getObjectName(0)).toBe("None");
-    expect(asset.getObjectName(1)).toBe("K2Node_Event_DeltaSeconds");
-    expect(asset.getObjectName(-1)).toBe("Default__Actor");
+    expect(asset.getObjectName(0).toString()).toBe("None");
+    expect(asset.getObjectName(1).toString()).toBe("K2Node_Event_DeltaSeconds");
+    expect(asset.getObjectName(-1).toString()).toBe("Default__Actor");
   });
 
   test("makeFullName", () => {
-    expect(asset.makeFullName(0)).toBe("None");
-    expect(asset.makeFullName(55)).toBe("TestActorUE4-0-2.TestActorUE4-0-2:CustomFunction.K2Node_CallFunction_7632");
-    expect(asset.makeFullName(-36)).toBe("/Script/CoreUObject.Object:LinearColor");
+    expect(asset.makeFullName(0).toString()).toBe("None");
+    expect(asset.makeFullName(55).toString()).toBe(
+      "TestActorUE4-0-2.TestActorUE4-0-2:CustomFunction.K2Node_CallFunction_7631",
+    );
+    expect(asset.makeFullName(-36).toString()).toBe("/Script/CoreUObject.Object:LinearColor");
   });
 });
 
@@ -56,15 +58,17 @@ describe("TestActorUE5-4-4", () => {
   });
 
   test("getObjectName", () => {
-    expect(asset.getObjectName(0)).toBe("None");
-    expect(asset.getObjectName(1)).toBe("TestActorUE5-4-4");
-    expect(asset.getObjectName(-1)).toBe("Default__Actor");
+    expect(asset.getObjectName(0).toString()).toBe("None");
+    expect(asset.getObjectName(1).toString()).toBe("TestActorUE5-4-4");
+    expect(asset.getObjectName(-1).toString()).toBe("Default__Actor");
   });
 
   test("makeFullName", () => {
-    expect(asset.makeFullName(0)).toBe("None");
-    expect(asset.makeFullName(14)).toBe("TestActorUE5-4-4.TestActorUE5-4-4:CustomGraph.K2Node_CallFunction_1");
-    expect(asset.makeFullName(-21)).toBe("/Script/Engine.KismetSystemLibrary:PrintString");
+    expect(asset.makeFullName(0).toString()).toBe("None");
+    expect(asset.makeFullName(14).toString()).toBe(
+      "TestActorUE5-4-4.TestActorUE5-4-4:CustomGraph.K2Node_CallFunction_0",
+    );
+    expect(asset.makeFullName(-21).toString()).toBe("/Script/Engine.KismetSystemLibrary:PrintString");
   });
 });
 

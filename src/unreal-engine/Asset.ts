@@ -4,6 +4,7 @@ import { FObjectImport } from "./structs/ObjectImport";
 import { FObjectExport } from "./structs/ObjectExport";
 import invariant from "tiny-invariant";
 import { EUnrealEngineObjectUE4Version } from "./versioning/ue-versions";
+import { FName, NAME_None } from "./structs/Name";
 
 /**
  * Permits to read the content of a package file.
@@ -70,7 +71,7 @@ export class Asset {
     return result;
   }
 
-  getObjectName(index: number): string {
+  getObjectName(index: number): FName {
     invariant(this.isIndexValid(index), `Invalid index ${index}`);
 
     if (index < 0) {
@@ -78,7 +79,7 @@ export class Asset {
     } else if (index > 0) {
       return this.exports[index - 1].ObjectName;
     } else {
-      return "None";
+      return NAME_None;
     }
   }
 

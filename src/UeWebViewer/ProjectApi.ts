@@ -1,6 +1,7 @@
 import React from "react";
 import { navigate } from "../utils/useHistoryState";
 import { removePrefix } from "../utils/string-utils";
+import { FName } from "../unreal-engine/structs/Name";
 
 const ProjectApiContext = React.createContext<ProjectApi | null>(null);
 
@@ -13,11 +14,11 @@ export class ProjectApi {
    * Open the asset in the editor
    * @param assetReference
    */
-  openAsset(assetReference: string) {
+  openAsset(assetReference: FName) {
     // TODO: check if the asset exists
     // TODO: verify case sensitivity
     if (assetReference.startsWith("/Game/")) {
-      const path = `${this.rootName}/Content/${removePrefix(assetReference, "/Game/")}.uasset`;
+      const path = `${this.rootName}/Content/${removePrefix(assetReference.text, "/Game/")}.uasset`;
       navigate(path);
       console.log("openAsset", path);
     }

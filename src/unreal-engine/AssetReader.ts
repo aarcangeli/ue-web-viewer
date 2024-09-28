@@ -1,5 +1,6 @@
 import invariant from "tiny-invariant";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
+import { FName } from "./structs/Name";
 
 /**
  * Low level API to read binary data from an ArrayBuffer.
@@ -130,7 +131,7 @@ export class AssetReader {
     return result;
   }
 
-  readName() {
+  readName(): FName {
     if (this._names === null) {
       throw new Error("Names are not set yet");
     }
@@ -139,7 +140,7 @@ export class AssetReader {
     if (index < 0 || index >= this._names.length) {
       throw new Error(`Invalid name index: ${index}`);
     }
-    return this._names[index] + (number === 0 ? "" : `_${number}`);
+    return new FName(this._names[index], number);
   }
 
   private ensureBytes(number: number) {

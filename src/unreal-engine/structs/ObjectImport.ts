@@ -1,6 +1,7 @@
 import { AssetReader } from "../AssetReader";
 import { FPackageFileSummary } from "./PackageFileSummary";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
+import { FName, NAME_None } from "./Name";
 
 /**
  * struct FObjectImport {
@@ -15,11 +16,11 @@ import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "..
  * };
  */
 export class FObjectImport {
-  ClassPackage: string = "";
-  ClassName: string = "";
+  ClassPackage: FName = NAME_None;
+  ClassName: FName = NAME_None;
   OuterIndex: number = 0;
-  ObjectName: string = "";
-  PackageName: string = "";
+  ObjectName: FName = NAME_None;
+  PackageName: FName = NAME_None;
   bImportOptional: boolean = false;
 
   static fromStream(reader: AssetReader) {

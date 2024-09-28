@@ -2,13 +2,14 @@ import { AssetReader } from "../AssetReader";
 import { FGuid } from "./Guid";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import { enumToFlags } from "../../utils/enuim-utils";
+import { FName, NAME_None } from "./Name";
 
 export class FObjectExport {
   ClassIndex: number = 0;
   SuperIndex: number = 0;
   TemplateIndex: number = 0;
   OuterIndex: number = 0;
-  ObjectName: string = "";
+  ObjectName: FName = NAME_None;
   objectFlags: number = 0;
   SerialSize: number = 0;
   SerialOffset: number = 0;

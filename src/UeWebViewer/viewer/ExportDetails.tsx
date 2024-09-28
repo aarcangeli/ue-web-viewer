@@ -62,7 +62,7 @@ function RawView(props: { asset: Asset }) {
           <IndentedRow title={"Super Index"}>{value.SuperIndex}</IndentedRow>
           <IndentedRow title={"Template Index"}>{value.TemplateIndex}</IndentedRow>
           <IndentedRow title={"Outer Index"}>{value.OuterIndex}</IndentedRow>
-          <IndentedRow title={"Object Name"}>{value.ObjectName}</IndentedRow>
+          <IndentedRow title={"Object Name"}>{value.ObjectName.text}</IndentedRow>
           <IndentedRow title={"Object Flags"}>
             {value.objectFlags} ({exportFlagsToString(value.objectFlags)})
           </IndentedRow>

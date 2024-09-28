@@ -6,8 +6,9 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { partition } from "../../utils/partition";
 import { ProjectApi, useProjectApi } from "../ProjectApi";
 import { makeObjectTitle } from "./commons";
+import { FName } from "../../unreal-engine/structs/Name";
 
-const CoreUObject = "/Script/CoreUObject";
+const CoreUObject = FName.fromString("/Script/CoreUObject");
 
 class Node {
   constructor(
@@ -73,7 +74,7 @@ function makeTitle(projectApi: ProjectApi, node: Node) {
   return makeObjectTitle({
     onClick,
     objectName: node.ObjectName,
-    objectClass: node.ClassPackage == CoreUObject ? node.ClassName : `${node.ClassPackage}.${node.ClassName}`,
+    objectClass: node.ClassPackage.equals(CoreUObject) ? node.ClassName.text : `${node.ClassPackage}.${node.ClassName}`,
   });
 }
 
@@ -94,11 +95,11 @@ function RawView(props: { asset: Asset }) {
     <SimpleDetailsView>
       {props.asset.imports.map((value, index) => (
         <CollapsableSection name={`Import ${-index - 1}`} key={index}>
-          <IndentedRow title={"Class Package"}>{value.ClassPackage}</IndentedRow>
-          <IndentedRow title={"Class Name"}>{value.ClassName}</IndentedRow>
+          <IndentedRow title={"Class Package"}>{value.ClassPackage.text}</IndentedRow>
+          <IndentedRow title={"Class Name"}>{value.ClassName.text}</IndentedRow>
           <IndentedRow title={"Outer Index"}>{value.OuterIndex}</IndentedRow>
-          <IndentedRow title={"Object Name"}>{value.ObjectName}</IndentedRow>
-          <IndentedRow title={"Package Name"}>{value.PackageName}</IndentedRow>
+          <IndentedRow title={"Object Name"}>{value.ObjectName.text}</IndentedRow>
+          <IndentedRow title={"Package Name"}>{value.PackageName.text}</IndentedRow>
           <IndentedRow title={"bImportOptional"}>{value.bImportOptional ? "true" : "false"}</IndentedRow>
         </CollapsableSection>
       ))}
