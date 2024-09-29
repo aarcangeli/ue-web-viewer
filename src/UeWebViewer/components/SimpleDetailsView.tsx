@@ -93,7 +93,7 @@ export function IndentedRow(
       ))}
       {(withPlaceHolder ?? true) && <Box w={`24px`} h={`24px`} flexShrink={0} />}
       {title && (
-        <Text as={"span"} color={"orange.300"} mr={2} userSelect={"none"}>
+        <Text as={"span"} color={"orange.300"} mr={2}>
           {title}:
         </Text>
       )}

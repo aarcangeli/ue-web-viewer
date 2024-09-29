@@ -75,7 +75,6 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
   }, []);
 
   const treeViewHeight = height - HEADER_SIZE;
-  console.log(`TreeView render height=${treeViewHeight}`);
 
   const loadAndProcessChildren = useCallback(
     async (node: T): Promise<Node<T>[]> => {

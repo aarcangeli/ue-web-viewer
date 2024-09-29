@@ -1,11 +1,27 @@
 import { Asset } from "../../unreal-engine/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import {
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { exportFlagsToString, FObjectExport } from "../../unreal-engine/structs/ObjectExport";
 import invariant from "tiny-invariant";
 import { makeObjectTitle } from "./commons";
 import { removePrefix } from "../../utils/string-utils";
+import { IoOpenOutline, IoReload } from "react-icons/io5";
+import { ObjectPreview } from "./AssetPreview";
 
 class Node {
   constructor(
@@ -41,7 +57,7 @@ function makeTree(asset: Asset): Node[] {
       invariant(index < convertedTable.length, `Invalid index ${index} for node ${value}`);
       convertedTable[index].children.push(value);
     } else if (value.objectExport.OuterIndex !== 0) {
-      console.log("Detected subobject of import");
+      console.error("Detected subobject of import");
     }
   }
 
@@ -74,14 +90,64 @@ function RawView(props: { asset: Asset }) {
   );
 }
 
-function RenderNodes(props: { tree: Node[] }) {
+function OpenObjectPreviewButton(props: { asset: Asset; index: number }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return (
+    <>
+      <IconButton aria-label={"Open Object"} size={"xs"} variant={"ghost"} icon={<IoOpenOutline />} onClick={onOpen} />
+
+      <Modal isOpen={isOpen} onClose={onClose} size={"full"}>
+        <ObjectPreviewContent asset={props.asset} index={props.index} />
+      </Modal>
+    </>
+  );
+}
+
+function ObjectPreviewContent(props: { asset: Asset; index: number }) {
+  const object = props.asset.getObjectByIndex(props.index);
+  const [, setVersion] = React.useState(0);
+
+  return (
+    <>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>
+          Object Preview
+          {/* TODO: this reload doesn't really reload the file */}
+          <IconButton
+            aria-label={"Refresh Asset"}
+            size={"xs"}
+            variant={"ghost"}
+            icon={<IoReload />}
+            onClick={() => {
+              props.asset.reloadObject(object);
+              setVersion((v) => v + 1);
+            }}
+          />
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <ObjectPreview object={object} />
+        </ModalBody>
+      </ModalContent>
+    </>
+  );
+}
+
+function RenderNodes(props: { asset: Asset; tree: Node[] }) {
   const recursiveSection = (node: Node) => (
     <CollapsableSection
       key={node.index}
-      name={makeObjectTitle({
-        objectName: node.objectExport.ObjectName,
-        objectClass: removePrefix(node.classFullName, "/Script/Engine."),
-      })}
+      name={
+        <>
+          {makeObjectTitle({
+            objectName: node.objectExport.ObjectName,
+            objectClass: removePrefix(node.classFullName, "/Script/Engine."),
+          })}
+          <OpenObjectPreviewButton index={node.index} asset={props.asset} />
+        </>
+      }
       hasChildren={Boolean(node.children.length)}
     >
       {node.children.map(recursiveSection)}
@@ -103,7 +169,7 @@ export function ExportDetails(props: { asset: Asset }) {
       </TabList>
       <TabPanels>
         <TabPanel>
-          <RenderNodes tree={tree} />
+          <RenderNodes asset={asset} tree={tree} />
         </TabPanel>
         <TabPanel>
           <RawView asset={props.asset} />

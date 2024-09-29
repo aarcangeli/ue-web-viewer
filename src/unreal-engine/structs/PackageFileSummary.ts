@@ -1,6 +1,6 @@
 import { AssetReader } from "../AssetReader";
 import { EPackageFlags } from "../enums";
-import { FGuid } from "./Guid";
+import { FGuid, GUID_None } from "./Guid";
 import { FEngineVersion } from "./EngineVersion";
 import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "./CustomVersion";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
@@ -73,9 +73,9 @@ export class FPackageFileSummary {
 
   // deprecated in 4.27
   // UPackage::Guid has not been used by the engine for a long time and FPackageFileSummary::Guid will be removed
-  Guid: FGuid = new FGuid();
+  Guid: FGuid = GUID_None;
 
-  PersistentGuid: FGuid = new FGuid();
+  PersistentGuid: FGuid = GUID_None;
   LocalizationId: string = "";
 
   Generations: FGenerationInfo[] = [];

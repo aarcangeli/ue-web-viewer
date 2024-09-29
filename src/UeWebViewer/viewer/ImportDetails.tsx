@@ -34,7 +34,7 @@ class Node {
   }
 }
 
-function makeTree(imports: FObjectImport[]): Node[] {
+function makeTree(imports: ReadonlyArray<FObjectImport>): Node[] {
   const sortNodesRecursively = (convertedTable: Node[]) => {
     convertedTable.sort((a: Node, b: Node) => {
       return (

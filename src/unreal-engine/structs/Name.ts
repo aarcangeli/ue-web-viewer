@@ -42,6 +42,10 @@ export class FName {
     return this.name + (this.number != 0 ? `_${this.number - 1}` : "");
   }
 
+  get isNone() {
+    return this.name === "None" && this.number === 0;
+  }
+
   /**
    * Alias for `text`.
    */

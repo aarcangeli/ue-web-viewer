@@ -50,7 +50,11 @@ export class AssetReader {
   }
 
   readBoolean() {
-    return this.readInt32() !== 0;
+    let number = this.readInt32();
+    if (number !== 0 && number !== 1) {
+      console.warn(`Invalid boolean value: ${number}`);
+    }
+    return number !== 0;
   }
 
   readInt8() {
@@ -111,6 +115,20 @@ export class AssetReader {
     return Number(value);
   }
 
+  readFloat() {
+    this.ensureBytes(4);
+    const value = this.dataView.getFloat32(this.offset, this._littleEndian);
+    this.offset += 4;
+    return value;
+  }
+
+  readDouble() {
+    this.ensureBytes(8);
+    const value = this.dataView.getFloat64(this.offset, this._littleEndian);
+    this.offset += 8;
+    return value;
+  }
+
   readString() {
     const length = this.readInt32();
     if (length === 0) {
@@ -143,6 +161,13 @@ export class AssetReader {
     return new FName(this._names[index], number);
   }
 
+  subReader(size: number) {
+    this.ensureBytes(size);
+    const subDataView = new DataView(this.dataView.buffer, this.dataView.byteOffset + this.offset, size);
+    this.offset += size;
+    return this.makeChild(subDataView);
+  }
+
   private ensureBytes(number: number) {
     if (this.offset + number > this.dataView.byteLength) {
       throw new Error("End of file");
@@ -156,12 +181,25 @@ export class AssetReader {
   get littleEndian() {
     return this._littleEndian;
   }
+
+  private makeChild(newBlob: DataView) {
+    let reader = new AssetReader(newBlob);
+    reader._littleEndian = this._littleEndian;
+    reader._fileVersionUE4 = this._fileVersionUE4;
+    reader._fileVersionUE5 = this._fileVersionUE5;
+    reader._names = this._names;
+    return reader;
+  }
 }
 
 /**
  * An enhanced version of AssetReader that permits to edit file version and names.
  */
 export class FullAssetReader extends AssetReader {
+  constructor(dataView: DataView) {
+    super(dataView);
+  }
+
   setNames(value: string[]) {
     this._names = value;
   }

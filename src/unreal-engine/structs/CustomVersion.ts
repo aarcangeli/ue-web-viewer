@@ -1,4 +1,4 @@
-import { FGuid } from "./Guid";
+import { FGuid, GUID_None } from "./Guid";
 import { AssetReader } from "../AssetReader";
 
 /**
@@ -24,7 +24,7 @@ export enum ECustomVersionSerializationFormat {
  * };
  */
 export class FCustomVersion {
-  Key: FGuid = new FGuid();
+  Key: FGuid = GUID_None;
   Version: number = 0;
   FriendlyName: string = "";
 

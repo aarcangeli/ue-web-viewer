@@ -20,7 +20,6 @@ export class ProjectApi {
     if (assetReference.startsWith("/Game/")) {
       const path = `${this.rootName}/Content/${removePrefix(assetReference.text, "/Game/")}.uasset`;
       navigate(path);
-      console.log("openAsset", path);
     }
   }
 }

@@ -16,7 +16,7 @@ export interface Props {
 async function ReadAndParseFile(file: FileApi) {
   const content = await file.read();
   const reader = new FullAssetReader(new DataView(content));
-  return Asset.fromStream(file.name, reader);
+  return new Asset(file.name, reader);
 }
 
 const tabNames = [
@@ -41,7 +41,6 @@ export function FileViewer(props: Props) {
   const [asset, setAsset] = React.useState<Asset>();
 
   useEffect(() => {
-    console.log("Reading file", props.file.fullPath);
     setAsset(undefined);
     ReadAndParseFile(props.file)
       .then((asset) => setAsset(asset))

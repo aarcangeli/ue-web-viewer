@@ -23,8 +23,6 @@ import { NavBar } from "./components/NavBar";
  * @param items
  */
 async function OpenItems(items: DataTransferItem[]): Promise<React.ReactNode> {
-  console.log("Opening project", items);
-
   // This must be before any await, otherwise the browser will not convert the items to files correctly
   const handles = await getFilesFromItems(items);
 
@@ -43,7 +41,6 @@ async function OpenItems(items: DataTransferItem[]): Promise<React.ReactNode> {
     throw new Error("Multiple uproject files found");
   }
 
-  console.log("Project", project);
   return <ProjectViewer project={handles[0]} />;
 }
 
