@@ -1,4 +1,4 @@
-import { Asset } from "../../unreal-engine/Asset";
+import { Asset } from "../../unreal-engine/serialization/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
 import { FObjectImport } from "../../unreal-engine/structs/ObjectImport";

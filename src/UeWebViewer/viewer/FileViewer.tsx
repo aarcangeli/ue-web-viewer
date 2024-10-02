@@ -3,7 +3,7 @@ import { FileApi } from "../filesystem/FileApi";
 import React, { useEffect, useState } from "react";
 import { FullAssetReader } from "../../unreal-engine/AssetReader";
 import invariant from "tiny-invariant";
-import { Asset } from "../../unreal-engine/Asset";
+import { Asset } from "../../unreal-engine/serialization/Asset";
 import { ImportDetails } from "./ImportDetails";
 import { ExportDetails } from "./ExportDetails";
 import { SummaryDetails } from "./SummaryDetails";
@@ -14,9 +14,11 @@ export interface Props {
 }
 
 async function ReadAndParseFile(file: FileApi) {
-  const content = await file.read();
-  const reader = new FullAssetReader(new DataView(content));
-  return new Asset(file.name, reader);
+  const loadAsset = async () => {
+    const content = await file.read();
+    return new FullAssetReader(new DataView(content));
+  };
+  return new Asset(file.name, await loadAsset(), loadAsset);
 }
 
 const tabNames = [

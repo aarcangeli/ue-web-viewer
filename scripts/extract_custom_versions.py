@@ -275,7 +275,7 @@ def format_custom_version(version: CustomVersion) -> str:
 def format_custom_versions_index(custom_versions: list[CustomVersion]) -> str:
     result = make_header() + "\n"
 
-    result += 'import { FGuid } from "../structs/Guid";\n'
+    result += 'import { FGuid } from "../objects/CoreUObject/Guid";\n'
     result += 'import { CustomVersionGuid } from "./registry";\n'
     for version in custom_versions:
         result += (

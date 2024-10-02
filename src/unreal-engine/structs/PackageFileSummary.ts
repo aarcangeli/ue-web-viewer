@@ -1,8 +1,8 @@
 import { AssetReader } from "../AssetReader";
 import { EPackageFlags } from "../enums";
-import { FGuid, GUID_None } from "./Guid";
+import { FGuid, GUID_None } from "../objects/CoreUObject/Guid";
 import { FEngineVersion } from "./EngineVersion";
-import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "./CustomVersion";
+import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "../serialization/CustomVersion";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 
 /**

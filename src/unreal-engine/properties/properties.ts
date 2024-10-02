@@ -49,10 +49,20 @@ export type ObjectValue = {
   object: UObject | null;
 };
 
+export type StructValue = {
+  type: "struct";
+  value: Record<string, any>;
+};
+
 export type ScriptDelegate = {
   type: "delegate";
   object: UObject | null;
   function: FName;
+};
+
+export type ArrayValue = {
+  type: "array";
+  value: PropertyValue[];
 };
 
 export type SerializationError = {
@@ -66,7 +76,9 @@ export type PropertyValue =
   | NameValue
   | StringValue
   | ObjectValue
+  | StructValue
   | ScriptDelegate
+  | ArrayValue
   | SerializationError;
 
 /**

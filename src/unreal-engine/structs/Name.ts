@@ -1,5 +1,3 @@
-import { AssetReader } from "../AssetReader";
-
 const NUM_REGEX = /^([0-9]|[1-9][0-9]*)$/;
 
 export class FName {
@@ -58,6 +56,55 @@ export class FName {
    */
   toJSON() {
     return this.text;
+  }
+}
+
+function getMapKey(key: FName) {
+  return key.text.toLowerCase();
+}
+
+/**
+ * A specialized map for FName keys.
+ */
+export class FNameMap<V> {
+  private readonly _map = new Map<string, [FName, V]>();
+
+  constructor(entries?: readonly (readonly [FName, V])[] | null) {
+    if (entries) {
+      for (const [key, value] of entries) {
+        this.set(key, value);
+      }
+    }
+  }
+
+  clear() {
+    this._map.clear();
+  }
+
+  delete(key: FName): boolean {
+    return this._map.delete(getMapKey(key));
+  }
+
+  forEach(fn: (value: V, key: FName, map: FNameMap<V>) => void, thisArg?: any) {
+    this._map.forEach((value) => {
+      fn.call(thisArg, value[1], value[0], this);
+    });
+  }
+
+  get(key: FName): V | undefined {
+    return this._map.get(getMapKey(key))?.[1];
+  }
+
+  has(key: FName): boolean {
+    return this._map.has(getMapKey(key));
+  }
+
+  set(key: FName, value: V) {
+    this._map.set(getMapKey(key), [key, value]);
+  }
+
+  get size() {
+    return this._map.size;
   }
 }
 

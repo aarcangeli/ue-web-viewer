@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { FullAssetReader } from "./AssetReader";
+import { FullAssetReader } from "../AssetReader";
 import { Asset } from "./Asset";
 
 // Memo: use custom serializer if needed

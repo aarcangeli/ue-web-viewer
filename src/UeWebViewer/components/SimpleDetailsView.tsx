@@ -103,6 +103,7 @@ export function IndentedRow(
 }
 
 export function CollapsableSection(props: {
+  title?: React.ReactNode;
   name: React.ReactNode;
   children?: React.ReactNode;
   initialExpanded?: boolean;
@@ -126,6 +127,11 @@ export function CollapsableSection(props: {
         withPlaceHolder={false}
       >
         <OptionalTreeHandle isVisible={hasChildren} isExpanded={isExpanded} onClick={onClick} />
+        {props.title && (
+          <Text as={"span"} color={"orange.300"} mr={2}>
+            {props.title}:
+          </Text>
+        )}
         <Text cursor={"default"}>{props.name}</Text>
       </IndentedRow>
       {isExpanded && <DetailsViewContext.Provider value={viewContext}>{props.children}</DetailsViewContext.Provider>}

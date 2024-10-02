@@ -1,10 +1,12 @@
-import { makeError, NumericValue, PropertyValue, TaggedProperty } from "./properties";
+import { makeError, PropertyValue, TaggedProperty } from "./properties";
 import { AssetReader } from "../AssetReader";
-import { FPropertyTag, FPropertyTypeName } from "./PropertyTag";
+import { FPropertyTag } from "./PropertyTag";
 import { EOverriddenPropertyOperation, EPropertyTagExtension, EPropertyType } from "./enums";
 import { UStruct } from "../objects/CoreUObject/Class";
 import { EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import { ObjectResolver } from "../objects/CoreUObject/Object";
+
+import { getPropertySerializerFromTag, UnknownPropertyType } from "./readers";
 
 export function readTaggedProperties(
   struct: UStruct,
@@ -38,8 +40,6 @@ export function readTaggedProperties(
 
     properties.push(readTaggedProperty(tag, reader, resolver));
   }
-
-  console.log(properties);
 }
 
 function readTaggedProperty(tag: FPropertyTag, reader: AssetReader, resolver: ObjectResolver) {
@@ -54,29 +54,37 @@ function readTaggedProperty(tag: FPropertyTag, reader: AssetReader, resolver: Ob
       value = { type: "boolean", value: tag.boolVal };
     }
   } else {
-    value = readPropertyValue(tag.typeName, reader.subReader(tag.size), resolver);
+    value = readPropertyValue(tag, reader.subReader(tag.size), resolver);
   }
 
   return new TaggedProperty(tag, value);
 }
 
-function readPropertyValue(
-  typeName: FPropertyTypeName,
-  assetReader: AssetReader,
-  resolver: ObjectResolver,
-): PropertyValue {
+function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: ObjectResolver): PropertyValue {
+  const typeName = tag.typeName;
+
+  let serializer;
   try {
-    const row = readerTable[typeName.propertyType];
-    if (!row) {
-      return makeError(`Unknown property type: ${typeName}`);
+    serializer = getPropertySerializerFromTag(reader, tag);
+  } catch (e) {
+    if (e instanceof UnknownPropertyType) {
+      let message =
+        typeName.toString() != e.typeName.toString()
+          ? `Unknown property type '${e.typeName}' (FULL signature: '${typeName}')`
+          : `Unknown property type '${typeName}'`;
+      return makeError(message);
     }
-    let result = row(assetReader, resolver);
+    return makeError(`Cannot get serializer of '${typeName}': ${e}`);
+  }
+
+  try {
+    let result = serializer(reader, resolver, typeName);
 
     // Check that the reader has read all the bytes.
     // Properties are easy to read, if there are extra bytes, it's likely a bug.
-    if (result.type != "error" && assetReader.remaining > 0) {
+    if (result.type != "error" && reader.remaining > 0) {
       console.warn("Extra bytes found at the end of property value.");
-      return makeError(`Found ${assetReader.remaining} bytes found at the end of property value (type: ${typeName}).`);
+      return makeError(`Found ${reader.remaining} bytes found at the end of property value (type: ${typeName}).`);
     }
 
     return result;
@@ -84,47 +92,3 @@ function readPropertyValue(
     return makeError(`Cannot read property: ${e} (type: ${typeName})`);
   }
 }
-
-type ReaderRow = (reader: AssetReader, resolver: ObjectResolver) => PropertyValue;
-
-function makeNumeric(value: number): NumericValue {
-  return { type: "numeric", value: value };
-}
-
-function makeReaderTable() {
-  const table: ReaderRow[] = [];
-
-  table[EPropertyType.BoolProperty] = (reader: AssetReader) => {
-    let number = reader.readInt8();
-    if (number != 0 && number != 1) {
-      console.warn("Boolean type should be 0 or 1, but got", number);
-    }
-    return { type: "boolean", value: number != 0 };
-  };
-
-  table[EPropertyType.ByteProperty] = (reader) => ({ type: "name", value: reader.readName() });
-  table[EPropertyType.EnumProperty] = (reader) => ({ type: "name", value: reader.readName() });
-
-  table[EPropertyType.Int8Property] = (reader) => makeNumeric(reader.readInt8());
-  table[EPropertyType.Int16Property] = (reader) => makeNumeric(reader.readInt16());
-  table[EPropertyType.Int32Property] = (reader) => makeNumeric(reader.readInt32());
-  table[EPropertyType.IntProperty] = (reader) => makeNumeric(reader.readInt32());
-  table[EPropertyType.Int64Property] = (reader) => makeNumeric(reader.readInt64());
-
-  table[EPropertyType.UInt16Property] = (reader) => makeNumeric(reader.readUInt16());
-  table[EPropertyType.UInt32Property] = (reader) => makeNumeric(reader.readUInt32());
-  table[EPropertyType.UInt64Property] = (reader) => makeNumeric(reader.readUInt64());
-
-  table[EPropertyType.FloatProperty] = (reader) => makeNumeric(reader.readFloat());
-  table[EPropertyType.DoubleProperty] = (reader) => makeNumeric(reader.readDouble());
-
-  table[EPropertyType.NameProperty] = (reader) => ({ type: "name", value: reader.readName() });
-  table[EPropertyType.StrProperty] = (reader) => ({ type: "string", value: reader.readString() });
-  table[EPropertyType.TextProperty] = (reader) => makeError("TextProperty not implemented");
-
-  table[EPropertyType.ObjectProperty] = (reader, resolver) => ({ type: "object", object: resolver(reader) });
-
-  return table;
-}
-
-const readerTable = makeReaderTable();

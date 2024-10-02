@@ -18,7 +18,7 @@ export class AssetReader {
   // Pool of names filled during the reading of the asset.
   protected _names: string[] | null = null;
 
-  constructor(private dataView: DataView) {}
+  constructor(private readonly dataView: DataView) {}
 
   tell() {
     return this.offset;
@@ -161,11 +161,23 @@ export class AssetReader {
     return new FName(this._names[index], number);
   }
 
+  /**
+   * Advance the reader by the given number of bytes and return a new reader that reads from the same buffer.
+   * @param size
+   */
   subReader(size: number) {
     this.ensureBytes(size);
     const subDataView = new DataView(this.dataView.buffer, this.dataView.byteOffset + this.offset, size);
     this.offset += size;
     return this.makeChild(subDataView);
+  }
+
+  /**
+   * Creates a new reader with the same buffer and state.
+   * The changes to the new reader do not affect the original reader.
+   */
+  clone() {
+    return this.makeChild(this.dataView);
   }
 
   private ensureBytes(number: number) {

@@ -1,4 +1,4 @@
-import { Asset } from "../../unreal-engine/Asset";
+import { Asset } from "../../unreal-engine/serialization/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
 import {
@@ -105,8 +105,8 @@ function OpenObjectPreviewButton(props: { asset: Asset; index: number }) {
 }
 
 function ObjectPreviewContent(props: { asset: Asset; index: number }) {
-  const object = props.asset.getObjectByIndex(props.index);
-  const [, setVersion] = React.useState(0);
+  const [asset, setAsset] = React.useState(props.asset);
+  const [object, setObject] = React.useState(() => props.asset.getObjectByIndex(props.index));
 
   return (
     <>
@@ -114,15 +114,17 @@ function ObjectPreviewContent(props: { asset: Asset; index: number }) {
       <ModalContent>
         <ModalHeader>
           Object Preview
-          {/* TODO: this reload doesn't really reload the file */}
           <IconButton
             aria-label={"Refresh Asset"}
             size={"xs"}
             variant={"ghost"}
             icon={<IoReload />}
             onClick={() => {
-              props.asset.reloadObject(object);
-              setVersion((v) => v + 1);
+              asset.reloadAsset().then((asset) => {
+                console.log("Reloaded asset", asset);
+                setAsset(asset);
+                setObject(asset.getByFullName(object.fullName));
+              });
             }}
           />
         </ModalHeader>

@@ -1,12 +1,12 @@
 import { FName } from "../../structs/Name";
 import invariant from "tiny-invariant";
-import { makeNameFromParts } from "../../Asset";
 import { UClass } from "./Class";
-import { AssetReader, FullAssetReader } from "../../AssetReader";
+import { AssetReader } from "../../AssetReader";
 import { TaggedProperty } from "../../properties/properties";
 import { readTaggedProperties } from "../../properties/properties-serialization";
-import { SerializationStatistics } from "../../structs/SerializationStatistics";
-import { FGuid } from "../../structs/Guid";
+import { SerializationStatistics } from "../../serialization/SerializationStatistics";
+import { FGuid } from "./Guid";
+import { makeNameFromParts } from "../../path-utils";
 
 /**
  * All characters are allowed except for '.' and ':'.
@@ -136,7 +136,6 @@ export class UObject {
   }
 
   deserialize(reader: AssetReader, resolver: ObjectResolver) {
-    console.log("UObject.deserialize", this.fullName);
     readTaggedProperties(this.class, this.properties, reader, true, resolver);
 
     // read object guid if present

@@ -1,4 +1,4 @@
-import { FGuid } from "../structs/Guid";
+import { FGuid } from "../objects/CoreUObject/Guid";
 import invariant from "tiny-invariant";
 
 /**

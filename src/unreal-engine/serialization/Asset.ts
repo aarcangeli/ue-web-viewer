@@ -1,16 +1,17 @@
-import { AssetReader, FullAssetReader } from "./AssetReader";
-import { FPackageFileSummary } from "./structs/PackageFileSummary";
-import { FObjectImport } from "./structs/ObjectImport";
-import { FObjectExport } from "./structs/ObjectExport";
+import { AssetReader, FullAssetReader } from "../AssetReader";
+import { FPackageFileSummary } from "../structs/PackageFileSummary";
+import { FObjectImport } from "../structs/ObjectImport";
+import { FObjectExport } from "../structs/ObjectExport";
 import invariant from "tiny-invariant";
-import { EUnrealEngineObjectUE4Version } from "./versioning/ue-versions";
-import { FName, NAME_None } from "./structs/Name";
-import { removeExtension } from "../utils/string-utils";
-import { UObject, WeakObject } from "./objects/CoreUObject/Object";
-import { UPackage } from "./objects/CoreUObject/Package";
-import { CLASS_Package, UnknownClass } from "./objects/global-instances";
-import { UClass } from "./objects/CoreUObject/Class";
-import { SerializationStatistics } from "./structs/SerializationStatistics";
+import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
+import { FName, NAME_None } from "../structs/Name";
+import { removeExtension } from "../../utils/string-utils";
+import { UObject, WeakObject } from "../objects/CoreUObject/Object";
+import { UPackage } from "../objects/CoreUObject/Package";
+import { CLASS_Package, UnknownClass } from "../objects/global-instances";
+import { UClass } from "../objects/CoreUObject/Class";
+import { SerializationStatistics } from "./SerializationStatistics";
+import { makeNameFromParts } from "../path-utils";
 
 /**
  * Mock object which represents an object imported from another package.
@@ -18,25 +19,6 @@ import { SerializationStatistics } from "./structs/SerializationStatistics";
 class MissingImportedObject extends UObject {}
 
 const RecursiveCheck = Symbol("RecursiveCheck");
-
-/**
- * The logic of unreal is unnecessarily complicated.
- *
- * - The first part is a package.
- * - The second part is the object name and is separated by a '.'.
- * - The third part is a subject, and is separated by a ':'.
- * - Further parts are separated by '.'.
- */
-export function makeNameFromParts(parts: any[]) {
-  let result = "";
-  parts.forEach((part, index) => {
-    if (index > 0) {
-      result += index == 2 ? ":" : ".";
-    }
-    result += part;
-  });
-  return result;
-}
 
 /**
  * Permits to read the content of a package file.
@@ -67,8 +49,15 @@ export class Asset {
   /**
    * Construct an asset from the given package name and reader.
    * The created asset retains a reference to the reader to lazily load objects when needed.
+   * @param packageName The name of the package.
+   * @param reader The reader to read the package content.
+   * @param _reload Quick & dirty way to reload the reader.
    */
-  constructor(packageName: string, reader: FullAssetReader) {
+  constructor(
+    packageName: string,
+    reader: FullAssetReader,
+    private _reload: (() => Promise<FullAssetReader>) | null = null,
+  ) {
     invariant(packageName, "Expected a package name");
     invariant(reader.tell() === 0, "Expected to be at the beginning of the stream");
 
@@ -165,13 +154,33 @@ export class Asset {
       // For now, all imports are treated as missing objects
       let object = new MissingImportedObject(UnknownClass, this.getObjectName(index));
       this._importedObjects[-index - 1] = object.asWeakObject();
-      console.log(`Imported object ${index}; parent: ${this.getOuterIndex(index)}`);
       const outerIndex = this.getOuterIndex(index);
       if (outerIndex != 0) {
         this.getObjectByIndex(outerIndex).addInner(object);
       }
       return object;
     }
+  }
+
+  async reloadAsset() {
+    if (!this._reload) {
+      throw new Error("Reloading is not supported");
+    }
+
+    const reader = await this._reload();
+    return new Asset(this._packageName, reader, this._reload);
+  }
+
+  getByFullName(fullName: string) {
+    let exportedObject = this.findIndexByFullName(fullName);
+    if (exportedObject === -1) {
+      throw new Error(`Object with full name ${fullName} not found`);
+    }
+    return this.getObjectByIndex(exportedObject + 1);
+  }
+
+  private findIndexByFullName(fullName: string) {
+    return this.exports.findIndex((e, index) => this.makeFullName(index + 1).toLowerCase() === fullName.toLowerCase());
   }
 
   reloadObject(object: UObject) {
@@ -264,7 +273,6 @@ export class Asset {
 
   private serializeObject(objectExport: FObjectExport, object: UObject) {
     try {
-      console.log(`Reading object ${object.fullName}`);
       this._reader.seek(objectExport.SerialOffset);
       let subReader = this._reader.subReader(objectExport.SerialSize);
       object.deserialize(subReader, (reader) => {
@@ -279,7 +287,6 @@ export class Asset {
       console.warn(`Error deserializing object ${object.fullName}; the object is partially loaded:`, e);
       object.serializationStatistics = new SerializationStatistics(null, String(e));
     }
-    console.log(`END Reading object ${object.fullName}`);
     object.isFullyLoaded = true;
   }
 

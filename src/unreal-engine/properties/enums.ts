@@ -81,7 +81,7 @@ export const propertyById = new Map<EPropertyType, FName>([
 ]);
 
 export const propertyByName = new Map<string, EPropertyType>(
-  [...propertyById.entries()].map(([key, value]) => [value.text, key]),
+  [...propertyById.entries()].map(([key, value]) => [value.text.toLowerCase(), key]),
 );
 
 // Also known as EClassSerializationControlExtension
@@ -117,4 +117,8 @@ export enum EPropertyTagFlags {
   HasPropertyExtensions = 0x04,
   HasBinaryOrNativeSerialize = 0x08,
   BoolTrue = 0x10,
+}
+
+export function getTypeByName(name: FName) {
+  return propertyByName.get(name.text.toLowerCase());
 }

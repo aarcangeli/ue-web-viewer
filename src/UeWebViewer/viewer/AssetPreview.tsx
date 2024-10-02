@@ -1,9 +1,9 @@
-import { Asset } from "../../unreal-engine/Asset";
+import { Asset } from "../../unreal-engine/serialization/Asset";
 import React from "react";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box } from "@chakra-ui/react";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import { PropertyValue } from "../../unreal-engine/properties/properties";
-import { SerializationStatistics } from "../../unreal-engine/structs/SerializationStatistics";
+import { SerializationStatistics } from "../../unreal-engine/serialization/SerializationStatistics";
 import { UObject } from "../../unreal-engine/objects/CoreUObject/Object";
 
 export function ObjectPreview(props: { object: UObject }) {
@@ -51,11 +51,27 @@ function renderValue(key: number, name: string, value: PropertyValue) {
           {value.object?.fullName ?? "null"}
         </IndentedRow>
       );
+    case "struct":
+      return (
+        <CollapsableSection key={key} title={name} name={String(value.value)}>
+          {Object.keys(value.value).map((subKey, index) => (
+            <IndentedRow key={index} title={subKey}>
+              {String(value.value[subKey])}
+            </IndentedRow>
+          ))}
+        </CollapsableSection>
+      );
     case "delegate":
       return (
         <IndentedRow key={key} title={name}>
           {value.object?.fullName ?? "null"}::{value.function.text}
         </IndentedRow>
+      );
+    case "array":
+      return (
+        <CollapsableSection key={key} title={name} name={`size = ${value.value.length}`}>
+          {value.value.map((item, index) => renderValue(index, String(index), item))}
+        </CollapsableSection>
       );
     case "error":
       return (
@@ -75,8 +91,10 @@ function renderStatistics(statistics: SerializationStatistics) {
       <Box p={2}>
         <Alert status="error">
           <AlertIcon />
-          <AlertTitle>The reading of this asset failed; only partial data is available.</AlertTitle>
-          <AlertDescription>{statistics.error}</AlertDescription>
+          <Box>
+            <AlertTitle>The reading of this asset failed; The asset is partially read.</AlertTitle>
+            <AlertDescription>{statistics.error}</AlertDescription>
+          </Box>
         </Alert>
       </Box>
     );
