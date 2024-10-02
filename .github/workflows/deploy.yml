@@ -42,7 +42,7 @@ jobs:
         run: yarn install
 
       - name: Run the tests and generate coverage report
-        run: yarn test --coverage --reporters=default --reporters=jest-junit
+        run: yarn test:coverage
 
       - name: Upload coverage to Codecov
         if: ${{ !cancelled() }}
