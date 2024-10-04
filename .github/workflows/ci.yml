@@ -22,13 +22,16 @@ jobs:
         id: yarn-cache
         uses: actions/setup-node@v4
         with:
-          node-version: "lts"
+          node-version: "latest"
           cache: "yarn"
 
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install --immutable
         shell: bash
+
+      - name: Type check
+        run: yarn typecheck
 
       - name: Run the tests and generate coverage report
         run: yarn test:coverage

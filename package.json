@@ -12,6 +12,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage --reporters=default --reporters=jest-junit",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {
