@@ -35,6 +35,8 @@ jobs:
         run: yarn test:coverage
 
       - name: Build 🏗️
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           yarn build
           run: cp -r .github/start-template/* dist/

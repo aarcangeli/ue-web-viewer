@@ -53,5 +53,8 @@
     "vite-plugin-svgr": "^4.2.0",
     "vite-tsconfig-paths": "^5.0.1",
     "web-vitals": "^2.1.0"
+  },
+  "devDependencies": {
+    "@codecov/vite-plugin": "^1.2.0"
   }
 }
