@@ -1,6 +1,14 @@
 import { NodeApi, NodeRendererProps, Tree, TreeApi } from "react-arborist";
-import useResizeObserver from "use-resize-observer";
-import React, { forwardRef, memo, useCallback, useContext, useImperativeHandle, useMemo, useRef } from "react";
+import React, {
+  forwardRef,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from "react";
 import { Box, IconButton, Text } from "@chakra-ui/react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
 import { searchCtx, SpeedSearch } from "./SpeedSearch";
@@ -22,6 +30,7 @@ export interface MinimalNode {
 
 export interface TreeViewApi<T> {
   selectPath(path: string): Promise<boolean>;
+
   clearSelection(): void;
 }
 
@@ -149,6 +158,12 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
       } as Node<T>;
     });
   }, [generateId, nodes]);
+
+  useEffect(() => {
+    if (treeRef.current && convertedNodes.length == 1) {
+      treeRef.current.open(convertedNodes[0].id);
+    }
+  }, []);
 
   const selectWithoutUserAction = useCallback((id: string) => {
     isUserAction.current = false;
