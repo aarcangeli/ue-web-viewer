@@ -27,34 +27,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository 📦
         uses: actions/checkout@v4
         with:
           lfs: true
 
-      - name: Set up Node.js ${{ matrix.node-version }}
+      - name: Set up Node.js ${{ matrix.node-version }} ☕️
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: "yarn"
 
-      - name: Install dependencies
-        run: yarn install
+      - name: Install dependencies 📥
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install --immutable
+        shell: bash
 
-      - name: Build
+      - name: Build 🏗️
         env:
           # Set to false, otherwise warnings are treated as errors
           CI: false
         run: yarn build
 
-      - name: Setup Pages
+      - name: Setup Pages 📄
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload artifact 🚀
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "build/"
+          path: "dist/"
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages 🚀
         id: deployment
         uses: actions/deploy-pages@v4

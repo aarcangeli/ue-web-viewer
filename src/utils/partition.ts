@@ -20,7 +20,6 @@ export function multiPartition<T>(
   size: number,
   filter: (e: T, idx: number, arr: T[]) => number,
 ): Array<T[]> {
-  partition("asd");
   const result: Array<T[]> = Array.from({ length: size }, () => []);
   for (const e of array) {
     const idx = filter(e, array.indexOf(e), array);
