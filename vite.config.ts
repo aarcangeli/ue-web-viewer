@@ -6,7 +6,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), json5Plugin(), tsconfigPaths()],
-  base: "/ue-web-viewer",
+  base: "",
   server: {
     port: 3000,
   },

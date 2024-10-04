@@ -34,13 +34,24 @@ jobs:
       - name: Run the tests and generate coverage report 🧪
         run: yarn test:coverage
 
+      - name: Build 🏗️
+        run: |
+          yarn build
+          run: cp -r .github/start-template/* dist/
+
+      - name: Upload coverage as artifacts ⬆️
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/lcov-report
+
       - name: Upload artifacts ⬆️
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: coverage
           path: coverage/lcov-report
-          retention-days: 10
 
       - name: Upload coverage to Codecov 🛡️
         if: ${{ !cancelled() }}

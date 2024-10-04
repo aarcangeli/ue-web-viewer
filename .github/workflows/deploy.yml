@@ -43,15 +43,12 @@ jobs:
         shell: bash
 
       - name: Build 🏗️
-        env:
-          # Set to false, otherwise warnings are treated as errors
-          CI: false
         run: yarn build
 
       - name: Setup Pages 📄
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact 🚀
+      - name: Upload artifact ⬆️
         uses: actions/upload-pages-artifact@v3
         with:
           path: "dist/"
