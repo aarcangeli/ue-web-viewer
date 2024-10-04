@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TestActorUE4-0-2 Read MyBasicActor: exports 1`] = `
-Array [
+[
   FObjectExport {
     "ClassIndex": -7,
     "CreateBeforeCreateDependencies": 0,
@@ -1781,7 +1781,7 @@ Array [
 `;
 
 exports[`TestActorUE4-0-2 Read MyBasicActor: imports 1`] = `
-Array [
+[
   FObjectImport {
     "ClassName": "Actor",
     "ClassPackage": "/Script/Engine",
@@ -2093,11 +2093,11 @@ exports[`TestActorUE4-0-2 Read MyBasicActor: summary 1`] = `
 FPackageFileSummary {
   "AssetRegistryDataOffset": 76587,
   "BulkDataStartOffset": 91817,
-  "ChunkIDs": Array [],
+  "ChunkIDs": [],
   "CompatibleWithEngineVersion": "4.0.2-2034640+++depot+UE4-Releases+4.0",
   "CompressionFlags": 0,
   "CustomVersionContainer": FCustomVersionContainer {
-    "Versions": Array [],
+    "Versions": [],
   },
   "DependsOffset": 9302,
   "ExportCount": 71,
@@ -2107,7 +2107,7 @@ FPackageFileSummary {
   "FileVersionUE5": 0,
   "GatherableTextDataCount": 0,
   "GatherableTextDataOffset": 0,
-  "Generations": Array [
+  "Generations": [
     FGenerationInfo {
       "ExportCount": 71,
       "NameCount": 191,
@@ -2141,7 +2141,7 @@ FPackageFileSummary {
 `;
 
 exports[`TestActorUE5-4-4 Read MyBasicActor: exports 1`] = `
-Array [
+[
   FObjectExport {
     "ClassIndex": -10,
     "CreateBeforeCreateDependencies": 0,
@@ -2896,7 +2896,7 @@ Array [
 `;
 
 exports[`TestActorUE5-4-4 Read MyBasicActor: imports 1`] = `
-Array [
+[
   FObjectImport {
     "ClassName": "Actor",
     "ClassPackage": "/Script/Engine",
@@ -3160,11 +3160,11 @@ exports[`TestActorUE5-4-4 Read MyBasicActor: summary 1`] = `
 FPackageFileSummary {
   "AssetRegistryDataOffset": 13480,
   "BulkDataStartOffset": 47621,
-  "ChunkIDs": Array [],
+  "ChunkIDs": [],
   "CompatibleWithEngineVersion": "0.0.0-0",
   "CompressionFlags": 0,
   "CustomVersionContainer": FCustomVersionContainer {
-    "Versions": Array [
+    "Versions": [
       FCustomVersion {
         "FriendlyName": "",
         "Key": "{12f88b9f-8875-4afc-a67c-d90c383abd29}",
@@ -3240,7 +3240,7 @@ FPackageFileSummary {
   "FileVersionUE5": 1012,
   "GatherableTextDataCount": 0,
   "GatherableTextDataOffset": 0,
-  "Generations": Array [
+  "Generations": [
     FGenerationInfo {
       "ExportCount": 30,
       "NameCount": 173,

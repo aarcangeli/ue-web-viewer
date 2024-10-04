@@ -12,6 +12,8 @@ import { Asset } from "./Asset";
 //   },
 // });
 
+const root = path.join(__dirname, "..");
+
 // Try to load an asset saved with UE4.0.2
 describe("TestActorUE4-0-2", () => {
   let asset: Asset;
@@ -77,7 +79,7 @@ describe("TestActorUE5-4-4", () => {
  * @param filename
  */
 function readAsset(filename: string) {
-  const fullPath = path.join(__dirname, filename);
+  const fullPath = path.join(root, filename);
   const fileData = fs.readFileSync(fullPath);
   const reader = new FullAssetReader(new DataView(fileData.buffer, 0, fileData.byteLength));
   const packageName = path.basename(filename, path.extname(filename));
