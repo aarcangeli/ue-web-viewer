@@ -55,12 +55,13 @@ jobs:
           name: dist
           path: dist
 
+      # If the test fails, the coverage will not be uploaded
       - name: Upload coverage to Codecov 🛡️
-        if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
+      # If the test fails, we still want to upload the test results
       - name: Upload test results to Codecov 🛡️
         if: ${{ !cancelled() }}
         uses: codecov/test-results-action@v1
