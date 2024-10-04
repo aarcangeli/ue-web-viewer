@@ -1,5 +1,4 @@
 import { AssetReader } from "../../AssetReader";
-import { EUnrealEngineObjectUE5Version } from "../../versioning/ue-versions";
 
 export class FPlane {
   X: number = 0;

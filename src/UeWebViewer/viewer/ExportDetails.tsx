@@ -47,7 +47,7 @@ function makeTree(asset: Asset): Node[] {
   };
 
   const convertedTable = asset.exports.map((exportObject, index) => {
-    let fullName = asset.makeFullName(exportObject.ClassIndex);
+    const fullName = asset.makeFullName(exportObject.ClassIndex);
     return new Node(exportObject, index + 1, fullName);
   });
 

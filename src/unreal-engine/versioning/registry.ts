@@ -5,6 +5,7 @@ import invariant from "tiny-invariant";
  * Represents the guid of a custom version.
  * @param E The enum of the custom version.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class CustomVersionGuid<E> {
   readonly friendlyName: string;
   readonly guid: FGuid;

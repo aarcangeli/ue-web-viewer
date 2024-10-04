@@ -1,5 +1,4 @@
 import { AssetReader } from "../AssetReader";
-import { FPackageFileSummary } from "./PackageFileSummary";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import { FName, NAME_None } from "./Name";
 

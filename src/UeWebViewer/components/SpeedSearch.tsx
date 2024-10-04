@@ -28,6 +28,7 @@ export function SpeedSearch(props: SpeedSearchProps) {
   const ref = useRef<HTMLInputElement>(null);
   const [isSpeedSearchVisible, setSpeedSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState<PatternQuery | undefined>(undefined);
+  const onHide = props.onHide;
 
   useEffect(() => {
     if (isSpeedSearchVisible) {
@@ -38,8 +39,8 @@ export function SpeedSearch(props: SpeedSearchProps) {
   const onHideSpeedSearch = useCallback(() => {
     setSpeedSearchVisible(false);
     setSearchQuery(undefined);
-    props.onHide();
-  }, []);
+    onHide();
+  }, [onHide]);
 
   return (
     <Box

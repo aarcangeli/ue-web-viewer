@@ -20,7 +20,3 @@ PACKAGE_CoreUObject.addInner(CLASS_Package);
 /// A special class which represents an unknown class.
 export const UnknownClass = new UClass(CLASS_Class, FName.fromString("[Unknown Class]"), null);
 export const UnknownObject = new UObject(UnknownClass, FName.fromString("[Unknown Object]"));
-
-// Exported for debugging purposes
-// @ts-ignore
-window["CoreUObject"] = PACKAGE_CoreUObject;

@@ -1,11 +1,10 @@
 import { makeError, PropertyValue, TaggedProperty } from "./properties";
 import { AssetReader } from "../AssetReader";
 import { FPropertyTag } from "./PropertyTag";
-import { EOverriddenPropertyOperation, EPropertyTagExtension, EPropertyType } from "./enums";
+import { EPropertyTagExtension, EPropertyType } from "./enums";
 import { UStruct } from "../objects/CoreUObject/Class";
 import { EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import { ObjectResolver } from "../objects/CoreUObject/Object";
-
 import { getPropertySerializerFromTag, UnknownPropertyType } from "./readers";
 
 export function readTaggedProperties(
@@ -19,20 +18,18 @@ export function readTaggedProperties(
 
   properties.length = 0;
 
-  let enableOverridableSerialization = false;
-  let operation = EOverriddenPropertyOperation.None;
-
   if (
     isUClass &&
     reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.PROPERTY_TAG_EXTENSION_AND_OVERRIDABLE_SERIALIZATION
   ) {
     const serializationControl: EPropertyTagExtension = reader.readUInt8();
     if (serializationControl & EPropertyTagExtension.OverridableInformation) {
-      operation = reader.readUInt8();
+      // skip operation
+      reader.readUInt8();
     }
   }
 
-  while (true) {
+  for (;;) {
     const tag = FPropertyTag.fromStream(reader);
     if (tag.name.isNone) {
       break;
@@ -68,7 +65,7 @@ function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: Obj
     serializer = getPropertySerializerFromTag(reader, tag);
   } catch (e) {
     if (e instanceof UnknownPropertyType) {
-      let message =
+      const message =
         typeName.toString() != e.typeName.toString()
           ? `Unknown property type '${e.typeName}' (FULL signature: '${typeName}')`
           : `Unknown property type '${typeName}'`;
@@ -78,7 +75,7 @@ function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: Obj
   }
 
   try {
-    let result = serializer(reader, resolver, typeName);
+    const result = serializer(reader, resolver, typeName);
 
     // Check that the reader has read all the bytes.
     // Properties are easy to read, if there are extra bytes, it's likely a bug.

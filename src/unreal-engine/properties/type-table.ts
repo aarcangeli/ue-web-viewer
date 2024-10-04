@@ -15,7 +15,7 @@ function makeRow(packageName: string, structName: string): [FName, FName] {
   return [FName.fromString(structName), FName.fromString(packageName)];
 }
 
-let values = Object.keys(structTyped).flatMap((packageName) => {
+const values = Object.keys(structTyped).flatMap((packageName) => {
   // const value = structs[key] as string[];
   // return value.map(([packageName, structName]) => makeRow(packageName, structName));
   return structTyped[packageName].map((structName) => makeRow(packageName, structName));

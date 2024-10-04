@@ -85,7 +85,7 @@ export class FNameMap<V> {
     return this._map.delete(getMapKey(key));
   }
 
-  forEach(fn: (value: V, key: FName, map: FNameMap<V>) => void, thisArg?: any) {
+  forEach(fn: (value: V, key: FName, map: FNameMap<V>) => void, thisArg?: unknown) {
     this._map.forEach((value) => {
       fn.call(thisArg, value[1], value[0], this);
     });

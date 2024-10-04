@@ -1,7 +1,7 @@
 import { Box, Flex, HStack, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 
-const NavLink = (props: { children: React.ReactNode; onClick?: () => void; href?: string }) => {
+export const NavLink = (props: { children: React.ReactNode; onClick?: () => void; href?: string }) => {
   const { children } = props;
 
   return (

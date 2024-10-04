@@ -30,7 +30,7 @@ const tabNames = [
 
 function getTabIndexFromHash() {
   if (document.location.hash) {
-    let hash = document.location.hash.slice(1).toLowerCase();
+    const hash = document.location.hash.slice(1).toLowerCase();
     return tabNames.findIndex((tab) => tab.id === hash);
   }
   return 0;

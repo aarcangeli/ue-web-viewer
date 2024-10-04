@@ -34,7 +34,7 @@ export class Asset {
   readonly exports: ReadonlyArray<FObjectExport> = [];
 
   /// Cache of exported objects.
-  private readonly _exportedObjects: Array<WeakObject | Symbol> = [];
+  private readonly _exportedObjects: Array<WeakObject | symbol> = [];
 
   /// Cache of imported objects.
   private readonly _importedObjects: Array<WeakObject> = [];
@@ -137,7 +137,7 @@ export class Asset {
     invariant(this.isIndexValid(index), `Invalid export index ${index}`);
     invariant(index != 0, `Expected a valid export index`);
 
-    let currentObject = this.getCachedObjectByIndex(index);
+    const currentObject = this.getCachedObjectByIndex(index);
     if (currentObject) {
       if (full && !currentObject.isFullyLoaded) {
         this.reloadObject(currentObject);
@@ -152,7 +152,7 @@ export class Asset {
       invariant(index < 0);
       // todo: import from another asset
       // For now, all imports are treated as missing objects
-      let object = new MissingImportedObject(UnknownClass, this.getObjectName(index));
+      const object = new MissingImportedObject(UnknownClass, this.getObjectName(index));
       this._importedObjects[-index - 1] = object.asWeakObject();
       const outerIndex = this.getOuterIndex(index);
       if (outerIndex != 0) {
@@ -172,7 +172,7 @@ export class Asset {
   }
 
   getByFullName(fullName: string) {
-    let exportedObject = this.findIndexByFullName(fullName);
+    const exportedObject = this.findIndexByFullName(fullName);
     if (exportedObject === -1) {
       throw new Error(`Object with full name ${fullName} not found`);
     }
@@ -199,7 +199,7 @@ export class Asset {
    * If not found, returns 0.
    */
   private findRootExportByName(exportName: string) {
-    let number = this.exports.findIndex((e) => e.OuterIndex == 0 && e.ObjectName.text === exportName);
+    const number = this.exports.findIndex((e) => e.OuterIndex == 0 && e.ObjectName.text === exportName);
     return number + 1;
   }
 
@@ -225,7 +225,7 @@ export class Asset {
   private getCachedObjectByIndex(index: number) {
     invariant(this.isIndexValid(index), `Invalid index ${index}`);
 
-    let value: WeakObject | Symbol;
+    let value: WeakObject | symbol;
     if (index == 0) {
       return null;
     } else if (index > 0) {
@@ -274,7 +274,7 @@ export class Asset {
   private serializeObject(objectExport: FObjectExport, object: UObject) {
     try {
       this._reader.seek(objectExport.SerialOffset);
-      let subReader = this._reader.subReader(objectExport.SerialSize);
+      const subReader = this._reader.subReader(objectExport.SerialSize);
       object.deserialize(subReader, (reader) => {
         const index = reader.readInt32();
         return this.getObjectByIndex(index, false);

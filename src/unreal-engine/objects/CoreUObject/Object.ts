@@ -98,7 +98,9 @@ export class UObject {
   get fullName(): string {
     const parts = [];
 
-    let it: UObject | null = this;
+    parts.push(this.nameString);
+
+    let it = this.outer;
     while (it !== null) {
       parts.push(it.nameString);
       it = it.outer;

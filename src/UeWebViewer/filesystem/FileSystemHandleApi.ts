@@ -42,7 +42,7 @@ export class FileHandleApi implements FileApi {
     if (this.fileHandle.kind === "directory") {
       throw new Error("Cannot write to a directory");
     }
-    let fileHandle = this.fileHandle as FileSystemFileHandle;
+    const fileHandle = this.fileHandle as FileSystemFileHandle;
     const writable = await fileHandle.createWritable();
     await writable.write(data);
     await writable.close();

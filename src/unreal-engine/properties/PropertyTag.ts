@@ -1,5 +1,5 @@
 import { FName, NAME_None } from "../structs/Name";
-import { EGuidFormats, FGuid, GUID_None } from "../objects/CoreUObject/Guid";
+import { EGuidFormats, FGuid } from "../objects/CoreUObject/Guid";
 import { AssetReader } from "../AssetReader";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import invariant from "tiny-invariant";

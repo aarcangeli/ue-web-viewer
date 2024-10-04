@@ -69,7 +69,7 @@ export function IndentedRow(
   props: HTMLChakraProps<"div"> & { title?: string; withPlaceHolder?: boolean; bgHover?: CSS.Property.Color },
 ) {
   const viewContext = useViewContext();
-  const { children, title, withPlaceHolder, bg, bgHover, ...rest } = props;
+  const { title, withPlaceHolder, bg, bgHover, ...rest } = props;
 
   return (
     <Flex

@@ -36,7 +36,9 @@ export default function DropArea(props: {
       if (event.dataTransfer && isDragActiveRef.current) {
         event.dataTransfer.dropEffect = "link";
       }
-    } catch {}
+    } catch (e) {
+      console.warn("Failed to set dropEffect", e);
+    }
     event.preventDefault();
   }, []);
 

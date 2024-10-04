@@ -45,11 +45,6 @@ export enum FEnterpriseObjectVersion {
   /// Change CoreTechParametricSurface serialization to be more efficient
   CoreTechParametricSurfaceOptim = 10,
   // endregion
-
-  // region Introduced with UE 4.22.0
-  /// Addition of pointer to UDatasmithDataPrepRecipe
-  HasUDatasmithDataPrepRecipe = 6,
-  // endregion
 }
 
 export const FEnterpriseObjectVersionDetails: VersionDetails[] = [

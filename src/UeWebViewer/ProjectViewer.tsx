@@ -31,7 +31,7 @@ function makeNode(node: FileApi): FileNode {
 
 async function loadChildNodes(node: FileNode): Promise<FileNode[]> {
   await fakeWait();
-  let files = await node.file.children();
+  const files = await node.file.children();
   files.sort((a, b) => {
     if (a.kind !== b.kind) {
       return a.kind === "directory" ? -1 : 1;
@@ -47,12 +47,12 @@ export function ProjectViewer(props: Props) {
   const [currentFile, setCurrentFile] = useState<FileApi | null>(null);
   const tree = useRef<TreeViewApi<FileNode>>(null);
 
-  let project = props.project;
+  const project = props.project;
 
   const nodes = useMemo(() => [makeNode(project)], [project]);
   const projectApi = useMemo(() => new ProjectApi(project.name), [project]);
 
-  let onChoosePath = useCallback((path: string | undefined) => {
+  const onChoosePath = useCallback((path: string | undefined) => {
     if (path) {
       tree.current?.selectPath(path);
     } else {
