@@ -39,7 +39,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           yarn build
-          run: cp -r .github/start-template/* dist/
+          cp -r .github/start-template/* dist/
 
       - name: Upload coverage as artifacts ⬆️
         if: ${{ !cancelled() }}
