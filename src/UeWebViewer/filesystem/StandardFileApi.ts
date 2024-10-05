@@ -5,7 +5,7 @@ import type { FileApi } from "./FileApi";
  * This api doesn't support directory operations and is read-only.
  */
 export class StandardFileApi implements FileApi {
-  kind = "file" as const;
+  readonly kind = "file";
   isWritable = false;
   parent = null;
   name: string;

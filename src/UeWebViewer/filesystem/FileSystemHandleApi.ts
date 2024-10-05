@@ -1,15 +1,17 @@
 import type { FileApi } from "./FileApi";
 
 export class FileHandleApi implements FileApi {
-  kind = this.fileHandle.kind;
-  isWritable = true;
+  readonly kind: "file" | "directory";
+  readonly isWritable = true;
 
   constructor(
     private fileHandle: FileSystemHandle,
     public parent: FileApi | null,
     public fullPath: string,
     private isEmptyDir: boolean,
-  ) {}
+  ) {
+    this.kind = this.fileHandle.kind;
+  }
 
   isEmptyDirectory(): boolean {
     return this.isEmptyDir;
