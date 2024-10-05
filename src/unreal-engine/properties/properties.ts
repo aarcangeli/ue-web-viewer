@@ -51,7 +51,7 @@ export type ObjectValue = {
 
 export type StructValue = {
   type: "struct";
-  value: Record<string, unknown>;
+  value: Record<string, any>;
 };
 
 export type ScriptDelegate = {

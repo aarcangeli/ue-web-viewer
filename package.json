@@ -9,11 +9,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "preview": "vite preview",
     "test": "jest",
     "test:coverage": "jest --coverage --reporters=default --reporters=jest-junit",
-    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "preview": "vite preview"
+    "eslint": "eslint .",
+    "eslint:dump-config": "node eslint.config.js --dump",
+    "check:all": "yarn typecheck && yarn eslint"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
