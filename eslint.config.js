@@ -1,6 +1,6 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
+import eslint from "typescript-eslint";
 import reactPlugin from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
@@ -12,7 +12,7 @@ const config = [
   },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
+  ...eslint.configs.recommended,
   reactPlugin.configs.flat.recommended,
   {
     plugins: {
@@ -24,6 +24,11 @@ const config = [
       "react-hooks/exhaustive-deps": "error",
       "@typescript-eslint/no-explicit-any": "warn",
     },
+  },
+  // Enable Node.js globals for scripts and config files
+  {
+    files: ["eslint.config.js", "scripts/**"],
+    languageOptions: { globals: globals.node },
   },
 ];
 export default config;
