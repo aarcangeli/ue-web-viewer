@@ -1,5 +1,5 @@
 import { FGuid, GUID_None } from "../objects/CoreUObject/Guid";
-import { AssetReader } from "../AssetReader";
+import type { AssetReader } from "../AssetReader";
 
 /**
  * enum class ECustomVersionSerializationFormat : int8 {

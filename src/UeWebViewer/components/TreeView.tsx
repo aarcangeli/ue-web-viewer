@@ -1,4 +1,5 @@
-import { NodeApi, NodeRendererProps, Tree, TreeApi } from "react-arborist";
+import type { NodeApi, NodeRendererProps, TreeApi } from "react-arborist";
+import { Tree } from "react-arborist";
 import React, {
   forwardRef,
   memo,
@@ -12,7 +13,7 @@ import React, {
 import { Box, IconButton, Text } from "@chakra-ui/react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
 import { searchCtx, SpeedSearch } from "./SpeedSearch";
-import { PatternQuery } from "../../utils/PatternQuery";
+import type { PatternQuery } from "../../utils/PatternQuery";
 
 const LINE_HEIGHT = 32;
 const GAP = 1;

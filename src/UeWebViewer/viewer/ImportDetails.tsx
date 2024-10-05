@@ -1,10 +1,11 @@
-import { Asset } from "../../unreal-engine/serialization/Asset";
+import type { Asset } from "../../unreal-engine/serialization/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
-import { FObjectImport } from "../../unreal-engine/structs/ObjectImport";
+import type { FObjectImport } from "../../unreal-engine/structs/ObjectImport";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { partition } from "../../utils/partition";
-import { ProjectApi, useProjectApi } from "../ProjectApi";
+import type { ProjectApi } from "../ProjectApi";
+import { useProjectApi } from "../ProjectApi";
 import { makeObjectTitle } from "./commons";
 import { FName } from "../../unreal-engine/structs/Name";
 

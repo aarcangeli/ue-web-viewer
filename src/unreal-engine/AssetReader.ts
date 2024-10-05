@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
+import type { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
 import { FName } from "./structs/Name";
 
 /**

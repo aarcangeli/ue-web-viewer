@@ -1,5 +1,5 @@
 import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import { FileApi } from "../filesystem/FileApi";
+import type { FileApi } from "../filesystem/FileApi";
 import React, { useEffect, useState } from "react";
 import { FullAssetReader } from "../../unreal-engine/AssetReader";
 import invariant from "tiny-invariant";

@@ -1,10 +1,11 @@
-import { makeError, PropertyValue, TaggedProperty } from "./properties";
-import { AssetReader } from "../AssetReader";
+import type { PropertyValue } from "./properties";
+import { makeError, TaggedProperty } from "./properties";
+import type { AssetReader } from "../AssetReader";
 import { FPropertyTag } from "./PropertyTag";
 import { EPropertyTagExtension, EPropertyType } from "./enums";
-import { UStruct } from "../objects/CoreUObject/Class";
+import type { UStruct } from "../objects/CoreUObject/Class";
 import { EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
-import { ObjectResolver } from "../objects/CoreUObject/Object";
+import type { ObjectResolver } from "../objects/CoreUObject/Object";
 import { getPropertySerializerFromTag, UnknownPropertyType } from "./readers";
 
 export function readTaggedProperties(

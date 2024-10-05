@@ -1,4 +1,4 @@
-import { AssetReader, FullAssetReader } from "../AssetReader";
+import type { AssetReader, FullAssetReader } from "../AssetReader";
 import { FPackageFileSummary } from "../structs/PackageFileSummary";
 import { FObjectImport } from "../structs/ObjectImport";
 import { FObjectExport } from "../structs/ObjectExport";
@@ -9,7 +9,7 @@ import { removeExtension } from "../../utils/string-utils";
 import { UObject, WeakObject } from "../objects/CoreUObject/Object";
 import { UPackage } from "../objects/CoreUObject/Package";
 import { CLASS_Package, UnknownClass } from "../objects/global-instances";
-import { UClass } from "../objects/CoreUObject/Class";
+import type { UClass } from "../objects/CoreUObject/Class";
 import { SerializationStatistics } from "./SerializationStatistics";
 import { makeNameFromParts } from "../path-utils";
 

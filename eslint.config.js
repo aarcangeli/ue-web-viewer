@@ -4,8 +4,13 @@ import eslint from "typescript-eslint";
 import reactPlugin from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import { defineFlatConfig } from "eslint-define-config";
 
-const config = [
+const config = defineFlatConfig([
+  {
+    name: "Globally ignored files",
+    ignores: ["dist/**"],
+  },
   pluginJs.configs.recommended,
   ...eslint.configs.recommended,
   reactPlugin.configs.flat.recommended,
@@ -31,18 +36,19 @@ const config = [
     },
   },
   {
-    name: "Disabled rules",
-    rules: {
-      // Allow the use of `any` in TypeScript
-      "@typescript-eslint/no-explicit-any": "warn",
-    },
-  },
-  {
     name: "Node.js globals",
     files: ["eslint.config.js", "scripts/**"],
     languageOptions: { globals: globals.node },
   },
-];
+  {
+    name: "Custom rules",
+    rules: {
+      // Allow the use of `any` in TypeScript
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/consistent-type-imports": "error",
+    },
+  },
+]);
 export default config;
 
 // Dump the config if the --dump flag is passed

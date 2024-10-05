@@ -1,7 +1,8 @@
-import { FileApi } from "./filesystem/FileApi";
+import type { FileApi } from "./filesystem/FileApi";
 import { Flex, useColorModeValue } from "@chakra-ui/react";
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { MinimalNode, TreeView, TreeViewApi } from "./components/TreeView";
+import type { MinimalNode, TreeViewApi } from "./components/TreeView";
+import { TreeView } from "./components/TreeView";
 import { fakeWait } from "./config";
 import { FileViewer } from "./viewer/FileViewer";
 import { BiFileBlank, BiFolder } from "react-icons/bi";

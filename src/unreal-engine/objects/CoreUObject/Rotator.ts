@@ -1,4 +1,4 @@
-import { AssetReader } from "../../AssetReader";
+import type { AssetReader } from "../../AssetReader";
 
 /**
  * struct FRotator {

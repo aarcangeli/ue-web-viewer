@@ -1,10 +1,10 @@
-import { FName } from "../../structs/Name";
+import type { FName } from "../../structs/Name";
 import invariant from "tiny-invariant";
-import { UClass } from "./Class";
-import { AssetReader } from "../../AssetReader";
-import { TaggedProperty } from "../../properties/properties";
+import type { UClass } from "./Class";
+import type { AssetReader } from "../../AssetReader";
+import type { TaggedProperty } from "../../properties/properties";
 import { readTaggedProperties } from "../../properties/properties-serialization";
-import { SerializationStatistics } from "../../serialization/SerializationStatistics";
+import type { SerializationStatistics } from "../../serialization/SerializationStatistics";
 import { FGuid } from "./Guid";
 import { makeNameFromParts } from "../../path-utils";
 

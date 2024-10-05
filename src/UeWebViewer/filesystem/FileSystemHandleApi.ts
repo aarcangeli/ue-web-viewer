@@ -1,4 +1,4 @@
-import { FileApi } from "./FileApi";
+import type { FileApi } from "./FileApi";
 
 export class FileHandleApi implements FileApi {
   kind = this.fileHandle.kind;

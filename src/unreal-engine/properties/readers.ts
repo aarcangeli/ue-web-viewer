@@ -1,7 +1,8 @@
-import { AssetReader } from "../AssetReader";
-import { ObjectResolver } from "../objects/CoreUObject/Object";
-import { FPropertyTag, FPropertyTypeName } from "./PropertyTag";
-import { NumericValue, PropertyValue } from "./properties";
+import type { AssetReader } from "../AssetReader";
+import type { ObjectResolver } from "../objects/CoreUObject/Object";
+import type { FPropertyTypeName } from "./PropertyTag";
+import { FPropertyTag } from "./PropertyTag";
+import type { NumericValue, PropertyValue } from "./properties";
 import { FName, FNameMap } from "../structs/Name";
 import { NAME_CoreUObject } from "../objects/names";
 import { FGuid } from "../objects/CoreUObject/Guid";

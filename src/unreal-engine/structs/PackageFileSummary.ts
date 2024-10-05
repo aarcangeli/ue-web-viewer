@@ -1,4 +1,4 @@
-import { AssetReader } from "../AssetReader";
+import type { AssetReader } from "../AssetReader";
 import { EPackageFlags } from "../enums";
 import { FGuid, GUID_None } from "../objects/CoreUObject/Guid";
 import { FEngineVersion } from "./EngineVersion";

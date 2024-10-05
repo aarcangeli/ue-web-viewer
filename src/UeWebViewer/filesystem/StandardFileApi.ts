@@ -1,4 +1,4 @@
-import { FileApi } from "./FileApi";
+import type { FileApi } from "./FileApi";
 
 /**
  * File wrapper for the standard File API.

@@ -1,4 +1,4 @@
-import { AssetReader } from "../../AssetReader";
+import type { AssetReader } from "../../AssetReader";
 
 export class FVector {
   X: number = 0;
