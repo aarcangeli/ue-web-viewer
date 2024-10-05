@@ -4,6 +4,7 @@ import invariant from "tiny-invariant";
 /**
  * Represents the guid of a custom version.
  * @param E The enum of the custom version.
+ * @param T The type of the custom version (used for type checking).
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class CustomVersionGuid<E> {
