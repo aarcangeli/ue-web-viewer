@@ -6,7 +6,7 @@
  * - The third part is a subject, and is separated by a ':'.
  * - Further parts are separated by '.'.
  */
-export function makeNameFromParts(parts: any[]) {
+export function makeNameFromParts(parts: unknown[]) {
   let result = "";
   parts.forEach((part, index) => {
     if (index > 0) {

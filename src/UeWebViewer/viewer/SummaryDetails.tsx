@@ -1,4 +1,4 @@
-import { Asset } from "../../unreal-engine/serialization/Asset";
+import type { Asset } from "../../unreal-engine/serialization/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React from "react";
 

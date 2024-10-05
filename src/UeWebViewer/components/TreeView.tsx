@@ -1,4 +1,5 @@
-import { NodeApi, NodeRendererProps, Tree, TreeApi } from "react-arborist";
+import type { NodeApi, NodeRendererProps, TreeApi } from "react-arborist";
+import { Tree } from "react-arborist";
 import React, {
   forwardRef,
   memo,
@@ -12,7 +13,7 @@ import React, {
 import { Box, IconButton, Text } from "@chakra-ui/react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
 import { searchCtx, SpeedSearch } from "./SpeedSearch";
-import { PatternQuery } from "../../utils/PatternQuery";
+import type { PatternQuery } from "../../utils/PatternQuery";
 
 const LINE_HEIGHT = 32;
 const GAP = 1;
@@ -32,6 +33,8 @@ export interface TreeViewApi<T> {
   selectPath(path: string): Promise<boolean>;
 
   clearSelection(): void;
+
+  get root(): T;
 }
 
 interface Props<T extends MinimalNode> {
@@ -107,7 +110,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
         return node.currentLoading;
       }
 
-      let promise = loadAndProcessChildren(node.value)
+      const promise = loadAndProcessChildren(node.value)
         .then((children) => {
           if (promise === node.currentLoading) {
             // If the new list is empty, select the parent node
@@ -163,7 +166,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
     if (treeRef.current && convertedNodes.length == 1) {
       treeRef.current.open(convertedNodes[0].id);
     }
-  }, []);
+  }, [convertedNodes]);
 
   const selectWithoutUserAction = useCallback((id: string) => {
     isUserAction.current = false;
@@ -178,7 +181,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
     async selectPath(path: string) {
       let nodeList = convertedNodes;
       let foundElement: Node<T> | null = null;
-      for (let part of path.split("/")) {
+      for (const part of path.split("/")) {
         if (foundElement) {
           treeRef.current?.open(foundElement.id);
         }
@@ -199,10 +202,14 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
     clearSelection() {
       treeRef.current?.deselectAll();
     },
+    get root() {
+      return convertedNodes[0].value;
+    },
   }));
 
   // Everytime the version changes, force the tree to re-render
   // This is the only way to force the tree to re-render
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const data = useMemo(() => [...convertedNodes], [convertedNodes, version]);
 
   const onToggle = useCallback(
@@ -225,7 +232,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
   );
 
   const doFind = useCallback((query: PatternQuery, direction: null | "up" | "down") => {
-    let tree = treeRef.current;
+    const tree = treeRef.current;
     if (!tree) return;
 
     const visibleNodes = tree.visibleNodes;
@@ -274,7 +281,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
         onNavigate={doFind}
         onSearch={(value) => doFind(value, null)}
         onHide={() => {
-          let nodes = treeRef.current?.selectedNodes;
+          const nodes = treeRef.current?.selectedNodes;
           if (nodes && nodes?.length > 0) {
             treeRef.current?.focus(nodes[0].id);
           } else {

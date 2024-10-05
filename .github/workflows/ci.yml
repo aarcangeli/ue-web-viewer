@@ -28,8 +28,14 @@ jobs:
         run: yarn install --immutable
         shell: bash
 
+      - name: Dump ESLint configuration 📝
+        run: yarn eslint:dump-config
+
       - name: Type check 🔍
         run: yarn typecheck
+
+      - name: ESLint 🧹
+        run: yarn eslint
 
       - name: Run the tests and generate coverage report 🧪
         run: yarn test:coverage

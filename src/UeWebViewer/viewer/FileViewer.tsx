@@ -1,5 +1,5 @@
 import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import { FileApi } from "../filesystem/FileApi";
+import type { FileApi } from "../filesystem/FileApi";
 import React, { useEffect, useState } from "react";
 import { FullAssetReader } from "../../unreal-engine/AssetReader";
 import invariant from "tiny-invariant";
@@ -30,7 +30,7 @@ const tabNames = [
 
 function getTabIndexFromHash() {
   if (document.location.hash) {
-    let hash = document.location.hash.slice(1).toLowerCase();
+    const hash = document.location.hash.slice(1).toLowerCase();
     return tabNames.findIndex((tab) => tab.id === hash);
   }
   return 0;

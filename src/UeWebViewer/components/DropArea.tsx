@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/react";
-import React, { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 export default function DropArea(props: {
   children?: ReactNode | undefined;
@@ -36,7 +37,9 @@ export default function DropArea(props: {
       if (event.dataTransfer && isDragActiveRef.current) {
         event.dataTransfer.dropEffect = "link";
       }
-    } catch {}
+    } catch (e) {
+      console.warn("Failed to set dropEffect", e);
+    }
     event.preventDefault();
   }, []);
 

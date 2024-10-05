@@ -24,20 +24,20 @@ export function useHistoryState(onChoosePath: (path: string | undefined) => void
       onChoosePath(currentPath);
       lastPathReported.current = currentPath;
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     window.addEventListener("popstate", reloadPath);
     return () => window.removeEventListener("popstate", reloadPath);
   }, [reloadPath]);
 
-  useEffect(reloadPath, []);
+  useEffect(reloadPath, [reloadPath]);
 }
 
 export function navigate(path: string | undefined) {
   const currentPath = window.history.state?.path;
   if (currentPath !== path) {
-    let url = path ? "?path=" + stupidEncodePath(path) : "?";
+    const url = path ? "?path=" + stupidEncodePath(path) : "?";
     const hash = window.location.hash;
     window.history.pushState({ path }, "", url + hash);
     window.dispatchEvent(new PopStateEvent("popstate"));

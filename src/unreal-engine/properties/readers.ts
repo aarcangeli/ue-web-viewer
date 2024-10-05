@@ -1,7 +1,8 @@
-import { AssetReader } from "../AssetReader";
-import { ObjectResolver } from "../objects/CoreUObject/Object";
-import { FPropertyTag, FPropertyTypeName } from "./PropertyTag";
-import { NumericValue, PropertyValue } from "./properties";
+import type { AssetReader } from "../AssetReader";
+import type { ObjectResolver } from "../objects/CoreUObject/Object";
+import type { FPropertyTypeName } from "./PropertyTag";
+import { FPropertyTag } from "./PropertyTag";
+import type { NumericValue, PropertyValue } from "./properties";
 import { FName, FNameMap } from "../structs/Name";
 import { NAME_CoreUObject } from "../objects/names";
 import { FGuid } from "../objects/CoreUObject/Guid";
@@ -64,7 +65,7 @@ export function getPropertySerializer(
   fileVersionUE5: EUnrealEngineObjectUE5Version,
   typeName: FPropertyTypeName,
 ): PropertySerializer {
-  let propertyType = typeName.propertyType;
+  const propertyType = typeName.propertyType;
 
   if (propertyType == EPropertyType.ArrayProperty) {
     return getArraySerializer(typeName.getParameter(0), fileVersionUE5);
@@ -74,7 +75,7 @@ export function getPropertySerializer(
     return getStructSerializer(fileVersionUE5, typeName.getParameter(0));
   }
 
-  let foundValue = readerByPropertyType[propertyType];
+  const foundValue = readerByPropertyType[propertyType];
   if (foundValue) {
     return foundValue;
   }
@@ -86,11 +87,11 @@ function makeCombinedName(packageName: FName | string, objectName: FName | strin
   return FName.fromString(`${packageName}.${objectName}`);
 }
 
-function makeStructReader<T extends Object>(generator: (reader: AssetReader) => T): PropertySerializer {
+function makeStructReader<T extends object>(generator: (reader: AssetReader) => T): PropertySerializer {
   return (reader) => ({ type: "struct", value: generator(reader) });
 }
 
-function makeLargeWorld<T extends Object>(
+function makeLargeWorld<T extends object>(
   generatorFloat: (reader: AssetReader) => T,
   generatorDouble: (reader: AssetReader) => T,
 ): StructPropertySerializer {
@@ -118,7 +119,7 @@ function findFallbackReader(
   {
     const packageName = typeTable.get(structName);
     if (packageName) {
-      let value = getByStructName(fileVersionUE5, packageName, structName);
+      const value = getByStructName(fileVersionUE5, packageName, structName);
       if (value) {
         console.log(`Guess struct type: ${packageName}.${structName}`);
         return value;
@@ -161,7 +162,7 @@ function getByStructName(
   packageName: FName,
   structName: FName,
 ): PropertySerializer | undefined {
-  let newVar = readerByStructName.get(makeCombinedName(packageName, structName));
+  const newVar = readerByStructName.get(makeCombinedName(packageName, structName));
   if (newVar) {
     return convertSerializer(fileVersionUE5, newVar);
   }
@@ -223,7 +224,7 @@ const readerByPropertyType = (() => {
   const table: PropertySerializer[] = [];
 
   table[EPropertyType.BoolProperty] = (reader: AssetReader) => {
-    let number = reader.readInt8();
+    const number = reader.readInt8();
     if (number != 0 && number != 1) {
       console.warn("Boolean type should be 0 or 1, but got", number);
     }

@@ -1,5 +1,5 @@
 import { FGuid, GUID_None } from "../objects/CoreUObject/Guid";
-import { AssetReader } from "../AssetReader";
+import type { AssetReader } from "../AssetReader";
 
 /**
  * enum class ECustomVersionSerializationFormat : int8 {
@@ -32,8 +32,7 @@ export class FCustomVersion {
     const result = new FCustomVersion();
     switch (format) {
       case ECustomVersionSerializationFormat.Enums:
-        const value = reader.readUInt32();
-        result.Key = FGuid.fromComponents(0, 0, 0, value);
+        result.Key = FGuid.fromComponents(0, 0, 0, reader.readUInt32());
         result.Version = reader.readInt32();
         result.FriendlyName = `__EnumTag__${result.Key.toString()}`;
         break;

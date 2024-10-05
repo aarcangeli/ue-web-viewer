@@ -1,5 +1,5 @@
 import { UObject } from "./Object";
-import { FName } from "../../structs/Name";
+import type { FName } from "../../structs/Name";
 
 export class UField extends UObject {}
 

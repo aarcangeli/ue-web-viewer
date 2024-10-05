@@ -1,7 +1,8 @@
-import { Box, Flex, HTMLChakraProps, IconButton, Text } from "@chakra-ui/react";
+import type { HTMLChakraProps } from "@chakra-ui/react";
+import { Box, Flex, IconButton, Text } from "@chakra-ui/react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
 import React, { useCallback, useContext, useState } from "react";
-import * as CSS from "csstype";
+import type * as CSS from "csstype";
 
 const INDENT_SIZE = 18;
 const LINE_HEIGHT = 26;
@@ -69,7 +70,7 @@ export function IndentedRow(
   props: HTMLChakraProps<"div"> & { title?: string; withPlaceHolder?: boolean; bgHover?: CSS.Property.Color },
 ) {
   const viewContext = useViewContext();
-  const { children, title, withPlaceHolder, bg, bgHover, ...rest } = props;
+  const { title, withPlaceHolder, bg, bgHover, ...rest } = props;
 
   return (
     <Flex

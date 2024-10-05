@@ -1,4 +1,4 @@
-import { Asset } from "../../unreal-engine/serialization/Asset";
+import type { Asset } from "../../unreal-engine/serialization/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
 import {
@@ -16,7 +16,8 @@ import {
   Tabs,
   useDisclosure,
 } from "@chakra-ui/react";
-import { exportFlagsToString, FObjectExport } from "../../unreal-engine/structs/ObjectExport";
+import type { FObjectExport } from "../../unreal-engine/structs/ObjectExport";
+import { exportFlagsToString } from "../../unreal-engine/structs/ObjectExport";
 import invariant from "tiny-invariant";
 import { makeObjectTitle } from "./commons";
 import { removePrefix } from "../../utils/string-utils";
@@ -47,7 +48,7 @@ function makeTree(asset: Asset): Node[] {
   };
 
   const convertedTable = asset.exports.map((exportObject, index) => {
-    let fullName = asset.makeFullName(exportObject.ClassIndex);
+    const fullName = asset.makeFullName(exportObject.ClassIndex);
     return new Node(exportObject, index + 1, fullName);
   });
 

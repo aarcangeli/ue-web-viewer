@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
+import type { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
 import { FName } from "./structs/Name";
 
 /**
@@ -50,7 +50,7 @@ export class AssetReader {
   }
 
   readBoolean() {
-    let number = this.readInt32();
+    const number = this.readInt32();
     if (number !== 0 && number !== 1) {
       console.warn(`Invalid boolean value: ${number}`);
     }
@@ -153,8 +153,8 @@ export class AssetReader {
     if (this._names === null) {
       throw new Error("Names are not set yet");
     }
-    let index = this.readInt32();
-    let number = this.readInt32();
+    const index = this.readInt32();
+    const number = this.readInt32();
     if (index < 0 || index >= this._names.length) {
       throw new Error(`Invalid name index: ${index}`);
     }
@@ -195,7 +195,7 @@ export class AssetReader {
   }
 
   private makeChild(newBlob: DataView) {
-    let reader = new AssetReader(newBlob);
+    const reader = new AssetReader(newBlob);
     reader._littleEndian = this._littleEndian;
     reader._fileVersionUE4 = this._fileVersionUE4;
     reader._fileVersionUE5 = this._fileVersionUE5;

@@ -1,4 +1,4 @@
-import { FileApi } from "./FileApi";
+import type { FileApi } from "./FileApi";
 import { fromHandle } from "./FileSystemHandleApi";
 
 export async function getFilesFromItems(items: DataTransferItem[]): Promise<FileApi[]> {

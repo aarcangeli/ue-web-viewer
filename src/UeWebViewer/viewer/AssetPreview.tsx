@@ -1,10 +1,10 @@
-import { Asset } from "../../unreal-engine/serialization/Asset";
+import type { Asset } from "../../unreal-engine/serialization/Asset";
 import React from "react";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box } from "@chakra-ui/react";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
-import { PropertyValue } from "../../unreal-engine/properties/properties";
-import { SerializationStatistics } from "../../unreal-engine/serialization/SerializationStatistics";
-import { UObject } from "../../unreal-engine/objects/CoreUObject/Object";
+import type { PropertyValue } from "../../unreal-engine/properties/properties";
+import type { SerializationStatistics } from "../../unreal-engine/serialization/SerializationStatistics";
+import type { UObject } from "../../unreal-engine/objects/CoreUObject/Object";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;

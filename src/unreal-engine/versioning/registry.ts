@@ -1,10 +1,12 @@
-import { FGuid } from "../objects/CoreUObject/Guid";
+import type { FGuid } from "../objects/CoreUObject/Guid";
 import invariant from "tiny-invariant";
 
 /**
  * Represents the guid of a custom version.
  * @param E The enum of the custom version.
+ * @param T The type of the custom version (used for type checking).
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class CustomVersionGuid<E> {
   readonly friendlyName: string;
   readonly guid: FGuid;

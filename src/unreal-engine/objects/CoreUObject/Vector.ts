@@ -1,5 +1,4 @@
-import { AssetReader } from "../../AssetReader";
-import { EUnrealEngineObjectUE5Version } from "../../versioning/ue-versions";
+import type { AssetReader } from "../../AssetReader";
 
 export class FVector {
   X: number = 0;

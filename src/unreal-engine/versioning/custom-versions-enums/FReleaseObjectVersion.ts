@@ -142,11 +142,6 @@ export enum FReleaseObjectVersion {
   /// bake center of mass into chaos cache
   GeometryCollectionCacheRemovesMassToLocal = 44,
   // endregion
-
-  // region Introduced with UE 4.26.0
-  /// Dummy version to allow us to fix up the fact that ReleaseObjectVersion was changed elsewhere
-  ReleaseObjectVersionFixup = 31,
-  // endregion
 }
 
 export const FReleaseObjectVersionDetails: VersionDetails[] = [

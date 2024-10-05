@@ -1,4 +1,4 @@
-import { AssetReader } from "../../AssetReader";
+import type { AssetReader } from "../../AssetReader";
 
 export enum EGuidFormats {
   /// Ex: {11223344-5566-7788-99AA-BBCCDDEEFF00}
@@ -54,13 +54,13 @@ export class FGuid {
 
   // Note: in unreal, the default format is DigitsWithHyphensLower
   toString(format: EGuidFormats = EGuidFormats.DigitsWithHyphensInBraces) {
-    let block1 = this.A.toString(16).padStart(8, "0");
-    let block2 = (this.B >>> 16).toString(16).padStart(4, "0");
-    let block3 = (this.B & 0xffff).toString(16).padStart(4, "0");
-    let block4 = (this.C >>> 16).toString(16).padStart(4, "0");
-    let block5 = (this.C & 0xffff).toString(16).padStart(4, "0") + this.D.toString(16).padStart(8, "0");
+    const block1 = this.A.toString(16).padStart(8, "0");
+    const block2 = (this.B >>> 16).toString(16).padStart(4, "0");
+    const block3 = (this.B & 0xffff).toString(16).padStart(4, "0");
+    const block4 = (this.C >>> 16).toString(16).padStart(4, "0");
+    const block5 = (this.C & 0xffff).toString(16).padStart(4, "0") + this.D.toString(16).padStart(8, "0");
 
-    let string = `${block1}-${block2}-${block3}-${block4}-${block5}`;
+    const string = `${block1}-${block2}-${block3}-${block4}-${block5}`;
     switch (format) {
       case EGuidFormats.DigitsWithHyphensInBraces:
         return `{${string}}`;
