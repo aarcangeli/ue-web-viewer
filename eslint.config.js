@@ -6,15 +6,21 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 
 const config = [
-  {
-    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
-    ...reactPlugin.configs.flat.recommended,
-  },
-  { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...eslint.configs.recommended,
   reactPlugin.configs.flat.recommended,
   {
+    name: "Browser globals",
+    files: ["src/**"],
+    languageOptions: { globals: globals.browser },
+  },
+  {
+    name: "JavaScript & TypeScript",
+    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    ...reactPlugin.configs.flat.recommended,
+  },
+  {
+    name: "React hooks",
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
@@ -22,17 +28,24 @@ const config = [
     rules: {
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "error",
+    },
+  },
+  {
+    name: "Disabled rules",
+    rules: {
+      // Allow the use of `any` in TypeScript
       "@typescript-eslint/no-explicit-any": "warn",
     },
   },
-  // Enable Node.js globals for scripts and config files
   {
+    name: "Node.js globals",
     files: ["eslint.config.js", "scripts/**"],
     languageOptions: { globals: globals.node },
   },
 ];
 export default config;
 
+// Dump the config if the --dump flag is passed
 if (process.argv.includes("--dump")) {
   // redact plugins to remove circular references
   const withoutPlugins = config.map((c) => {
