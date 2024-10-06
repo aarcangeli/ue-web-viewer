@@ -7,6 +7,8 @@ import { readTaggedProperties } from "../../properties/properties-serialization"
 import type { SerializationStatistics } from "../../serialization/SerializationStatistics";
 import { FGuid } from "./Guid";
 import { makeNameFromParts } from "../../path-utils";
+import type { EPackageFlags } from "../../enums";
+import { EObjectFlags } from "../../structs/ObjectExport";
 
 /**
  * All characters are allowed except for '.' and ':'.
@@ -14,6 +16,12 @@ import { makeNameFromParts } from "../../path-utils";
 const ValidObjectName = /^[^.:]+$/;
 
 export type ObjectResolver = (reader: AssetReader) => UObject | null;
+
+export type ObjectConstructionParams = {
+  clazz: UClass;
+  name: FName;
+  flags?: EPackageFlags;
+};
 
 /**
  * The base class of all UE objects.
@@ -35,6 +43,7 @@ export type ObjectResolver = (reader: AssetReader) => UObject | null;
 export class UObject {
   private _outer: UObject | null = null;
   private _class: UClass;
+  private readonly _flags: EPackageFlags;
   private readonly _name: FName;
 
   public readonly properties: TaggedProperty[] = [];
@@ -58,14 +67,15 @@ export class UObject {
 
   objectGuid: FGuid | null = null;
 
-  constructor(clazz: UClass, name: FName) {
-    invariant(clazz !== null, "Class cannot be null");
-    invariant(name !== null, "Class cannot be null");
-    invariant(!name.isNone, "Name cannot be None");
-    invariant(ValidObjectName.test(name.text), `Invalid object name: ${name.text}`);
+  constructor(params: ObjectConstructionParams) {
+    invariant(params.clazz, "Class cannot be null");
+    invariant(params.name, "Object name cannot be null");
+    invariant(!params.name.isNone, "Name cannot be None");
+    invariant(ValidObjectName.test(params.name.text), `Invalid object name: ${params.name.text}`);
 
-    this._class = clazz;
-    this._name = name;
+    this._class = params.clazz;
+    this._name = params.name;
+    this._flags = params.flags ?? 0;
   }
 
   /**
@@ -138,11 +148,19 @@ export class UObject {
   }
 
   deserialize(reader: AssetReader, resolver: ObjectResolver) {
+    invariant(!(this._flags & EObjectFlags.RF_ClassDefaultObject), "Cannot deserialize a default object");
+
     readTaggedProperties(this.class, this.properties, reader, true, resolver);
 
     // read object guid if present
     const hasObjectGuid = reader.readBoolean();
     this.objectGuid = hasObjectGuid ? FGuid.fromStream(reader) : null;
+  }
+
+  deserializeDefaultObject(reader: AssetReader, resolver: ObjectResolver) {
+    invariant(this._flags & EObjectFlags.RF_ClassDefaultObject, "Can only deserialize a default object");
+
+    readTaggedProperties(this.class, this.properties, reader, true, resolver);
   }
 
   findInnerByFName(name: FName): UObject | null {

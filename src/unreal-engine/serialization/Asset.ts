@@ -1,11 +1,12 @@
 import type { AssetReader, FullAssetReader } from "../AssetReader";
 import { FPackageFileSummary } from "../structs/PackageFileSummary";
 import { FObjectImport } from "../structs/ObjectImport";
-import { FObjectExport } from "../structs/ObjectExport";
+import { EObjectFlags, FObjectExport } from "../structs/ObjectExport";
 import invariant from "tiny-invariant";
 import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
 import { FName, NAME_None } from "../structs/Name";
 import { removeExtension } from "../../utils/string-utils";
+import type { ObjectConstructionParams, ObjectResolver } from "../objects/CoreUObject/Object";
 import { UObject, WeakObject } from "../objects/CoreUObject/Object";
 import { UPackage } from "../objects/CoreUObject/Package";
 import { CLASS_Package, UnknownClass } from "../objects/global-instances";
@@ -80,7 +81,11 @@ export class Asset {
     this.exports = readExportMap(reader, summary);
 
     // Create the package object
-    this._package = new UPackage(CLASS_Package, FName.fromString(packageName));
+    this._package = new UPackage({
+      clazz: CLASS_Package,
+      name: FName.fromString(packageName),
+      flags: 0,
+    });
   }
 
   makeFullName(index: number): string {
@@ -152,7 +157,11 @@ export class Asset {
       invariant(index < 0);
       // todo: import from another asset
       // For now, all imports are treated as missing objects
-      const object = new MissingImportedObject(UnknownClass, this.getObjectName(index));
+      const object = new MissingImportedObject({
+        clazz: UnknownClass,
+        name: this.getObjectName(index),
+        flags: 0,
+      });
       this._importedObjects[-index - 1] = object.asWeakObject();
       const outerIndex = this.getOuterIndex(index);
       if (outerIndex != 0) {
@@ -253,15 +262,19 @@ export class Asset {
     const object = this.withRecursionCheck(index, () => {
       invariant(objectExport.ClassIndex != 0, `Expected a valid class index`);
       const clazz = this.getObjectByIndex(objectExport.ClassIndex) as UClass;
-      return this.instantiateObject(clazz, objectExport.ObjectName);
+      return this.instantiateObject({
+        clazz: clazz,
+        name: objectExport.ObjectName,
+        flags: objectExport.objectFlags,
+      });
     });
-
-    // Register the object immediately, so it can be referenced by other objects (even recursively)
-    this._exportedObjects[index - 1] = object.asWeakObject();
 
     // Attach the object to the outer
     const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex) : this._package;
     outer.addInner(object);
+
+    // Register the object immediately, so it can be referenced by other objects (even recursively)
+    this._exportedObjects[index - 1] = object.asWeakObject();
 
     // serialize
     if (full) {
@@ -275,13 +288,18 @@ export class Asset {
     try {
       this._reader.seek(objectExport.SerialOffset);
       const subReader = this._reader.subReader(objectExport.SerialSize);
-      object.deserialize(subReader, (reader) => {
+
+      const resolver: ObjectResolver = (reader) => {
         const index = reader.readInt32();
         return this.getObjectByIndex(index, false);
-      });
-      if (subReader.remaining > 0) {
-        // console.warn(`Remaining bytes after reading object ${object.fullName}: ${subReader.remaining}`);
+      };
+
+      if (objectExport.objectFlags & EObjectFlags.RF_ClassDefaultObject) {
+        object.deserializeDefaultObject(subReader, resolver);
+      } else {
+        object.deserialize(subReader, resolver);
       }
+
       object.serializationStatistics = new SerializationStatistics(subReader.remaining, null);
     } catch (e) {
       console.warn(`Error deserializing object ${object.fullName}; the object is partially loaded:`, e);
@@ -290,9 +308,9 @@ export class Asset {
     object.isFullyLoaded = true;
   }
 
-  private instantiateObject(clazz: UClass, name: FName) {
+  private instantiateObject(params: ObjectConstructionParams) {
     // todo: this should return a different class based on the UClass
-    return new UObject(clazz, name);
+    return new UObject(params);
   }
 
   private withRecursionCheck<T>(index: number, fn: () => T) {

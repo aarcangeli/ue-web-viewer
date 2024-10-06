@@ -21,3 +21,9 @@ yarn preview
 ```bash
 yarn dev
 ```
+
+## Useful stuff
+
+```
+PackageTools.ReloadPackage /Game/BP_SimpleProperties
+```

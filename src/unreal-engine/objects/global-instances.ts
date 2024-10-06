@@ -1,22 +1,57 @@
 import { FName } from "../structs/Name";
 import { UPackage } from "./CoreUObject/Package";
+import type { ClassConstructionParams } from "./CoreUObject/Class";
 import { UClass } from "./CoreUObject/Class";
+import type { ObjectConstructionParams } from "./CoreUObject/Object";
 import { LazyClass, UObject } from "./CoreUObject/Object";
 
-export const PACKAGE_CoreUObject = new UPackage(LazyClass, FName.fromString("/Script/CoreUObject"));
+/**
+ * Utility function to create a new object.
+ */
+function NewObject<T extends UObject>(
+  obj: new (params: ObjectConstructionParams) => T,
+  clazz: UClass,
+  name: string,
+): T {
+  return new obj({
+    clazz: clazz,
+    name: FName.fromString(name),
+  });
+}
 
-export const CLASS_Object = new UClass(LazyClass, FName.fromString("Object"), null);
-export const CLASS_Class = new UClass(LazyClass, FName.fromString("Class"), CLASS_Object);
-export const CLASS_Package = new UClass(CLASS_Class, FName.fromString("Package"), null);
+/**
+ * Utility function to create a new class.
+ */
+function NewClass<T extends UClass>(
+  obj: new (params: ClassConstructionParams) => T,
+  clazz: UClass,
+  name: string,
+  superClazz: UClass | undefined = undefined,
+) {
+  return new obj({
+    clazz: clazz,
+    name: FName.fromString(name),
+    superClazz: superClazz,
+  });
+}
 
-CLASS_Class.replaceLazyClass(CLASS_Object);
-CLASS_Object.replaceLazyClass(CLASS_Object);
+// The "class" field is a circular reference, so we need a special "lazy" class to break the cycle.
+// The actual class will be set later.
+export const PACKAGE_CoreUObject = NewObject(UPackage, LazyClass, "/Script/CoreUObject");
+
+export const CLASS_Object = NewClass(UClass, LazyClass, "Object");
+export const CLASS_Class = NewClass(UClass, LazyClass, "Class", CLASS_Object);
+export const CLASS_Package = NewClass(UClass, LazyClass, "Package");
+
 PACKAGE_CoreUObject.replaceLazyClass(CLASS_Package);
+CLASS_Object.replaceLazyClass(CLASS_Object);
+CLASS_Class.replaceLazyClass(CLASS_Object);
+CLASS_Package.replaceLazyClass(CLASS_Class);
 
 PACKAGE_CoreUObject.addInner(CLASS_Object);
 PACKAGE_CoreUObject.addInner(CLASS_Class);
 PACKAGE_CoreUObject.addInner(CLASS_Package);
 
 /// A special class which represents an unknown class.
-export const UnknownClass = new UClass(CLASS_Class, FName.fromString("[Unknown Class]"), null);
-export const UnknownObject = new UObject(UnknownClass, FName.fromString("[Unknown Object]"));
+export const UnknownClass = NewClass(UClass, CLASS_Class, "[Unknown Class]");
+export const UnknownObject = NewObject(UObject, UnknownClass, "[Unknown Object]");
