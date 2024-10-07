@@ -64,7 +64,10 @@ export const propertyById = new Map<EPropertyType, FName>([
   [EPropertyType.StrProperty, FName.fromString("StrProperty")],
   [EPropertyType.TextProperty, FName.fromString("TextProperty")],
   [EPropertyType.InterfaceProperty, FName.fromString("InterfaceProperty")],
-  [EPropertyType.MulticastDelegateProperty, FName.fromString("MulticastDelegateProperty")],
+  [
+    EPropertyType.MulticastDelegateProperty,
+    FName.fromString("MulticastDelegateProperty"),
+  ],
   [EPropertyType.LazyObjectProperty, FName.fromString("LazyObjectProperty")],
   [EPropertyType.SoftObjectProperty, FName.fromString("SoftObjectProperty")],
   [EPropertyType.Int64Property, FName.fromString("Int64Property")],
@@ -81,7 +84,10 @@ export const propertyById = new Map<EPropertyType, FName>([
 ]);
 
 export const propertyByName = new Map<string, EPropertyType>(
-  [...propertyById.entries()].map(([key, value]) => [value.text.toLowerCase(), key]),
+  [...propertyById.entries()].map(([key, value]) => [
+    value.text.toLowerCase(),
+    key,
+  ]),
 );
 
 // Also known as EClassSerializationControlExtension

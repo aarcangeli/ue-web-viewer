@@ -62,7 +62,10 @@ export class UObject {
     invariant(clazz !== null, "Class cannot be null");
     invariant(name !== null, "Class cannot be null");
     invariant(!name.isNone, "Name cannot be None");
-    invariant(ValidObjectName.test(name.text), `Invalid object name: ${name.text}`);
+    invariant(
+      ValidObjectName.test(name.text),
+      `Invalid object name: ${name.text}`,
+    );
 
     this._class = clazz;
     this._name = name;
@@ -114,7 +117,9 @@ export class UObject {
    * Inner objects are weakly referenced, so they can be collected if there are no other references to them.
    */
   get innerObjects(): ReadonlyArray<UObject> {
-    return this._innerObjects.map((ref) => ref.deref()).filter((obj) => obj) as UObject[];
+    return this._innerObjects
+      .map((ref) => ref.deref())
+      .filter((obj) => obj) as UObject[];
   }
 
   /**

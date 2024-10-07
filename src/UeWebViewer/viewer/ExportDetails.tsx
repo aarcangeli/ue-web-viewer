@@ -1,5 +1,9 @@
 import type { Asset } from "../../unreal-engine/serialization/Asset";
-import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
+import {
+  CollapsableSection,
+  IndentedRow,
+  SimpleDetailsView,
+} from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
 import {
   IconButton,
@@ -55,7 +59,10 @@ function makeTree(asset: Asset): Node[] {
   for (const value of convertedTable) {
     if (value.objectExport.OuterIndex > 0) {
       const index = value.objectExport.OuterIndex - 1;
-      invariant(index < convertedTable.length, `Invalid index ${index} for node ${value}`);
+      invariant(
+        index < convertedTable.length,
+        `Invalid index ${index} for node ${value}`,
+      );
       convertedTable[index].children.push(value);
     } else if (value.objectExport.OuterIndex !== 0) {
       console.error("Detected subobject of import");
@@ -77,13 +84,19 @@ function RawView(props: { asset: Asset }) {
         <CollapsableSection name={`Export ${index + 1}`} key={index}>
           <IndentedRow title={"Class Index"}>{value.ClassIndex}</IndentedRow>
           <IndentedRow title={"Super Index"}>{value.SuperIndex}</IndentedRow>
-          <IndentedRow title={"Template Index"}>{value.TemplateIndex}</IndentedRow>
+          <IndentedRow title={"Template Index"}>
+            {value.TemplateIndex}
+          </IndentedRow>
           <IndentedRow title={"Outer Index"}>{value.OuterIndex}</IndentedRow>
-          <IndentedRow title={"Object Name"}>{value.ObjectName.text}</IndentedRow>
+          <IndentedRow title={"Object Name"}>
+            {value.ObjectName.text}
+          </IndentedRow>
           <IndentedRow title={"Object Flags"}>
             {value.objectFlags} ({exportFlagsToString(value.objectFlags)})
           </IndentedRow>
-          <IndentedRow title={"Package Flags"}>{value.packageFlags}</IndentedRow>
+          <IndentedRow title={"Package Flags"}>
+            {value.packageFlags}
+          </IndentedRow>
           <IndentedRow title={"bIsAsset"}>{String(value.bIsAsset)}</IndentedRow>
         </CollapsableSection>
       ))}
@@ -96,7 +109,13 @@ function OpenObjectPreviewButton(props: { asset: Asset; index: number }) {
 
   return (
     <>
-      <IconButton aria-label={"Open Object"} size={"xs"} variant={"ghost"} icon={<IoOpenOutline />} onClick={onOpen} />
+      <IconButton
+        aria-label={"Open Object"}
+        size={"xs"}
+        variant={"ghost"}
+        icon={<IoOpenOutline />}
+        onClick={onOpen}
+      />
 
       <Modal isOpen={isOpen} onClose={onClose} size={"full"}>
         <ObjectPreviewContent asset={props.asset} index={props.index} />
@@ -107,7 +126,9 @@ function OpenObjectPreviewButton(props: { asset: Asset; index: number }) {
 
 function ObjectPreviewContent(props: { asset: Asset; index: number }) {
   const [asset, setAsset] = React.useState(props.asset);
-  const [object, setObject] = React.useState(() => props.asset.getObjectByIndex(props.index));
+  const [object, setObject] = React.useState(() =>
+    props.asset.getObjectByIndex(props.index),
+  );
 
   return (
     <>
@@ -157,7 +178,9 @@ function RenderNodes(props: { asset: Asset; tree: Node[] }) {
     </CollapsableSection>
   );
 
-  return <SimpleDetailsView>{props.tree.map(recursiveSection)}</SimpleDetailsView>;
+  return (
+    <SimpleDetailsView>{props.tree.map(recursiveSection)}</SimpleDetailsView>
+  );
 }
 
 export function ExportDetails(props: { asset: Asset }) {

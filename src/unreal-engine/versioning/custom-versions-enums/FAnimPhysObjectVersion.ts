@@ -67,19 +67,22 @@ export const FAnimPhysObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ConvertAnimNodeLookAtAxis",
-    comment: "convert animnode look at to use just default axis instead of enum, which doesn't do much",
+    comment:
+      "convert animnode look at to use just default axis instead of enum, which doesn't do much",
     value: 1,
     firstAppearance: "4.16.0",
   }),
   new VersionDetails({
     name: "BoxSphylElemsUseRotators",
-    comment: "Change FKSphylElem and FKBoxElem to use Rotators not Quats for easier editing",
+    comment:
+      "Change FKSphylElem and FKBoxElem to use Rotators not Quats for easier editing",
     value: 2,
     firstAppearance: "4.16.0",
   }),
   new VersionDetails({
     name: "ThumbnailSceneInfoAndAssetImportDataAreTransactional",
-    comment: "Change thumbnail scene info and asset import data to be transactional",
+    comment:
+      "Change thumbnail scene info and asset import data to be transactional",
     value: 3,
     firstAppearance: "4.16.0",
   }),
@@ -91,13 +94,15 @@ export const FAnimPhysObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RemoveUIDFromSmartNameSerialize",
-    comment: "Remove UID from smart name serialize, it just breaks determinism ",
+    comment:
+      "Remove UID from smart name serialize, it just breaks determinism ",
     value: 5,
     firstAppearance: "4.17.0",
   }),
   new VersionDetails({
     name: "CreateTargetReference",
-    comment: "Convert FName Socket to FSocketReference and added TargetReference that support bone and socket",
+    comment:
+      "Convert FName Socket to FSocketReference and added TargetReference that support bone and socket",
     value: 6,
     firstAppearance: "4.17.0",
   }),
@@ -121,7 +126,8 @@ export const FAnimPhysObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "SmartNameRefactorForDeterministicCooking",
-    comment: "Remove GUID from Smart Names entirely + remove automatic name fixup",
+    comment:
+      "Remove GUID from Smart Names entirely + remove automatic name fixup",
     value: 10,
     firstAppearance: "4.18.0",
   }),
@@ -139,7 +145,8 @@ export const FAnimPhysObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixupBadBlendProfileReferences",
-    comment: "Fixed blend profile references persisting after paste when they aren't compatible",
+    comment:
+      "Fixed blend profile references persisting after paste when they aren't compatible",
     value: 13,
     firstAppearance: "4.19.0",
   }),

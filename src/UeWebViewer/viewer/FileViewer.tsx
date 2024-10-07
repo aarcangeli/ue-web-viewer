@@ -1,4 +1,11 @@
-import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import {
+  Flex,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
 import type { FileApi } from "../filesystem/FileApi";
 import React, { useEffect, useState } from "react";
 import { FullAssetReader } from "../../unreal-engine/AssetReader";
@@ -65,7 +72,12 @@ export function FileViewer(props: Props) {
   };
 
   return (
-    <Flex grow={1} direction={"column"} alignItems={"stretch"} overflowY={"auto"}>
+    <Flex
+      grow={1}
+      direction={"column"}
+      alignItems={"stretch"}
+      overflowY={"auto"}
+    >
       {asset && (
         <Tabs
           isLazy

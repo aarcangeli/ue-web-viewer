@@ -162,7 +162,8 @@ export const FRenderingObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "IntroducedMeshDecals",
-    comment: "translucency is now a property which matters for materials with the decal domain",
+    comment:
+      "translucency is now a property which matters for materials with the decal domain",
     value: 4,
     firstAppearance: "4.13.0",
   }),
@@ -184,7 +185,8 @@ export const FRenderingObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "MovedParticleCutoutsToRequiredModule",
-    comment: "Particle Cutout (SubUVAnimation) data is now stored in the ParticleRequired Module",
+    comment:
+      "Particle Cutout (SubUVAnimation) data is now stored in the ParticleRequired Module",
     value: 8,
     firstAppearance: "4.14.0",
   }),
@@ -201,7 +203,8 @@ export const FRenderingObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "TypeHandlingForMaterialSqrtNodes",
-    comment: "Added type handling to material normalize and length (sqrt) nodes",
+    comment:
+      "Added type handling to material normalize and length (sqrt) nodes",
     value: 11,
     firstAppearance: "4.14.0",
   }),
@@ -237,7 +240,8 @@ export const FRenderingObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixedMeshUVDensity",
-    comment: "Triggers a rebuild of the mesh UV density while also adding an update in the postedit",
+    comment:
+      "Triggers a rebuild of the mesh UV density while also adding an update in the postedit",
     value: 18,
     firstAppearance: "4.17.0",
   }),
@@ -263,7 +267,8 @@ export const FRenderingObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ModelVertexBufferSerialization",
-    comment: "FModelVertexBuffer does serialize a regular TArray instead of a TResourceArray",
+    comment:
+      "FModelVertexBuffer does serialize a regular TArray instead of a TResourceArray",
     value: 23,
     firstAppearance: "4.19.0",
   }),
@@ -301,7 +306,8 @@ export const FRenderingObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "DiaphragmDOFOnlyForDeferredShadingRenderer",
-    comment: "Removed old gaussian and bokeh DOF methods from deferred shading renderer.",
+    comment:
+      "Removed old gaussian and bokeh DOF methods from deferred shading renderer.",
     value: 30,
     firstAppearance: "4.23.0",
   }),
@@ -319,7 +325,8 @@ export const FRenderingObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ExplicitSRGBSetting",
-    comment: "UTextureRenderTarget2D now explicitly allows users to create sRGB or non-sRGB type targets",
+    comment:
+      "UTextureRenderTarget2D now explicitly allows users to create sRGB or non-sRGB type targets",
     value: 33,
     firstAppearance: "4.24.0",
   }),
@@ -366,13 +373,15 @@ export const FRenderingObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AnisotropicMaterial",
-    comment: "Added material attributes to shader graph to support anisotropic materials ",
+    comment:
+      "Added material attributes to shader graph to support anisotropic materials ",
     value: 41,
     firstAppearance: "4.25.0",
   }),
   new VersionDetails({
     name: "AutoExposureForceOverrideBiasFlag",
-    comment: "Add if anything has changed in the exposure, override the bias to avoid the new default propagating",
+    comment:
+      "Add if anything has changed in the exposure, override the bias to avoid the new default propagating",
     value: 42,
     firstAppearance: "4.25.0",
   }),
@@ -391,7 +400,8 @@ export const FRenderingObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VirtualTexturedLightmapsV3",
-    comment: "Add a new virtual texture to support virtual texture light map on mobile",
+    comment:
+      "Add a new virtual texture to support virtual texture light map on mobile",
     value: 45,
     firstAppearance: "4.27.0",
   }),
@@ -403,13 +413,15 @@ export const FRenderingObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "NaniteForceMaterialUsage",
-    comment: "Added support to force Nanite material usage if Nanite mesh builders are also forced.",
+    comment:
+      "Added support to force Nanite material usage if Nanite mesh builders are also forced.",
     value: 47,
     firstAppearance: "5.3.0",
   }),
   new VersionDetails({
     name: "AddedMaterialExpressionIncludesHash",
-    comment: "Custom material expression includes are now serialized & used for DDC key generation",
+    comment:
+      "Custom material expression includes are now serialized & used for DDC key generation",
     value: 48,
     firstAppearance: "5.4.0",
   }),

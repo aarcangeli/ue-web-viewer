@@ -59,7 +59,10 @@ export class Asset {
     private _reload: (() => Promise<FullAssetReader>) | null = null,
   ) {
     invariant(packageName, "Expected a package name");
-    invariant(reader.tell() === 0, "Expected to be at the beginning of the stream");
+    invariant(
+      reader.tell() === 0,
+      "Expected to be at the beginning of the stream",
+    );
 
     // remove extension
     packageName = removeExtension(packageName);
@@ -152,7 +155,10 @@ export class Asset {
       invariant(index < 0);
       // todo: import from another asset
       // For now, all imports are treated as missing objects
-      const object = new MissingImportedObject(UnknownClass, this.getObjectName(index));
+      const object = new MissingImportedObject(
+        UnknownClass,
+        this.getObjectName(index),
+      );
       this._importedObjects[-index - 1] = object.asWeakObject();
       const outerIndex = this.getOuterIndex(index);
       if (outerIndex != 0) {
@@ -180,7 +186,10 @@ export class Asset {
   }
 
   private findIndexByFullName(fullName: string) {
-    return this.exports.findIndex((e, index) => this.makeFullName(index + 1).toLowerCase() === fullName.toLowerCase());
+    return this.exports.findIndex(
+      (e, index) =>
+        this.makeFullName(index + 1).toLowerCase() === fullName.toLowerCase(),
+    );
   }
 
   reloadObject(object: UObject) {
@@ -199,7 +208,9 @@ export class Asset {
    * If not found, returns 0.
    */
   private findRootExportByName(exportName: string) {
-    const number = this.exports.findIndex((e) => e.OuterIndex == 0 && e.ObjectName.text === exportName);
+    const number = this.exports.findIndex(
+      (e) => e.OuterIndex == 0 && e.ObjectName.text === exportName,
+    );
     return number + 1;
   }
 
@@ -238,7 +249,9 @@ export class Asset {
     // The recursion can only happen when serializing outer or class.
     // If an object is referenced in properties, it will return a partially loaded object.
     if (value === RecursiveCheck) {
-      throw new Error(`Recursive object reference detected: ${this.recursionCheck.join(" -> ")} -> ${index}`);
+      throw new Error(
+        `Recursive object reference detected: ${this.recursionCheck.join(" -> ")} -> ${index}`,
+      );
     }
 
     return (value as WeakObject)?.deref() ?? null;
@@ -260,7 +273,9 @@ export class Asset {
     this._exportedObjects[index - 1] = object.asWeakObject();
 
     // Attach the object to the outer
-    const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex) : this._package;
+    const outer = objectExport.OuterIndex
+      ? this.getObjectByIndex(objectExport.OuterIndex)
+      : this._package;
     outer.addInner(object);
 
     // serialize
@@ -282,10 +297,19 @@ export class Asset {
       if (subReader.remaining > 0) {
         // console.warn(`Remaining bytes after reading object ${object.fullName}: ${subReader.remaining}`);
       }
-      object.serializationStatistics = new SerializationStatistics(subReader.remaining, null);
+      object.serializationStatistics = new SerializationStatistics(
+        subReader.remaining,
+        null,
+      );
     } catch (e) {
-      console.warn(`Error deserializing object ${object.fullName}; the object is partially loaded:`, e);
-      object.serializationStatistics = new SerializationStatistics(null, String(e));
+      console.warn(
+        `Error deserializing object ${object.fullName}; the object is partially loaded:`,
+        e,
+      );
+      object.serializationStatistics = new SerializationStatistics(
+        null,
+        String(e),
+      );
     }
     object.isFullyLoaded = true;
   }
@@ -322,7 +346,10 @@ function readNames(reader: AssetReader, summary: FPackageFileSummary) {
     names.push(reader.readString());
 
     // skip hash
-    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_NAME_HASHES_SERIALIZED) {
+    if (
+      reader.fileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_NAME_HASHES_SERIALIZED
+    ) {
       reader.readUInt32();
     }
   }

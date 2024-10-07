@@ -135,7 +135,8 @@ export const FFoliageCustomVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FoliageDiscardOnLoad",
-    comment: "Supports discarding foliage types on load independently from density scaling",
+    comment:
+      "Supports discarding foliage types on load independently from density scaling",
     value: 15,
     firstAppearance: "4.27.0",
   }),

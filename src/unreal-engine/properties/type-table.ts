@@ -18,7 +18,9 @@ function makeRow(packageName: string, structName: string): [FName, FName] {
 const values = Object.keys(structTyped).flatMap((packageName) => {
   // const value = structs[key] as string[];
   // return value.map(([packageName, structName]) => makeRow(packageName, structName));
-  return structTyped[packageName].map((structName) => makeRow(packageName, structName));
+  return structTyped[packageName].map((structName) =>
+    makeRow(packageName, structName),
+  );
 });
 
 export const typeTable = new FNameMap<FName>(values);
