@@ -40,7 +40,9 @@ describe("TestActorUE4-0-2", () => {
     expect(asset.makeFullName(55).toString()).toBe(
       "TestActorUE4-0-2.TestActorUE4-0-2:CustomFunction.K2Node_CallFunction_7631",
     );
-    expect(asset.makeFullName(-36).toString()).toBe("/Script/CoreUObject.Object:LinearColor");
+    expect(asset.makeFullName(-36).toString()).toBe(
+      "/Script/CoreUObject.Object:LinearColor",
+    );
   });
 });
 
@@ -70,7 +72,9 @@ describe("TestActorUE5-4-4", () => {
     expect(asset.makeFullName(14).toString()).toBe(
       "TestActorUE5-4-4.TestActorUE5-4-4:CustomGraph.K2Node_CallFunction_0",
     );
-    expect(asset.makeFullName(-21).toString()).toBe("/Script/Engine.KismetSystemLibrary:PrintString");
+    expect(asset.makeFullName(-21).toString()).toBe(
+      "/Script/Engine.KismetSystemLibrary:PrintString",
+    );
   });
 });
 
@@ -81,7 +85,9 @@ describe("TestActorUE5-4-4", () => {
 function readAsset(filename: string) {
   const fullPath = path.join(root, filename);
   const fileData = fs.readFileSync(fullPath);
-  const reader = new FullAssetReader(new DataView(fileData.buffer, 0, fileData.byteLength));
+  const reader = new FullAssetReader(
+    new DataView(fileData.buffer, 0, fileData.byteLength),
+  );
   const packageName = path.basename(filename, path.extname(filename));
   return new Asset(packageName, reader);
 }

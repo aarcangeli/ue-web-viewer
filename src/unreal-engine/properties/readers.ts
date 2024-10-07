@@ -10,7 +10,10 @@ import { FRotator } from "../objects/CoreUObject/Rotator";
 import { FVector } from "../objects/CoreUObject/Vector";
 import { typeTable } from "./type-table";
 import { EPropertyType } from "./enums";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
+import {
+  EUnrealEngineObjectUE4Version,
+  EUnrealEngineObjectUE5Version,
+} from "../versioning/ue-versions";
 import invariant from "tiny-invariant";
 import { FPlane } from "../objects/CoreUObject/Plane";
 
@@ -27,7 +30,9 @@ const ArrayProperty = FName.fromString("ArrayProperty");
  * A serializer for a struct property.
  * The value is an array in case the serialization depends on the floating point precision.
  */
-type StructPropertySerializer = PropertySerializer | [PropertySerializer, PropertySerializer];
+type StructPropertySerializer =
+  | PropertySerializer
+  | [PropertySerializer, PropertySerializer];
 
 export class UnknownPropertyType extends Error {
   constructor(public typeName: FPropertyTypeName) {
@@ -43,15 +48,28 @@ export class UnknownPropertyType extends Error {
  * @param reader The asset reader, we might need to read additional data.
  * @throws {UnknownPropertyType} If the property type is unknown.
  */
-export function getPropertySerializerFromTag(reader: AssetReader, tag: FPropertyTag): PropertySerializer {
+export function getPropertySerializerFromTag(
+  reader: AssetReader,
+  tag: FPropertyTag,
+): PropertySerializer {
   // In UE 4.12-5.4 there was a special tag for array of structs.
   if (tag.legacyData) {
-    if (tag.legacyData.type.equals(ArrayProperty) && tag.legacyData.innerType?.equals(StructProperty)) {
-      if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_INNER_ARRAY_TAG_INFO) {
+    if (
+      tag.legacyData.type.equals(ArrayProperty) &&
+      tag.legacyData.innerType?.equals(StructProperty)
+    ) {
+      if (
+        reader.fileVersionUE4 >=
+        EUnrealEngineObjectUE4Version.VER_UE4_INNER_ARRAY_TAG_INFO
+      ) {
         const arraySize = reader.readInt32();
         const innerTag = FPropertyTag.fromStream(reader);
         console.log("Tag:", tag, "Inner tag:", innerTag);
-        return getLegacyStructArraySerializer(reader.fileVersionUE5, arraySize, innerTag);
+        return getLegacyStructArraySerializer(
+          reader.fileVersionUE5,
+          arraySize,
+          innerTag,
+        );
       }
       // We can't ready anything in this case.
       throw new UnknownPropertyType(tag.typeName);
@@ -83,11 +101,16 @@ export function getPropertySerializer(
   throw new UnknownPropertyType(typeName);
 }
 
-function makeCombinedName(packageName: FName | string, objectName: FName | string): FName {
+function makeCombinedName(
+  packageName: FName | string,
+  objectName: FName | string,
+): FName {
   return FName.fromString(`${packageName}.${objectName}`);
 }
 
-function makeStructReader<T extends object>(generator: (reader: AssetReader) => T): PropertySerializer {
+function makeStructReader<T extends object>(
+  generator: (reader: AssetReader) => T,
+): PropertySerializer {
   return (reader) => ({ type: "struct", value: generator(reader) });
 }
 
@@ -99,10 +122,22 @@ function makeLargeWorld<T extends object>(
 }
 
 const readerByStructName = new FNameMap<StructPropertySerializer>([
-  [makeCombinedName(NAME_CoreUObject, "Guid"), makeStructReader(FGuid.fromStream)],
-  [makeCombinedName(NAME_CoreUObject, "Rotator"), makeLargeWorld(FRotator.fromStream, FRotator.fromStreamDouble)],
-  [makeCombinedName(NAME_CoreUObject, "Vector"), makeLargeWorld(FVector.fromStream, FVector.fromStreamDouble)],
-  [makeCombinedName(NAME_CoreUObject, "Plane"), makeLargeWorld(FPlane.fromStream, FPlane.fromStreamDouble)],
+  [
+    makeCombinedName(NAME_CoreUObject, "Guid"),
+    makeStructReader(FGuid.fromStream),
+  ],
+  [
+    makeCombinedName(NAME_CoreUObject, "Rotator"),
+    makeLargeWorld(FRotator.fromStream, FRotator.fromStreamDouble),
+  ],
+  [
+    makeCombinedName(NAME_CoreUObject, "Vector"),
+    makeLargeWorld(FVector.fromStream, FVector.fromStreamDouble),
+  ],
+  [
+    makeCombinedName(NAME_CoreUObject, "Plane"),
+    makeLargeWorld(FPlane.fromStream, FPlane.fromStreamDouble),
+  ],
 ]);
 
 /**
@@ -149,9 +184,13 @@ function findFallbackReader(
   throw new UnknownPropertyType(typeName);
 }
 
-function convertSerializer(fileVersionUE5: EUnrealEngineObjectUE5Version, newVar: StructPropertySerializer) {
+function convertSerializer(
+  fileVersionUE5: EUnrealEngineObjectUE5Version,
+  newVar: StructPropertySerializer,
+) {
   if (Array.isArray(newVar)) {
-    const isLargeWorld = fileVersionUE5 >= EUnrealEngineObjectUE5Version.LARGE_WORLD_COORDINATES;
+    const isLargeWorld =
+      fileVersionUE5 >= EUnrealEngineObjectUE5Version.LARGE_WORLD_COORDINATES;
     return newVar[isLargeWorld ? 1 : 0];
   }
   return newVar;
@@ -162,7 +201,9 @@ function getByStructName(
   packageName: FName,
   structName: FName,
 ): PropertySerializer | undefined {
-  const newVar = readerByStructName.get(makeCombinedName(packageName, structName));
+  const newVar = readerByStructName.get(
+    makeCombinedName(packageName, structName),
+  );
   if (newVar) {
     return convertSerializer(fileVersionUE5, newVar);
   }
@@ -213,13 +254,19 @@ function getLegacyStructArraySerializer(
   innerTag: FPropertyTag,
 ): PropertySerializer {
   invariant(innerTag.legacyData);
-  invariant(innerTag.legacyData.type.equals(StructProperty), "Expected array property");
+  invariant(
+    innerTag.legacyData.type.equals(StructProperty),
+    "Expected array property",
+  );
 
   return getArraySerializer(innerTag.typeName, fileVersionUE5, arraySize);
 }
 
 const readerByPropertyType = (() => {
-  const makeNumeric = (value: number): NumericValue => ({ type: "numeric", value: value });
+  const makeNumeric = (value: number): NumericValue => ({
+    type: "numeric",
+    value: value,
+  });
 
   const table: PropertySerializer[] = [];
 
@@ -231,26 +278,49 @@ const readerByPropertyType = (() => {
     return { type: "boolean", value: number != 0 };
   };
 
-  table[EPropertyType.ByteProperty] = (reader) => makeNumeric(reader.readUInt8());
-  table[EPropertyType.EnumProperty] = (reader) => ({ type: "name", value: reader.readName() });
+  table[EPropertyType.ByteProperty] = (reader) =>
+    makeNumeric(reader.readUInt8());
+  table[EPropertyType.EnumProperty] = (reader) => ({
+    type: "name",
+    value: reader.readName(),
+  });
 
-  table[EPropertyType.Int8Property] = (reader) => makeNumeric(reader.readInt8());
-  table[EPropertyType.Int16Property] = (reader) => makeNumeric(reader.readInt16());
-  table[EPropertyType.Int32Property] = (reader) => makeNumeric(reader.readInt32());
-  table[EPropertyType.IntProperty] = (reader) => makeNumeric(reader.readInt32());
-  table[EPropertyType.Int64Property] = (reader) => makeNumeric(reader.readInt64());
+  table[EPropertyType.Int8Property] = (reader) =>
+    makeNumeric(reader.readInt8());
+  table[EPropertyType.Int16Property] = (reader) =>
+    makeNumeric(reader.readInt16());
+  table[EPropertyType.Int32Property] = (reader) =>
+    makeNumeric(reader.readInt32());
+  table[EPropertyType.IntProperty] = (reader) =>
+    makeNumeric(reader.readInt32());
+  table[EPropertyType.Int64Property] = (reader) =>
+    makeNumeric(reader.readInt64());
 
-  table[EPropertyType.UInt16Property] = (reader) => makeNumeric(reader.readUInt16());
-  table[EPropertyType.UInt32Property] = (reader) => makeNumeric(reader.readUInt32());
-  table[EPropertyType.UInt64Property] = (reader) => makeNumeric(reader.readUInt64());
+  table[EPropertyType.UInt16Property] = (reader) =>
+    makeNumeric(reader.readUInt16());
+  table[EPropertyType.UInt32Property] = (reader) =>
+    makeNumeric(reader.readUInt32());
+  table[EPropertyType.UInt64Property] = (reader) =>
+    makeNumeric(reader.readUInt64());
 
-  table[EPropertyType.FloatProperty] = (reader) => makeNumeric(reader.readFloat());
-  table[EPropertyType.DoubleProperty] = (reader) => makeNumeric(reader.readDouble());
+  table[EPropertyType.FloatProperty] = (reader) =>
+    makeNumeric(reader.readFloat());
+  table[EPropertyType.DoubleProperty] = (reader) =>
+    makeNumeric(reader.readDouble());
 
-  table[EPropertyType.NameProperty] = (reader) => ({ type: "name", value: reader.readName() });
-  table[EPropertyType.StrProperty] = (reader) => ({ type: "string", value: reader.readString() });
+  table[EPropertyType.NameProperty] = (reader) => ({
+    type: "name",
+    value: reader.readName(),
+  });
+  table[EPropertyType.StrProperty] = (reader) => ({
+    type: "string",
+    value: reader.readString(),
+  });
 
-  table[EPropertyType.ObjectProperty] = (reader, resolver) => ({ type: "object", object: resolver(reader) });
+  table[EPropertyType.ObjectProperty] = (reader, resolver) => ({
+    type: "object",
+    object: resolver(reader),
+  });
 
   return table;
 })();

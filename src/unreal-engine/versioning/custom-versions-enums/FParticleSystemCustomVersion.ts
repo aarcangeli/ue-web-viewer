@@ -34,13 +34,15 @@ export const FParticleSystemCustomVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixLegacySpawningBugs",
-    comment: "skip emitter cooking if their detail mode doesn't match predefined",
+    comment:
+      "skip emitter cooking if their detail mode doesn't match predefined",
     value: 2,
     firstAppearance: "4.20.0",
   }),
   new VersionDetails({
     name: "AddEpicDetailMode",
-    comment: "fixing some spawning bugs but must keep old behavior around for existing systems.",
+    comment:
+      "fixing some spawning bugs but must keep old behavior around for existing systems.",
     value: 3,
     firstAppearance: "5.3.0",
   }),

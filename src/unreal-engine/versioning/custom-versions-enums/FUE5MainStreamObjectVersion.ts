@@ -283,13 +283,15 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RemovingSourceAnimationData",
-    comment: "Removing SourceAnimationData, animation layering is now applied during compression",
+    comment:
+      "Removing SourceAnimationData, animation layering is now applied during compression",
     value: 3,
     firstAppearance: "5.0.0",
   }),
   new VersionDetails({
     name: "MeshDescriptionNewFormat",
-    comment: "This is the correct versioning for MeshDescription changes which were added to ReleaseObjectVersion.",
+    comment:
+      "This is the correct versioning for MeshDescription changes which were added to ReleaseObjectVersion.",
     value: 4,
     firstAppearance: "5.0.0",
   }),
@@ -320,7 +322,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RenamingAnimationNumFrames",
-    comment: "Renaming UAnimSequence::NumFrames to NumberOfKeys, as that what is actually contains.",
+    comment:
+      "Renaming UAnimSequence::NumFrames to NumberOfKeys, as that what is actually contains.",
     value: 9,
     firstAppearance: "5.0.0",
   }),
@@ -393,7 +396,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "IntroducingAnimationDataModel",
-    comment: "Introducing UAnimDataModel sub-object for UAnimSequenceBase containing all animation source data",
+    comment:
+      "Introducing UAnimDataModel sub-object for UAnimSequenceBase containing all animation source data",
     value: 21,
     firstAppearance: "5.0.0",
   }),
@@ -411,7 +415,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixForceExternalActorLevelReferenceDuplicates",
-    comment: "Fix potentially duplicated actors when using ForceExternalActorLevelReference",
+    comment:
+      "Fix potentially duplicated actors when using ForceExternalActorLevelReference",
     value: 24,
     firstAppearance: "5.0.0",
   }),
@@ -423,7 +428,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ConvexUsesVerticesArray",
-    comment: "Chaos FConvex uses array of FVec3s for vertices instead of particles",
+    comment:
+      "Chaos FConvex uses array of FVec3s for vertices instead of particles",
     value: 26,
     firstAppearance: "5.0.0",
   }),
@@ -441,7 +447,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "MoveCustomAttributesToDataModel",
-    comment: "Moving animation custom attributes from AnimationSequence to UAnimDataModel",
+    comment:
+      "Moving animation custom attributes from AnimationSequence to UAnimDataModel",
     value: 29,
     firstAppearance: "5.0.0",
   }),
@@ -453,7 +460,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "BlendSpaceSmoothingImprovements",
-    comment: "Fix to the Cubic smoothing, plus introduction of new smoothing types",
+    comment:
+      "Fix to the Cubic smoothing, plus introduction of new smoothing types",
     value: 31,
     firstAppearance: "5.0.0",
   }),
@@ -465,7 +473,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "SparseClassDataStructSerialization",
-    comment: "Sparse class data serializes its associated structure to allow for BP types to be used",
+    comment:
+      "Sparse class data serializes its associated structure to allow for BP types to be used",
     value: 33,
     firstAppearance: "5.0.0",
   }),
@@ -477,13 +486,15 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AnimNodeConstantDataRefactorPhase0",
-    comment: "Initial set of anim nodes converted to use constants held in sparse class data",
+    comment:
+      "Initial set of anim nodes converted to use constants held in sparse class data",
     value: 35,
     firstAppearance: "5.0.0",
   }),
   new VersionDetails({
     name: "MaterialSavedCachedData",
-    comment: "Explicitly serialized bSavedCachedExpressionData for Material(Instance)",
+    comment:
+      "Explicitly serialized bSavedCachedExpressionData for Material(Instance)",
     value: 36,
     firstAppearance: "5.0.0",
   }),
@@ -537,13 +548,15 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "GeometryCollectionUserDefinedCollisionShapes",
-    comment: "Chaos FGeometryCollectionObject user defined collision shapes support",
+    comment:
+      "Chaos FGeometryCollectionObject user defined collision shapes support",
     value: 45,
     firstAppearance: "5.0.0",
   }),
   new VersionDetails({
     name: "RemovedAtmosphericFog",
-    comment: "Removed the AtmosphericFog component with conversion to SkyAtmosphere component",
+    comment:
+      "Removed the AtmosphericFog component with conversion to SkyAtmosphere component",
     value: 46,
     firstAppearance: "5.0.0",
   }),
@@ -562,7 +575,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "GeometryCollectionCacheRemovesMassToLocal",
-    comment: "No longer bake MassToLocal transform into recorded transform data in GeometryCollection caching",
+    comment:
+      "No longer bake MassToLocal transform into recorded transform data in GeometryCollection caching",
     value: 49,
     firstAppearance: "5.0.0",
   }),
@@ -586,7 +600,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RayTracedShadowsType",
-    comment: "Ray tracing shadows have three states now (Disabled, Use Project Settings, Enabled)",
+    comment:
+      "Ray tracing shadows have three states now (Disabled, Use Project Settings, Enabled)",
     value: 53,
     firstAppearance: "5.0.0",
   }),
@@ -610,7 +625,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ConvertReductionBaseSkeletalMeshBulkDataToInlineReductionCacheData",
-    comment: "Remove the inline reduction bulkdata and replace it by a simple vertex and triangle count cache",
+    comment:
+      "Remove the inline reduction bulkdata and replace it by a simple vertex and triangle count cache",
     value: 57,
     firstAppearance: "5.0.0",
   }),
@@ -641,13 +657,15 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "DynamicMeshAttributesWeightMapsAndNames",
-    comment: "FDynamicMeshAttributeSet has Weight Maps. TDynamicAttributeBase serializes its name.",
+    comment:
+      "FDynamicMeshAttributeSet has Weight Maps. TDynamicAttributeBase serializes its name.",
     value: 62,
     firstAppearance: "5.1.0",
   }),
   new VersionDetails({
     name: "FKControlNamingScheme",
-    comment: "Switching FK control naming scheme to incorporate _CURVE for curve controls",
+    comment:
+      "Switching FK control naming scheme to incorporate _CURVE for curve controls",
     value: 63,
     firstAppearance: "5.1.0",
   }),
@@ -673,13 +691,15 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "MaterialFeatureLevelNodeFixForSM6",
-    comment: "Fix material feature level nodes to account for new SM6 input pin.",
+    comment:
+      "Fix material feature level nodes to account for new SM6 input pin.",
     value: 67,
     firstAppearance: "5.1.0",
   }),
   new VersionDetails({
     name: "GeometryCollectionPerChildDamageThreshold",
-    comment: "Fix material feature level nodes to account for new SM6 input pin.",
+    comment:
+      "Fix material feature level nodes to account for new SM6 input pin.",
     value: 68,
     firstAppearance: "5.1.0",
   }),
@@ -691,7 +711,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "LiveLinkComponentPickerPerController",
-    comment: "Allow each LiveLink controller to specify its own component to control",
+    comment:
+      "Allow each LiveLink controller to specify its own component to control",
     value: 70,
     firstAppearance: "5.1.0",
   }),
@@ -715,13 +736,15 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "WorldPartitionSerializeStreamingPolicyOnCook",
-    comment: "World partition streaming policy serialization only for cooked builds",
+    comment:
+      "World partition streaming policy serialization only for cooked builds",
     value: 74,
     firstAppearance: "5.1.0",
   }),
   new VersionDetails({
     name: "WorldPartitionActorDescRemoveBoundsRelevantSerialization",
-    comment: "Remove serialization of bounds relevant from  WorldPartitionActorDesc",
+    comment:
+      "Remove serialization of bounds relevant from  WorldPartitionActorDesc",
     value: 75,
     firstAppearance: "5.1.0",
   }),
@@ -751,7 +774,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ManagedArrayCollectionAlwaysSerializeValue",
-    comment: "Made ManagedArrayCollection::FValueType::Value always serialize when FValueType is",
+    comment:
+      "Made ManagedArrayCollection::FValueType::Value always serialize when FValueType is",
     value: 80,
     firstAppearance: "5.1.0",
   }),
@@ -775,7 +799,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "DecreaseLowResolutionHeightField",
-    comment: "Low resolution data in Height Field will store one height for (6x6) 36 cells",
+    comment:
+      "Low resolution data in Height Field will store one height for (6x6) 36 cells",
     value: 84,
     firstAppearance: "5.1.0",
   }),
@@ -841,19 +866,22 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "PoseAssetRawDataGUIDUpdate",
-    comment: "Adding additional object version to defer out-of-date pose asset warning until next resaves",
+    comment:
+      "Adding additional object version to defer out-of-date pose asset warning until next resaves",
     value: 95,
     firstAppearance: "5.2.0",
   }),
   new VersionDetails({
     name: "RigVMSaveFunctionAccessInModel",
-    comment: "Store function information (and compilation data) in blueprint generated class",
+    comment:
+      "Store function information (and compilation data) in blueprint generated class",
     value: 96,
     firstAppearance: "5.2.0",
   }),
   new VersionDetails({
     name: "RigVMSerializeExecuteContextStruct",
-    comment: "Store the RigVM execute context struct the VM uses in the archive",
+    comment:
+      "Store the RigVM execute context struct the VM uses in the archive",
     value: 97,
     firstAppearance: "5.2.0",
   }),
@@ -871,7 +899,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "MaterialRefractionModeNone",
-    comment: "Add refraction mode None, converted from legacy when the refraction pin is not plugged.",
+    comment:
+      "Add refraction mode None, converted from legacy when the refraction pin is not plugged.",
     value: 100,
     firstAppearance: "5.2.0",
   }),
@@ -883,7 +912,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "PerPlatformAnimSequenceTargetFrameRate",
-    comment: "Animation Sequence now stores its frame-rate on a per-platform basis",
+    comment:
+      "Animation Sequence now stores its frame-rate on a per-platform basis",
     value: 102,
     firstAppearance: "5.2.0",
   }),
@@ -901,7 +931,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "NullPinSubCategoryObjectFix",
-    comment: "In certain cases, Blueprint pins with a PC_Object category would serialize a null PinSubCategoryObject",
+    comment:
+      "In certain cases, Blueprint pins with a PC_Object category would serialize a null PinSubCategoryObject",
     value: 105,
     firstAppearance: "5.3.0",
   }),
@@ -937,13 +968,15 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "IncreaseMaterialAttributesInputMask",
-    comment: "Changed the material property connected bitmasks from 32bit to 64bit",
+    comment:
+      "Changed the material property connected bitmasks from 32bit to 64bit",
     value: 111,
     firstAppearance: "5.3.0",
   }),
   new VersionDetails({
     name: "NiagaraSimStageNumIterationsBindings",
-    comment: "Combines proprties into a new binding so users can select constant or binding",
+    comment:
+      "Combines proprties into a new binding so users can select constant or binding",
     value: 112,
     firstAppearance: "5.3.0",
   }),
@@ -955,7 +988,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RigVMExternalExecuteContextStruct",
-    comment: "Store the RigVM execute context struct the VM uses in the archive",
+    comment:
+      "Store the RigVM execute context struct the VM uses in the archive",
     value: 114,
     firstAppearance: "5.3.0",
   }),

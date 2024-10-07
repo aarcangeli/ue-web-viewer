@@ -1,4 +1,7 @@
-export function enumToFlags(enumValue: number, flags: Array<[string, number]>): string {
+export function enumToFlags(
+  enumValue: number,
+  flags: Array<[string, number]>,
+): string {
   const result: string[] = [];
 
   for (const [name, value] of flags) {

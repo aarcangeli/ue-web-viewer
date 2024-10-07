@@ -97,31 +97,36 @@ export const FPhysicsObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "TriangleMeshHasVertexIndexMap",
-    comment: "TriangleMesh has map from source vertex index to internal vertex index for per-poly collisoin.",
+    comment:
+      "TriangleMesh has map from source vertex index to internal vertex index for per-poly collisoin.",
     value: 5,
     firstAppearance: "4.27.0",
   }),
   new VersionDetails({
     name: "VariableConvexStructureData",
-    comment: "Chaos Convex StructureData supports different index sizes based on num verts/planes",
+    comment:
+      "Chaos Convex StructureData supports different index sizes based on num verts/planes",
     value: 6,
     firstAppearance: "4.27.0",
   }),
   new VersionDetails({
     name: "AddCCDEnableFlag",
-    comment: "Add the ability to enable or disable Continuous Collision Detection",
+    comment:
+      "Add the ability to enable or disable Continuous Collision Detection",
     value: 7,
     firstAppearance: "4.27.0",
   }),
   new VersionDetails({
     name: "ChaosClothAddWeightedValue",
-    comment: "Added the weighted value property type to store the cloths weight maps' low/high ranges",
+    comment:
+      "Added the weighted value property type to store the cloths weight maps' low/high ranges",
     value: 8,
     firstAppearance: "4.27.0",
   }),
   new VersionDetails({
     name: "ConvexUsesVerticesArray",
-    comment: "Chaos FConvex uses array of FVec3s for vertices instead of particles",
+    comment:
+      "Chaos FConvex uses array of FVec3s for vertices instead of particles",
     value: 9,
     firstAppearance: "4.27.0",
   }),
@@ -151,13 +156,15 @@ export const FPhysicsObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ChaosConvexHasUniqueEdgeSet",
-    comment: "Convex structure data has a list of unique edges (half of the half edges)",
+    comment:
+      "Convex structure data has a list of unique edges (half of the half edges)",
     value: 14,
     firstAppearance: "4.27.0",
   }),
   new VersionDetails({
     name: "GeometryCollectionUserDefinedCollisionShapes",
-    comment: "Chaos FGeometryCollectionObject user defined collision shapes support",
+    comment:
+      "Chaos FGeometryCollectionObject user defined collision shapes support",
     value: 15,
     firstAppearance: "5.0.0",
   }),

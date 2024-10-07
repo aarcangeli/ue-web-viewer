@@ -15,9 +15,15 @@ interface SimpleDetailsViewCtx {
   indent: number;
 }
 
-const DetailsViewContext = React.createContext<SimpleDetailsViewCtx | null>(null);
+const DetailsViewContext = React.createContext<SimpleDetailsViewCtx | null>(
+  null,
+);
 
-function OptionalTreeHandle(props: { isVisible?: boolean; isExpanded: boolean; onClick?: () => void }) {
+function OptionalTreeHandle(props: {
+  isVisible?: boolean;
+  isExpanded: boolean;
+  onClick?: () => void;
+}) {
   if (!props.isVisible) {
     return <Box w={"24px"} h={"24px"} flexShrink={0} />;
   }
@@ -45,7 +51,9 @@ export function SimpleDetailsView(props: Props) {
 
   return (
     <Flex direction={"column"} fontSize={13} gap={"1px"} bg={"black"}>
-      <DetailsViewContext.Provider value={viewContext}>{props.children}</DetailsViewContext.Provider>
+      <DetailsViewContext.Provider value={viewContext}>
+        {props.children}
+      </DetailsViewContext.Provider>
     </Flex>
   );
 }
@@ -67,7 +75,11 @@ function useViewContextCopy() {
 }
 
 export function IndentedRow(
-  props: HTMLChakraProps<"div"> & { title?: string; withPlaceHolder?: boolean; bgHover?: CSS.Property.Color },
+  props: HTMLChakraProps<"div"> & {
+    title?: string;
+    withPlaceHolder?: boolean;
+    bgHover?: CSS.Property.Color;
+  },
 ) {
   const viewContext = useViewContext();
   const { title, withPlaceHolder, bg, bgHover, ...rest } = props;
@@ -92,7 +104,9 @@ export function IndentedRow(
           borderColor={"black"}
         />
       ))}
-      {(withPlaceHolder ?? true) && <Box w={`24px`} h={`24px`} flexShrink={0} />}
+      {(withPlaceHolder ?? true) && (
+        <Box w={`24px`} h={`24px`} flexShrink={0} />
+      )}
       {title && (
         <Text as={"span"} color={"orange.300"} mr={2}>
           {title}:
@@ -127,7 +141,11 @@ export function CollapsableSection(props: {
         bgHover={originalIndent === 0 ? "gray.700" : undefined}
         withPlaceHolder={false}
       >
-        <OptionalTreeHandle isVisible={hasChildren} isExpanded={isExpanded} onClick={onClick} />
+        <OptionalTreeHandle
+          isVisible={hasChildren}
+          isExpanded={isExpanded}
+          onClick={onClick}
+        />
         {props.title && (
           <Text as={"span"} color={"orange.300"} mr={2}>
             {props.title}:
@@ -135,7 +153,11 @@ export function CollapsableSection(props: {
         )}
         <Text cursor={"default"}>{props.name}</Text>
       </IndentedRow>
-      {isExpanded && <DetailsViewContext.Provider value={viewContext}>{props.children}</DetailsViewContext.Provider>}
+      {isExpanded && (
+        <DetailsViewContext.Provider value={viewContext}>
+          {props.children}
+        </DetailsViewContext.Provider>
+      )}
     </Flex>
   );
 }

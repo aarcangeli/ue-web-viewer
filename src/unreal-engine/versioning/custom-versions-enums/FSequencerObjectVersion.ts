@@ -71,13 +71,15 @@ export const FSequencerObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RenameMediaSourcePlatformPlayers",
-    comment: "Per-platform overrides player overrides for media sources changed name and type.",
+    comment:
+      "Per-platform overrides player overrides for media sources changed name and type.",
     value: 1,
     firstAppearance: "4.14.0",
   }),
   new VersionDetails({
     name: "ConvertEnableRootMotionToForceRootLock",
-    comment: "Enable root motion isn't the right flag to use, but force root lock",
+    comment:
+      "Enable root motion isn't the right flag to use, but force root lock",
     value: 2,
     firstAppearance: "4.15.0",
   }),
@@ -113,7 +115,8 @@ export const FSequencerObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "PurgeSpawnableBlueprints",
-    comment: "Purged old spawnable blueprint classes from level sequence assets",
+    comment:
+      "Purged old spawnable blueprint classes from level sequence assets",
     value: 8,
     firstAppearance: "4.20.0",
   }),
@@ -131,7 +134,8 @@ export const FSequencerObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ModifyLinearKeysForOldInterp",
-    comment: "Change the linear keys so they act the old way and interpolate always.",
+    comment:
+      "Change the linear keys so they act the old way and interpolate always.",
     value: 11,
     firstAppearance: "4.22.0",
   }),
@@ -143,7 +147,8 @@ export const FSequencerObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "SpawnableImprovements",
-    comment: "Set ContinuouslyRespawn to false by default, added FMovieSceneSpawnable::bNetAddressableName",
+    comment:
+      "Set ContinuouslyRespawn to false by default, added FMovieSceneSpawnable::bNetAddressableName",
     value: 13,
     firstAppearance: "4.27.0",
   }),

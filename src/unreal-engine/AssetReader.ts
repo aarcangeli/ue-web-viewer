@@ -1,5 +1,8 @@
 import invariant from "tiny-invariant";
-import type { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
+import type {
+  EUnrealEngineObjectUE4Version,
+  EUnrealEngineObjectUE5Version,
+} from "./versioning/ue-versions";
 import { FName } from "./structs/Name";
 
 /**
@@ -110,7 +113,9 @@ export class AssetReader {
     const value = this.dataView.getBigUint64(this.offset, this._littleEndian);
     this.offset += 8;
     if (value > Number.MAX_SAFE_INTEGER) {
-      throw new Error("UInt64 value is too large to be represented as a number");
+      throw new Error(
+        "UInt64 value is too large to be represented as a number",
+      );
     }
     return Number(value);
   }
@@ -135,7 +140,9 @@ export class AssetReader {
       return "";
     }
     if (length < 0) {
-      throw new Error("Unicode string serialization is not supported at the moment");
+      throw new Error(
+        "Unicode string serialization is not supported at the moment",
+      );
     }
     this.ensureBytes(length);
     let result = "";
@@ -167,7 +174,11 @@ export class AssetReader {
    */
   subReader(size: number) {
     this.ensureBytes(size);
-    const subDataView = new DataView(this.dataView.buffer, this.dataView.byteOffset + this.offset, size);
+    const subDataView = new DataView(
+      this.dataView.buffer,
+      this.dataView.byteOffset + this.offset,
+      size,
+    );
     this.offset += size;
     return this.makeChild(subDataView);
   }
@@ -216,7 +227,10 @@ export class FullAssetReader extends AssetReader {
     this._names = value;
   }
 
-  setVersion(fileVersionUE4: EUnrealEngineObjectUE4Version, fileVersionUE5: EUnrealEngineObjectUE5Version) {
+  setVersion(
+    fileVersionUE4: EUnrealEngineObjectUE4Version,
+    fileVersionUE5: EUnrealEngineObjectUE5Version,
+  ) {
     this._fileVersionUE4 = fileVersionUE4;
     this._fileVersionUE5 = fileVersionUE5;
   }

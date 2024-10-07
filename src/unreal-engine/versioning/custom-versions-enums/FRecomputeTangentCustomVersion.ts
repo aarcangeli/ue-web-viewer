@@ -31,7 +31,8 @@ export const FRecomputeTangentCustomVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RecomputeTangentVertexColorMask",
-    comment: "Choose which Vertex Color channel to use as mask to blend tangents",
+    comment:
+      "Choose which Vertex Color channel to use as mask to blend tangents",
     value: 2,
     firstAppearance: "4.27.0",
   }),
