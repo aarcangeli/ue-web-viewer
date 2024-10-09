@@ -5,7 +5,7 @@ import { FPropertyTag } from "./PropertyTag";
 import { EPropertyTagExtension, EPropertyType } from "./enums";
 import { EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import type { ObjectResolver } from "../objects/CoreUObject/Object";
-import { getPropertySerializerFromTag, UnknownPropertyType } from "./readers";
+import { getPropertySerializerFromTag, UnknownPropertyType } from "./serializers";
 
 export function readTaggedProperties(reader: AssetReader, isUClass: boolean, resolver: ObjectResolver) {
   // from UStruct::SerializeVersionedTaggedProperties

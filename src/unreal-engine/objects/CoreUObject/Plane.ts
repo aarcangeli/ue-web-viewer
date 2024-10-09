@@ -13,7 +13,7 @@ export class FPlane {
     this.W = W;
   }
 
-  static fromStream(reader: AssetReader) {
+  static fromFloat(reader: AssetReader) {
     const x = reader.readFloat();
     const y = reader.readFloat();
     const z = reader.readFloat();
@@ -21,7 +21,7 @@ export class FPlane {
     return new FPlane(x, y, z, w);
   }
 
-  static fromStreamDouble(reader: AssetReader) {
+  static fromDouble(reader: AssetReader) {
     const x = reader.readDouble();
     const y = reader.readDouble();
     const z = reader.readDouble();
