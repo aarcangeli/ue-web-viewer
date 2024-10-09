@@ -26,4 +26,5 @@ yarn dev
 
 ```
 PackageTools.ReloadPackage /Game/BP_SimpleProperties
+UE_IMPLEMENT_STRUCT("/Script/CoreUObject", Vector4);
 ```

@@ -23,11 +23,22 @@ export type ObjectConstructionParams = {
   flags?: EPackageFlags;
 };
 
+export enum ELoadingPhase {
+  /// The object is not being loaded.
+  None,
+  /// The object is currently being loaded.
+  Loading,
+  /// The object has been fully loaded.
+  Full,
+  /// There was an error loading the object.
+  Error,
+}
+
 /**
  * The base class of all UE objects.
  *
  * On the C++ side, the UObject class extends UObjectBaseUtility, which extends UObjectBase.
- * For simplicity, we will only implement the UObject class here.
+ * UObject is the superclass of all objects for UHT (Take a look at NoExportTypes.h)
  *
  * An object instance represents a single object in the UE4 runtime.
  * - Has a name, which is unique within its outer object.
@@ -46,7 +57,7 @@ export class UObject {
   private readonly _flags: EPackageFlags;
   private readonly _name: FName;
 
-  public readonly properties: TaggedProperty[] = [];
+  public properties: TaggedProperty[] = [];
 
   /**
    * Unreal Engine doesn't use a strong reference to the children objects.
@@ -63,7 +74,10 @@ export class UObject {
    */
   serializationStatistics: SerializationStatistics | null = null;
 
-  isFullyLoaded = false;
+  /**
+   * The loading phase of the object.
+   */
+  loadingPhase: ELoadingPhase = ELoadingPhase.None;
 
   objectGuid: FGuid | null = null;
 
@@ -150,7 +164,7 @@ export class UObject {
   deserialize(reader: AssetReader, resolver: ObjectResolver) {
     invariant(!(this._flags & EObjectFlags.RF_ClassDefaultObject), "Cannot deserialize a default object");
 
-    readTaggedProperties(this.class, this.properties, reader, true, resolver);
+    this.properties = readTaggedProperties(reader, true, resolver);
 
     // read object guid if present
     const hasObjectGuid = reader.readBoolean();
@@ -160,7 +174,7 @@ export class UObject {
   deserializeDefaultObject(reader: AssetReader, resolver: ObjectResolver) {
     invariant(this._flags & EObjectFlags.RF_ClassDefaultObject, "Can only deserialize a default object");
 
-    readTaggedProperties(this.class, this.properties, reader, true, resolver);
+    this.properties = readTaggedProperties(reader, true, resolver);
   }
 
   findInnerByFName(name: FName): UObject | null {

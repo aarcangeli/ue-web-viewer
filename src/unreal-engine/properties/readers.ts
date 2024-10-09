@@ -13,6 +13,9 @@ import { EPropertyType } from "./enums";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import invariant from "tiny-invariant";
 import { FPlane } from "../objects/CoreUObject/Plane";
+import { FQuat } from "../objects/CoreUObject/Quat";
+import { readTaggedProperties } from "./properties-serialization";
+import { FVector2D } from "../objects/CoreUObject/Vector2D";
 
 export type PropertySerializer = (
   reader: AssetReader,
@@ -44,17 +47,17 @@ export class UnknownPropertyType extends Error {
  * @throws {UnknownPropertyType} If the property type is unknown.
  */
 export function getPropertySerializerFromTag(reader: AssetReader, tag: FPropertyTag): PropertySerializer {
-  // In UE 4.12-5.4 there was a special tag for array of structs.
+  console.log("Tag:", tag.toString());
+  // Before UE 5.4 there was a special tag for array of structs.
   if (tag.legacyData) {
     if (tag.legacyData.type.equals(ArrayProperty) && tag.legacyData.innerType?.equals(StructProperty)) {
-      if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_INNER_ARRAY_TAG_INFO) {
-        const arraySize = reader.readInt32();
-        const innerTag = FPropertyTag.fromStream(reader);
-        console.log("Tag:", tag, "Inner tag:", innerTag);
-        return getLegacyStructArraySerializer(reader.fileVersionUE5, arraySize, innerTag);
+      if (reader.fileVersionUE4 < EUnrealEngineObjectUE4Version.VER_UE4_INNER_ARRAY_TAG_INFO) {
+        // The file is too old, we can't ready anything without knowing the struct type.
+        throw new UnknownPropertyType(tag.typeName);
       }
-      // We can't ready anything in this case.
-      throw new UnknownPropertyType(tag.typeName);
+      const arraySize = reader.readInt32();
+      const innerTag = FPropertyTag.fromStream(reader);
+      return getLegacyStructArraySerializer(reader.fileVersionUE5, innerTag, arraySize);
     }
   }
 
@@ -88,7 +91,7 @@ function makeCombinedName(packageName: FName | string, objectName: FName | strin
 }
 
 function makeStructReader<T extends object>(generator: (reader: AssetReader) => T): PropertySerializer {
-  return (reader) => ({ type: "struct", value: generator(reader) });
+  return (reader) => ({ type: "native-struct", value: generator(reader) });
 }
 
 function makeLargeWorld<T extends object>(
@@ -98,18 +101,27 @@ function makeLargeWorld<T extends object>(
   return [makeStructReader(generatorFloat), makeStructReader(generatorDouble)];
 }
 
+/**
+ * This is a list of structs with native serialization support.
+ *
+ * A C++ struct is native serializable if:
+ * - Has the "bool Serialize(FArchive& Ar)" or "bool Serialize(FStructuredArchive::FSlot Slot)" method.
+ * - Has a trait "TStructOpsTypeTraits<StructType>::WithSerializer" or "TStructOpsTypeTraits<StructType>::WithStructuredSerializer".
+ */
 const readerByStructName = new FNameMap<StructPropertySerializer>([
   [makeCombinedName(NAME_CoreUObject, "Guid"), makeStructReader(FGuid.fromStream)],
+  [makeCombinedName(NAME_CoreUObject, "Plane"), makeLargeWorld(FPlane.fromStream, FPlane.fromStreamDouble)],
+  [makeCombinedName(NAME_CoreUObject, "Quat"), makeLargeWorld(FQuat.fromStream, FQuat.fromStreamDouble)],
   [makeCombinedName(NAME_CoreUObject, "Rotator"), makeLargeWorld(FRotator.fromStream, FRotator.fromStreamDouble)],
   [makeCombinedName(NAME_CoreUObject, "Vector"), makeLargeWorld(FVector.fromStream, FVector.fromStreamDouble)],
-  [makeCombinedName(NAME_CoreUObject, "Plane"), makeLargeWorld(FPlane.fromStream, FPlane.fromStreamDouble)],
+  [makeCombinedName(NAME_CoreUObject, "Vector2D"), makeLargeWorld(FVector2D.fromStream, FVector2D.fromStreamDouble)],
 ]);
 
 /**
  * Before UE 5.4 there was a simplified tag format which doesn't contain the hierarchy of property types.
  * We try our best to find the correct struct reader based on the name.
  */
-function findFallbackReader(
+function findFallbackSerializer(
   fileVersionUE5: EUnrealEngineObjectUE5Version,
   typeName: FPropertyTypeName,
 ): PropertySerializer {
@@ -119,7 +131,7 @@ function findFallbackReader(
   {
     const packageName = typeTable.get(structName);
     if (packageName) {
-      const value = getByStructName(fileVersionUE5, packageName, structName);
+      const value = findNativeStructSerializer(fileVersionUE5, packageName, structName);
       if (value) {
         console.log(`Guess struct type: ${packageName}.${structName}`);
         return value;
@@ -145,8 +157,8 @@ function findFallbackReader(
     }
   }
 
-  console.info(`WARNING: Unknown struct type: ${structName}`);
-  throw new UnknownPropertyType(typeName);
+  // We hope the struct is a tagged struct.
+  return taggedPropertiesSerializer;
 }
 
 function convertSerializer(fileVersionUE5: EUnrealEngineObjectUE5Version, newVar: StructPropertySerializer) {
@@ -157,7 +169,7 @@ function convertSerializer(fileVersionUE5: EUnrealEngineObjectUE5Version, newVar
   return newVar;
 }
 
-function getByStructName(
+function findNativeStructSerializer(
   fileVersionUE5: EUnrealEngineObjectUE5Version,
   packageName: FName,
   structName: FName,
@@ -168,22 +180,54 @@ function getByStructName(
   }
 }
 
+function taggedPropertiesSerializer(reader: AssetReader, resolver: ObjectResolver): PropertyValue {
+  const properties = readTaggedProperties(reader, false, resolver);
+  return { type: "struct", value: properties };
+}
+
 function getStructSerializer(
   fileVersionUE5: EUnrealEngineObjectUE5Version,
   structName: FPropertyTypeName,
 ): PropertySerializer {
-  // Manage legacy struct types
+  // Before UE 5.4, the package name was not stored in the tag.
+  // We have to guess based on the struct name (which may potentially be wrong).
   if (!structName.innerTypes.length) {
-    return findFallbackReader(fileVersionUE5, structName);
+    return findFallbackSerializer(fileVersionUE5, structName);
   }
 
   const outer = structName.getParameter(0);
-  const newVar = getByStructName(fileVersionUE5, outer.name, structName.name);
+  const newVar = findNativeStructSerializer(fileVersionUE5, outer.name, structName.name);
   if (newVar) {
     return newVar;
   }
 
-  throw new UnknownPropertyType(structName);
+  // We assume the struct is serialized using property tags.
+  return taggedPropertiesSerializer;
+}
+
+/**
+ * Get the serializer for a legacy struct array.
+ */
+function getLegacyStructArraySerializer(
+  fileVersionUE5: EUnrealEngineObjectUE5Version,
+  innerTag: FPropertyTag,
+  arraySize: number,
+): PropertySerializer {
+  invariant(innerTag.legacyData);
+  if (!innerTag.legacyData.type.equals(StructProperty)) {
+    throw new Error("Expected array property");
+  }
+
+  const subTypeName = innerTag.typeName;
+  const subSerializer = getPropertySerializer(fileVersionUE5, subTypeName);
+
+  return (reader: AssetReader, resolver: ObjectResolver) => {
+    const result: PropertyValue[] = [];
+    for (let i = 0; i < arraySize; i++) {
+      result.push(subSerializer(reader, resolver, subTypeName));
+    }
+    return { type: "array", value: result };
+  };
 }
 
 function getArraySerializer(
@@ -202,20 +246,6 @@ function getArraySerializer(
     }
     return { type: "array", value: result };
   };
-}
-
-/**
- * Get the serializer for a legacy struct array.
- */
-function getLegacyStructArraySerializer(
-  fileVersionUE5: EUnrealEngineObjectUE5Version,
-  arraySize: number,
-  innerTag: FPropertyTag,
-): PropertySerializer {
-  invariant(innerTag.legacyData);
-  invariant(innerTag.legacyData.type.equals(StructProperty), "Expected array property");
-
-  return getArraySerializer(innerTag.typeName, fileVersionUE5, arraySize);
 }
 
 const readerByPropertyType = (() => {

@@ -53,6 +53,12 @@ function renderValue(key: number, name: string, value: PropertyValue) {
       );
     case "struct":
       return (
+        <CollapsableSection key={key} title={name} name={``}>
+          {value.value.map((item, index) => renderValue(index, item.nameString, item.value))}
+        </CollapsableSection>
+      );
+    case "native-struct":
+      return (
         <CollapsableSection key={key} title={name} name={String(value.value)}>
           {Object.keys(value.value).map((subKey, index) => (
             <IndentedRow key={index} title={subKey}>

@@ -7,6 +7,7 @@ import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
 import { FName, NAME_None } from "../structs/Name";
 import { removeExtension } from "../../utils/string-utils";
 import type { ObjectConstructionParams, ObjectResolver } from "../objects/CoreUObject/Object";
+import { ELoadingPhase } from "../objects/CoreUObject/Object";
 import { UObject, WeakObject } from "../objects/CoreUObject/Object";
 import { UPackage } from "../objects/CoreUObject/Package";
 import { CLASS_Package, UnknownClass } from "../objects/global-instances";
@@ -44,8 +45,6 @@ export class Asset {
    * The package object.
    */
   private readonly _package: UPackage;
-
-  private recursionCheck: string[] = [];
 
   /**
    * Construct an asset from the given package name and reader.
@@ -144,7 +143,7 @@ export class Asset {
 
     const currentObject = this.getCachedObjectByIndex(index);
     if (currentObject) {
-      if (full && !currentObject.isFullyLoaded) {
+      if (full && currentObject.loadingPhase === ELoadingPhase.None) {
         this.reloadObject(currentObject);
       }
       return currentObject;
@@ -198,6 +197,7 @@ export class Asset {
         return e instanceof WeakObject && e.deref() === object;
       }) + 1;
     if (index > 0) {
+      object.loadingPhase = ELoadingPhase.None;
       this.serializeObject(this.exports[index - 1], object);
     }
   }
@@ -247,7 +247,7 @@ export class Asset {
     // The recursion can only happen when serializing outer or class.
     // If an object is referenced in properties, it will return a partially loaded object.
     if (value === RecursiveCheck) {
-      throw new Error(`Recursive object reference detected: ${this.recursionCheck.join(" -> ")} -> ${index}`);
+      throw new Error(`Recursive object reference`);
     }
 
     return (value as WeakObject)?.deref() ?? null;
@@ -262,22 +262,24 @@ export class Asset {
     const object = this.withRecursionCheck(index, () => {
       invariant(objectExport.ClassIndex != 0, `Expected a valid class index`);
       const clazz = this.getObjectByIndex(objectExport.ClassIndex) as UClass;
-      return this.instantiateObject({
+      const object = this.instantiateObject({
         clazz: clazz,
         name: objectExport.ObjectName,
         flags: objectExport.objectFlags,
       });
+
+      // Attach the object to the outer
+      const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex) : this._package;
+      outer.addInner(object);
+
+      // Register the object
+      this._exportedObjects[index - 1] = object.asWeakObject();
+
+      return object;
     });
 
-    // Attach the object to the outer
-    const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex) : this._package;
-    outer.addInner(object);
-
-    // Register the object immediately, so it can be referenced by other objects (even recursively)
-    this._exportedObjects[index - 1] = object.asWeakObject();
-
     // serialize
-    if (full) {
+    if (full && object.loadingPhase === ELoadingPhase.None) {
       this.serializeObject(objectExport, object);
     }
 
@@ -285,7 +287,12 @@ export class Asset {
   }
 
   private serializeObject(objectExport: FObjectExport, object: UObject) {
+    invariant(object.loadingPhase === ELoadingPhase.None, `Object ${object.fullName} already loaded`);
+
     try {
+      // Mark as loaded, so that we can detect recursion
+      object.loadingPhase = ELoadingPhase.Loading;
+
       this._reader.seek(objectExport.SerialOffset);
       const subReader = this._reader.subReader(objectExport.SerialSize);
 
@@ -301,11 +308,12 @@ export class Asset {
       }
 
       object.serializationStatistics = new SerializationStatistics(subReader.remaining, null);
+      object.loadingPhase = ELoadingPhase.Full;
     } catch (e) {
       console.warn(`Error deserializing object ${object.fullName}; the object is partially loaded:`, e);
       object.serializationStatistics = new SerializationStatistics(null, String(e));
+      object.loadingPhase = ELoadingPhase.Error;
     }
-    object.isFullyLoaded = true;
   }
 
   private instantiateObject(params: ObjectConstructionParams) {
@@ -313,21 +321,19 @@ export class Asset {
     return new UObject(params);
   }
 
-  private withRecursionCheck<T>(index: number, fn: () => T) {
+  private withRecursionCheck(index: number, fn: () => UObject) {
     // recursion check
-    const oldLength = this.recursionCheck.length;
-    this.recursionCheck.push(`${index}`);
     this._exportedObjects[index - 1] = RecursiveCheck;
 
     try {
-      return fn();
+      const createdObject = fn();
+      this._exportedObjects[index - 1] = createdObject.asWeakObject();
+      return createdObject;
     } catch (e) {
       if (this._exportedObjects[index - 1] === RecursiveCheck) {
         delete this._exportedObjects[index - 1];
       }
       throw e;
-    } finally {
-      this.recursionCheck.splice(oldLength);
     }
   }
 }

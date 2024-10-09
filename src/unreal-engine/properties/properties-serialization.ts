@@ -3,21 +3,14 @@ import { makeError, TaggedProperty } from "./properties";
 import type { AssetReader } from "../AssetReader";
 import { FPropertyTag } from "./PropertyTag";
 import { EPropertyTagExtension, EPropertyType } from "./enums";
-import type { UStruct } from "../objects/CoreUObject/Class";
 import { EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import type { ObjectResolver } from "../objects/CoreUObject/Object";
 import { getPropertySerializerFromTag, UnknownPropertyType } from "./readers";
 
-export function readTaggedProperties(
-  struct: UStruct,
-  properties: TaggedProperty[],
-  reader: AssetReader,
-  isUClass: boolean,
-  resolver: ObjectResolver,
-) {
+export function readTaggedProperties(reader: AssetReader, isUClass: boolean, resolver: ObjectResolver) {
   // from UStruct::SerializeVersionedTaggedProperties
 
-  properties.length = 0;
+  const properties: TaggedProperty[] = [];
 
   if (
     isUClass &&
@@ -38,6 +31,8 @@ export function readTaggedProperties(
 
     properties.push(readTaggedProperty(tag, reader, resolver));
   }
+
+  return properties;
 }
 
 function readTaggedProperty(tag: FPropertyTag, reader: AssetReader, resolver: ObjectResolver) {

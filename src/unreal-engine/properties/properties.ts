@@ -1,4 +1,4 @@
-import type { FPropertyTag } from "./PropertyTag";
+import type { FPropertyTag, FPropertyTypeName } from "./PropertyTag";
 import type { FName } from "../structs/Name";
 import type { UObject } from "../objects/CoreUObject/Object";
 
@@ -24,51 +24,59 @@ export class TaggedProperty {
   }
 }
 
-export type booleanValue = {
+export interface booleanValue {
   type: "boolean";
   value: boolean;
-};
+}
 
-export type NumericValue = {
+export interface NumericValue {
   type: "numeric";
   value: number;
-};
+}
 
-export type NameValue = {
+export interface NameValue {
   type: "name";
   value: FName;
-};
+}
 
-export type StringValue = {
+export interface StringValue {
   type: "string";
   value: string;
-};
+}
 
-export type ObjectValue = {
+export interface ObjectValue {
   type: "object";
   object: UObject | null;
-};
+}
 
-export type StructValue = {
+export interface TaggedStructValue {
   type: "struct";
-  value: Record<string, any>;
-};
+  value: TaggedProperty[];
+}
 
-export type ScriptDelegate = {
+/**
+ * A struct with a native serialization format.
+ */
+export interface StructValue {
+  type: "native-struct";
+  value: Record<string, any>;
+}
+
+export interface ScriptDelegate {
   type: "delegate";
   object: UObject | null;
   function: FName;
-};
+}
 
-export type ArrayValue = {
+export interface ArrayValue {
   type: "array";
   value: PropertyValue[];
-};
+}
 
-export type SerializationError = {
+export interface SerializationError {
   type: "error";
   message: string;
-};
+}
 
 export type PropertyValue =
   | booleanValue
@@ -77,6 +85,7 @@ export type PropertyValue =
   | StringValue
   | ObjectValue
   | StructValue
+  | TaggedStructValue
   | ScriptDelegate
   | ArrayValue
   | SerializationError;
