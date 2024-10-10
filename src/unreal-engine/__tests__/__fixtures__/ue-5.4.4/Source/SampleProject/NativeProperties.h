@@ -5,7 +5,7 @@
 #include "NativeProperties.generated.h"
 
 UCLASS()
-class UE_5_4_4_API ANativeProperties : public AActor
+class SAMPLEPROJECT_API ANativeProperties : public AActor
 {
 	GENERATED_BODY()
 

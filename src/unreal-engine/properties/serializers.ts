@@ -54,7 +54,6 @@ export class UnknownPropertyType extends Error {
  * @throws {UnknownPropertyType} If the property type is unknown.
  */
 export function getPropertySerializerFromTag(reader: AssetReader, tag: FPropertyTag): PropertySerializer {
-  console.log("Tag:", tag.toString());
   // Before UE 5.4 there was a special tag for array of structs.
   if (tag.legacyData) {
     if (tag.legacyData.type.equals(ArrayProperty) && tag.legacyData.innerType?.equals(StructProperty)) {

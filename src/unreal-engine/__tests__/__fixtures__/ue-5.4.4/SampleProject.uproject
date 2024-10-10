@@ -5,7 +5,7 @@
 	"Description": "",
 	"Modules": [
 		{
-			"Name": "ue_5_4_4",
+			"Name": "SampleProject",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
