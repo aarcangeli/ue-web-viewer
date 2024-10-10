@@ -27,4 +27,5 @@ repos:
         name: eslint
         language: system
         entry: yarn eslint
+        files: \.(js|jsx|ts|tsx)$
         args: [--fix]
