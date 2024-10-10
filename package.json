@@ -13,7 +13,8 @@
     "test": "jest",
     "test:coverage": "jest --coverage --reporters=default --reporters=jest-junit",
     "typecheck": "tsc --noEmit",
-    "eslint": "eslint .",
+    "eslint": "eslint",
+    "eslint:all": "eslint . --fix",
     "eslint:dump-config": "node eslint.config.js --dump",
     "eslint:inspector": "eslint-config-inspector",
     "check:all": "yarn typecheck && yarn eslint"

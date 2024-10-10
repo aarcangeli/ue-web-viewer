@@ -1,4 +1,4 @@
-import type { FPropertyTag, FPropertyTypeName } from "./PropertyTag";
+import type { FPropertyTag } from "./PropertyTag";
 import type { FName } from "../structs/Name";
 import type { UObject } from "../objects/CoreUObject/Object";
 

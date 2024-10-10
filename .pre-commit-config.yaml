@@ -20,3 +20,11 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: eslint
+        name: eslint
+        language: system
+        entry: yarn eslint
+        args: [--fix]
