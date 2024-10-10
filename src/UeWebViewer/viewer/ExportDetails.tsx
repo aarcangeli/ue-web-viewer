@@ -75,16 +75,41 @@ function RawView(props: { asset: Asset }) {
     <SimpleDetailsView>
       {exports.map((value, index) => (
         <CollapsableSection name={`Export ${index + 1}`} key={index}>
-          <IndentedRow title={"Class Index"}>{value.ClassIndex}</IndentedRow>
-          <IndentedRow title={"Super Index"}>{value.SuperIndex}</IndentedRow>
-          <IndentedRow title={"Template Index"}>{value.TemplateIndex}</IndentedRow>
-          <IndentedRow title={"Outer Index"}>{value.OuterIndex}</IndentedRow>
-          <IndentedRow title={"Object Name"}>{value.ObjectName.text}</IndentedRow>
-          <IndentedRow title={"Object Flags"}>
-            {value.objectFlags} ({exportFlagsToString(value.objectFlags)})
+          <IndentedRow title={"ClassIndex"}>{String(value.ClassIndex)}</IndentedRow>
+          <IndentedRow title={"SuperIndex"}>{String(value.SuperIndex)}</IndentedRow>
+          <IndentedRow title={"TemplateIndex"}>{String(value.TemplateIndex)}</IndentedRow>
+          <IndentedRow title={"OuterIndex"}>{String(value.OuterIndex)}</IndentedRow>
+          <IndentedRow title={"ObjectName"}>{String(value.ObjectName)}</IndentedRow>
+          <IndentedRow title={"objectFlags"}>{exportFlagsToString(value.objectFlags)}</IndentedRow>
+          <IndentedRow title={"SerialSize"}>{String(value.SerialSize)}</IndentedRow>
+          <IndentedRow title={"SerialOffset"}>{String(value.SerialOffset)}</IndentedRow>
+          <IndentedRow title={"bForcedExport"}>{String(value.bForcedExport)}</IndentedRow>
+          <IndentedRow title={"bNotForClient"}>{String(value.bNotForClient)}</IndentedRow>
+          <IndentedRow title={"bNotForServer"}>{String(value.bNotForServer)}</IndentedRow>
+          <IndentedRow title={"bIsInheritedInstance"}>{String(value.bIsInheritedInstance)}</IndentedRow>
+          <IndentedRow title={"packageFlags"}>{String(value.packageFlags)}</IndentedRow>
+          <IndentedRow title={"bNotAlwaysLoadedForEditorGame"}>
+            {String(value.bNotAlwaysLoadedForEditorGame)}
           </IndentedRow>
-          <IndentedRow title={"Package Flags"}>{value.packageFlags}</IndentedRow>
           <IndentedRow title={"bIsAsset"}>{String(value.bIsAsset)}</IndentedRow>
+          <IndentedRow title={"bGeneratePublicHash"}>{String(value.bGeneratePublicHash)}</IndentedRow>
+          <IndentedRow title={"FirstExportDependency"}>{String(value.FirstExportDependency)}</IndentedRow>
+          <IndentedRow title={"SerializationBeforeSerializationDependencies"}>
+            {String(value.SerializationBeforeSerializationDependencies)}
+          </IndentedRow>
+          <IndentedRow title={"CreateBeforeSerializationDependencies"}>
+            {String(value.CreateBeforeSerializationDependencies)}
+          </IndentedRow>
+          <IndentedRow title={"SerializationBeforeCreateDependencies"}>
+            {String(value.SerializationBeforeCreateDependencies)}
+          </IndentedRow>
+          <IndentedRow title={"CreateBeforeCreateDependencies"}>
+            {String(value.CreateBeforeCreateDependencies)}
+          </IndentedRow>
+          <IndentedRow title={"ScriptSerializationStartOffset"}>
+            {String(value.ScriptSerializationStartOffset)}
+          </IndentedRow>
+          <IndentedRow title={"ScriptSerializationEndOffset"}>{String(value.ScriptSerializationEndOffset)}</IndentedRow>
         </CollapsableSection>
       ))}
     </SimpleDetailsView>

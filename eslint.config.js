@@ -11,6 +11,13 @@ const config = defineFlatConfig([
     name: "Globally ignored files",
     ignores: ["dist/**"],
   },
+  {
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+  },
   pluginJs.configs.recommended,
   ...eslint.configs.recommended,
   reactPlugin.configs.flat.recommended,

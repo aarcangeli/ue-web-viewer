@@ -5,6 +5,7 @@ import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../component
 import type { PropertyValue } from "../../unreal-engine/properties/properties";
 import type { SerializationStatistics } from "../../unreal-engine/serialization/SerializationStatistics";
 import type { UObject } from "../../unreal-engine/objects/CoreUObject/Object";
+import { FMatrix44 } from "../../unreal-engine/objects/CoreUObject/Matrix44";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
@@ -52,6 +53,23 @@ function renderValue(key: number, name: string, value: PropertyValue) {
         </IndentedRow>
       );
     case "struct":
+      return (
+        <CollapsableSection key={key} title={name} name={``}>
+          {value.value.map((item, index) => renderValue(index, item.nameString, item.value))}
+        </CollapsableSection>
+      );
+    case "native-struct":
+      if (value.value instanceof FMatrix44) {
+        return (
+          <CollapsableSection initialExpanded={false} key={key} title={name} name={String(value.value)}>
+            {value.value.matrix.map((item, index) => (
+              <IndentedRow key={index} title={`M[${Math.floor(index / 4)}][${index % 4}]`}>
+                {String(item)}
+              </IndentedRow>
+            ))}
+          </CollapsableSection>
+        );
+      }
       return (
         <CollapsableSection key={key} title={name} name={String(value.value)}>
           {Object.keys(value.value).map((subKey, index) => (

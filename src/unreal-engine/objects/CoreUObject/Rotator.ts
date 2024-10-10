@@ -22,14 +22,14 @@ export class FRotator {
     return new FRotator(pitch, yaw, roll);
   }
 
-  static fromStream(reader: AssetReader) {
+  static fromFloat(reader: AssetReader) {
     const pitch = reader.readFloat();
     const yaw = reader.readFloat();
     const roll = reader.readFloat();
     return new FRotator(pitch, yaw, roll);
   }
 
-  static fromStreamDouble(reader: AssetReader) {
+  static fromDouble(reader: AssetReader) {
     const pitch = reader.readDouble();
     const yaw = reader.readDouble();
     const roll = reader.readDouble();

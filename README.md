@@ -21,3 +21,12 @@ yarn preview
 ```bash
 yarn dev
 ```
+
+## Useful stuff
+
+```
+PackageTools.ReloadPackage /Game/BP_SimpleProperties
+UE_IMPLEMENT_STRUCT("/Script/CoreUObject", Vector4);
+UClass::SerializeDefaultObject serializes the default object of a class
+UStruct::SerializeVersionedTaggedProperties serializes tagged properties
+```

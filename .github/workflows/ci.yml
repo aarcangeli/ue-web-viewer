@@ -35,9 +35,12 @@ jobs:
         run: yarn typecheck
 
       - name: ESLint 🧹
+        id: eslint
         run: yarn eslint
 
       - name: Run the tests and generate coverage report 🧪
+        # Run the tests even if eslint fails
+        if: ${{ success() || steps.eslint.outcome == 'failure' }}
         run: yarn test:coverage
 
       - name: Build 🏗️

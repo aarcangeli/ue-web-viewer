@@ -11,6 +11,7 @@ const config: Config = {
     "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
   },
   modulePaths: ["<rootDir>/src"],
+  testPathIgnorePatterns: ["utils.ts"],
 };
 
 export default config;
