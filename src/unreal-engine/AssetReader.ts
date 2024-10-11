@@ -199,13 +199,6 @@ export class AssetReader {
     return this._littleEndian;
   }
 
-  /**
-   * Returns the offset of the reader in the global buffer.
-   */
-  private get globalOffset() {
-    return this.dataView.byteOffset + this.offset;
-  }
-
   private makeChild(newBlob: DataView) {
     const reader = new AssetReader(newBlob);
     reader._littleEndian = this._littleEndian;
