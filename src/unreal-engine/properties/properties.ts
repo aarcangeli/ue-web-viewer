@@ -1,6 +1,6 @@
 import type { FPropertyTag } from "./PropertyTag";
 import type { FName } from "../structs/Name";
-import type { UObject } from "../objects/CoreUObject/Object";
+import type { UObject } from "../modules/CoreUObject/objects/Object";
 
 export class TaggedProperty {
   public readonly tag: FPropertyTag;

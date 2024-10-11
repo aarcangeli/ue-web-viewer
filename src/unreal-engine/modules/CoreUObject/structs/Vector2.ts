@@ -1,4 +1,4 @@
-import type { AssetReader } from "../../AssetReader";
+import type { AssetReader } from "../../../AssetReader";
 
 /**
  * Two-dimensional vector.
@@ -49,6 +49,6 @@ export class FVector2 {
   }
 
   toString() {
-    return `FVector2D{X: ${this.X}, Y: ${this.Y}}`;
+    return `FVector2{X: ${this.X}, Y: ${this.Y}}`;
   }
 }

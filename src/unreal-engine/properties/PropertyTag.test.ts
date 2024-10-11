@@ -1,5 +1,5 @@
 import { FPropertyTypeName } from "./PropertyTag";
-import { FGuid } from "../objects/CoreUObject/Guid";
+import { FGuid } from "../modules/CoreUObject/structs/Guid";
 import { FName } from "../structs/Name";
 import { EPropertyType } from "./enums";
 

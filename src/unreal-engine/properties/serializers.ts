@@ -1,28 +1,28 @@
 import type { AssetReader } from "../AssetReader";
-import type { ObjectResolver } from "../objects/CoreUObject/Object";
+import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
 import type { FPropertyTypeName } from "./PropertyTag";
 import { FPropertyTag } from "./PropertyTag";
 import type { NumericValue, PropertyValue } from "./properties";
 import { FName, FNameMap } from "../structs/Name";
-import { NAME_CoreUObject } from "../objects/names";
-import { FGuid } from "../objects/CoreUObject/Guid";
-import { FRotator } from "../objects/CoreUObject/Rotator";
-import { FVector3 } from "../objects/CoreUObject/Vector3";
+import { NAME_CoreUObject } from "../modules/names";
+import { FGuid } from "../modules/CoreUObject/structs/Guid";
+import { FRotator } from "../modules/CoreUObject/structs/Rotator";
+import { FVector3 } from "../modules/CoreUObject/structs/Vector3";
 import { typeTable } from "./type-table";
 import { EPropertyType } from "./enums";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import invariant from "tiny-invariant";
-import { FPlane } from "../objects/CoreUObject/Plane";
-import { FQuat } from "../objects/CoreUObject/Quat";
+import { FPlane } from "../modules/CoreUObject/structs/Plane";
+import { FQuat } from "../modules/CoreUObject/structs/Quat";
 import { readTaggedProperties } from "./properties-serialization";
-import { FVector2 } from "../objects/CoreUObject/Vector2";
-import { FVector4 } from "../objects/CoreUObject/Vector4";
-import { FBox } from "../objects/CoreUObject/Box";
-import { FMatrix44 } from "../objects/CoreUObject/Matrix44";
-import { FLinearColor } from "../objects/CoreUObject/LinearColor";
-import { FColor } from "../objects/CoreUObject/Color";
-import { FTwoVectors } from "../objects/CoreUObject/TwoVectors";
-import { FTransform } from "../objects/CoreUObject/Transform";
+import { FVector2 } from "../modules/CoreUObject/structs/Vector2";
+import { FVector4 } from "../modules/CoreUObject/structs/Vector4";
+import { FBox } from "../modules/CoreUObject/structs/Box";
+import { FMatrix44 } from "../modules/CoreUObject/structs/Matrix44";
+import { FLinearColor } from "../modules/CoreUObject/structs/LinearColor";
+import { FColor } from "../modules/CoreUObject/structs/Color";
+import { FTwoVectors } from "../modules/CoreUObject/structs/TwoVectors";
+import { FTransform } from "../modules/CoreUObject/structs/Transform";
 
 export type PropertySerializer = (
   reader: AssetReader,

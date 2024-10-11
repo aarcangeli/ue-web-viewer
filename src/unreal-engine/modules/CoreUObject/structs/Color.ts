@@ -1,4 +1,4 @@
-import type { AssetReader } from "../../AssetReader";
+import type { AssetReader } from "../../../AssetReader";
 
 /**
  * RGBA color on integer scale (sRGB).

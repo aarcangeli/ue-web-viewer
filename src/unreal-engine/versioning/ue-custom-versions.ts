@@ -3,7 +3,7 @@
 // noinspection JSUnusedGlobalSymbols
 //
 
-import { FGuid } from "../objects/CoreUObject/Guid";
+import { FGuid } from "../modules/CoreUObject/structs/Guid";
 import { CustomVersionGuid } from "./registry";
 import * as FAnimationCustomVersion from "./custom-versions-enums/FAnimationCustomVersion";
 import * as FClothingAssetCustomVersion from "./custom-versions-enums/FClothingAssetCustomVersion";

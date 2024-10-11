@@ -1,4 +1,4 @@
-import type { AssetReader } from "../../AssetReader";
+import type { AssetReader } from "../../../AssetReader";
 
 /**
  * Three-dimensional vector.
@@ -58,6 +58,6 @@ export class FVector3 {
   }
 
   toString() {
-    return `FVector{X: ${this.X}, Y: ${this.Y}, Z: ${this.Z}}`;
+    return `FVector3{X: ${this.X}, Y: ${this.Y}, Z: ${this.Z}}`;
   }
 }

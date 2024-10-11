@@ -6,12 +6,12 @@ import invariant from "tiny-invariant";
 import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
 import { FName, NAME_None } from "../structs/Name";
 import { removeExtension } from "../../utils/string-utils";
-import type { ObjectConstructionParams, ObjectResolver } from "../objects/CoreUObject/Object";
-import { ELoadingPhase } from "../objects/CoreUObject/Object";
-import { UObject, WeakObject } from "../objects/CoreUObject/Object";
-import { UPackage } from "../objects/CoreUObject/Package";
-import { CLASS_Package, UnknownClass } from "../objects/global-instances";
-import type { UClass } from "../objects/CoreUObject/Class";
+import type { ObjectConstructionParams, ObjectResolver } from "../modules/CoreUObject/objects/Object";
+import { ELoadingPhase } from "../modules/CoreUObject/objects/Object";
+import { UObject, WeakObject } from "../modules/CoreUObject/objects/Object";
+import { UPackage } from "../modules/CoreUObject/objects/Package";
+import { CLASS_Package, UnknownClass } from "../modules/global-instances";
+import type { UClass } from "../modules/CoreUObject/objects/Class";
 import { SerializationStatistics } from "./SerializationStatistics";
 import { makeNameFromParts } from "../path-utils";
 
@@ -23,7 +23,13 @@ class MissingImportedObject extends UObject {}
 const RecursiveCheck = Symbol("RecursiveCheck");
 
 /**
- * Permits to read the content of a package file.
+ * This class permits to load data from an asset file.
+ * An asset is composed by a root file (uasset or uexp) and an optional uexp file.
+ *
+ * Objects are lazily loaded when requested, and are cached using weak references.
+ * When an object is garbage collected, it will be reloaded when requested again.
+ *
+ * The root object is always an instane of {@link UPackage}, and is not really read from the file.
  *
  * An asset is garbage collected only if all assets that contain it are garbage collected.
  */
@@ -44,7 +50,7 @@ export class Asset {
   /**
    * The package object.
    */
-  private readonly _package: UPackage;
+  readonly package: UPackage;
 
   /**
    * Construct an asset from the given package name and reader.
@@ -80,14 +86,14 @@ export class Asset {
     this.exports = readExportMap(reader, summary);
 
     // Create the package object
-    this._package = new UPackage({
+    this.package = new UPackage({
       clazz: CLASS_Package,
       name: FName.fromString(packageName),
       flags: 0,
     });
   }
 
-  makeFullName(index: number): string {
+  makeFullNameByIndex(index: number): string {
     invariant(this.isIndexValid(index), `Invalid index ${index}`);
 
     if (index == 0) {
@@ -188,7 +194,9 @@ export class Asset {
   }
 
   private findIndexByFullName(fullName: string) {
-    return this.exports.findIndex((e, index) => this.makeFullName(index + 1).toLowerCase() === fullName.toLowerCase());
+    return this.exports.findIndex(
+      (e, index) => this.makeFullNameByIndex(index + 1).toLowerCase() === fullName.toLowerCase(),
+    );
   }
 
   reloadObject(object: UObject) {
@@ -269,7 +277,7 @@ export class Asset {
       });
 
       // Attach the object to the outer
-      const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex) : this._package;
+      const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex) : this.package;
       outer.addInner(object);
 
       // Register the object

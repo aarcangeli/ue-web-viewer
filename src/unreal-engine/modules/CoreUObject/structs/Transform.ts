@@ -1,4 +1,4 @@
-import type { AssetReader } from "../../AssetReader";
+import type { AssetReader } from "../../../AssetReader";
 import { FQuat } from "./Quat";
 import { FVector3 } from "./Vector3";
 

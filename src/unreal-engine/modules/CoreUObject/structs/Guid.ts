@@ -1,4 +1,4 @@
-import type { AssetReader } from "../../AssetReader";
+import type { AssetReader } from "../../../AssetReader";
 
 export enum EGuidFormats {
   /// Ex: {11223344-5566-7788-99AA-BBCCDDEEFF00}

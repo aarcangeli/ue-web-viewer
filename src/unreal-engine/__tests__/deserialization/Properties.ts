@@ -1,6 +1,6 @@
 import { readAsset } from "../utils";
 import invariant from "tiny-invariant";
-import { UObject } from "../../objects/CoreUObject/Object";
+import { UObject } from "../../modules/CoreUObject/objects/Object";
 
 // UObject references should be serialized using their full name
 expect.addSnapshotSerializer({
@@ -17,7 +17,6 @@ describe("BP_NativeProperties", () => {
     invariant(object);
 
     expect(object.properties).toHaveLength(57);
-
     for (const property of object.properties) {
       expect(property).toMatchSnapshot();
     }

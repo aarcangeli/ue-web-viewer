@@ -1,5 +1,5 @@
 import type { AssetReader } from "../AssetReader";
-import { FGuid } from "../objects/CoreUObject/Guid";
+import { FGuid } from "../modules/CoreUObject/structs/Guid";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import { enumToFlags } from "../../utils/enuim-utils";
 import type { FName } from "./Name";

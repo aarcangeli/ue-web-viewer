@@ -1,9 +1,9 @@
 import { FName } from "../structs/Name";
-import { UPackage } from "./CoreUObject/Package";
-import type { ClassConstructionParams } from "./CoreUObject/Class";
-import { UClass } from "./CoreUObject/Class";
-import type { ObjectConstructionParams } from "./CoreUObject/Object";
-import { LazyClass, UObject } from "./CoreUObject/Object";
+import { UPackage } from "./CoreUObject/objects/Package";
+import type { ClassConstructionParams } from "./CoreUObject/objects/Class";
+import { UClass } from "./CoreUObject/objects/Class";
+import type { ObjectConstructionParams } from "./CoreUObject/objects/Object";
+import { LazyClass, UObject } from "./CoreUObject/objects/Object";
 
 /**
  * Utility function to create a new object.

@@ -4,8 +4,8 @@ import { Alert, AlertDescription, AlertIcon, AlertTitle, Box } from "@chakra-ui/
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import type { PropertyValue } from "../../unreal-engine/properties/properties";
 import type { SerializationStatistics } from "../../unreal-engine/serialization/SerializationStatistics";
-import type { UObject } from "../../unreal-engine/objects/CoreUObject/Object";
-import { FMatrix44 } from "../../unreal-engine/objects/CoreUObject/Matrix44";
+import type { UObject } from "../../unreal-engine/modules/CoreUObject/objects/Object";
+import { FMatrix44 } from "../../unreal-engine/modules/CoreUObject/structs/Matrix44";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;

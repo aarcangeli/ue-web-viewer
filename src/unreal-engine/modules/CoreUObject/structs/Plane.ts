@@ -1,12 +1,12 @@
-import type { AssetReader } from "../../AssetReader";
+import type { AssetReader } from "../../../AssetReader";
 
-export class FQuat {
+export class FPlane {
   X: number = 0;
   Y: number = 0;
   Z: number = 0;
   W: number = 0;
 
-  public constructor(X: number, Y: number, Z: number, W: number) {
+  public constructor(X: number, Y: number, Z: number, W: number = 0) {
     this.X = X;
     this.Y = Y;
     this.Z = Z;
@@ -18,7 +18,7 @@ export class FQuat {
     const y = reader.readFloat();
     const z = reader.readFloat();
     const w = reader.readFloat();
-    return new FQuat(x, y, z, w);
+    return new FPlane(x, y, z, w);
   }
 
   static fromDouble(reader: AssetReader) {
@@ -26,10 +26,10 @@ export class FQuat {
     const y = reader.readDouble();
     const z = reader.readDouble();
     const w = reader.readDouble();
-    return new FQuat(x, y, z, w);
+    return new FPlane(x, y, z, w);
   }
 
   toString() {
-    return `FQuat{X: ${this.X}, Y: ${this.Y}, Z: ${this.Z}, W: ${this.W}}`;
+    return `FPlane{X: ${this.X}, Y: ${this.Y}, Z: ${this.Z}, W: ${this.W}}`;
   }
 }

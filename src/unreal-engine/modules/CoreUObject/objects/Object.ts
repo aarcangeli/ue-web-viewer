@@ -1,14 +1,14 @@
-import type { FName } from "../../structs/Name";
+import type { FName } from "../../../structs/Name";
 import invariant from "tiny-invariant";
 import type { UClass } from "./Class";
-import type { AssetReader } from "../../AssetReader";
-import type { TaggedProperty } from "../../properties/properties";
-import { readTaggedProperties } from "../../properties/properties-serialization";
-import type { SerializationStatistics } from "../../serialization/SerializationStatistics";
-import { FGuid } from "./Guid";
-import { makeNameFromParts } from "../../path-utils";
-import type { EPackageFlags } from "../../enums";
-import { EObjectFlags } from "../../structs/ObjectExport";
+import type { AssetReader } from "../../../AssetReader";
+import type { TaggedProperty } from "../../../properties/properties";
+import { readTaggedProperties } from "../../../properties/properties-serialization";
+import type { SerializationStatistics } from "../../../serialization/SerializationStatistics";
+import { FGuid } from "../structs/Guid";
+import { makeNameFromParts } from "../../../path-utils";
+import type { EPackageFlags } from "../../../enums";
+import { EObjectFlags } from "../../../structs/ObjectExport";
 
 /**
  * All characters are allowed except for '.' and ':'.
