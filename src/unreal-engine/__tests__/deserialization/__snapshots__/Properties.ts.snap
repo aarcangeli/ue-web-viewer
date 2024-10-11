@@ -721,6 +721,30 @@ TaggedProperty {
     "boolVal": false,
     "experimentalOverridableLogic": false,
     "legacyData": null,
+    "name": "Vector2d",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 2,
+    "size": 16,
+    "typeName": "StructProperty(Vector2D(/Script/CoreUObject))",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FVector2 {
+      "X": 1,
+      "Y": 2,
+    },
+  },
+}
+`;
+
+exports[`BP_NativeProperties Properties 31`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": null,
     "name": "Vector4f",
     "overrideOperation": 0,
     "propertyGuid": null,
@@ -740,7 +764,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 31`] = `
+exports[`BP_NativeProperties Properties 32`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -766,7 +790,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 32`] = `
+exports[`BP_NativeProperties Properties 33`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -792,7 +816,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 33`] = `
+exports[`BP_NativeProperties Properties 34`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -818,7 +842,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 34`] = `
+exports[`BP_NativeProperties Properties 35`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -844,7 +868,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 35`] = `
+exports[`BP_NativeProperties Properties 36`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -869,7 +893,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 36`] = `
+exports[`BP_NativeProperties Properties 37`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -894,7 +918,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 37`] = `
+exports[`BP_NativeProperties Properties 38`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -919,7 +943,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 38`] = `
+exports[`BP_NativeProperties Properties 39`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -952,7 +976,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 39`] = `
+exports[`BP_NativeProperties Properties 40`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -985,7 +1009,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 40`] = `
+exports[`BP_NativeProperties Properties 41`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1018,7 +1042,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 41`] = `
+exports[`BP_NativeProperties Properties 42`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1058,7 +1082,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 42`] = `
+exports[`BP_NativeProperties Properties 43`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1098,7 +1122,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 43`] = `
+exports[`BP_NativeProperties Properties 44`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1138,7 +1162,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 44`] = `
+exports[`BP_NativeProperties Properties 45`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1164,7 +1188,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 45`] = `
+exports[`BP_NativeProperties Properties 46`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1190,7 +1214,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 46`] = `
+exports[`BP_NativeProperties Properties 47`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1216,7 +1240,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 47`] = `
+exports[`BP_NativeProperties Properties 48`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1242,7 +1266,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 48`] = `
+exports[`BP_NativeProperties Properties 49`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1268,7 +1292,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 49`] = `
+exports[`BP_NativeProperties Properties 50`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1300,7 +1324,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 50`] = `
+exports[`BP_NativeProperties Properties 51`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1321,7 +1345,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 51`] = `
+exports[`BP_NativeProperties Properties 52`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1359,7 +1383,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 52`] = `
+exports[`BP_NativeProperties Properties 53`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1397,7 +1421,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 53`] = `
+exports[`BP_NativeProperties Properties 54`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1486,7 +1510,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 54`] = `
+exports[`BP_NativeProperties Properties 55`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1507,7 +1531,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 55`] = `
+exports[`BP_NativeProperties Properties 56`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1528,7 +1552,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 56`] = `
+exports[`BP_NativeProperties Properties 57`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,
@@ -1549,7 +1573,7 @@ TaggedProperty {
 }
 `;
 
-exports[`BP_NativeProperties Properties 57`] = `
+exports[`BP_NativeProperties Properties 58`] = `
 TaggedProperty {
   "tag": FPropertyTag {
     "arrayIndex": 0,

@@ -16,7 +16,7 @@ describe("BP_NativeProperties", () => {
     const object = asset.getByFullName("BP_NativeProperties.Default__BP_NativeProperties_C");
     invariant(object);
 
-    expect(object.properties).toHaveLength(57);
+    expect(object.properties).toHaveLength(58);
     for (const property of object.properties) {
       expect(property).toMatchSnapshot();
     }
