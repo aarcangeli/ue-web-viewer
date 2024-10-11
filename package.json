@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "test": "jest",
     "test:coverage": "jest --coverage --reporters=default --reporters=jest-junit",
+    "test:update-snapshots": "jest --updateSnapshot",
     "typecheck": "tsc --noEmit",
     "eslint": "eslint",
     "eslint:all": "eslint . --fix",
