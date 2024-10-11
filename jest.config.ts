@@ -12,6 +12,9 @@ const config: Config = {
   },
   modulePaths: ["<rootDir>/src"],
   testPathIgnorePatterns: ["utils.ts"],
+  transform: {
+    "^.+\\.(t|j)sx?$": "@swc/jest",
+  },
 };
 
 export default config;
