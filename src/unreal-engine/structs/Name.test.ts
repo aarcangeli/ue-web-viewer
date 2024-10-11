@@ -44,4 +44,12 @@ describe("Name", () => {
     expect(name.number).toBe(0);
     expect(name.toString()).toBe("MyName_01");
   });
+
+  it("should be case insensitive", () => {
+    const name = FName.fromString("MyName");
+    expect(FName.fromString("MyName")).toEqual(name);
+
+    const none = FName.fromString("none");
+    expect(none.isNone).toBe(true);
+  });
 });

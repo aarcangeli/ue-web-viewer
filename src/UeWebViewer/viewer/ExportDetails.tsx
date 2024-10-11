@@ -16,8 +16,8 @@ import {
   Tabs,
   useDisclosure,
 } from "@chakra-ui/react";
-import type { FObjectExport } from "../../unreal-engine/structs/ObjectExport";
-import { exportFlagsToString } from "../../unreal-engine/structs/ObjectExport";
+import type { FObjectExport } from "../../unreal-engine/serialization/ObjectExport";
+import { exportFlagsToString } from "../../unreal-engine/serialization/ObjectExport";
 import invariant from "tiny-invariant";
 import { makeObjectTitle } from "./commons";
 import { removePrefix } from "../../utils/string-utils";

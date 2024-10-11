@@ -8,7 +8,7 @@ import type { SerializationStatistics } from "../../../serialization/Serializati
 import { FGuid } from "../structs/Guid";
 import { makeNameFromParts } from "../../../path-utils";
 import type { EPackageFlags } from "../../../enums";
-import { EObjectFlags } from "../../../structs/ObjectExport";
+import { EObjectFlags } from "../../../serialization/ObjectExport";
 
 /**
  * All characters are allowed except for '.' and ':'.
@@ -119,18 +119,22 @@ export class UObject {
     return this._outer;
   }
 
-  get fullName(): string {
-    const parts = [];
+  get nameParts(): FName[] {
+    const parts: FName[] = [];
 
-    parts.push(this.nameString);
+    parts.push(this.name);
 
     let it = this.outer;
     while (it !== null) {
-      parts.push(it.nameString);
+      parts.push(it.name);
       it = it.outer;
     }
 
-    return makeNameFromParts(parts.reverse());
+    return parts.reverse();
+  }
+
+  get fullName(): string {
+    return makeNameFromParts(this.nameParts);
   }
 
   /**

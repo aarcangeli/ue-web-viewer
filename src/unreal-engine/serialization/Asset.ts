@@ -1,7 +1,7 @@
 import type { AssetReader, FullAssetReader } from "../AssetReader";
-import { FPackageFileSummary } from "../structs/PackageFileSummary";
-import { FObjectImport } from "../structs/ObjectImport";
-import { EObjectFlags, FObjectExport } from "../structs/ObjectExport";
+import { FPackageFileSummary } from "./PackageFileSummary";
+import { FObjectImport } from "./ObjectImport";
+import { EObjectFlags, FObjectExport } from "./ObjectExport";
 import invariant from "tiny-invariant";
 import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
 import { FName, NAME_None } from "../structs/Name";

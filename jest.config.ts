@@ -1,5 +1,9 @@
 import type { Config } from "jest";
 import { defaults } from "jest-config";
+import inspector from "inspector";
+
+// Check if the debugger is attached.
+const isDebugAttached = Boolean(inspector.url());
 
 const config: Config = {
   ...defaults,
@@ -13,7 +17,8 @@ const config: Config = {
   modulePaths: ["<rootDir>/src"],
   testPathIgnorePatterns: ["utils.ts"],
   transform: {
-    "^.+\\.(t|j)sx?$": "@swc/jest",
+    // Use SWC for faster TypeScript transpilation, but not when debugging because it is not debuggable.
+    ...(isDebugAttached ? {} : { "^.+\\.(t|j)sx?$": "@swc/jest" }),
   },
 };
 

@@ -1551,8 +1551,10 @@ TaggedProperty {
     "typeName": "StructProperty(DateTime(/Script/CoreUObject))",
   },
   "value": {
-    "message": "Cannot read property: Error: Invalid name index: 2072870016 (type: StructProperty(DateTime(/Script/CoreUObject)))",
-    "type": "error",
+    "type": "native-struct",
+    "value": FDateTime {
+      "Ticks": 637162927330000000n,
+    },
   },
 }
 `;
@@ -1572,8 +1574,10 @@ TaggedProperty {
     "typeName": "StructProperty(Timespan(/Script/CoreUObject))",
   },
   "value": {
-    "message": "Cannot read property: Error: Invalid name index: -539754489 (type: StructProperty(Timespan(/Script/CoreUObject)))",
-    "type": "error",
+    "type": "native-struct",
+    "value": FTimespan {
+      "Ticks": 106666847991234567n,
+    },
   },
 }
 `;
@@ -1593,8 +1597,10 @@ TaggedProperty {
     "typeName": "StructProperty(FrameNumber(/Script/CoreUObject))",
   },
   "value": {
-    "message": "Cannot read property: Error: End of file (type: StructProperty(FrameNumber(/Script/CoreUObject)))",
-    "type": "error",
+    "type": "native-struct",
+    "value": FFrameNumber {
+      "Value": 1234,
+    },
   },
 }
 `;
@@ -1614,8 +1620,12 @@ TaggedProperty {
     "typeName": "StructProperty(SoftClassPath(/Script/CoreUObject))",
   },
   "value": {
-    "message": "Cannot read property: Error: End of file (type: StructProperty(SoftClassPath(/Script/CoreUObject)))",
-    "type": "error",
+    "type": "native-struct",
+    "value": FSoftObjectPath {
+      "assetName": "BP_NativeProperties_C",
+      "packageName": "BP_NativeProperties",
+      "subPathString": "",
+    },
   },
 }
 `;

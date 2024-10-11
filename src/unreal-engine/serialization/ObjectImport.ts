@@ -1,7 +1,7 @@
 import type { AssetReader } from "../AssetReader";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
-import type { FName } from "./Name";
-import { NAME_None } from "./Name";
+import type { FName } from "../structs/Name";
+import { NAME_None } from "../structs/Name";
 
 /**
  * struct FObjectImport {

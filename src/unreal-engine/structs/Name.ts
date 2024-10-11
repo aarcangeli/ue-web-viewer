@@ -40,8 +40,12 @@ export class FName {
     return this.name + (this.number != 0 ? `_${this.number - 1}` : "");
   }
 
+  get isEmpty() {
+    return this.name.length === 0 && this.number === 0;
+  }
+
   get isNone() {
-    return this.name === "None" && this.number === 0;
+    return this.equals(NAME_None);
   }
 
   /**

@@ -23,6 +23,10 @@ import { FLinearColor } from "../modules/CoreUObject/structs/LinearColor";
 import { FColor } from "../modules/CoreUObject/structs/Color";
 import { FTwoVectors } from "../modules/CoreUObject/structs/TwoVectors";
 import { FTransform } from "../modules/CoreUObject/structs/Transform";
+import { FDateTime } from "../modules/CoreUObject/structs/DateTime";
+import { FTimespan } from "../modules/CoreUObject/structs/Timespan";
+import { FFrameNumber } from "../modules/CoreUObject/structs/FrameNumber";
+import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
 
 export type PropertySerializer = (
   reader: AssetReader,
@@ -98,6 +102,12 @@ function makeCombinedName(packageName: FName | string, objectName: FName | strin
 
 function makeStructReader<T extends object>(generator: (reader: AssetReader) => T): PropertySerializer {
   return (reader) => ({ type: "native-struct", value: generator(reader) });
+}
+
+function softObjectPathSerializer(reader: AssetReader, resolver: ObjectResolver): PropertyValue {
+  const object = resolver(reader);
+  const objectPath = object ? FSoftObjectPath.fromObject(object) : FSoftObjectPath.empty();
+  return { type: "native-struct", value: objectPath };
 }
 
 function makeLargeWorld<T extends object>(
@@ -201,6 +211,14 @@ const readerByStructName = new FNameMap<StructPropertySerializer>([
 
   // Guid
   [makeCombinedName(NAME_CoreUObject, "Guid"), makeStructReader(FGuid.fromStream)],
+
+  // Date and time
+  [makeCombinedName(NAME_CoreUObject, "DateTime"), makeStructReader(FDateTime.fromStream)],
+  [makeCombinedName(NAME_CoreUObject, "Timespan"), makeStructReader(FTimespan.fromStream)],
+  [makeCombinedName(NAME_CoreUObject, "FrameNumber"), makeStructReader(FFrameNumber.fromStream)],
+
+  // Soft class reference
+  [makeCombinedName(NAME_CoreUObject, "SoftClassPath"), softObjectPathSerializer],
 ]);
 
 /**
