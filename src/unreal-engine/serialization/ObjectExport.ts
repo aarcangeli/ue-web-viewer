@@ -1,7 +1,7 @@
 import type { AssetReader } from "../AssetReader";
 import { FGuid } from "../modules/CoreUObject/structs/Guid";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
-import { enumToFlags } from "../../utils/enuim-utils";
+import { enumToFlags } from "../../utils/enum-utils";
 import type { FName } from "../structs/Name";
 import { NAME_None } from "../structs/Name";
 
