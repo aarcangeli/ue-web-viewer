@@ -1,4 +1,5 @@
 import type { HTMLChakraProps } from "@chakra-ui/react";
+import { Center } from "@chakra-ui/react";
 import { Box, Flex, IconButton, Text } from "@chakra-ui/react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
 import React, { useCallback, useContext, useState } from "react";
@@ -67,7 +68,12 @@ function useViewContextCopy() {
 }
 
 export function IndentedRow(
-  props: HTMLChakraProps<"div"> & { title?: string; withPlaceHolder?: boolean; bgHover?: CSS.Property.Color },
+  props: HTMLChakraProps<"div"> & {
+    icon?: React.ReactNode;
+    title?: string;
+    withPlaceHolder?: boolean;
+    bgHover?: CSS.Property.Color;
+  },
 ) {
   const viewContext = useViewContext();
   const { title, withPlaceHolder, bg, bgHover, ...rest } = props;
@@ -93,6 +99,11 @@ export function IndentedRow(
         />
       ))}
       {(withPlaceHolder ?? true) && <Box w={`24px`} h={`24px`} flexShrink={0} />}
+      {props.icon && (
+        <Center w={"24px"} h={"24px"} flexShrink={0}>
+          {props.icon}
+        </Center>
+      )}
       {title && (
         <Text as={"span"} color={"orange.300"} mr={2}>
           {title}:
@@ -104,6 +115,7 @@ export function IndentedRow(
 }
 
 export function CollapsableSection(props: {
+  icon?: React.ReactNode;
   title?: React.ReactNode;
   name?: React.ReactNode;
   children?: React.ReactNode;
@@ -128,6 +140,11 @@ export function CollapsableSection(props: {
         withPlaceHolder={false}
       >
         <OptionalTreeHandle isVisible={hasChildren} isExpanded={isExpanded} onClick={onClick} />
+        {props.icon && (
+          <Center w={"24px"} h={"24px"} flexShrink={0}>
+            {props.icon}
+          </Center>
+        )}
         {props.title && (
           <Text as={"span"} color={"orange.300"} mr={2}>
             {props.title}:

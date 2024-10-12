@@ -2,7 +2,7 @@ import type { AssetReader } from "../AssetReader";
 import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
 import type { FPropertyTypeName } from "./PropertyTag";
 import { FPropertyTag } from "./PropertyTag";
-import { MapValue, NumericValue, PropertyValue, SetValue } from "./properties";
+import type { MapValue, NumericValue, PropertyValue, SetValue } from "./properties";
 import { FName, FNameMap } from "../structs/Name";
 import { NAME_CoreUObject } from "../modules/names";
 import { FGuid } from "../modules/CoreUObject/structs/Guid";
@@ -90,8 +90,11 @@ export function getPropertySerializer(
   }
 
   if (propertyType == EPropertyType.MapProperty) {
-    console.log("Map property", typeName);
     return getMapSerializer(typeName.getParameter(0), typeName.getParameter(1), fileVersionUE5);
+  }
+
+  if (propertyType == EPropertyType.SoftObjectProperty) {
+    return softObjectPathSerializer;
   }
 
   const foundValue = readerByPropertyType[propertyType];

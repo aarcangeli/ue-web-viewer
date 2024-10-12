@@ -261,6 +261,10 @@ export class FPropertyTypeName {
     return new FPropertyTypeName(this.name, [...this.innerTypes, innerType]);
   }
 
+  getOptionalParameter(index: number): FPropertyTypeName | null {
+    return this.innerTypes[index] ?? null;
+  }
+
   getParameter(index: number) {
     if (index >= this.innerTypes.length) {
       throw new Error(`Expected inner type at index ${index}, but found only ${this.innerTypes.length} values.`);

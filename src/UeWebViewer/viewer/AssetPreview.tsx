@@ -8,6 +8,7 @@ import type { UObject } from "../../unreal-engine/modules/CoreUObject/objects/Ob
 import { FMatrix44 } from "../../unreal-engine/modules/CoreUObject/structs/Matrix44";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { Icon } from "@chakra-ui/icons";
+import { makePropertyIcon } from "./MakePropertyIcon";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
@@ -24,7 +25,9 @@ export function ObjectPreview(props: { object: UObject }) {
           <IndentedRow title={"Object Guid"}>{exportedObjects.objectGuid?.toString() || "None"}</IndentedRow>
         </CollapsableSection>
         <CollapsableSection name={"Properties"}>
-          {exportedObjects.properties.map((property, index) => renderValue(index, property.nameString, property.value))}
+          {exportedObjects.properties.map((property, index) =>
+            renderValue(index, property.nameString, property.value, makePropertyIcon(property.tag)),
+          )}
         </CollapsableSection>
       </SimpleDetailsView>
     </Box>
@@ -41,33 +44,35 @@ function makeIndexLabel(index: number) {
   return `Index [ ${index} ]`;
 }
 
-function renderValue(key: number, name: string, value: PropertyValue) {
+function renderValue(key: number, name: string, value: PropertyValue, icon?: React.ReactElement) {
   switch (value.type) {
     case "numeric":
     case "boolean":
     case "name":
     case "string":
       return (
-        <IndentedRow key={key} title={name}>
+        <IndentedRow key={key} icon={icon} title={name}>
           {`${value.value}`}
         </IndentedRow>
       );
     case "object":
       return (
-        <IndentedRow key={key} title={name}>
+        <IndentedRow key={key} icon={icon} title={name}>
           {value.object?.fullName ?? "null"}
         </IndentedRow>
       );
     case "struct":
       return (
-        <CollapsableSection key={key} title={name} name={``}>
-          {value.value.map((item, index) => renderValue(index, item.nameString, item.value))}
+        <CollapsableSection key={key} icon={icon} title={name} name={``}>
+          {value.value.map((item, index) =>
+            renderValue(index, item.nameString, item.value, makePropertyIcon(item.tag)),
+          )}
         </CollapsableSection>
       );
     case "native-struct":
       if (value.value instanceof FMatrix44) {
         return (
-          <CollapsableSection initialExpanded={false} key={key} title={name} name={String(value.value)}>
+          <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value.value)}>
             {value.value.matrix.map((item, index) => (
               <IndentedRow key={index} title={`M[${Math.floor(index / 4)}][${index % 4}]`}>
                 {String(item)}
@@ -77,7 +82,7 @@ function renderValue(key: number, name: string, value: PropertyValue) {
         );
       }
       return (
-        <CollapsableSection key={key} title={name} name={String(value.value)}>
+        <CollapsableSection key={key} icon={icon} title={name} name={String(value.value)}>
           {Object.keys(value.value).map((subKey, index) => (
             <IndentedRow key={index} title={subKey}>
               {String(value.value[subKey])}
@@ -87,13 +92,13 @@ function renderValue(key: number, name: string, value: PropertyValue) {
       );
     case "delegate":
       return (
-        <IndentedRow key={key} title={name}>
+        <IndentedRow key={key} icon={icon} title={name}>
           {value.object?.fullName ?? "null"}::{value.function.text}
         </IndentedRow>
       );
     case "array":
       return (
-        <CollapsableSection key={key} title={name} name={`${value.value.length} Array elements`}>
+        <CollapsableSection key={key} icon={icon} title={name} name={`${value.value.length} Array elements`}>
           {value.value.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
         </CollapsableSection>
       );
@@ -101,6 +106,7 @@ function renderValue(key: number, name: string, value: PropertyValue) {
       return (
         <CollapsableSection
           key={key}
+          icon={icon}
           title={name}
           name={
             <>
@@ -124,6 +130,7 @@ function renderValue(key: number, name: string, value: PropertyValue) {
       return (
         <CollapsableSection
           key={key}
+          icon={icon}
           title={name}
           name={
             <>
@@ -145,7 +152,7 @@ function renderValue(key: number, name: string, value: PropertyValue) {
       );
     case "error":
       return (
-        <IndentedRow key={key} title={name}>
+        <IndentedRow key={key} icon={icon} title={name}>
           <Box color={"red"}>ERROR: {value.message}</Box>
         </IndentedRow>
       );
@@ -172,7 +179,7 @@ function makeMapKey(key: PropertyValue): string {
 function makeHelpSetMap() {
   return (
     <MakeHelpTooltip
-      title={
+      label={
         "Only added and removed elements are serialized on the asset, the diff applied to a default object to generate the final property element."
       }
     />
@@ -206,9 +213,9 @@ function renderStatistics(statistics: SerializationStatistics) {
   return false;
 }
 
-function MakeHelpTooltip(props: { title: string }) {
+function MakeHelpTooltip(props: { label: string }) {
   return (
-    <Tooltip label={props.title} verticalAlign="middle" placement={"top"} hasArrow>
+    <Tooltip label={props.label} verticalAlign="middle" placement={"top"} hasArrow>
       <span>
         <Icon as={IoMdHelpCircleOutline} verticalAlign="middle" boxSize={5} />
       </span>
