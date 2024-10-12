@@ -1,3 +1,5 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 using UnrealBuildTool;
 using System.Collections.Generic;
 
@@ -5,8 +7,8 @@ public class SampleProjectTarget : TargetRules {
     public SampleProjectTarget(TargetInfo Target)
         : base(Target) {
         Type = TargetType.Game;
-        DefaultBuildSettings = BuildSettingsVersion.V5;
-        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_4;
-        ExtraModuleNames.Add("SampleProject");
+        DefaultBuildSettings = BuildSettingsVersion.V2;
+
+        ExtraModuleNames.AddRange(new string[] { "SampleProject" });
     }
 }

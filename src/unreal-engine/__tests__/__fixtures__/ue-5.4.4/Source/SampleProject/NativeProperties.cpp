@@ -1,5 +1,3 @@
 #include "NativeProperties.h"
 
-ANativeProperties::ANativeProperties()
-{
-}
+ANativeProperties::ANativeProperties() {}

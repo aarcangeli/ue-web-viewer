@@ -20,18 +20,6 @@ export class AssetReader {
 
   constructor(private readonly dataView: DataView) {}
 
-  tell() {
-    return this.offset;
-  }
-
-  get fileSize() {
-    return this.dataView.byteLength;
-  }
-
-  get remaining() {
-    return this.dataView.byteLength - this.offset;
-  }
-
   get fileVersionUE4(): EUnrealEngineObjectUE4Version {
     invariant(this._fileVersionUE4 !== null, "File version UE4 is not set yet");
     return this._fileVersionUE4;
@@ -40,6 +28,14 @@ export class AssetReader {
   get fileVersionUE5(): EUnrealEngineObjectUE5Version {
     invariant(this._fileVersionUE5 !== null, "File version UE5 is not set yet");
     return this._fileVersionUE5;
+  }
+
+  tell() {
+    return this.offset;
+  }
+
+  get remaining() {
+    return this.dataView.byteLength - this.offset;
   }
 
   seek(offset: number) {
@@ -185,18 +181,18 @@ export class AssetReader {
     return this.makeChild(this.dataView);
   }
 
-  private ensureBytes(number: number) {
-    if (this.offset + number > this.dataView.byteLength) {
-      throw new Error("End of file");
-    }
-  }
-
   swapEndian() {
     this._littleEndian = !this._littleEndian;
   }
 
   get littleEndian() {
     return this._littleEndian;
+  }
+
+  private ensureBytes(number: number) {
+    if (this.offset + number > this.dataView.byteLength) {
+      throw new Error("End of file");
+    }
   }
 
   private makeChild(newBlob: DataView) {

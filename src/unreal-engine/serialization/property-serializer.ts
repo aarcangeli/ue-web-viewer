@@ -251,7 +251,6 @@ function findFallbackSerializer(
     }
   });
   if (foundValue) {
-    console.log(`Guess struct type: ${packageName}.${structName}`);
     const serializer = convertSerializer(fileVersionUE5, foundValue);
     if (serializer) {
       return serializer;

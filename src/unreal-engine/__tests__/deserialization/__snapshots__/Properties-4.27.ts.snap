@@ -1,0 +1,1224 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BP_BasicProperties Properties 1`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": true,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "BoolProperty",
+      "valueType": null,
+    },
+    "name": "Bool",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 0,
+    "typeName": "BoolProperty",
+  },
+  "value": {
+    "type": "boolean",
+    "value": true,
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 2`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "Int8Property",
+      "valueType": null,
+    },
+    "name": "Int8",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 1,
+    "typeName": "Int8Property",
+  },
+  "value": {
+    "type": "numeric",
+    "value": 123,
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 3`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "Int16Property",
+      "valueType": null,
+    },
+    "name": "Int16",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 2,
+    "typeName": "Int16Property",
+  },
+  "value": {
+    "type": "numeric",
+    "value": 123,
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 4`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "IntProperty",
+      "valueType": null,
+    },
+    "name": "Int32",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 4,
+    "typeName": "IntProperty",
+  },
+  "value": {
+    "type": "numeric",
+    "value": 123,
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 5`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "Int64Property",
+      "valueType": null,
+    },
+    "name": "Int64",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 8,
+    "typeName": "Int64Property",
+  },
+  "value": {
+    "type": "numeric",
+    "value": 123,
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 6`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": "None",
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "ByteProperty",
+      "valueType": null,
+    },
+    "name": "UInt8",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 1,
+    "typeName": "ByteProperty(None)",
+  },
+  "value": {
+    "type": "numeric",
+    "value": 123,
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 7`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "UInt16Property",
+      "valueType": null,
+    },
+    "name": "UInt16",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 2,
+    "typeName": "UInt16Property",
+  },
+  "value": {
+    "type": "numeric",
+    "value": 123,
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 8`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "UInt32Property",
+      "valueType": null,
+    },
+    "name": "UInt32",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 4,
+    "typeName": "UInt32Property",
+  },
+  "value": {
+    "type": "numeric",
+    "value": 123,
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 9`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "UInt64Property",
+      "valueType": null,
+    },
+    "name": "UInt64",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 8,
+    "typeName": "UInt64Property",
+  },
+  "value": {
+    "type": "numeric",
+    "value": 123,
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 10`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "FloatProperty",
+      "valueType": null,
+    },
+    "name": "Float",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 4,
+    "typeName": "FloatProperty",
+  },
+  "value": {
+    "type": "numeric",
+    "value": 123,
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 11`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "DoubleProperty",
+      "valueType": null,
+    },
+    "name": "Double",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 8,
+    "typeName": "DoubleProperty",
+  },
+  "value": {
+    "type": "numeric",
+    "value": 123,
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 12`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "StrProperty",
+      "valueType": null,
+    },
+    "name": "String",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 17,
+    "typeName": "StrProperty",
+  },
+  "value": {
+    "type": "string",
+    "value": "Hello String",
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 13`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "TextProperty",
+      "valueType": null,
+    },
+    "name": "Text",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 96,
+    "typeName": "TextProperty",
+  },
+  "value": {
+    "message": "Unknown property type 'TextProperty'",
+    "type": "error",
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 14`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "NameProperty",
+      "valueType": null,
+    },
+    "name": "Name",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 8,
+    "typeName": "NameProperty",
+  },
+  "value": {
+    "type": "name",
+    "value": "Hello Name",
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 15`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": "ESampleEnum",
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "ByteProperty",
+      "valueType": null,
+    },
+    "name": "Enum",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 8,
+    "typeName": "ByteProperty(ESampleEnum)",
+  },
+  "value": {
+    "message": "Found 7 bytes found at the end of property value (type: ByteProperty(ESampleEnum)).",
+    "type": "error",
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 16`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "SampleStruct",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Struct",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 109,
+    "typeName": "StructProperty(SampleStruct)",
+  },
+  "value": {
+    "type": "struct",
+    "value": [
+      TaggedProperty {
+        "tag": FPropertyTag {
+          "arrayIndex": 0,
+          "boolVal": false,
+          "experimentalOverridableLogic": false,
+          "legacyData": FLegacyPropertyTag {
+            "enumName": null,
+            "innerType": null,
+            "structGuid": null,
+            "structName": null,
+            "type": "IntProperty",
+            "valueType": null,
+          },
+          "name": "IntValue",
+          "overrideOperation": 0,
+          "propertyGuid": null,
+          "serializeType": 1,
+          "size": 4,
+          "typeName": "IntProperty",
+        },
+        "value": {
+          "type": "numeric",
+          "value": 123,
+        },
+      },
+      TaggedProperty {
+        "tag": FPropertyTag {
+          "arrayIndex": 0,
+          "boolVal": false,
+          "experimentalOverridableLogic": false,
+          "legacyData": FLegacyPropertyTag {
+            "enumName": null,
+            "innerType": null,
+            "structGuid": null,
+            "structName": null,
+            "type": "FloatProperty",
+            "valueType": null,
+          },
+          "name": "FloatValue",
+          "overrideOperation": 0,
+          "propertyGuid": null,
+          "serializeType": 1,
+          "size": 4,
+          "typeName": "FloatProperty",
+        },
+        "value": {
+          "type": "numeric",
+          "value": 123,
+        },
+      },
+      TaggedProperty {
+        "tag": FPropertyTag {
+          "arrayIndex": 0,
+          "boolVal": false,
+          "experimentalOverridableLogic": false,
+          "legacyData": FLegacyPropertyTag {
+            "enumName": null,
+            "innerType": null,
+            "structGuid": null,
+            "structName": null,
+            "type": "StrProperty",
+            "valueType": null,
+          },
+          "name": "StringValue",
+          "overrideOperation": 0,
+          "propertyGuid": null,
+          "serializeType": 1,
+          "size": 18,
+          "typeName": "StrProperty",
+        },
+        "value": {
+          "type": "string",
+          "value": "String Struct",
+        },
+      },
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 1`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "IntProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "ArrayProperty",
+      "valueType": null,
+    },
+    "name": "IntArray",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 8,
+    "typeName": "ArrayProperty(IntProperty)",
+  },
+  "value": {
+    "type": "array",
+    "value": [
+      {
+        "type": "numeric",
+        "value": 123,
+      },
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 2`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "StrProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "ArrayProperty",
+      "valueType": null,
+    },
+    "name": "StringArray",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 25,
+    "typeName": "ArrayProperty(StrProperty)",
+  },
+  "value": {
+    "type": "array",
+    "value": [
+      {
+        "type": "string",
+        "value": "Hello",
+      },
+      {
+        "type": "string",
+        "value": "Unreal",
+      },
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 3`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "StructProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "ArrayProperty",
+      "valueType": null,
+    },
+    "name": "StructArray",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 150,
+    "typeName": "ArrayProperty(StructProperty)",
+  },
+  "value": {
+    "type": "array",
+    "value": [
+      {
+        "type": "struct",
+        "value": [
+          TaggedProperty {
+            "tag": FPropertyTag {
+              "arrayIndex": 0,
+              "boolVal": false,
+              "experimentalOverridableLogic": false,
+              "legacyData": FLegacyPropertyTag {
+                "enumName": null,
+                "innerType": null,
+                "structGuid": null,
+                "structName": null,
+                "type": "IntProperty",
+                "valueType": null,
+              },
+              "name": "IntValue",
+              "overrideOperation": 0,
+              "propertyGuid": null,
+              "serializeType": 1,
+              "size": 4,
+              "typeName": "IntProperty",
+            },
+            "value": {
+              "type": "numeric",
+              "value": 1,
+            },
+          },
+          TaggedProperty {
+            "tag": FPropertyTag {
+              "arrayIndex": 0,
+              "boolVal": false,
+              "experimentalOverridableLogic": false,
+              "legacyData": FLegacyPropertyTag {
+                "enumName": null,
+                "innerType": null,
+                "structGuid": null,
+                "structName": null,
+                "type": "FloatProperty",
+                "valueType": null,
+              },
+              "name": "FloatValue",
+              "overrideOperation": 0,
+              "propertyGuid": null,
+              "serializeType": 1,
+              "size": 4,
+              "typeName": "FloatProperty",
+            },
+            "value": {
+              "type": "numeric",
+              "value": 2,
+            },
+          },
+          TaggedProperty {
+            "tag": FPropertyTag {
+              "arrayIndex": 0,
+              "boolVal": false,
+              "experimentalOverridableLogic": false,
+              "legacyData": FLegacyPropertyTag {
+                "enumName": null,
+                "innerType": null,
+                "structGuid": null,
+                "structName": null,
+                "type": "StrProperty",
+                "valueType": null,
+              },
+              "name": "StringValue",
+              "overrideOperation": 0,
+              "propertyGuid": null,
+              "serializeType": 1,
+              "size": 6,
+              "typeName": "StrProperty",
+            },
+            "value": {
+              "type": "string",
+              "value": "3",
+            },
+          },
+        ],
+      },
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 4`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "TextProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "ArrayProperty",
+      "valueType": null,
+    },
+    "name": "TextArray",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 185,
+    "typeName": "ArrayProperty(TextProperty)",
+  },
+  "value": {
+    "message": "Unknown property type 'TextProperty' (FULL signature: 'ArrayProperty(TextProperty)')",
+    "type": "error",
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 5`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "ObjectProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "ArrayProperty",
+      "valueType": null,
+    },
+    "name": "ObjectArray",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 12,
+    "typeName": "ArrayProperty(ObjectProperty)",
+  },
+  "value": {
+    "type": "array",
+    "value": [
+      {
+        "object": [ref] /Script/SampleProject.BasicProperties,
+        "type": "object",
+      },
+      {
+        "object": [ref] /Script/SampleProject.NativeStructProperties,
+        "type": "object",
+      },
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 6`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "NameProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "ArrayProperty",
+      "valueType": null,
+    },
+    "name": "NameArray",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 20,
+    "typeName": "ArrayProperty(NameProperty)",
+  },
+  "value": {
+    "type": "array",
+    "value": [
+      {
+        "type": "name",
+        "value": "Name",
+      },
+      {
+        "type": "name",
+        "value": "Array",
+      },
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 7`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "InterfaceProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "ArrayProperty",
+      "valueType": null,
+    },
+    "name": "InterfaceArray",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 8,
+    "typeName": "ArrayProperty(InterfaceProperty)",
+  },
+  "value": {
+    "message": "Unknown property type 'InterfaceProperty' (FULL signature: 'ArrayProperty(InterfaceProperty)')",
+    "type": "error",
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 8`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "IntProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "SetProperty",
+      "valueType": null,
+    },
+    "name": "IntSet",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 20,
+    "typeName": "SetProperty(IntProperty)",
+  },
+  "value": {
+    "elementsToRemove": [],
+    "type": "set",
+    "value": [
+      {
+        "type": "numeric",
+        "value": 1,
+      },
+      {
+        "type": "numeric",
+        "value": 2,
+      },
+      {
+        "type": "numeric",
+        "value": 3,
+      },
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 9`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "StrProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "SetProperty",
+      "valueType": null,
+    },
+    "name": "StringSet",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 30,
+    "typeName": "SetProperty(StrProperty)",
+  },
+  "value": {
+    "elementsToRemove": [],
+    "type": "set",
+    "value": [
+      {
+        "type": "string",
+        "value": "Value1",
+      },
+      {
+        "type": "string",
+        "value": "Value2",
+      },
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 10`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "StructProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "SetProperty",
+      "valueType": null,
+    },
+    "name": "StructSet",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 108,
+    "typeName": "SetProperty(StructProperty)",
+  },
+  "value": {
+    "message": "Cannot get serializer of 'SetProperty(StructProperty)': Error: Expected inner type at index 0, but found only 0 values.",
+    "type": "error",
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 11`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "ObjectProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "SetProperty",
+      "valueType": null,
+    },
+    "name": "ObjectSet",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 16,
+    "typeName": "SetProperty(ObjectProperty)",
+  },
+  "value": {
+    "elementsToRemove": [],
+    "type": "set",
+    "value": [
+      {
+        "object": [ref] /Script/SampleProject.BasicProperties,
+        "type": "object",
+      },
+      {
+        "object": [ref] /Game/BP_NativeStructProperties.BP_NativeStructProperties,
+        "type": "object",
+      },
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 12`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "NameProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "SetProperty",
+      "valueType": null,
+    },
+    "name": "NameSet",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 24,
+    "typeName": "SetProperty(NameProperty)",
+  },
+  "value": {
+    "elementsToRemove": [],
+    "type": "set",
+    "value": [
+      {
+        "type": "name",
+        "value": "Name1",
+      },
+      {
+        "type": "name",
+        "value": "Name2",
+      },
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 13`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "IntProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "MapProperty",
+      "valueType": "StrProperty",
+    },
+    "name": "IntToStringMap",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 37,
+    "typeName": "MapProperty(IntProperty,StrProperty)",
+  },
+  "value": {
+    "elementsToRemove": [],
+    "type": "map",
+    "value": [
+      [
+        {
+          "type": "numeric",
+          "value": 123,
+        },
+        {
+          "type": "string",
+          "value": "First",
+        },
+      ],
+      [
+        {
+          "type": "numeric",
+          "value": 456,
+        },
+        {
+          "type": "string",
+          "value": "Second",
+        },
+      ],
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 14`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "StrProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "MapProperty",
+      "valueType": "StructProperty",
+    },
+    "name": "StringToStructMap",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 222,
+    "typeName": "MapProperty(StrProperty,StructProperty)",
+  },
+  "value": {
+    "message": "Cannot get serializer of 'MapProperty(StrProperty,StructProperty)': Error: Expected inner type at index 0, but found only 0 values.",
+    "type": "error",
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 15`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "StructProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "MapProperty",
+      "valueType": "ObjectProperty",
+    },
+    "name": "GuidToObjectMap",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 28,
+    "typeName": "MapProperty(StructProperty,ObjectProperty)",
+  },
+  "value": {
+    "message": "Cannot get serializer of 'MapProperty(StructProperty,ObjectProperty)': Error: Expected inner type at index 0, but found only 0 values.",
+    "type": "error",
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 16`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "ObjectProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "MapProperty",
+      "valueType": "NameProperty",
+    },
+    "name": "ObjectToNameMap",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 32,
+    "typeName": "MapProperty(ObjectProperty,NameProperty)",
+  },
+  "value": {
+    "elementsToRemove": [],
+    "type": "map",
+    "value": [
+      [
+        {
+          "object": [ref] /Game/BP_BasicProperties.BP_BasicProperties,
+          "type": "object",
+        },
+        {
+          "type": "name",
+          "value": "BasicProperties",
+        },
+      ],
+      [
+        {
+          "object": [ref] /Game/BP_NativeStructProperties.BP_NativeStructProperties,
+          "type": "object",
+        },
+        {
+          "type": "name",
+          "value": "NativeStructProperties",
+        },
+      ],
+    ],
+  },
+}
+`;
+
+exports[`BP_ContainerProperties Properties 17`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": "FloatProperty",
+      "structGuid": null,
+      "structName": null,
+      "type": "MapProperty",
+      "valueType": "BoolProperty",
+    },
+    "name": "FloatToBoolMap",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 18,
+    "typeName": "MapProperty(FloatProperty,BoolProperty)",
+  },
+  "value": {
+    "elementsToRemove": [],
+    "type": "map",
+    "value": [
+      [
+        {
+          "type": "numeric",
+          "value": 123.30000305175781,
+        },
+        {
+          "type": "boolean",
+          "value": false,
+        },
+      ],
+      [
+        {
+          "type": "numeric",
+          "value": 123.4000015258789,
+        },
+        {
+          "type": "boolean",
+          "value": true,
+        },
+      ],
+    ],
+  },
+}
+`;
