@@ -26,6 +26,7 @@ import { FDateTime } from "../modules/CoreUObject/structs/DateTime";
 import { FTimespan } from "../modules/CoreUObject/structs/Timespan";
 import { FFrameNumber } from "../modules/CoreUObject/structs/FrameNumber";
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
+import { FText } from "../types/Text";
 
 type PropertySerializer = (reader: AssetReader, resolver: ObjectResolver, typeName: FPropertyTypeName) => PropertyValue;
 
@@ -251,6 +252,7 @@ function findFallbackSerializer(
     }
   });
   if (foundValue) {
+    console.log(`Guess struct type: ${packageName}.${structName}`);
     const serializer = convertSerializer(fileVersionUE5, foundValue);
     if (serializer) {
       return serializer;
@@ -433,6 +435,7 @@ const readerByPropertyType = (() => {
 
   table[EPropertyType.NameProperty] = (reader) => ({ type: "name", value: reader.readName() });
   table[EPropertyType.StrProperty] = (reader) => ({ type: "string", value: reader.readString() });
+  table[EPropertyType.TextProperty] = (reader) => ({ type: "text", value: FText.fromStream(reader) });
 
   table[EPropertyType.ObjectProperty] = (reader, resolver) => ({ type: "object", object: resolver(reader) });
 

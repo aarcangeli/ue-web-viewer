@@ -9,6 +9,8 @@ import { FMatrix44 } from "../../unreal-engine/modules/CoreUObject/structs/Matri
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { Icon } from "@chakra-ui/icons";
 import { makePropertyIcon } from "./MakePropertyIcon";
+import type { ITextData } from "../../unreal-engine/types/Text";
+import { ETextHistoryType, FTextHistory_Base } from "../../unreal-engine/types/Text";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
@@ -44,6 +46,19 @@ function makeIndexLabel(index: number) {
   return `Index [ ${index} ]`;
 }
 
+function renderTextData(textData: ITextData) {
+  if (textData instanceof FTextHistory_Base) {
+    return (
+      <>
+        <IndentedRow title={"Namespace"}>{textData.namespace}</IndentedRow>
+        <IndentedRow title={"Key"}>{textData.key}</IndentedRow>
+        <IndentedRow title={"Source String"}>{textData.getSourceString()}</IndentedRow>
+      </>
+    );
+  }
+  return undefined;
+}
+
 function renderValue(key: number, name: string, value: PropertyValue, icon?: React.ReactElement) {
   switch (value.type) {
     case "numeric":
@@ -52,8 +67,16 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
     case "string":
       return (
         <IndentedRow key={key} icon={icon} title={name}>
-          {`${value.value}`}
+          {String(value.value)}
         </IndentedRow>
+      );
+    case "text":
+      return (
+        <CollapsableSection key={key} initialExpanded={false} icon={icon} title={name} name={value.value.toString()}>
+          <IndentedRow title={"Flags"}>{String(value.value.flags)}</IndentedRow>
+          <IndentedRow title={"History Type"}>{ETextHistoryType[value.value.textHistoryType]}</IndentedRow>
+          {renderTextData(value.value.textData)}
+        </CollapsableSection>
       );
     case "object":
       return (

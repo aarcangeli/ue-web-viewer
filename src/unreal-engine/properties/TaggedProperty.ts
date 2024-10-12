@@ -1,6 +1,7 @@
 import type { FPropertyTag } from "./PropertyTag";
 import type { FName } from "../types/Name";
 import type { UObject } from "../modules/CoreUObject/objects/Object";
+import type { FText } from "../types/Text";
 
 export class TaggedProperty {
   public readonly tag: FPropertyTag;
@@ -42,6 +43,11 @@ export interface NameValue {
 export interface StringValue {
   type: "string";
   value: string;
+}
+
+export interface TextValue {
+  type: "text";
+  value: FText;
 }
 
 export interface ObjectValue {
@@ -95,6 +101,7 @@ export type PropertyValue =
   | NumericValue
   | NameValue
   | StringValue
+  | TextValue
   | ObjectValue
   | StructValue
   | TaggedStructValue

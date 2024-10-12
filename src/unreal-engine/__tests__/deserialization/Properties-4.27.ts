@@ -1,6 +1,6 @@
-import { readAsset } from "../utils";
+import { readAsset } from "../test-utils";
 import invariant from "tiny-invariant";
-import { extendJest, matchSnapshots, validateObject } from "./property-tests";
+import { extendJest, matchSnapshots, validateObject } from "./property-tests-utils";
 
 extendJest();
 

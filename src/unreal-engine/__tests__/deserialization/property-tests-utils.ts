@@ -1,4 +1,4 @@
-import { TaggedProperty } from "../../properties/TaggedProperty";
+import type { TaggedProperty } from "../../properties/TaggedProperty";
 import { UObject } from "../../modules/CoreUObject/objects/Object";
 
 /**
@@ -8,7 +8,7 @@ export function extendJest() {
   expect.extend({
     toBeValidProperty(property: TaggedProperty) {
       if (property.value.type === "error") {
-        let message = property.value.message;
+        const message = property.value.message;
         return {
           message: () => `${message}\nAt property: ${property.tag}`,
           pass: false,
