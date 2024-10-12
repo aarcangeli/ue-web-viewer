@@ -14,12 +14,10 @@
     "test:coverage": "jest --coverage --reporters=default --reporters=jest-junit",
     "test:update-snapshots": "jest --updateSnapshot",
     "typecheck": "tsc --noEmit",
-    "eslint": "eslint",
-    "eslint:all": "eslint . --fix",
+    "eslint": "eslint . --fix",
     "eslint:dump-config": "node eslint.config.js --dump",
     "eslint:inspector": "eslint-config-inspector",
-    "check:all": "yarn typecheck && yarn eslint",
-    "pre-commit": "yarn typecheck && yarn eslint:all && yarn test"
+    "pre-commit": "yarn typecheck && yarn eslint && yarn test"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
