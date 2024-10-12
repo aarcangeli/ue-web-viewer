@@ -106,21 +106,40 @@ function renderValue(key: number, name: string, value: PropertyValue) {
             <>
               {value.value.length} Set elements added
               {value.elementsToRemove.length > 0 ? <>, {value.elementsToRemove.length} removed</> : ""}{" "}
-              <MakeHelpTooltip
-                title={
-                  "Only added and removed elements are serialized on the asset, the diff applied to a default object to generate the final property element."
-                }
-              />
+              {makeHelpSetMap()}
             </>
           }
         >
           {value.elementsToRemove.length > 0 && (
-            <CollapsableSection title={"Removed values"} name={`size = ${value.elementsToRemove.length}`}>
+            <CollapsableSection title={"Removed elements"} name={`size = ${value.elementsToRemove.length}`}>
               {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
             </CollapsableSection>
           )}
-          <CollapsableSection title={"Added values"} name={`size = ${value.value.length}`}>
+          <CollapsableSection title={"Added elements"} name={`size = ${value.value.length}`}>
             {value.value.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
+          </CollapsableSection>
+        </CollapsableSection>
+      );
+    case "map":
+      return (
+        <CollapsableSection
+          key={key}
+          title={name}
+          name={
+            <>
+              {value.value.length} Map elements added
+              {value.elementsToRemove.length > 0 ? <>, {value.elementsToRemove.length} removed</> : ""}{" "}
+              {makeHelpSetMap()}
+            </>
+          }
+        >
+          {value.elementsToRemove.length > 0 && (
+            <CollapsableSection title={"Removed elements"} name={`size = ${value.elementsToRemove.length}`}>
+              {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
+            </CollapsableSection>
+          )}
+          <CollapsableSection title={"Added elements"} name={`size = ${value.value.length}`}>
+            {value.value.map((item, index) => renderValue(index, makeMapKey(item[0]), item[1]))}
           </CollapsableSection>
         </CollapsableSection>
       );
@@ -134,6 +153,30 @@ function renderValue(key: number, name: string, value: PropertyValue) {
       // force compilation error if we forget to handle a case
       return throwBadPropertyValue(value);
   }
+}
+
+function makeMapKey(key: PropertyValue): string {
+  // Only scalar types are allowed as map keys
+  switch (key.type) {
+    case "boolean":
+    case "numeric":
+    case "name":
+    case "string":
+      return `Key [ ${key.value} ]`;
+    default:
+      console.error(`Unknown key ${key}`);
+      return `Unknown key ${key}`;
+  }
+}
+
+function makeHelpSetMap() {
+  return (
+    <MakeHelpTooltip
+      title={
+        "Only added and removed elements are serialized on the asset, the diff applied to a default object to generate the final property element."
+      }
+    />
+  );
 }
 
 function renderStatistics(statistics: SerializationStatistics) {

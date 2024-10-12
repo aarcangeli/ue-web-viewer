@@ -70,13 +70,19 @@ export interface ScriptDelegate {
 
 export interface ArrayValue {
   type: "array";
-  value: PropertyValue[];
+  value: Array<PropertyValue>;
 }
 
 export interface SetValue {
   type: "set";
   elementsToRemove: PropertyValue[];
-  value: PropertyValue[];
+  value: Array<PropertyValue>;
+}
+
+export interface MapValue {
+  type: "map";
+  elementsToRemove: PropertyValue[];
+  value: Array<[PropertyValue, PropertyValue]>;
 }
 
 export interface SerializationError {
@@ -95,6 +101,7 @@ export type PropertyValue =
   | ScriptDelegate
   | ArrayValue
   | SetValue
+  | MapValue
   | SerializationError;
 
 /**

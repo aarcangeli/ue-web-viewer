@@ -2,7 +2,7 @@ import type { AssetReader } from "../AssetReader";
 import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
 import type { FPropertyTypeName } from "./PropertyTag";
 import { FPropertyTag } from "./PropertyTag";
-import { NumericValue, PropertyValue, SetValue } from "./properties";
+import { MapValue, NumericValue, PropertyValue, SetValue } from "./properties";
 import { FName, FNameMap } from "../structs/Name";
 import { NAME_CoreUObject } from "../modules/names";
 import { FGuid } from "../modules/CoreUObject/structs/Guid";
@@ -28,11 +28,7 @@ import { FTimespan } from "../modules/CoreUObject/structs/Timespan";
 import { FFrameNumber } from "../modules/CoreUObject/structs/FrameNumber";
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
 
-export type PropertySerializer = (
-  reader: AssetReader,
-  resolver: ObjectResolver,
-  typeName: FPropertyTypeName,
-) => PropertyValue;
+type PropertySerializer = (reader: AssetReader, resolver: ObjectResolver, typeName: FPropertyTypeName) => PropertyValue;
 
 const StructProperty = FName.fromString("StructProperty");
 const ArrayProperty = FName.fromString("ArrayProperty");
@@ -81,6 +77,10 @@ export function getPropertySerializer(
 ): PropertySerializer {
   const propertyType = typeName.propertyType;
 
+  if (propertyType == EPropertyType.StructProperty) {
+    return getStructSerializer(fileVersionUE5, typeName.getParameter(0));
+  }
+
   if (propertyType == EPropertyType.ArrayProperty) {
     return getArraySerializer(typeName.getParameter(0), fileVersionUE5);
   }
@@ -89,8 +89,9 @@ export function getPropertySerializer(
     return getSetSerializer(typeName.getParameter(0), fileVersionUE5);
   }
 
-  if (propertyType == EPropertyType.StructProperty) {
-    return getStructSerializer(fileVersionUE5, typeName.getParameter(0));
+  if (propertyType == EPropertyType.MapProperty) {
+    console.log("Map property", typeName);
+    return getMapSerializer(typeName.getParameter(0), typeName.getParameter(1), fileVersionUE5);
   }
 
   const foundValue = readerByPropertyType[propertyType];
@@ -317,6 +318,7 @@ function getStructSerializer(
 
 /**
  * Get the serializer for a legacy struct array.
+ * Es: TArray<FSomeStruct> in UE 4.25
  */
 function getLegacyStructArraySerializer(
   fileVersionUE5: EUnrealEngineObjectUE5Version,
@@ -379,6 +381,35 @@ function getSetSerializer(
     }
 
     return { type: "set", elementsToRemove, value };
+  };
+}
+
+function getMapSerializer(
+  keyTypename: FPropertyTypeName,
+  valueTypename: FPropertyTypeName,
+  fileVersionUE5: EUnrealEngineObjectUE5Version,
+): PropertySerializer {
+  const keySerializer = getPropertySerializer(fileVersionUE5, keyTypename);
+  const valueSerializer = getPropertySerializer(fileVersionUE5, valueTypename);
+
+  return (reader: AssetReader, resolver: ObjectResolver): MapValue => {
+    // Read elements to remove
+    const countToRemove = reader.readInt32();
+    const elementsToRemove: PropertyValue[] = [];
+    for (let i = 0; i < countToRemove; i++) {
+      elementsToRemove.push(keySerializer(reader, resolver, keyTypename));
+    }
+
+    // Read elements to add
+    const count = reader.readInt32();
+    const result: Array<[PropertyValue, PropertyValue]> = [];
+    for (let i = 0; i < count; i++) {
+      const key = keySerializer(reader, resolver, keyTypename);
+      const value = valueSerializer(reader, resolver, valueTypename);
+      result.push([key, value]);
+    }
+
+    return { type: "map", elementsToRemove, value: result };
   };
 }
 
