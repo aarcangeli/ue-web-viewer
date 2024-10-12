@@ -7,7 +7,7 @@ import { partition } from "../../utils/partition";
 import type { ProjectApi } from "../ProjectApi";
 import { useProjectApi } from "../ProjectApi";
 import { makeObjectTitle } from "./commons";
-import { FName } from "../../unreal-engine/structs/Name";
+import { FName } from "../../unreal-engine/types/Name";
 
 const CoreUObject = FName.fromString("/Script/CoreUObject");
 

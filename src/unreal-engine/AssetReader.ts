@@ -1,6 +1,6 @@
 import invariant from "tiny-invariant";
 import type { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
-import { FName } from "./structs/Name";
+import { FName } from "./types/Name";
 
 /**
  * Low level API to read binary data from an ArrayBuffer.

@@ -1,4 +1,4 @@
-import { FName } from "../structs/Name";
+import { FName } from "../types/Name";
 
 export const NAME_CoreUObject = FName.fromString("/Script/CoreUObject");
 export const NAME_Core = FName.fromString("/Script/Core");

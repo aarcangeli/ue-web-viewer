@@ -4,7 +4,7 @@ import { FObjectImport } from "./ObjectImport";
 import { EObjectFlags, FObjectExport } from "./ObjectExport";
 import invariant from "tiny-invariant";
 import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
-import { FName, NAME_None } from "../structs/Name";
+import { FName, NAME_None } from "../types/Name";
 import { removeExtension } from "../../utils/string-utils";
 import type { ObjectConstructionParams, ObjectResolver } from "../modules/CoreUObject/objects/Object";
 import { ELoadingPhase } from "../modules/CoreUObject/objects/Object";
@@ -26,12 +26,10 @@ const RecursiveCheck = Symbol("RecursiveCheck");
  * This class permits to load data from an asset file.
  * An asset is composed by a root file (uasset or uexp) and an optional uexp file.
  *
- * Objects are lazily loaded when requested, and are cached using weak references.
- * When an object is garbage collected, it will be reloaded when requested again.
+ * The first time an object is requested, it is loaded from the file and weakly cached.
+ * All referenced objects are created empty, and are filled when requested.
  *
- * The root object is always an instane of {@link UPackage}, and is not really read from the file.
- *
- * An asset is garbage collected only if all assets that contain it are garbage collected.
+ * The root object is always an instance of {@link UPackage}.
  */
 export class Asset {
   private readonly _packageName: string;

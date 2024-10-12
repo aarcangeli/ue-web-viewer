@@ -1,4 +1,4 @@
-import type { FName } from "./structs/Name";
+import type { FName } from "./types/Name";
 
 /**
  * The logic of unreal is unnecessarily complicated.

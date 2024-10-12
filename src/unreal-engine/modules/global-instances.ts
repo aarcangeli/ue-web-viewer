@@ -1,4 +1,4 @@
-import { FName } from "../structs/Name";
+import { FName } from "../types/Name";
 import { UPackage } from "./CoreUObject/objects/Package";
 import type { ClassConstructionParams } from "./CoreUObject/objects/Class";
 import { UClass } from "./CoreUObject/objects/Class";

@@ -1,9 +1,9 @@
-import type { FName } from "../../../structs/Name";
+import type { FName } from "../../../types/Name";
 import invariant from "tiny-invariant";
 import type { UClass } from "./Class";
 import type { AssetReader } from "../../../AssetReader";
-import type { TaggedProperty } from "../../../properties/properties";
-import { readTaggedProperties } from "../../../properties/properties-serialization";
+import type { TaggedProperty } from "../../../properties/TaggedProperty";
+import { readTaggedProperties } from "../../../serialization/properties-serialization";
 import type { SerializationStatistics } from "../../../serialization/SerializationStatistics";
 import { FGuid } from "../structs/Guid";
 import { makeNameFromParts } from "../../../path-utils";
@@ -37,23 +37,23 @@ export enum ELoadingPhase {
 /**
  * The base class of all UE objects.
  *
- * On the C++ side, the UObject class extends UObjectBaseUtility, which extends UObjectBase.
- * UObject is the superclass of all objects for UHT (Take a look at NoExportTypes.h)
- *
  * An object instance represents a single object in the UE4 runtime.
  * - Has a name, which is unique within its outer object.
- * - May have an outer object.
- * - May have children objects, which are objects that have this object as their outer object.
- * - Has a class, which is another UObject that represents the class of the object.
+ * - May have an outer object and inner objects.
+ * - Has a class, which is an instance of {@link UClass} that represents the class of the object.
  *
- * For simplicity, the name of the object cannot be changed after creation.
+ * We are not going to implement all the complexity of the UObject class, we only need the basic functionality to
+ * read the properties of the objects.
+ *
+ * On the C++ side, the UObject class extends UObjectBaseUtility, which extends UObjectBase.
+ * However, UHT only manages UObject (see NoExportTypes.h)
  *
  * Do not use WeakRef to weakly reference UObject instances.
  * Use instead asWeakObject() to create a WeakObject instance.
  */
 export class UObject {
   private _outer: UObject | null = null;
-  private _class: UClass;
+  private /*readonly*/ _class: UClass;
   private readonly _flags: EPackageFlags;
   private readonly _name: FName;
 

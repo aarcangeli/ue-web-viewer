@@ -1,4 +1,4 @@
-import { FName, NAME_None } from "../structs/Name";
+import { FName, NAME_None } from "../types/Name";
 import { EGuidFormats, FGuid } from "../modules/CoreUObject/structs/Guid";
 import type { AssetReader } from "../AssetReader";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";

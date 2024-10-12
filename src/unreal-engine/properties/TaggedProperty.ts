@@ -1,5 +1,5 @@
 import type { FPropertyTag } from "./PropertyTag";
-import type { FName } from "../structs/Name";
+import type { FName } from "../types/Name";
 import type { UObject } from "../modules/CoreUObject/objects/Object";
 
 export class TaggedProperty {

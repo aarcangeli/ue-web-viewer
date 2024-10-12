@@ -2,7 +2,7 @@ import type { Asset } from "../../unreal-engine/serialization/Asset";
 import React from "react";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Tooltip } from "@chakra-ui/react";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
-import type { PropertyValue } from "../../unreal-engine/properties/properties";
+import type { PropertyValue } from "../../unreal-engine/properties/TaggedProperty";
 import type { SerializationStatistics } from "../../unreal-engine/serialization/SerializationStatistics";
 import type { UObject } from "../../unreal-engine/modules/CoreUObject/objects/Object";
 import { FMatrix44 } from "../../unreal-engine/modules/CoreUObject/structs/Matrix44";

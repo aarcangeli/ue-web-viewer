@@ -1,8 +1,8 @@
-import type { PropertyValue } from "./properties";
-import { makeError, TaggedProperty } from "./properties";
+import type { PropertyValue } from "../properties/TaggedProperty";
+import { makeError, TaggedProperty } from "../properties/TaggedProperty";
 import type { AssetReader } from "../AssetReader";
-import { FPropertyTag } from "./PropertyTag";
-import { EPropertyTagExtension, EPropertyType } from "./enums";
+import { FPropertyTag } from "../properties/PropertyTag";
+import { EPropertyTagExtension, EPropertyType } from "../properties/enums";
 import { EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
 import { getPropertySerializerFromTag, UnknownPropertyType } from "./property-serializer";

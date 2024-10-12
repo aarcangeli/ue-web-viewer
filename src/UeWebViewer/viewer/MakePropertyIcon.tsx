@@ -5,7 +5,7 @@ import { Tooltip } from "@chakra-ui/react";
 import { Icon } from "@chakra-ui/icons";
 import { MdQuestionMark } from "react-icons/md";
 import { NAME_CoreUObject } from "../../unreal-engine/modules/names";
-import { FName, FNameMap } from "../../unreal-engine/structs/Name";
+import { FName, FNameMap } from "../../unreal-engine/types/Name";
 
 const colors = new Map<EPropertyType, string>([
   [EPropertyType.BoolProperty, "#950000"],

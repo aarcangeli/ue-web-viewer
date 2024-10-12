@@ -1,5 +1,5 @@
 import type { AssetReader } from "../../../AssetReader";
-import { FName, NAME_None } from "../../../structs/Name";
+import { FName, NAME_None } from "../../../types/Name";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../../../versioning/ue-versions";
 import { isShortPackageName, tryParseExportTextPath } from "../../../path-utils";
 import type { UObject } from "../objects/Object";

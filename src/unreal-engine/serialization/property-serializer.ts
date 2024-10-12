@@ -1,15 +1,14 @@
 import type { AssetReader } from "../AssetReader";
 import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
-import type { FPropertyTypeName } from "./PropertyTag";
-import { FPropertyTag } from "./PropertyTag";
-import type { MapValue, NumericValue, PropertyValue, SetValue } from "./properties";
-import { FName, FNameMap } from "../structs/Name";
+import type { FPropertyTypeName } from "../properties/PropertyTag";
+import { FPropertyTag } from "../properties/PropertyTag";
+import type { MapValue, NumericValue, PropertyValue, SetValue } from "../properties/TaggedProperty";
+import { FName, FNameMap } from "../types/Name";
 import { NAME_CoreUObject } from "../modules/names";
 import { FGuid } from "../modules/CoreUObject/structs/Guid";
 import { FRotator } from "../modules/CoreUObject/structs/Rotator";
 import { FVector3 } from "../modules/CoreUObject/structs/Vector3";
-import { typeTable } from "./type-table";
-import { EPropertyType } from "./enums";
+import { EPropertyType } from "../properties/enums";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import invariant from "tiny-invariant";
 import { FPlane } from "../modules/CoreUObject/structs/Plane";
@@ -240,18 +239,6 @@ function findFallbackSerializer(
   typeName: FPropertyTypeName,
 ): PropertySerializer {
   const structName = typeName.name;
-
-  // Find in our table of known types
-  {
-    const packageName = typeTable.get(structName);
-    if (packageName) {
-      const value = findNativeStructSerializer(fileVersionUE5, packageName, structName);
-      if (value) {
-        console.log(`Guess struct type: ${packageName}.${structName}`);
-        return value;
-      }
-    }
-  }
 
   // Find the first known package that contains this type
   let packageName;

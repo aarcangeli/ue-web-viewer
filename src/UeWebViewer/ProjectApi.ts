@@ -1,7 +1,7 @@
 import React from "react";
 import { navigate } from "../utils/useHistoryState";
 import { removePrefix } from "../utils/string-utils";
-import type { FName } from "../unreal-engine/structs/Name";
+import type { FName } from "../unreal-engine/types/Name";
 
 const ProjectApiContext = React.createContext<ProjectApi | null>(null);
 
