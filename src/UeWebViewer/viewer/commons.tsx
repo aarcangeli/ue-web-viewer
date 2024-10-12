@@ -1,7 +1,7 @@
 import { IconButton, Link, Text, Tooltip } from "@chakra-ui/react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import React from "react";
-import type { FName } from "../../unreal-engine/structs/Name";
+import type { FName } from "../../unreal-engine/types/Name";
 
 /**
  * Just a utility method to render an object title which is common to both import and export details.

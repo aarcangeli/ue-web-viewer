@@ -12,11 +12,12 @@
     "preview": "vite preview",
     "test": "jest",
     "test:coverage": "jest --coverage --reporters=default --reporters=jest-junit",
+    "test:update-snapshots": "jest --updateSnapshot",
     "typecheck": "tsc --noEmit",
-    "eslint": "eslint .",
+    "eslint": "eslint . --fix",
     "eslint:dump-config": "node eslint.config.js --dump",
     "eslint:inspector": "eslint-config-inspector",
-    "check:all": "yarn typecheck && yarn eslint"
+    "pre-commit": "yarn typecheck && yarn eslint && yarn test"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -26,6 +27,8 @@
     "@emotion/styled": "^11.11.5",
     "@eslint/config-inspector": "^0.5.4",
     "@eslint/js": "^9.12.0",
+    "@swc/core": "^1.7.35",
+    "@swc/jest": "^0.2.36",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",

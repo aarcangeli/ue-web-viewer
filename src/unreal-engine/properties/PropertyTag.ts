@@ -1,5 +1,5 @@
-import { FName, NAME_None } from "../structs/Name";
-import { EGuidFormats, FGuid } from "../objects/CoreUObject/Guid";
+import { FName, NAME_None } from "../types/Name";
+import { EGuidFormats, FGuid } from "../modules/CoreUObject/structs/Guid";
 import type { AssetReader } from "../AssetReader";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import invariant from "tiny-invariant";
@@ -89,41 +89,41 @@ export class FPropertyTag {
     let typeName = new FPropertyTypeName(type);
     if (type.equals(StructProperty)) {
       legacyTag.structName = reader.readName();
-      typeName = typeName.addInnerType(FPropertyTypeName.fromName(legacyTag.structName));
+      typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.structName));
       if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_STRUCT_GUID_IN_PROPERTY_TAG) {
         legacyTag.structGuid = FGuid.fromStream(reader);
         if (legacyTag.structGuid.isValid()) {
-          typeName = typeName.addInnerType(FPropertyTypeName.fromGuid(legacyTag.structGuid));
+          typeName = typeName.addParameter(FPropertyTypeName.fromGuid(legacyTag.structGuid));
         }
       }
     } else if (type.equals(BoolProperty)) {
       result.boolVal = reader.readUInt8() !== 0;
     } else if (type.equals(ByteProperty)) {
       legacyTag.enumName = reader.readName();
-      typeName = typeName.addInnerType(parseLegacyEnumName(legacyTag.enumName.text));
+      typeName = typeName.addParameter(parseLegacyEnumName(legacyTag.enumName.text));
     } else if (type.equals(EnumProperty)) {
       legacyTag.enumName = reader.readName();
-      typeName = typeName.addInnerType(parseLegacyEnumName(legacyTag.enumName.text));
-      typeName = typeName.addInnerType(FPropertyTypeName.fromName(ByteProperty));
+      typeName = typeName.addParameter(parseLegacyEnumName(legacyTag.enumName.text));
+      typeName = typeName.addParameter(FPropertyTypeName.fromName(ByteProperty));
     } else if (type.equals(ArrayProperty)) {
       if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VAR_UE4_ARRAY_PROPERTY_INNER_TAGS) {
         legacyTag.innerType = reader.readName();
-        typeName = typeName.addInnerType(FPropertyTypeName.fromName(legacyTag.innerType));
+        typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.innerType));
       }
     } else if (type.equals(OptionalProperty)) {
       legacyTag.innerType = reader.readName();
-      typeName = typeName.addInnerType(FPropertyTypeName.fromName(legacyTag.innerType));
+      typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.innerType));
     } else if (type.equals(SetProperty)) {
       if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_PROPERTY_TAG_SET_MAP_SUPPORT) {
         legacyTag.innerType = reader.readName();
-        typeName = typeName.addInnerType(FPropertyTypeName.fromName(legacyTag.innerType));
+        typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.innerType));
       }
     } else if (type.equals(MapProperty)) {
       if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_PROPERTY_TAG_SET_MAP_SUPPORT) {
         legacyTag.innerType = reader.readName();
         legacyTag.valueType = reader.readName();
-        typeName = typeName.addInnerType(FPropertyTypeName.fromName(legacyTag.innerType));
-        typeName = typeName.addInnerType(FPropertyTypeName.fromName(legacyTag.valueType));
+        typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.innerType));
+        typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.valueType));
       }
     }
     result.legacyData = legacyTag;
@@ -257,8 +257,19 @@ export class FPropertyTypeName {
     return getTypeByName(this.name) ?? EPropertyType.Unknown;
   }
 
-  addInnerType(innerType: FPropertyTypeName) {
+  addParameter(innerType: FPropertyTypeName) {
     return new FPropertyTypeName(this.name, [...this.innerTypes, innerType]);
+  }
+
+  getOptionalParameter(index: number): FPropertyTypeName | null {
+    return this.innerTypes[index] ?? null;
+  }
+
+  getParameter(index: number) {
+    if (index >= this.innerTypes.length) {
+      throw new Error(`Expected inner type at index ${index}, but found only ${this.innerTypes.length} values.`);
+    }
+    return this.innerTypes[index];
   }
 
   toString(): string {
@@ -269,10 +280,7 @@ export class FPropertyTypeName {
     return this.toString();
   }
 
-  getParameter(index: number) {
-    if (index >= this.innerTypes.length) {
-      throw new Error(`Expected inner type at index ${index}, but found only ${this.innerTypes.length} values.`);
-    }
-    return this.innerTypes[index];
+  toJSON() {
+    return this.toString();
   }
 }

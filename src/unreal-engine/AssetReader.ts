@@ -1,6 +1,6 @@
 import invariant from "tiny-invariant";
 import type { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
-import { FName } from "./structs/Name";
+import { FName } from "./types/Name";
 
 /**
  * Low level API to read binary data from an ArrayBuffer.
@@ -77,13 +77,18 @@ export class AssetReader {
   }
 
   readInt64(): number {
-    this.ensureBytes(8);
-    const value = this.dataView.getBigInt64(this.offset, this._littleEndian);
-    this.offset += 8;
+    const value = this.readBigInt64();
     if (value > Number.MAX_SAFE_INTEGER || value < Number.MIN_SAFE_INTEGER) {
       throw new Error("Int64 value is too large to be represented as a number");
     }
     return Number(value);
+  }
+
+  readBigInt64(): bigint {
+    this.ensureBytes(8);
+    const value = this.dataView.getBigInt64(this.offset, this._littleEndian);
+    this.offset += 8;
+    return value;
   }
 
   readUInt8() {

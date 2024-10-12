@@ -1,4 +1,4 @@
-import { FGuid, GUID_None } from "../objects/CoreUObject/Guid";
+import { FGuid, GUID_None } from "../modules/CoreUObject/structs/Guid";
 import type { AssetReader } from "../AssetReader";
 
 /**

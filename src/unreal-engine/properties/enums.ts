@@ -1,4 +1,4 @@
-import { FName } from "../structs/Name";
+import { FName } from "../types/Name";
 
 export enum EPropertyType {
   Unknown,

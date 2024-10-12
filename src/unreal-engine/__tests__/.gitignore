@@ -1,0 +1,23 @@
+Binaries
+DerivedDataCache
+Intermediate
+Saved
+dist
+.vs
+.vsconfig
+*.sln
+
+# Source files
+*.png
+*.wav
+*.mp3
+*.jpg
+*.kra
+*.tga
+*.fbx
+*.hdr
+*.ttf
+
+#MacOs
+.DS_Store
+*~
