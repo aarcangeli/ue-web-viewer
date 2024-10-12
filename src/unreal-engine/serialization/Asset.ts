@@ -269,7 +269,7 @@ export class Asset {
 
     const object = this.withRecursionCheck(index, () => {
       invariant(objectExport.ClassIndex != 0, `Expected a valid class index`);
-      const clazz = this.getObjectByIndex(objectExport.ClassIndex) as UClass;
+      const clazz = this.getObjectByIndex(objectExport.ClassIndex, false) as UClass;
       const object = this.instantiateObject({
         clazz: clazz,
         name: objectExport.ObjectName,
@@ -277,7 +277,7 @@ export class Asset {
       });
 
       // Attach the object to the outer
-      const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex) : this.package;
+      const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex, false) : this.package;
       outer.addInner(object);
 
       // Register the object
@@ -306,7 +306,7 @@ export class Asset {
 
       const resolver: ObjectResolver = (reader) => {
         const index = reader.readInt32();
-        return this.getObjectByIndex(index, false);
+        return index ? this.getObjectByIndex(index, false) : null;
       };
 
       if (objectExport.objectFlags & EObjectFlags.RF_ClassDefaultObject) {

@@ -218,6 +218,7 @@ const readerByStructName = new FNameMap<StructPropertySerializer>([
   [makeCombinedName(NAME_CoreUObject, "FrameNumber"), makeStructReader(FFrameNumber.fromStream)],
 
   // Soft class reference
+  [makeCombinedName(NAME_CoreUObject, "SoftObjectPath"), softObjectPathSerializer],
   [makeCombinedName(NAME_CoreUObject, "SoftClassPath"), softObjectPathSerializer],
 ]);
 
