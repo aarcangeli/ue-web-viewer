@@ -73,6 +73,12 @@ export interface ArrayValue {
   value: PropertyValue[];
 }
 
+export interface SetValue {
+  type: "set";
+  elementsToRemove: PropertyValue[];
+  value: PropertyValue[];
+}
+
 export interface SerializationError {
   type: "error";
   message: string;
@@ -88,6 +94,7 @@ export type PropertyValue =
   | TaggedStructValue
   | ScriptDelegate
   | ArrayValue
+  | SetValue
   | SerializationError;
 
 /**

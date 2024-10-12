@@ -2,7 +2,7 @@ import type { AssetReader } from "../AssetReader";
 import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
 import type { FPropertyTypeName } from "./PropertyTag";
 import { FPropertyTag } from "./PropertyTag";
-import type { NumericValue, PropertyValue } from "./properties";
+import { NumericValue, PropertyValue, SetValue } from "./properties";
 import { FName, FNameMap } from "../structs/Name";
 import { NAME_CoreUObject } from "../modules/names";
 import { FGuid } from "../modules/CoreUObject/structs/Guid";
@@ -60,6 +60,7 @@ export class UnknownPropertyType extends Error {
 export function getPropertySerializerFromTag(reader: AssetReader, tag: FPropertyTag): PropertySerializer {
   // Before UE 5.4 there was a special tag for array of structs.
   if (tag.legacyData) {
+    invariant(reader.fileVersionUE5 < EUnrealEngineObjectUE5Version.PROPERTY_TAG_COMPLETE_TYPE_NAME);
     if (tag.legacyData.type.equals(ArrayProperty) && tag.legacyData.innerType?.equals(StructProperty)) {
       if (reader.fileVersionUE4 < EUnrealEngineObjectUE4Version.VER_UE4_INNER_ARRAY_TAG_INFO) {
         // The file is too old, we can't ready anything without knowing the struct type.
@@ -82,6 +83,10 @@ export function getPropertySerializer(
 
   if (propertyType == EPropertyType.ArrayProperty) {
     return getArraySerializer(typeName.getParameter(0), fileVersionUE5);
+  }
+
+  if (propertyType == EPropertyType.SetProperty) {
+    return getSetSerializer(typeName.getParameter(0), fileVersionUE5);
   }
 
   if (propertyType == EPropertyType.StructProperty) {
@@ -336,11 +341,10 @@ function getLegacyStructArraySerializer(
 }
 
 function getArraySerializer(
-  child: FPropertyTypeName,
+  subTypeName: FPropertyTypeName,
   fileVersionUE5: EUnrealEngineObjectUE5Version,
   arraySize: number = -1,
 ): PropertySerializer {
-  const subTypeName = child;
   const subSerializer = getPropertySerializer(fileVersionUE5, subTypeName);
 
   return (reader: AssetReader, resolver: ObjectResolver) => {
@@ -350,6 +354,31 @@ function getArraySerializer(
       result.push(subSerializer(reader, resolver, subTypeName));
     }
     return { type: "array", value: result };
+  };
+}
+
+function getSetSerializer(
+  subTypename: FPropertyTypeName,
+  fileVersionUE5: EUnrealEngineObjectUE5Version,
+): PropertySerializer {
+  const subSerializer = getPropertySerializer(fileVersionUE5, subTypename);
+
+  return (reader: AssetReader, resolver: ObjectResolver): SetValue => {
+    // Read elements to remove
+    const countToRemove = reader.readInt32();
+    const elementsToRemove: PropertyValue[] = [];
+    for (let i = 0; i < countToRemove; i++) {
+      elementsToRemove.push(subSerializer(reader, resolver, subTypename));
+    }
+
+    // Read elements to add
+    const count = reader.readInt32();
+    const value: PropertyValue[] = [];
+    for (let i = 0; i < count; i++) {
+      value.push(subSerializer(reader, resolver, subTypename));
+    }
+
+    return { type: "set", elementsToRemove, value };
   };
 }
 

@@ -105,7 +105,7 @@ export function IndentedRow(
 
 export function CollapsableSection(props: {
   title?: React.ReactNode;
-  name: React.ReactNode;
+  name?: React.ReactNode;
   children?: React.ReactNode;
   initialExpanded?: boolean;
   hasChildren?: boolean;
