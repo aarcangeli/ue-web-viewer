@@ -3,6 +3,13 @@
 #include "CoreMinimal.h"
 #include "SampleStruct.generated.h"
 
+UENUM()
+enum ESampleEnum {
+    None,
+    First,
+    Second,
+};
+
 USTRUCT()
 struct FSampleStruct {
     GENERATED_BODY()

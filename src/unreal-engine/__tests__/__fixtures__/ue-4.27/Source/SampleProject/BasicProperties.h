@@ -7,13 +7,6 @@
 #include "UObject/Object.h"
 #include "BasicProperties.generated.h"
 
-UENUM()
-enum ESampleEnum {
-    None,
-    First,
-    Second,
-};
-
 /**
  * Base class for blueprint exposed properties used in test fixtures.
  *

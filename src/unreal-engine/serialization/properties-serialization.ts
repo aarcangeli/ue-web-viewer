@@ -67,11 +67,12 @@ function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: Obj
           : `Unknown property type '${typeName}'`;
       return makeError(message);
     }
+    console.error(e);
     return makeError(`Cannot get serializer of '${typeName}': ${e}`);
   }
 
   try {
-    const result = serializer(reader, resolver, typeName);
+    const result = serializer(reader, resolver);
 
     // Check that the reader has read all the bytes.
     // Properties are easy to read, if there are extra bytes, it's likely a bug.

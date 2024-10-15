@@ -17,6 +17,12 @@ class SAMPLEPROJECT_API UContainerProperties : public UObject {
 public:
     // Arrays
     UPROPERTY(EditAnywhere, Category = "Array")
+    TArray<uint8> ByteArray;
+
+    UPROPERTY(EditAnywhere, Category = "Array")
+    TArray<TEnumAsByte<ESampleEnum>> EnumArray;
+
+    UPROPERTY(EditAnywhere, Category = "Array")
     TArray<int32> IntArray;
 
     UPROPERTY(EditAnywhere, Category = "Array")
