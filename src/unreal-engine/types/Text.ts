@@ -15,7 +15,7 @@ import invariant from "tiny-invariant";
  *
  * Parameters can be numbers, genders (!?), or other texts.
  *
- * The system manages the translation from FText to string using
+ * For simplicity, we only support the base form for now.
  */
 export class FText {
   constructor(
