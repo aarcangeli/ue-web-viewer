@@ -467,13 +467,11 @@ function convertFromLegacyTagIfNeeded(reader: AssetReader, tag: FPropertyTag): P
 
   // Before UE 5.4 there was a special tag for array of structs.
   if (tag.legacyData.type.equals(ArrayProperty) && tag.legacyData.innerType?.equals(StructProperty)) {
-    if (reader.fileVersionUE4 < EUnrealEngineObjectUE4Version.VER_UE4_INNER_ARRAY_TAG_INFO) {
-      // The file is too old, we can't ready anything without knowing the struct type.
-      throw new UnknownPropertyType(tag.typeName);
+    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_INNER_ARRAY_TAG_INFO) {
+      return getLegacyStructArraySerializer(reader);
     }
-    const arraySize = reader.readInt32();
-    const innerTag = FPropertyTag.fromStream(reader);
-    return getLegacyStructArraySerializer(reader.fileVersionUE5, innerTag, arraySize);
+    // The file is too old, we can't ready anything without knowing the struct type.
+    throw new UnknownPropertyType(tag.typeName);
   }
 
   return null;
@@ -483,18 +481,19 @@ function convertFromLegacyTagIfNeeded(reader: AssetReader, tag: FPropertyTag): P
  * Get the serializer for a legacy struct array.
  * Es: TArray<FSomeStruct> in UE 4.25
  */
-function getLegacyStructArraySerializer(
-  fileVersionUE5: EUnrealEngineObjectUE5Version,
-  innerTag: FPropertyTag,
-  arraySize: number,
-): PropertySerializer {
+function getLegacyStructArraySerializer(reader: AssetReader): PropertySerializer {
+  const fileVersionUE5 = reader.fileVersionUE5;
+
+  // Read the array size and the inner struct type.
+  const arraySize = reader.readInt32();
+  const innerTag = FPropertyTag.fromStream(reader);
+
   invariant(innerTag.legacyData);
   if (!innerTag.legacyData.type.equals(StructProperty)) {
     throw new Error("Expected array property");
   }
 
-  const subTypeName = innerTag.typeName;
-  const subSerializer = getPropertySerializer(fileVersionUE5, subTypeName);
+  const subSerializer = getPropertySerializer(fileVersionUE5, innerTag.typeName);
 
   return (reader: AssetReader, resolver: ObjectResolver) => {
     const result: PropertyValue[] = [];
