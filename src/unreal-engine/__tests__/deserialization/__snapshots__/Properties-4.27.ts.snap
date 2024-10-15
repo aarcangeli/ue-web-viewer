@@ -159,7 +159,7 @@ TaggedProperty {
     "propertyGuid": null,
     "serializeType": 1,
     "size": 1,
-    "typeName": "ByteProperty(None)",
+    "typeName": "ByteProperty",
   },
   "value": {
     "type": "numeric",
@@ -358,8 +358,16 @@ TaggedProperty {
     "typeName": "TextProperty",
   },
   "value": {
-    "message": "Unknown property type 'TextProperty'",
-    "type": "error",
+    "type": "text",
+    "value": FText {
+      "flags": 0,
+      "textData": FTextHistory_Base {
+        "key": "696BABDA401615F707312DA559EB7581",
+        "namespace": "[3A4CBA0B4DAA8ACF36B596A48B42C55B]",
+        "sourceString": "Hello Text",
+      },
+      "textHistoryType": 0,
+    },
   },
 }
 `;
@@ -414,8 +422,8 @@ TaggedProperty {
     "typeName": "ByteProperty(ESampleEnum)",
   },
   "value": {
-    "message": "Found 7 bytes found at the end of property value (type: ByteProperty(ESampleEnum)).",
-    "type": "error",
+    "type": "name",
+    "value": "Second",
   },
 }
 `;

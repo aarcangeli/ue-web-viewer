@@ -404,6 +404,22 @@ function getMapSerializer(
   };
 }
 
+function bytePropertyReader(reader: AssetReader, _: ObjectResolver, typeName: FPropertyTypeName): PropertyValue {
+  // ByteProperty is strange as it can be a numeric value or an enum.
+  // This depends on the type at the moment of serialization, and we can know it from the type name.
+
+  // If the enum type is present, the serializer has written the enum value as a name.
+  // (see FByteProperty::ConvertFromType case NAME_ByteProperty)
+  const enumType = typeName.getOptionalParameter(0);
+  if (enumType) {
+    invariant(!enumType.name.isNone);
+    const enumValue = reader.readName();
+    return { type: "name", value: enumValue };
+  }
+
+  return { type: "numeric", value: reader.readUInt8() };
+}
+
 const readerByPropertyType = (() => {
   const makeNumeric = (value: number): NumericValue => ({ type: "numeric", value: value });
 
@@ -417,7 +433,7 @@ const readerByPropertyType = (() => {
     return { type: "boolean", value: number != 0 };
   };
 
-  table[EPropertyType.ByteProperty] = (reader) => makeNumeric(reader.readUInt8());
+  table[EPropertyType.ByteProperty] = bytePropertyReader;
   table[EPropertyType.EnumProperty] = (reader) => ({ type: "name", value: reader.readName() });
 
   table[EPropertyType.Int8Property] = (reader) => makeNumeric(reader.readInt8());
