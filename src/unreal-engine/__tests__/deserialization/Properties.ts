@@ -1,4 +1,4 @@
-import { readAsset } from "../utils";
+import { readAsset } from "../test-utils";
 import invariant from "tiny-invariant";
 import { UObject } from "../../modules/CoreUObject/objects/Object";
 

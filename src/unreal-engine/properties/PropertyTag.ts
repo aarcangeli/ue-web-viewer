@@ -99,8 +99,11 @@ export class FPropertyTag {
     } else if (type.equals(BoolProperty)) {
       result.boolVal = reader.readUInt8() !== 0;
     } else if (type.equals(ByteProperty)) {
-      legacyTag.enumName = reader.readName();
-      typeName = typeName.addParameter(parseLegacyEnumName(legacyTag.enumName.text));
+      const enumName = reader.readName();
+      if (!enumName.isNone) {
+        typeName = typeName.addParameter(parseLegacyEnumName(enumName.text));
+      }
+      legacyTag.enumName = enumName;
     } else if (type.equals(EnumProperty)) {
       legacyTag.enumName = reader.readName();
       typeName = typeName.addParameter(parseLegacyEnumName(legacyTag.enumName.text));

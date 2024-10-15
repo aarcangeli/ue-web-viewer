@@ -15,7 +15,7 @@ const config: Config = {
     "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
   },
   modulePaths: ["<rootDir>/src"],
-  testPathIgnorePatterns: ["utils.ts"],
+  testPathIgnorePatterns: [".*-utils.ts"],
   transform: {
     // Use SWC for faster TypeScript transpilation, but not when debugging because it is not debuggable.
     ...(isDebugAttached ? {} : { "^.+\\.(t|j)sx?$": "@swc/jest" }),

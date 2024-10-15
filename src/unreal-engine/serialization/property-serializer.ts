@@ -26,8 +26,9 @@ import { FDateTime } from "../modules/CoreUObject/structs/DateTime";
 import { FTimespan } from "../modules/CoreUObject/structs/Timespan";
 import { FFrameNumber } from "../modules/CoreUObject/structs/FrameNumber";
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
+import { FText } from "../types/Text";
 
-type PropertySerializer = (reader: AssetReader, resolver: ObjectResolver, typeName: FPropertyTypeName) => PropertyValue;
+type PropertySerializer = (reader: AssetReader, resolver: ObjectResolver) => PropertyValue;
 
 const StructProperty = FName.fromString("StructProperty");
 const ArrayProperty = FName.fromString("ArrayProperty");
@@ -53,23 +54,22 @@ export class UnknownPropertyType extends Error {
  * @throws {UnknownPropertyType} If the property type is unknown.
  */
 export function getPropertySerializerFromTag(reader: AssetReader, tag: FPropertyTag): PropertySerializer {
-  // Before UE 5.4 there was a special tag for array of structs.
-  if (tag.legacyData) {
-    invariant(reader.fileVersionUE5 < EUnrealEngineObjectUE5Version.PROPERTY_TAG_COMPLETE_TYPE_NAME);
-    if (tag.legacyData.type.equals(ArrayProperty) && tag.legacyData.innerType?.equals(StructProperty)) {
-      if (reader.fileVersionUE4 < EUnrealEngineObjectUE4Version.VER_UE4_INNER_ARRAY_TAG_INFO) {
-        // The file is too old, we can't ready anything without knowing the struct type.
-        throw new UnknownPropertyType(tag.typeName);
-      }
-      const arraySize = reader.readInt32();
-      const innerTag = FPropertyTag.fromStream(reader);
-      return getLegacyStructArraySerializer(reader.fileVersionUE5, innerTag, arraySize);
+  // Old property migrations are handled here.
+  if (reader.fileVersionUE5 < EUnrealEngineObjectUE5Version.PROPERTY_TAG_COMPLETE_TYPE_NAME) {
+    const legacySerializer = convertFromLegacyTagIfNeeded(reader, tag);
+    if (legacySerializer) {
+      return legacySerializer;
     }
   }
 
   return getPropertySerializer(reader.fileVersionUE5, tag.typeName);
 }
 
+/**
+ * Retrieve the correct serializer for a property type.
+ * @param fileVersionUE5
+ * @param typeName
+ */
 export function getPropertySerializer(
   fileVersionUE5: EUnrealEngineObjectUE5Version,
   typeName: FPropertyTypeName,
@@ -94,6 +94,10 @@ export function getPropertySerializer(
 
   if (propertyType == EPropertyType.SoftObjectProperty) {
     return softObjectPathSerializer;
+  }
+
+  if (propertyType == EPropertyType.ByteProperty) {
+    return getBytePropertyReader(fileVersionUE5, typeName);
   }
 
   const foundValue = readerByPropertyType[propertyType];
@@ -306,32 +310,6 @@ function getStructSerializer(
   return taggedPropertiesSerializer;
 }
 
-/**
- * Get the serializer for a legacy struct array.
- * Es: TArray<FSomeStruct> in UE 4.25
- */
-function getLegacyStructArraySerializer(
-  fileVersionUE5: EUnrealEngineObjectUE5Version,
-  innerTag: FPropertyTag,
-  arraySize: number,
-): PropertySerializer {
-  invariant(innerTag.legacyData);
-  if (!innerTag.legacyData.type.equals(StructProperty)) {
-    throw new Error("Expected array property");
-  }
-
-  const subTypeName = innerTag.typeName;
-  const subSerializer = getPropertySerializer(fileVersionUE5, subTypeName);
-
-  return (reader: AssetReader, resolver: ObjectResolver) => {
-    const result: PropertyValue[] = [];
-    for (let i = 0; i < arraySize; i++) {
-      result.push(subSerializer(reader, resolver, subTypeName));
-    }
-    return { type: "array", value: result };
-  };
-}
-
 function getArraySerializer(
   subTypeName: FPropertyTypeName,
   fileVersionUE5: EUnrealEngineObjectUE5Version,
@@ -343,7 +321,7 @@ function getArraySerializer(
     const count = arraySize >= 0 ? arraySize : reader.readInt32();
     const result: PropertyValue[] = [];
     for (let i = 0; i < count; i++) {
-      result.push(subSerializer(reader, resolver, subTypeName));
+      result.push(subSerializer(reader, resolver));
     }
     return { type: "array", value: result };
   };
@@ -360,14 +338,14 @@ function getSetSerializer(
     const countToRemove = reader.readInt32();
     const elementsToRemove: PropertyValue[] = [];
     for (let i = 0; i < countToRemove; i++) {
-      elementsToRemove.push(subSerializer(reader, resolver, subTypename));
+      elementsToRemove.push(subSerializer(reader, resolver));
     }
 
     // Read elements to add
     const count = reader.readInt32();
     const value: PropertyValue[] = [];
     for (let i = 0; i < count; i++) {
-      value.push(subSerializer(reader, resolver, subTypename));
+      value.push(subSerializer(reader, resolver));
     }
 
     return { type: "set", elementsToRemove, value };
@@ -387,20 +365,57 @@ function getMapSerializer(
     const countToRemove = reader.readInt32();
     const elementsToRemove: PropertyValue[] = [];
     for (let i = 0; i < countToRemove; i++) {
-      elementsToRemove.push(keySerializer(reader, resolver, keyTypename));
+      elementsToRemove.push(keySerializer(reader, resolver));
     }
 
     // Read elements to add
     const count = reader.readInt32();
     const result: Array<[PropertyValue, PropertyValue]> = [];
     for (let i = 0; i < count; i++) {
-      const key = keySerializer(reader, resolver, keyTypename);
-      const value = valueSerializer(reader, resolver, valueTypename);
+      const key = keySerializer(reader, resolver);
+      const value = valueSerializer(reader, resolver);
       result.push([key, value]);
     }
 
     return { type: "map", elementsToRemove, value: result };
   };
+}
+
+function bytePropertyReader(reader: AssetReader): PropertyValue {
+  return { type: "numeric", value: reader.readUInt8() };
+}
+
+function enumPropertyReader(reader: AssetReader): PropertyValue {
+  const enumValue = reader.readName();
+  return { type: "name", value: enumValue };
+}
+
+function getBytePropertyReader(
+  fileVersionUE5: EUnrealEngineObjectUE5Version,
+  typeName: FPropertyTypeName,
+): PropertySerializer {
+  // ByteProperty may be an enum value (FName) or a byte value (uint8).
+  // This depends on the actual type at the moment of serialization.
+
+  // Before UE 5.4 we cannot be sure if the type is a byte or an enum.
+  // This is because FPropertyTag doesn't contain the full type name.
+  if (fileVersionUE5 < EUnrealEngineObjectUE5Version.PROPERTY_TAG_COMPLETE_TYPE_NAME) {
+    if (!typeName.getOptionalParameter(0)) {
+      console.warn("ByteProperty without type name, assuming byte");
+      return bytePropertyReader;
+    }
+  }
+
+  // If the enum type is present, the serializer has written the enum value as a name.
+  // (see FByteProperty::ConvertFromType case NAME_ByteProperty)
+  const enumType = typeName.getOptionalParameter(0);
+  if (enumType) {
+    invariant(!enumType.name.isNone);
+    return enumPropertyReader;
+  }
+
+  // With 5.4 we are sure 100% that the type is a byte.
+  return bytePropertyReader;
 }
 
 const readerByPropertyType = (() => {
@@ -416,8 +431,7 @@ const readerByPropertyType = (() => {
     return { type: "boolean", value: number != 0 };
   };
 
-  table[EPropertyType.ByteProperty] = (reader) => makeNumeric(reader.readUInt8());
-  table[EPropertyType.EnumProperty] = (reader) => ({ type: "name", value: reader.readName() });
+  table[EPropertyType.EnumProperty] = enumPropertyReader;
 
   table[EPropertyType.Int8Property] = (reader) => makeNumeric(reader.readInt8());
   table[EPropertyType.Int16Property] = (reader) => makeNumeric(reader.readInt16());
@@ -434,8 +448,60 @@ const readerByPropertyType = (() => {
 
   table[EPropertyType.NameProperty] = (reader) => ({ type: "name", value: reader.readName() });
   table[EPropertyType.StrProperty] = (reader) => ({ type: "string", value: reader.readString() });
+  table[EPropertyType.TextProperty] = (reader) => ({ type: "text", value: FText.fromStream(reader) });
 
   table[EPropertyType.ObjectProperty] = (reader, resolver) => ({ type: "object", object: resolver(reader) });
 
   return table;
 })();
+
+// region Legacy Serialization (pre UE 5.4)
+
+/**
+ * Some types may have a different serialization format in older versions (pre UE 5.4).
+ * @throws {UnknownPropertyType} If the property cannot be read safely.
+ */
+function convertFromLegacyTagIfNeeded(reader: AssetReader, tag: FPropertyTag): PropertySerializer | null {
+  invariant(tag.legacyData);
+  invariant(reader.fileVersionUE5 < EUnrealEngineObjectUE5Version.PROPERTY_TAG_COMPLETE_TYPE_NAME);
+
+  // Before UE 5.4 there was a special tag for array of structs.
+  if (tag.legacyData.type.equals(ArrayProperty) && tag.legacyData.innerType?.equals(StructProperty)) {
+    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_INNER_ARRAY_TAG_INFO) {
+      return getLegacyStructArraySerializer(reader);
+    }
+    // The file is too old, we can't ready anything without knowing the struct type.
+    throw new UnknownPropertyType(tag.typeName);
+  }
+
+  return null;
+}
+
+/**
+ * Get the serializer for a legacy struct array.
+ * Es: TArray<FSomeStruct> in UE 4.25
+ */
+function getLegacyStructArraySerializer(reader: AssetReader): PropertySerializer {
+  const fileVersionUE5 = reader.fileVersionUE5;
+
+  // Read the array size and the inner struct type.
+  const arraySize = reader.readInt32();
+  const innerTag = FPropertyTag.fromStream(reader);
+
+  invariant(innerTag.legacyData);
+  if (!innerTag.legacyData.type.equals(StructProperty)) {
+    throw new Error("Expected array property");
+  }
+
+  const subSerializer = getPropertySerializer(fileVersionUE5, innerTag.typeName);
+
+  return (reader: AssetReader, resolver: ObjectResolver) => {
+    const result: PropertyValue[] = [];
+    for (let i = 0; i < arraySize; i++) {
+      result.push(subSerializer(reader, resolver));
+    }
+    return { type: "array", value: result };
+  };
+}
+
+// endregion

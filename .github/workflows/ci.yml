@@ -44,7 +44,9 @@ jobs:
         run: yarn test:coverage
 
       - name: Build 🏗️
+        if: ${{ !cancelled() }}
         env:
+          # Upload bundle information to Codecov
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           yarn build
@@ -57,7 +59,7 @@ jobs:
           name: coverage
           path: coverage/lcov-report
 
-      - name: Upload artifacts ⬆️
+      - name: Upload "dist" artifacts ⬆️
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
