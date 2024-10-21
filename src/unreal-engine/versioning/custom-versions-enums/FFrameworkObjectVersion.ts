@@ -128,7 +128,8 @@ export const FFrameworkObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "UseBodySetupCollisionProfile",
-    comment: "BodySetup's default instance collision profile is used by default when creating a new instance.",
+    comment:
+      "BodySetup's default instance collision profile is used by default when creating a new instance.",
     value: 1,
     firstAppearance: "4.12.0",
   }),
@@ -146,7 +147,8 @@ export const FFrameworkObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ExplicitAttachmentRules",
-    comment: "Attachment rules are now explicit in how they affect location, rotation and scale",
+    comment:
+      "Attachment rules are now explicit in how they affect location, rotation and scale",
     value: 4,
     firstAppearance: "4.12.0",
   }),
@@ -176,7 +178,8 @@ export const FFrameworkObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ConstraintInstanceBehaviorParameters",
-    comment: "Refactor ConstraintInstance so that we have an easy way to swap behavior paramters",
+    comment:
+      "Refactor ConstraintInstance so that we have an easy way to swap behavior paramters",
     value: 9,
     firstAppearance: "4.13.0",
   }),
@@ -200,19 +203,22 @@ export const FFrameworkObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AddInternalClothingGraphicalSkinning",
-    comment: "Switched render data for clothing over to unreal data, reskinned to the simulation mesh",
+    comment:
+      "Switched render data for clothing over to unreal data, reskinned to the simulation mesh",
     value: 13,
     firstAppearance: "4.14.0",
   }),
   new VersionDetails({
     name: "WheelOffsetIsFromWheel",
-    comment: "Wheel force offset is now applied at the wheel instead of vehicle COM",
+    comment:
+      "Wheel force offset is now applied at the wheel instead of vehicle COM",
     value: 14,
     firstAppearance: "4.14.0",
   }),
   new VersionDetails({
     name: "MoveCurveTypesToSkeleton",
-    comment: "major flag - i.e. material types - moves to skeleton and handle in one place",
+    comment:
+      "major flag - i.e. material types - moves to skeleton and handle in one place",
     value: 15,
     firstAppearance: "4.14.0",
   }),
@@ -224,13 +230,15 @@ export const FFrameworkObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "GeometryCacheMissingMaterials",
-    comment: "Added serialization of materials applied to geometry cache objects",
+    comment:
+      "Added serialization of materials applied to geometry cache objects",
     value: 17,
     firstAppearance: "4.14.0",
   }),
   new VersionDetails({
     name: "LODsUseResolutionIndependentScreenSize",
-    comment: "Switch static & skeletal meshes to calculate LODs based on resolution-independent screen size",
+    comment:
+      "Switch static & skeletal meshes to calculate LODs based on resolution-independent screen size",
     value: 18,
     firstAppearance: "4.15.0",
   }),
@@ -248,7 +256,8 @@ export const FFrameworkObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "LODHysteresisUseResolutionIndependentScreenSize",
-    comment: "LOD hysteresis also needs conversion from the LODsUseResolutionIndependentScreenSize version",
+    comment:
+      "LOD hysteresis also needs conversion from the LODsUseResolutionIndependentScreenSize version",
     value: 21,
     firstAppearance: "4.15.0",
   }),
@@ -278,55 +287,64 @@ export const FFrameworkObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "EdGraphPinContainerType",
-    comment: "Represent a pins container type as an enum not 3 independent booleans",
+    comment:
+      "Represent a pins container type as an enum not 3 independent booleans",
     value: 26,
     firstAppearance: "4.17.0",
   }),
   new VersionDetails({
     name: "ChangeAssetPinsToString",
-    comment: "Switch asset pins to store as string instead of hard object reference",
+    comment:
+      "Switch asset pins to store as string instead of hard object reference",
     value: 27,
     firstAppearance: "4.17.0",
   }),
   new VersionDetails({
     name: "LocalVariablesBlueprintVisible",
-    comment: "Fix Local Variables so that the properties are correctly flagged as blueprint visible",
+    comment:
+      "Fix Local Variables so that the properties are correctly flagged as blueprint visible",
     value: 28,
     firstAppearance: "4.17.0",
   }),
   new VersionDetails({
     name: "RemoveUField_Next",
-    comment: "in order to allow us to do all UFunction loading in a single pass (after classes and CDOs are created):",
+    comment:
+      "in order to allow us to do all UFunction loading in a single pass (after classes and CDOs are created):",
     value: 29,
     firstAppearance: "4.18.0",
   }),
   new VersionDetails({
     name: "UserDefinedStructsBlueprintVisible",
-    comment: "Fix User Defined structs so that all members are correct flagged blueprint visible ",
+    comment:
+      "Fix User Defined structs so that all members are correct flagged blueprint visible ",
     value: 30,
     firstAppearance: "4.18.0",
   }),
   new VersionDetails({
     name: "PinsStoreFName",
-    comment: "FMaterialInput and FEdGraphPin store their name as FName instead of FString",
+    comment:
+      "FMaterialInput and FEdGraphPin store their name as FName instead of FString",
     value: 31,
     firstAppearance: "4.19.0",
   }),
   new VersionDetails({
     name: "UserDefinedStructsStoreDefaultInstance",
-    comment: "User defined structs store their default instance, which is used for initializing instances",
+    comment:
+      "User defined structs store their default instance, which is used for initializing instances",
     value: 32,
     firstAppearance: "4.19.0",
   }),
   new VersionDetails({
     name: "FunctionTerminatorNodesUseMemberReference",
-    comment: "Function terminator nodes serialize an FMemberReference rather than a name/class pair",
+    comment:
+      "Function terminator nodes serialize an FMemberReference rather than a name/class pair",
     value: 33,
     firstAppearance: "4.19.0",
   }),
   new VersionDetails({
     name: "EditableEventsUseConstRefParameters",
-    comment: "Custom event and non-native interface event implementations add 'const' to reference parameters",
+    comment:
+      "Custom event and non-native interface event implementations add 'const' to reference parameters",
     value: 34,
     firstAppearance: "4.20.0",
   }),

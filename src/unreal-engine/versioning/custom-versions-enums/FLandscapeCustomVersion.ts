@@ -68,19 +68,22 @@ export const FLandscapeCustomVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "GrassMaterialWPO",
-    comment: "Support material world-position-offset in the heightmap used for grass placement",
+    comment:
+      "Support material world-position-offset in the heightmap used for grass placement",
     value: 2,
     firstAppearance: "4.11.2",
   }),
   new VersionDetails({
     name: "CollisionMaterialWPO",
-    comment: "Support material world-position-offset in landscape simple collision",
+    comment:
+      "Support material world-position-offset in landscape simple collision",
     value: 3,
     firstAppearance: "4.12.0",
   }),
   new VersionDetails({
     name: "LightmassMaterialWPO",
-    comment: "Support material world-position-offset in landscape lighting mesh",
+    comment:
+      "Support material world-position-offset in landscape lighting mesh",
     value: 4,
     firstAppearance: "4.12.0",
   }),
@@ -100,13 +103,15 @@ export const FLandscapeCustomVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "MigrateOldPropertiesToNewRenderingProperties",
-    comment: "Migration of deprecated property from old landscape rendering to new landscape Rendering ",
+    comment:
+      "Migration of deprecated property from old landscape rendering to new landscape Rendering ",
     value: 7,
     firstAppearance: "4.19.0",
   }),
   new VersionDetails({
     name: "AddingBodyInstanceToSplinesElements",
-    comment: "Migration of old EnabledCollision for spline elements to the full body instance exposed",
+    comment:
+      "Migration of old EnabledCollision for spline elements to the full body instance exposed",
     value: 8,
     firstAppearance: "4.20.0",
   }),
@@ -124,7 +129,8 @@ export const FLandscapeCustomVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "NewLandscapeContinuousLOD",
-    comment: "New LOD distribution and tessellation calculations are introduced, needs parameter conversion",
+    comment:
+      "New LOD distribution and tessellation calculations are introduced, needs parameter conversion",
     value: 11,
     firstAppearance: "4.24.0",
   }),

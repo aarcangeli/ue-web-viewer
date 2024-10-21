@@ -51,86 +51,93 @@ export enum FFortniteReleaseBranchCustomObjectVersion {
   // endregion
 }
 
-export const FFortniteReleaseBranchCustomObjectVersionDetails: VersionDetails[] = [
-  new VersionDetails({
-    name: "BeforeCustomVersionWasAdded",
-    comment: "Before any version changes were made",
-    value: 0,
-    firstAppearance: "4.26.0",
-  }),
-  new VersionDetails({
-    name: "ChaosClothAddTethersToCachedData",
-    comment:
-      "Add the long range attachment tethers to the cloth asset to avoid a large hitch during the cloth's initialization.",
-    value: 1,
-    firstAppearance: "5.0.0",
-  }),
-  new VersionDetails({
-    name: "ChaosKinematicTargetRemoveScale",
-    comment: "Chaos::TKinematicTarget no longer stores a full transform, only position/rotation.",
-    value: 2,
-    firstAppearance: "5.0.0",
-  }),
-  new VersionDetails({
-    name: "ActorComponentUCSModifiedPropertiesSparseStorage",
-    comment: "Move UCSModifiedProperties out of ActorComponent and in to sparse storage",
-    value: 3,
-    firstAppearance: "5.1.0",
-  }),
-  new VersionDetails({
-    name: "FixupNaniteLandscapeMeshes",
-    comment: "Fixup Nanite meshes which were using the wrong material and didn't have proper UVs :",
-    value: 4,
-    firstAppearance: "5.2.0",
-  }),
-  new VersionDetails({
-    name: "RemoveUselessLandscapeMeshesCookedCollisionData",
-    comment:
-      "Remove any cooked collision data from nanite landscape / editor spline meshes since collisions are not needed there :",
-    value: 5,
-    firstAppearance: "5.2.0",
-  }),
-  new VersionDetails({
-    name: "SerializeAnimCurveCompressionCodecGuidOnCook",
-    comment:
-      "Serialize out UAnimCurveCompressionCodec::InstanceGUID to maintain deterministic DDC key generation in cooked-editor",
-    value: 6,
-    firstAppearance: "5.3.0",
-  }),
-  new VersionDetails({
-    name: "FixNaniteLandscapeMeshNames",
-    comment: "Fix the Nanite landscape mesh being reused because of a bad name",
-    value: 7,
-    firstAppearance: "5.3.0",
-  }),
-  new VersionDetails({
-    name: "LandscapeSharedPropertiesEnforcement",
-    comment: "Fixup and synchronize shared properties modified before the synchronicity enforcement",
-    value: 8,
-    firstAppearance: "5.3.0",
-  }),
-  new VersionDetails({
-    name: "WorldPartitionRuntimeCellGuidWithCellSize",
-    comment: "Include the cell size when computing the cell guid",
-    value: 9,
-    firstAppearance: "5.3.0",
-  }),
-  new VersionDetails({
-    name: "NaniteMaterialOverrideUsesEditorOnly",
-    comment: "Enable SkipOnlyEditorOnly style cooking of NaniteOverrideMaterial",
-    value: 10,
-    firstAppearance: "5.3.0",
-  }),
-  new VersionDetails({
-    name: "SinglePrecisonParticleData",
-    comment: "Store game thread particles data in single precision",
-    value: 11,
-    firstAppearance: "5.4.0",
-  }),
-  new VersionDetails({
-    name: "PCGPointStructuredSerializer",
-    comment: "UPCGPoint custom serialization",
-    value: 12,
-    firstAppearance: "5.4.0",
-  }),
-];
+export const FFortniteReleaseBranchCustomObjectVersionDetails: VersionDetails[] =
+  [
+    new VersionDetails({
+      name: "BeforeCustomVersionWasAdded",
+      comment: "Before any version changes were made",
+      value: 0,
+      firstAppearance: "4.26.0",
+    }),
+    new VersionDetails({
+      name: "ChaosClothAddTethersToCachedData",
+      comment:
+        "Add the long range attachment tethers to the cloth asset to avoid a large hitch during the cloth's initialization.",
+      value: 1,
+      firstAppearance: "5.0.0",
+    }),
+    new VersionDetails({
+      name: "ChaosKinematicTargetRemoveScale",
+      comment:
+        "Chaos::TKinematicTarget no longer stores a full transform, only position/rotation.",
+      value: 2,
+      firstAppearance: "5.0.0",
+    }),
+    new VersionDetails({
+      name: "ActorComponentUCSModifiedPropertiesSparseStorage",
+      comment:
+        "Move UCSModifiedProperties out of ActorComponent and in to sparse storage",
+      value: 3,
+      firstAppearance: "5.1.0",
+    }),
+    new VersionDetails({
+      name: "FixupNaniteLandscapeMeshes",
+      comment:
+        "Fixup Nanite meshes which were using the wrong material and didn't have proper UVs :",
+      value: 4,
+      firstAppearance: "5.2.0",
+    }),
+    new VersionDetails({
+      name: "RemoveUselessLandscapeMeshesCookedCollisionData",
+      comment:
+        "Remove any cooked collision data from nanite landscape / editor spline meshes since collisions are not needed there :",
+      value: 5,
+      firstAppearance: "5.2.0",
+    }),
+    new VersionDetails({
+      name: "SerializeAnimCurveCompressionCodecGuidOnCook",
+      comment:
+        "Serialize out UAnimCurveCompressionCodec::InstanceGUID to maintain deterministic DDC key generation in cooked-editor",
+      value: 6,
+      firstAppearance: "5.3.0",
+    }),
+    new VersionDetails({
+      name: "FixNaniteLandscapeMeshNames",
+      comment:
+        "Fix the Nanite landscape mesh being reused because of a bad name",
+      value: 7,
+      firstAppearance: "5.3.0",
+    }),
+    new VersionDetails({
+      name: "LandscapeSharedPropertiesEnforcement",
+      comment:
+        "Fixup and synchronize shared properties modified before the synchronicity enforcement",
+      value: 8,
+      firstAppearance: "5.3.0",
+    }),
+    new VersionDetails({
+      name: "WorldPartitionRuntimeCellGuidWithCellSize",
+      comment: "Include the cell size when computing the cell guid",
+      value: 9,
+      firstAppearance: "5.3.0",
+    }),
+    new VersionDetails({
+      name: "NaniteMaterialOverrideUsesEditorOnly",
+      comment:
+        "Enable SkipOnlyEditorOnly style cooking of NaniteOverrideMaterial",
+      value: 10,
+      firstAppearance: "5.3.0",
+    }),
+    new VersionDetails({
+      name: "SinglePrecisonParticleData",
+      comment: "Store game thread particles data in single precision",
+      value: 11,
+      firstAppearance: "5.4.0",
+    }),
+    new VersionDetails({
+      name: "PCGPointStructuredSerializer",
+      comment: "UPCGPoint custom serialization",
+      value: 12,
+      firstAppearance: "5.4.0",
+    }),
+  ];

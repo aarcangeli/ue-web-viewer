@@ -1,7 +1,13 @@
 import { FEngineVersion } from "./EngineVersion";
 
 test("FEngineVersion::fromComponents", () => {
-  const version = FEngineVersion.fromComponents(4, 13, 1, 3142249, "++UE+Release-4.13");
+  const version = FEngineVersion.fromComponents(
+    4,
+    13,
+    1,
+    3142249,
+    "++UE+Release-4.13",
+  );
   expect(version.Major).toBe(4);
   expect(version.Minor).toBe(13);
   expect(version.Patch).toBe(1);
@@ -12,7 +18,13 @@ test("FEngineVersion::fromComponents", () => {
 });
 
 test("FEngineVersion::fromComponents 2", () => {
-  const version = FEngineVersion.fromComponents(4, 0, 2, 2034640, "++depot+UE4-Releases+4.0");
+  const version = FEngineVersion.fromComponents(
+    4,
+    0,
+    2,
+    2034640,
+    "++depot+UE4-Releases+4.0",
+  );
   expect(version.Major).toBe(4);
   expect(version.Minor).toBe(0);
   expect(version.Patch).toBe(2);

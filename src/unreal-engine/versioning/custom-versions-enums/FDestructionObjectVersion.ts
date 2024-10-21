@@ -47,13 +47,15 @@ export const FDestructionObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AddedTimestampedGeometryComponentCache",
-    comment: "Added timestamped caches for geometry component to handle transform sampling instead of per-frame",
+    comment:
+      "Added timestamped caches for geometry component to handle transform sampling instead of per-frame",
     value: 1,
     firstAppearance: "4.22.0",
   }),
   new VersionDetails({
     name: "AddedCacheDataReduction",
-    comment: "Added functionality to strip unnecessary data from geometry collection caches",
+    comment:
+      "Added functionality to strip unnecessary data from geometry collection caches",
     value: 2,
     firstAppearance: "4.22.0",
   }),

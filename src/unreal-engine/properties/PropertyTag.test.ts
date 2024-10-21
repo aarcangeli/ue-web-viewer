@@ -8,7 +8,9 @@ describe("FPropertyTypeName", () => {
     let name = new FPropertyTypeName(FName.fromString("TagName"));
     name = name.addParameter(FPropertyTypeName.fromString("arg1"));
     name = name.addParameter(
-      FPropertyTypeName.fromString("arg2").addParameter(FPropertyTypeName.fromString("nested-arg")),
+      FPropertyTypeName.fromString("arg2").addParameter(
+        FPropertyTypeName.fromString("nested-arg"),
+      ),
     );
 
     // Full name
@@ -26,7 +28,9 @@ describe("FPropertyTypeName", () => {
       new FPropertyTypeName(FName.fromString("BPS_TestStructure"), [
         FPropertyTypeName.fromString("/Game/BPS_TestStructure"),
       ]),
-      FPropertyTypeName.fromGuid(FGuid.fromString("{c09f9868-40e3-c215-4f33-f088bdf2d890}")),
+      FPropertyTypeName.fromGuid(
+        FGuid.fromString("{c09f9868-40e3-c215-4f33-f088bdf2d890}"),
+      ),
     ]);
 
     expect(name.toString()).toBe(

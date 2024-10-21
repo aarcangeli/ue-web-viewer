@@ -27,7 +27,9 @@ describe("TestActorUE4-0-2", () => {
     expect(asset.makeFullNameByIndex(55).toString()).toBe(
       "TestActorUE4-0-2.TestActorUE4-0-2:CustomFunction.K2Node_CallFunction_7631",
     );
-    expect(asset.makeFullNameByIndex(-36).toString()).toBe("/Script/CoreUObject.Object:LinearColor");
+    expect(asset.makeFullNameByIndex(-36).toString()).toBe(
+      "/Script/CoreUObject.Object:LinearColor",
+    );
   });
 });
 
@@ -57,6 +59,8 @@ describe("TestActorUE5-4-4", () => {
     expect(asset.makeFullNameByIndex(14).toString()).toBe(
       "TestActorUE5-4-4.TestActorUE5-4-4:CustomGraph.K2Node_CallFunction_0",
     );
-    expect(asset.makeFullNameByIndex(-21).toString()).toBe("/Script/Engine.KismetSystemLibrary:PrintString");
+    expect(asset.makeFullNameByIndex(-21).toString()).toBe(
+      "/Script/Engine.KismetSystemLibrary:PrintString",
+    );
   });
 });

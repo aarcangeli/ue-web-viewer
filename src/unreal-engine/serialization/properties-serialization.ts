@@ -5,16 +5,24 @@ import { FPropertyTag } from "../properties/PropertyTag";
 import { EPropertyTagExtension, EPropertyType } from "../properties/enums";
 import { EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
-import { getPropertySerializerFromTag, UnknownPropertyType } from "./property-serializer";
+import {
+  getPropertySerializerFromTag,
+  UnknownPropertyType,
+} from "./property-serializer";
 
-export function readTaggedProperties(reader: AssetReader, isUClass: boolean, resolver: ObjectResolver) {
+export function readTaggedProperties(
+  reader: AssetReader,
+  isUClass: boolean,
+  resolver: ObjectResolver,
+) {
   // from UStruct::SerializeVersionedTaggedProperties
 
   const properties: TaggedProperty[] = [];
 
   if (
     isUClass &&
-    reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.PROPERTY_TAG_EXTENSION_AND_OVERRIDABLE_SERIALIZATION
+    reader.fileVersionUE5 >=
+      EUnrealEngineObjectUE5Version.PROPERTY_TAG_EXTENSION_AND_OVERRIDABLE_SERIALIZATION
   ) {
     const serializationControl: EPropertyTagExtension = reader.readUInt8();
     if (serializationControl & EPropertyTagExtension.OverridableInformation) {
@@ -35,14 +43,20 @@ export function readTaggedProperties(reader: AssetReader, isUClass: boolean, res
   return properties;
 }
 
-function readTaggedProperty(tag: FPropertyTag, reader: AssetReader, resolver: ObjectResolver) {
+function readTaggedProperty(
+  tag: FPropertyTag,
+  reader: AssetReader,
+  resolver: ObjectResolver,
+) {
   let value: PropertyValue;
 
   // bool values are stored in the tag itself.
   // if the bool is in a container, it is stored normally.
   if (tag.typeName.propertyType == EPropertyType.BoolProperty) {
     if (tag.size > 0) {
-      value = makeError(`Expected bool property stored in tag, but found extra bytes ${tag.size}.`);
+      value = makeError(
+        `Expected bool property stored in tag, but found extra bytes ${tag.size}.`,
+      );
     } else {
       value = { type: "boolean", value: tag.boolVal };
     }
@@ -53,7 +67,11 @@ function readTaggedProperty(tag: FPropertyTag, reader: AssetReader, resolver: Ob
   return new TaggedProperty(tag, value);
 }
 
-function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: ObjectResolver): PropertyValue {
+function readPropertyValue(
+  tag: FPropertyTag,
+  reader: AssetReader,
+  resolver: ObjectResolver,
+): PropertyValue {
   const typeName = tag.typeName;
 
   let serializer;
@@ -77,7 +95,9 @@ function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: Obj
     // Properties are easy to read, if there are extra bytes, it's likely a bug.
     if (result.type != "error" && reader.remaining > 0) {
       console.warn("Extra bytes found at the end of property value.");
-      return makeError(`Found ${reader.remaining} bytes found at the end of property value (type: ${typeName}).`);
+      return makeError(
+        `Found ${reader.remaining} bytes found at the end of property value (type: ${typeName}).`,
+      );
     }
 
     return result;

@@ -57,7 +57,8 @@ export const FSkeletalMeshCustomVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "CombineSectionWithChunk",
-    comment: "Remove Chunks array in FStaticLODModel and combine with Sections array",
+    comment:
+      "Remove Chunks array in FStaticLODModel and combine with Sections array",
     value: 1,
     firstAppearance: "4.27.0",
   }),

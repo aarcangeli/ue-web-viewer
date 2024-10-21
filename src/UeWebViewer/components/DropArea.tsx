@@ -44,7 +44,9 @@ export default function DropArea(props: {
   }, []);
 
   const onDragLeave = useCallback((event: DragEvent) => {
-    dragTargetsRef.current = dragTargetsRef.current.filter((target) => target !== event.target);
+    dragTargetsRef.current = dragTargetsRef.current.filter(
+      (target) => target !== event.target,
+    );
     if (dragTargetsRef.current.length === 0) {
       setIsDragActive(false);
       isDragActiveRef.current = false;
@@ -99,7 +101,12 @@ export default function DropArea(props: {
       padding={5}
       bg={"rgba(0, 0, 0, 0.5)"}
     >
-      <input ref={inputFile} type="file" name="file" style={{ display: "none" }}></input>
+      <input
+        ref={inputFile}
+        type="file"
+        name="file"
+        style={{ display: "none" }}
+      ></input>
       <Flex
         flexGrow={1}
         ref={dropTargetsRef}

@@ -1,6 +1,9 @@
 import type { AssetReader } from "../AssetReader";
 import { FGuid } from "../modules/CoreUObject/structs/Guid";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
+import {
+  EUnrealEngineObjectUE4Version,
+  EUnrealEngineObjectUE5Version,
+} from "../versioning/ue-versions";
 import { enumToFlags } from "../../utils/enum-utils";
 import type { FName } from "../types/Name";
 import { NAME_None } from "../types/Name";
@@ -37,7 +40,10 @@ export class FObjectExport {
     result.ClassIndex = reader.readInt32();
     result.SuperIndex = reader.readInt32();
 
-    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_TemplateIndex_IN_COOKED_EXPORTS) {
+    if (
+      reader.fileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_TemplateIndex_IN_COOKED_EXPORTS
+    ) {
       result.TemplateIndex = reader.readInt32();
     }
 
@@ -47,7 +53,10 @@ export class FObjectExport {
     result.objectFlags = reader.readUInt32();
 
     // SerialSize and SerialOffset are 32 bits before this version
-    if (reader.fileVersionUE4 < EUnrealEngineObjectUE4Version.VER_UE4_64BIT_EXPORTMAP_SERIALSIZES) {
+    if (
+      reader.fileVersionUE4 <
+      EUnrealEngineObjectUE4Version.VER_UE4_64BIT_EXPORTMAP_SERIALSIZES
+    ) {
       result.SerialSize = reader.readInt32();
       result.SerialOffset = reader.readInt32();
     } else {
@@ -60,29 +69,46 @@ export class FObjectExport {
     result.bNotForServer = reader.readBoolean();
 
     // Skip deprecate guid field
-    if (reader.fileVersionUE5 < EUnrealEngineObjectUE5Version.REMOVE_OBJECT_EXPORT_PACKAGE_GUID) {
+    if (
+      reader.fileVersionUE5 <
+      EUnrealEngineObjectUE5Version.REMOVE_OBJECT_EXPORT_PACKAGE_GUID
+    ) {
       FGuid.fromStream(reader);
     }
 
-    if (reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.TRACK_OBJECT_EXPORT_IS_INHERITED) {
+    if (
+      reader.fileVersionUE5 >=
+      EUnrealEngineObjectUE5Version.TRACK_OBJECT_EXPORT_IS_INHERITED
+    ) {
       result.bIsInheritedInstance = reader.readBoolean();
     }
 
     result.packageFlags = reader.readUInt32();
 
-    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_LOAD_FOR_EDITOR_GAME) {
+    if (
+      reader.fileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_LOAD_FOR_EDITOR_GAME
+    ) {
       result.bNotAlwaysLoadedForEditorGame = reader.readBoolean();
     }
 
-    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_COOKED_ASSETS_IN_EDITOR_SUPPORT) {
+    if (
+      reader.fileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_COOKED_ASSETS_IN_EDITOR_SUPPORT
+    ) {
       result.bIsAsset = reader.readBoolean();
     }
 
-    if (reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.OPTIONAL_RESOURCES) {
+    if (
+      reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.OPTIONAL_RESOURCES
+    ) {
       result.bGeneratePublicHash = reader.readBoolean();
     }
 
-    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_PRELOAD_DEPENDENCIES_IN_COOKED_EXPORTS) {
+    if (
+      reader.fileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_PRELOAD_DEPENDENCIES_IN_COOKED_EXPORTS
+    ) {
       result.FirstExportDependency = reader.readInt32();
       result.SerializationBeforeSerializationDependencies = reader.readInt32();
       result.CreateBeforeSerializationDependencies = reader.readInt32();
@@ -90,7 +116,10 @@ export class FObjectExport {
       result.CreateBeforeCreateDependencies = reader.readInt32();
     }
 
-    if (reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.SCRIPT_SERIALIZATION_OFFSET) {
+    if (
+      reader.fileVersionUE5 >=
+      EUnrealEngineObjectUE5Version.SCRIPT_SERIALIZATION_OFFSET
+    ) {
       result.ScriptSerializationStartOffset = reader.readUInt64();
       result.ScriptSerializationEndOffset = reader.readUInt64();
     }
@@ -173,7 +202,10 @@ const ObjectFlagsWithValues: Array<[string, number]> = [
   ["TextExportTransient", EObjectFlags.RF_TextExportTransient],
   ["LoadCompleted", EObjectFlags.RF_LoadCompleted],
   ["WasLoaded", EObjectFlags.RF_WasLoaded],
-  ["InheritableComponentTemplate", EObjectFlags.RF_InheritableComponentTemplate],
+  [
+    "InheritableComponentTemplate",
+    EObjectFlags.RF_InheritableComponentTemplate,
+  ],
   ["DuplicateTransient", EObjectFlags.RF_DuplicateTransient],
   ["StrongRefOnFrame", EObjectFlags.RF_StrongRefOnFrame],
   ["NonPIEDuplicateTransient", EObjectFlags.RF_NonPIEDuplicateTransient],

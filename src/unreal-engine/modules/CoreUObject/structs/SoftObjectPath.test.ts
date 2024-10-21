@@ -25,7 +25,9 @@ describe("FSoftObjectPath", () => {
   });
 
   it("should parse an object path", () => {
-    const softObjectPath = FSoftObjectPath.fromPathString("/Game/BP_Array.BP_Array");
+    const softObjectPath = FSoftObjectPath.fromPathString(
+      "/Game/BP_Array.BP_Array",
+    );
     expect(softObjectPath.packageName.text).toBe("/Game/BP_Array");
     expect(softObjectPath.assetName.text).toBe("BP_Array");
     expect(softObjectPath.subPathString).toBe("");
@@ -34,11 +36,15 @@ describe("FSoftObjectPath", () => {
   });
 
   it("should parse a full path", () => {
-    const softObjectPath = FSoftObjectPath.fromPathString("/Game/BP_Array.BP_Array:SubPath.SubPath");
+    const softObjectPath = FSoftObjectPath.fromPathString(
+      "/Game/BP_Array.BP_Array:SubPath.SubPath",
+    );
     expect(softObjectPath.packageName.text).toBe("/Game/BP_Array");
     expect(softObjectPath.assetName.text).toBe("BP_Array");
     expect(softObjectPath.subPathString).toBe("SubPath.SubPath");
     expect(softObjectPath.isNull()).toBe(false);
-    expect(softObjectPath.toString()).toBe("/Game/BP_Array.BP_Array:SubPath.SubPath");
+    expect(softObjectPath.toString()).toBe(
+      "/Game/BP_Array.BP_Array:SubPath.SubPath",
+    );
   });
 });

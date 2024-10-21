@@ -1,7 +1,13 @@
 import type { AssetReader } from "../../../AssetReader";
 import { FName, NAME_None } from "../../../types/Name";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../../../versioning/ue-versions";
-import { isShortPackageName, tryParseExportTextPath } from "../../../path-utils";
+import {
+  EUnrealEngineObjectUE4Version,
+  EUnrealEngineObjectUE5Version,
+} from "../../../versioning/ue-versions";
+import {
+  isShortPackageName,
+  tryParseExportTextPath,
+} from "../../../path-utils";
 import type { UObject } from "../objects/Object";
 
 /**
@@ -24,7 +30,10 @@ export class FSoftObjectPath {
 
   // This is not used ATM, but may be used in the future.
   static fromStream(reader: AssetReader) {
-    if (reader.fileVersionUE4 < EUnrealEngineObjectUE4Version.VER_UE4_ADDED_SOFT_OBJECT_PATH) {
+    if (
+      reader.fileVersionUE4 <
+      EUnrealEngineObjectUE4Version.VER_UE4_ADDED_SOFT_OBJECT_PATH
+    ) {
       // Single string
       let assetPath = reader.readString();
 
@@ -36,7 +45,10 @@ export class FSoftObjectPath {
       }
 
       return this.fromPathString(assetPath);
-    } else if (reader.fileVersionUE5 < EUnrealEngineObjectUE5Version.FSOFTOBJECTPATH_REMOVE_ASSET_PATH_FNAMES) {
+    } else if (
+      reader.fileVersionUE5 <
+      EUnrealEngineObjectUE5Version.FSOFTOBJECTPATH_REMOVE_ASSET_PATH_FNAMES
+    ) {
       // Package name and asset name merged into a single FName, followed by a string
       const [packageName, assetName] = splitPath(reader.readName());
       const subPathString = reader.readString();
@@ -137,7 +149,10 @@ function splitPath(path: FName): [FName, FName] {
     return [FName.fromString(pathString.substring(0, i)), NAME_None];
   }
 
-  const [leftPart, rightPart] = [pathString.substring(0, i), pathString.substring(i + 1)];
+  const [leftPart, rightPart] = [
+    pathString.substring(0, i),
+    pathString.substring(i + 1),
+  ];
   if (rightPart.includes(".") || rightPart.includes(":")) {
     // Multiple '.' or ':' are not allowed in the asset name.
     throw new Error(`Invalid soft object path: ${path}`);
@@ -157,7 +172,9 @@ function removeClassPrefix(path: string): string {
 function getNormalizedObjectPath(assetPath: string) {
   if (assetPath && isShortPackageName(assetPath)) {
     // Short package doesn't store the directory, and we have no way to know it.
-    throw new Error(`Cannot convert short package name to object path: ${assetPath}`);
+    throw new Error(
+      `Cannot convert short package name to object path: ${assetPath}`,
+    );
   }
   return assetPath;
 }

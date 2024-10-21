@@ -6,7 +6,10 @@ import invariant from "tiny-invariant";
 import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
 import { FName, NAME_None } from "../types/Name";
 import { removeExtension } from "../../utils/string-utils";
-import type { ObjectConstructionParams, ObjectResolver } from "../modules/CoreUObject/objects/Object";
+import type {
+  ObjectConstructionParams,
+  ObjectResolver,
+} from "../modules/CoreUObject/objects/Object";
 import { ELoadingPhase } from "../modules/CoreUObject/objects/Object";
 import { UObject, WeakObject } from "../modules/CoreUObject/objects/Object";
 import { UPackage } from "../modules/CoreUObject/objects/Package";
@@ -63,7 +66,10 @@ export class Asset {
     private _reload: (() => Promise<FullAssetReader>) | null = null,
   ) {
     invariant(packageName, "Expected a package name");
-    invariant(reader.tell() === 0, "Expected to be at the beginning of the stream");
+    invariant(
+      reader.tell() === 0,
+      "Expected to be at the beginning of the stream",
+    );
 
     // remove extension
     packageName = removeExtension(packageName);
@@ -193,7 +199,9 @@ export class Asset {
 
   private findIndexByFullName(fullName: string) {
     return this.exports.findIndex(
-      (e, index) => this.makeFullNameByIndex(index + 1).toLowerCase() === fullName.toLowerCase(),
+      (e, index) =>
+        this.makeFullNameByIndex(index + 1).toLowerCase() ===
+        fullName.toLowerCase(),
     );
   }
 
@@ -214,7 +222,9 @@ export class Asset {
    * If not found, returns 0.
    */
   private findRootExportByName(exportName: string) {
-    const number = this.exports.findIndex((e) => e.OuterIndex == 0 && e.ObjectName.text === exportName);
+    const number = this.exports.findIndex(
+      (e) => e.OuterIndex == 0 && e.ObjectName.text === exportName,
+    );
     return number + 1;
   }
 
@@ -267,7 +277,10 @@ export class Asset {
 
     const object = this.withRecursionCheck(index, () => {
       invariant(objectExport.ClassIndex != 0, `Expected a valid class index`);
-      const clazz = this.getObjectByIndex(objectExport.ClassIndex, false) as UClass;
+      const clazz = this.getObjectByIndex(
+        objectExport.ClassIndex,
+        false,
+      ) as UClass;
       const object = this.instantiateObject({
         clazz: clazz,
         name: objectExport.ObjectName,
@@ -275,7 +288,9 @@ export class Asset {
       });
 
       // Attach the object to the outer
-      const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex, false) : this.package;
+      const outer = objectExport.OuterIndex
+        ? this.getObjectByIndex(objectExport.OuterIndex, false)
+        : this.package;
       outer.addInner(object);
 
       // Register the object
@@ -293,7 +308,10 @@ export class Asset {
   }
 
   private serializeObject(objectExport: FObjectExport, object: UObject) {
-    invariant(object.loadingPhase === ELoadingPhase.None, `Object ${object.fullName} already loaded`);
+    invariant(
+      object.loadingPhase === ELoadingPhase.None,
+      `Object ${object.fullName} already loaded`,
+    );
 
     try {
       // Mark as loaded, so that we can detect recursion
@@ -313,11 +331,20 @@ export class Asset {
         object.deserialize(subReader, resolver);
       }
 
-      object.serializationStatistics = new SerializationStatistics(subReader.remaining, null);
+      object.serializationStatistics = new SerializationStatistics(
+        subReader.remaining,
+        null,
+      );
       object.loadingPhase = ELoadingPhase.Full;
     } catch (e) {
-      console.warn(`Error deserializing object ${object.fullName}; the object is partially loaded:`, e);
-      object.serializationStatistics = new SerializationStatistics(null, String(e));
+      console.warn(
+        `Error deserializing object ${object.fullName}; the object is partially loaded:`,
+        e,
+      );
+      object.serializationStatistics = new SerializationStatistics(
+        null,
+        String(e),
+      );
       object.loadingPhase = ELoadingPhase.Error;
     }
   }
@@ -352,7 +379,10 @@ function readNames(reader: AssetReader, summary: FPackageFileSummary) {
     names.push(reader.readString());
 
     // skip hash
-    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_NAME_HASHES_SERIALIZED) {
+    if (
+      reader.fileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_NAME_HASHES_SERIALIZED
+    ) {
       reader.readUInt32();
     }
   }

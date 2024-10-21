@@ -40,13 +40,15 @@ export const FAnimationCustomVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "BoneDrivenControllerMatchingMaya",
-    comment: "changed the range to apply to the input, and added a configurable method for updating the components",
+    comment:
+      "changed the range to apply to the input, and added a configurable method for updating the components",
     value: 1,
     firstAppearance: "4.9.0",
   }),
   new VersionDetails({
     name: "BoneDrivenControllerRemapping",
-    comment: "Converted the range clamp into a remap function, rather than just clamping",
+    comment:
+      "Converted the range clamp into a remap function, rather than just clamping",
     value: 2,
     firstAppearance: "4.9.0",
   }),

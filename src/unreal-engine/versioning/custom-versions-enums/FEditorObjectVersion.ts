@@ -147,13 +147,15 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "GatheredTextPackageCacheFixesV1",
-    comment: "Fixed several issues with the gathered text cache stored in package headers",
+    comment:
+      "Fixed several issues with the gathered text cache stored in package headers",
     value: 2,
     firstAppearance: "4.13.0",
   }),
   new VersionDetails({
     name: "RootMetaDataSupport",
-    comment: 'Added support for "root" meta-data (meta-data not associated with a particular object in a package)',
+    comment:
+      'Added support for "root" meta-data (meta-data not associated with a particular object in a package)',
     value: 3,
     firstAppearance: "4.13.0",
   }),
@@ -165,7 +167,8 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "TextFormatArgumentDataIsVariant",
-    comment: "Updated FFormatArgumentData to allow variant data to be marshaled from a BP into C++",
+    comment:
+      "Updated FFormatArgumentData to allow variant data to be marshaled from a BP into C++",
     value: 5,
     firstAppearance: "4.13.0",
   }),
@@ -177,7 +180,8 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ComboBoxControllerSupportUpdate",
-    comment: "Updated ComboBox to support toggling the menu open, better controller support",
+    comment:
+      "Updated ComboBox to support toggling the menu open, better controller support",
     value: 7,
     firstAppearance: "4.14.0",
   }),
@@ -202,7 +206,8 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "WidgetGraphSchema",
-    comment: "Update the schema of all widget blueprints to use the WidgetGraphSchema",
+    comment:
+      "Update the schema of all widget blueprints to use the WidgetGraphSchema",
     value: 11,
     firstAppearance: "4.15.0",
   }),
@@ -226,19 +231,22 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "UPropertryForMeshSectionSerialize",
-    comment: "Fix a serialization issue with static mesh FMeshSectionInfoMap FProperty",
+    comment:
+      "Fix a serialization issue with static mesh FMeshSectionInfoMap FProperty",
     value: 15,
     firstAppearance: "4.16.0",
   }),
   new VersionDetails({
     name: "FastWidgetTemplates",
-    comment: "Adding a version bump for the new fast widget construction in case of problems.",
+    comment:
+      "Adding a version bump for the new fast widget construction in case of problems.",
     value: 16,
     firstAppearance: "4.16.0",
   }),
   new VersionDetails({
     name: "MaterialThumbnailRenderingChanges",
-    comment: "Update material thumbnails to be more intelligent on default primitive shape for certain material types",
+    comment:
+      "Update material thumbnails to be more intelligent on default primitive shape for certain material types",
     value: 17,
     firstAppearance: "4.16.0",
   }),
@@ -269,7 +277,8 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AddedMaterialSharedInputs",
-    comment: "Added additional objects that must be serialized as part of this new material feature",
+    comment:
+      "Added additional objects that must be serialized as part of this new material feature",
     value: 22,
     firstAppearance: "4.19.0",
   }),
@@ -281,7 +290,8 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "SerializeInstancedStaticMeshRenderData",
-    comment: "Serialize the instanced static mesh render data, to avoid building it at runtime",
+    comment:
+      "Serialize the instanced static mesh render data, to avoid building it at runtime",
     value: 24,
     firstAppearance: "4.20.0",
   }),
@@ -299,7 +309,8 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ChangeSceneCaptureRootComponent",
-    comment: "Switch root component of SceneCapture actors from MeshComponent to SceneComponent",
+    comment:
+      "Switch root component of SceneCapture actors from MeshComponent to SceneComponent",
     value: 27,
     firstAppearance: "4.22.0",
   }),
@@ -317,7 +328,8 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "MeshDescriptionRemovedHoles",
-    comment: "Change to MeshDescription serialization (removed FMeshPolygon::HoleContours)",
+    comment:
+      "Change to MeshDescription serialization (removed FMeshPolygon::HoleContours)",
     value: 30,
     firstAppearance: "4.22.0",
   }),
@@ -349,7 +361,8 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "MeshDescriptionTriangles",
-    comment: "MeshDescription defined by triangles instead of arbitrary polygons",
+    comment:
+      "MeshDescription defined by triangles instead of arbitrary polygons",
     value: 35,
     firstAppearance: "4.24.0",
   }),
@@ -361,13 +374,15 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "SkeletalMeshBuildRefactor",
-    comment: "SkeletalMesh now can be rebuild in editor, no more need to re-import",
+    comment:
+      "SkeletalMesh now can be rebuild in editor, no more need to re-import",
     value: 37,
     firstAppearance: "4.24.0",
   }),
   new VersionDetails({
     name: "SkeletalMeshMoveEditorSourceDataToPrivateAsset",
-    comment: "Move all SkeletalMesh source data into a private uasset in the same package has the skeletalmesh",
+    comment:
+      "Move all SkeletalMesh source data into a private uasset in the same package has the skeletalmesh",
     value: 38,
     firstAppearance: "4.25.0",
   }),
@@ -379,13 +394,15 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "SkeletalMeshSourceDataSupport16bitOfMaterialNumber",
-    comment: "Make sure we can have more then 255 material in the skeletal mesh source data",
+    comment:
+      "Make sure we can have more then 255 material in the skeletal mesh source data",
     value: 40,
     firstAppearance: "4.26.0",
   }),
   new VersionDetails({
     name: "GatheredTextPackageCacheFixes",
-    comment: "Fixed several issues with the gathered text cache stored in package headers",
+    comment:
+      "Fixed several issues with the gathered text cache stored in package headers",
     value: 2,
     firstAppearance: "4.12.0",
     lastAppearance: "4.12.5",

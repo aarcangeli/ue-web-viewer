@@ -22,7 +22,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SUPPORT_LARGE_SHADERS",
-    comment: "Changing from WORDs to UINTs in the shader cache serialization, needs a new version",
+    comment:
+      "Changing from WORDs to UINTs in the shader cache serialization, needs a new version",
     value: 110,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -72,7 +73,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_CONSOLIDATE_HEADER_PARSER_ONLY_PROPERTIES",
-    comment: "Removed/consolidated some properties used only in the header parser that should never be serialized",
+    comment:
+      "Removed/consolidated some properties used only in the header parser that should never be serialized",
     value: 117,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -142,7 +144,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_KISMETNETWORKGRAPHS",
-    comment: "Blueprint saved before this may need Event Graph change to Local/Server Graph",
+    comment:
+      "Blueprint saved before this may need Event Graph change to Local/Server Graph",
     value: 127,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -170,7 +173,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FLAG_SCS_TRANSACTIONAL",
-    comment: "Setting RF_Transactional object flag on blueprint's SimpleConstructionScript",
+    comment:
+      "Setting RF_Transactional object flag on blueprint's SimpleConstructionScript",
     value: 131,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -240,21 +244,24 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FIX_REQUIRED_BONES",
-    comment: "Fix skeletons which only list active bones in their required bones list.",
+    comment:
+      "Fix skeletons which only list active bones in their required bones list.",
     value: 141,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
   }),
   new VersionDetails({
     name: "VER_UE4_COOKED_PACKAGE_VERSION_IS_PACKAGE_VERSION",
-    comment: "Switched 'cooked package' version to simply be the package version itself.",
+    comment:
+      "Switched 'cooked package' version to simply be the package version itself.",
     value: 142,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
   }),
   new VersionDetails({
     name: "VER_UE4_TEXTURE_SOURCE_ART_REFACTOR",
-    comment: "Refactor how texture source art is stored to better isolate editor-only data.",
+    comment:
+      "Refactor how texture source art is stored to better isolate editor-only data.",
     value: 143,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -269,7 +276,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_DESTRUCTIBLE_MESH_BODYSETUP_HOLDS_PHYSICAL_MATERIAL",
-    comment: "Add BodySetup to DestructibleMesh, use it to store the destructible physical material.",
+    comment:
+      "Add BodySetup to DestructibleMesh, use it to store the destructible physical material.",
     value: 145,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -297,7 +305,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_VISIBILITY_FLAG_CHANGES",
-    comment: "change HiddenGame, DrawInGame, DrawInEditor to bVisible, and bHiddenInGame",
+    comment:
+      "change HiddenGame, DrawInGame, DrawInEditor to bVisible, and bHiddenInGame",
     value: 149,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -311,21 +320,24 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_CONFORM_COMPONENT_ACTIVATE_FLAG",
-    comment: "change Particle/Audio/Thrust/RadialForce bEnable/bAutoPlay to use bAutoActivate",
+    comment:
+      "change Particle/Audio/Thrust/RadialForce bEnable/bAutoPlay to use bAutoActivate",
     value: 151,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_SKELMESH_MESHTOIMPORTVERTEXMAP",
-    comment: "make the 'mesh to import vertex map' in skelmesh always loaded so it can be used by vertex anim",
+    comment:
+      "make the 'mesh to import vertex map' in skelmesh always loaded so it can be used by vertex anim",
     value: 152,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
   }),
   new VersionDetails({
     name: "VER_UE4_REMOVE_UE3_864_SERIALIZATION",
-    comment: "remove serialization for properties added with UE3 version 864 serialization",
+    comment:
+      "remove serialization for properties added with UE3 version 864 serialization",
     value: 153,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -381,7 +393,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_CONSOLIDATE_SKINNEDMESH_UPDATE_FLAGS",
-    comment: "Consolidate UpdateSkelWhenNotRendered and TickAnimationWhenNotRendered to enum",
+    comment:
+      "Consolidate UpdateSkelWhenNotRendered and TickAnimationWhenNotRendered to enum",
     value: 161,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -402,7 +415,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_VARK2NODE_NULL_VARSRCCLASS_ON_SELF",
-    comment: "Made change to UK2Node_Variable so that VariableSourceClass is NULL if bSelfContext is TRUE",
+    comment:
+      "Made change to UK2Node_Variable so that VariableSourceClass is NULL if bSelfContext is TRUE",
     value: 164,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -463,14 +477,16 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SOUND_NODE_ATTENUATION_SETTINGS_CHANGE",
-    comment: "Unified SoundNodeAttenuation settings with other attenuation settings",
+    comment:
+      "Unified SoundNodeAttenuation settings with other attenuation settings",
     value: 173,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_EDGRAPHNODE_GUID",
-    comment: "Add a NodeGuid to EdGraphNode, upping version to generate for existing nodes ",
+    comment:
+      "Add a NodeGuid to EdGraphNode, upping version to generate for existing nodes ",
     value: 174,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -498,7 +514,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_UNIFY_AMBIENT_SOUND_ACTORS",
-    comment: "Unify ambient sound actor classes in to single ambient actor class",
+    comment:
+      "Unify ambient sound actor classes in to single ambient actor class",
     value: 178,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -540,7 +557,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_REMOVE_CTOR_LINK",
-    comment: "We removed the ctor link flag, this just clears this flag on load for future use",
+    comment:
+      "We removed the ctor link flag, this just clears this flag on load for future use",
     value: 184,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -609,7 +627,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_PACKAGE_MAGIC_POSTTAG",
-    comment: "Added a 4-byte magic number at the end of the package for file corruption validation",
+    comment:
+      "Added a 4-byte magic number at the end of the package for file corruption validation",
     value: 194,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -630,14 +649,16 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_BLUEPRINT_CDO_MIGRATION",
-    comment: "Moved blueprint authoritative data from Skeleton CDO to the Generated CDO",
+    comment:
+      "Moved blueprint authoritative data from Skeleton CDO to the Generated CDO",
     value: 197,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
   }),
   new VersionDetails({
     name: "VER_UE4_BULKDATA_AT_LARGE_OFFSETS",
-    comment: "Bulkdata is stored at the end of package files and can be located at offsets > 2GB",
+    comment:
+      "Bulkdata is stored at the end of package files and can be located at offsets > 2GB",
     value: 198,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -665,7 +686,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_REMOVE_CACHED_STATIC_MESH_STREAMING_FACTORS",
-    comment: "Remove cached static mesh streaming texture factors. They have been moved to derived data.",
+    comment:
+      "Remove cached static mesh streaming texture factors. They have been moved to derived data.",
     value: 202,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -735,7 +757,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SUMMARY_HAS_BULKDATA_OFFSET",
-    comment: "Package summary stores the offset to the beginning of the area where the bulkdata gets stored */",
+    comment:
+      "Package summary stores the offset to the beginning of the area where the bulkdata gets stored */",
     value: 212,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -750,20 +773,23 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_HASHED_MATERIAL_OUTPUT",
-    comment: "Hashed material compile output stored in packages to detect mismatches",
+    comment:
+      "Hashed material compile output stored in packages to detect mismatches",
     value: 214,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
   }),
   new VersionDetails({
     name: "VER_UE4_BLUEPRINT_VARS_NOT_READ_ONLY",
-    comment: "Removed restriction on blueprint-exposed variables from being read-only",
+    comment:
+      "Removed restriction on blueprint-exposed variables from being read-only",
     value: 215,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_STATIC_MESH_STORE_NAV_COLLISION",
-    comment: "Added manually serialized element to UStaticMesh (precalculated nav collision)",
+    comment:
+      "Added manually serialized element to UStaticMesh (precalculated nav collision)",
     value: 216,
     firstAppearance: "4.0.1",
   }),
@@ -787,7 +813,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_COLLISION_PROFILE_SETTING",
-    comment: "Collision Profile setting has been added, and all components that exists has to be properly upgraded",
+    comment:
+      "Collision Profile setting has been added, and all components that exists has to be properly upgraded",
     value: 220,
     firstAppearance: "4.0.1",
   }),
@@ -835,7 +862,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_LIGHTCOMPONENT_USE_IES_TEXTURE_MULTIPLIER_ON_NON_IES_BRIGHTNESS",
-    comment: "Use IES texture multiplier even when IES brightness is not being used",
+    comment:
+      "Use IES texture multiplier even when IES brightness is not being used",
     value: 228,
     firstAppearance: "4.0.1",
   }),
@@ -884,7 +912,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_LANDSCAPE_COMPONENT_LAZY_REFERENCES",
-    comment: "Landscape component reference between landscape component and collision component",
+    comment:
+      "Landscape component reference between landscape component and collision component",
     value: 236,
     firstAppearance: "4.0.1",
   }),
@@ -896,7 +925,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ADDED_SKELETON_ARCHIVER_REMOVAL",
-    comment: "Added fixup step to remove skeleton class references from blueprint objects",
+    comment:
+      "Added fixup step to remove skeleton class references from blueprint objects",
     value: 238,
     firstAppearance: "4.0.1",
   }),
@@ -932,13 +962,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_REFACTOR_MOVEMENT_COMPONENT_HIERARCHY",
-    comment: "Renamed some Movement Component properties, added PawnMovementComponent",
+    comment:
+      "Renamed some Movement Component properties, added PawnMovementComponent",
     value: 244,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_FIX_TERRAIN_LAYER_SWITCH_ORDER",
-    comment: "Swap UMaterialExpressionTerrainLayerSwitch::LayerUsed/LayerNotUsed the correct way round",
+    comment:
+      "Swap UMaterialExpressionTerrainLayerSwitch::LayerUsed/LayerNotUsed the correct way round",
     value: 245,
     firstAppearance: "4.0.1",
   }),
@@ -968,7 +1000,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ADDED_FBX_ASSET_IMPORT_DATA",
-    comment: "Added AssetImportData for FBX asset types, deprecating SourceFilePath and SourceFileTimestamp",
+    comment:
+      "Added AssetImportData for FBX asset types, deprecating SourceFilePath and SourceFileTimestamp",
     value: 250,
     firstAppearance: "4.0.1",
   }),
@@ -1010,19 +1043,22 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_CHANGED_MATERIAL_REFACTION_TYPE",
-    comment: "Fixup input expressions for reading from refraction material attributes.",
+    comment:
+      "Fixup input expressions for reading from refraction material attributes.",
     value: 257,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_REFACTOR_PROJECTILE_MOVEMENT",
-    comment: "Refactor projectile movement, along with some other movement component work.",
+    comment:
+      "Refactor projectile movement, along with some other movement component work.",
     value: 258,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_REMOVE_PHYSICALMATERIALPROPERTY",
-    comment: "Remove PhysicalMaterialProperty and replace with user defined enum",
+    comment:
+      "Remove PhysicalMaterialProperty and replace with user defined enum",
     value: 259,
     firstAppearance: "4.0.1",
   }),
@@ -1070,19 +1106,22 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_REFACTOR_PHYSICS_BLENDING",
-    comment: "Refactor the way physics blending works to allow partial blending",
+    comment:
+      "Refactor the way physics blending works to allow partial blending",
     value: 267,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_WORLD_LEVEL_INFO_UPDATED",
-    comment: "WorldLevelInfo: Added reference to parent level and streaming distance",
+    comment:
+      "WorldLevelInfo: Added reference to parent level and streaming distance",
     value: 268,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_STATIC_SKELETAL_MESH_SERIALIZATION_FIX",
-    comment: "Fixed cooking of skeletal/static meshes due to bad serialization logic",
+    comment:
+      "Fixed cooking of skeletal/static meshes due to bad serialization logic",
     value: 269,
     firstAppearance: "4.0.1",
   }),
@@ -1100,25 +1139,29 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_REMOVE_ZERO_TRIANGLE_SECTIONS",
-    comment: "Remove zero triangle sections from static meshes and compact material indices.",
+    comment:
+      "Remove zero triangle sections from static meshes and compact material indices.",
     value: 272,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_CHARACTER_MOVEMENT_DECELERATION",
-    comment: "Add param for deceleration in character movement instead of using acceleration.",
+    comment:
+      "Add param for deceleration in character movement instead of using acceleration.",
     value: 273,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_CAMERA_ACTOR_USING_CAMERA_COMPONENT",
-    comment: "Made ACameraActor use a UCameraComponent for parameter storage, etc...",
+    comment:
+      "Made ACameraActor use a UCameraComponent for parameter storage, etc...",
     value: 274,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_CHARACTER_MOVEMENT_DEPRECATE_PITCH_ROLL",
-    comment: "Deprecated some pitch/roll properties in CharacterMovementComponent",
+    comment:
+      "Deprecated some pitch/roll properties in CharacterMovementComponent",
     value: 275,
     firstAppearance: "4.0.1",
   }),
@@ -1142,7 +1185,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_CHARACTER_DEFAULT_MOVEMENT_BINDINGS",
-    comment: "Add flag to control whether Character blueprints receive default movement bindings.",
+    comment:
+      "Add flag to control whether Character blueprints receive default movement bindings.",
     value: 279,
     firstAppearance: "4.0.1",
   }),
@@ -1166,7 +1210,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_KEEP_SKEL_MESH_INDEX_DATA",
-    comment: "Skeletal mesh index data is kept in memory in game to support mesh merging.",
+    comment:
+      "Skeletal mesh index data is kept in memory in game to support mesh merging.",
     value: 283,
     firstAppearance: "4.0.1",
   }),
@@ -1184,13 +1229,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_REMOVE_DYNAMIC_VOLUME_CLASSES",
-    comment: "Removal of DynamicTriggerVolume, DynamicBlockingVolume, DynamicPhysicsVolume",
+    comment:
+      "Removal of DynamicTriggerVolume, DynamicBlockingVolume, DynamicPhysicsVolume",
     value: 286,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_STORE_HASCOOKEDDATA_FOR_BODYSETUP",
-    comment: "Store an additional flag in the BodySetup to indicate whether there is any cooked data to load",
+    comment:
+      "Store an additional flag in the BodySetup to indicate whether there is any cooked data to load",
     value: 287,
     firstAppearance: "4.0.1",
   }),
@@ -1220,13 +1267,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_CREATEEXPORTS_CLASS_LINKING_FOR_BLUEPRINTS",
-    comment: "Added call for linking classes in CreateExport to ensure memory is initialized properly",
+    comment:
+      "Added call for linking classes in CreateExport to ensure memory is initialized properly",
     value: 292,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_REMOVE_NATIVE_COMPONENTS_FROM_BLUEPRINT_SCS",
-    comment: "Remove native component nodes from the blueprint SimpleConstructionScript",
+    comment:
+      "Remove native component nodes from the blueprint SimpleConstructionScript",
     value: 293,
     firstAppearance: "4.0.1",
   }),
@@ -1262,7 +1311,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SOUND_NODE_ENVELOPER_CURVE_CHANGE",
-    comment: "Moving USoundNodeEnveloper from UDistributionFloatConstantCurve to FRichCurve",
+    comment:
+      "Moving USoundNodeEnveloper from UDistributionFloatConstantCurve to FRichCurve",
     value: 299,
     firstAppearance: "4.0.1",
   }),
@@ -1280,7 +1330,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_MOVE_SKELETALMESH_SHADOWCASTING",
-    comment: "Moving SkeletalMesh shadow casting flag from LoD details to material",
+    comment:
+      "Moving SkeletalMesh shadow casting flag from LoD details to material",
     value: 302,
     firstAppearance: "4.0.1",
   }),
@@ -1328,13 +1379,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_REFERENCE_SKELETON_REFACTOR",
-    comment: "Convert USkeleton and FBoneContrainer to using FReferenceSkeleton.",
+    comment:
+      "Convert USkeleton and FBoneContrainer to using FReferenceSkeleton.",
     value: 310,
     firstAppearance: "4.0.1",
   }),
   new VersionDetails({
     name: "VER_UE4_K2NODE_REFERENCEGUIDS",
-    comment: "Adding references to variable, function, and macro nodes to be able to update to renamed values",
+    comment:
+      "Adding references to variable, function, and macro nodes to be able to update to renamed values",
     value: 311,
     firstAppearance: "4.0.1",
   }),
@@ -1376,7 +1429,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FSLATESOUND_CONVERSION",
-    comment: "FName properties containing sound names converted to FSlateSound properties",
+    comment:
+      "FName properties containing sound names converted to FSlateSound properties",
     value: 318,
     firstAppearance: "4.0.1",
   }),
@@ -1418,7 +1472,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_NO_MIRROR_BRUSH_MODEL_COLLISION",
-    comment: "Stop generating 'mirrored' cooked mesh for Brush and Model components",
+    comment:
+      "Stop generating 'mirrored' cooked mesh for Brush and Model components",
     value: 325,
     firstAppearance: "4.0.1",
   }),
@@ -1430,7 +1485,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_WORLD_NAMED_AFTER_PACKAGE",
-    comment: 'Worlds have been renamed from "TheWorld" to be named after the package containing them',
+    comment:
+      'Worlds have been renamed from "TheWorld" to be named after the package containing them',
     value: 327,
     firstAppearance: "4.0.1",
   }),
@@ -1460,7 +1516,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SUPPORT_8_BONE_INFLUENCES_SKELETAL_MESHES",
-    comment: "Support for up to 8 skinning influences per vertex on skeletal meshes (on non-gpu vertices)",
+    comment:
+      "Support for up to 8 skinning influences per vertex on skeletal meshes (on non-gpu vertices)",
     value: 332,
     firstAppearance: "4.0.1",
   }),
@@ -1472,7 +1529,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SUPPORT_GPUSKINNING_8_BONE_INFLUENCES",
-    comment: "Support for up to 8 skinning influences per vertex on skeletal meshes (on gpu vertices)",
+    comment:
+      "Support for up to 8 skinning influences per vertex on skeletal meshes (on gpu vertices)",
     value: 334,
     firstAppearance: "4.0.1",
   }),
@@ -1484,7 +1542,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ENGINE_VERSION_OBJECT",
-    comment: "Engine version is stored as a FEngineVersion object rather than changelist number",
+    comment:
+      "Engine version is stored as a FEngineVersion object rather than changelist number",
     value: 336,
     firstAppearance: "4.0.1",
   }),
@@ -1526,7 +1585,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FOLIAGE_STATIC_MOBILITY",
-    comment: "Fix up old foliage components to have static mobility (superseded by VER_UE4_FOLIAGE_MOVABLE_MOBILITY)",
+    comment:
+      "Fix up old foliage components to have static mobility (superseded by VER_UE4_FOLIAGE_MOVABLE_MOBILITY)",
     value: 343,
     firstAppearance: "4.1.0",
   }),
@@ -1538,7 +1598,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FOLIAGE_COLLISION",
-    comment: "After implementing foliage collision, need to disable collision on old foliage instances",
+    comment:
+      "After implementing foliage collision, need to disable collision on old foliage instances",
     value: 345,
     firstAppearance: "4.1.0",
   }),
@@ -1556,13 +1617,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_MORPHTARGET_CPU_TANGENTZDELTA_FORMATCHANGE",
-    comment: "we still convert all to FVector in CPU time whenever any calculation",
+    comment:
+      "we still convert all to FVector in CPU time whenever any calculation",
     value: 348,
     firstAppearance: "4.1.0",
   }),
   new VersionDetails({
     name: "VER_UE4_SOFT_CONSTRAINTS_USE_MASS",
-    comment: "Soft constraint limits will implicitly use the mass of the bodies",
+    comment:
+      "Soft constraint limits will implicitly use the mass of the bodies",
     value: 349,
     firstAppearance: "4.1.0",
   }),
@@ -1587,7 +1650,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_CUSTOMPROFILENAME_CHANGE",
-    comment: "Now Default custom profile name isn't NONE anymore due to copy/paste not working properly with it",
+    comment:
+      "Now Default custom profile name isn't NONE anymore due to copy/paste not working properly with it",
     value: 353,
     firstAppearance: "4.2.0",
   }),
@@ -1605,13 +1669,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_VEHICLES_UNIT_CHANGE",
-    comment: "Vehicles use Nm for Torque instead of cm and RPM instead of rad/s",
+    comment:
+      "Vehicles use Nm for Torque instead of cm and RPM instead of rad/s",
     value: 356,
     firstAppearance: "4.2.0",
   }),
   new VersionDetails({
     name: "VER_UE4_ANIMATION_REMOVE_NANS",
-    comment: "now importing should detect NaNs, so we should not have NaNs in source data",
+    comment:
+      "now importing should detect NaNs, so we should not have NaNs in source data",
     value: 357,
     firstAppearance: "4.2.0",
   }),
@@ -1648,7 +1714,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FIX_MATERIAL_COORDS",
-    comment: "Requires test of material coords to ensure they're saved correctly",
+    comment:
+      "Requires test of material coords to ensure they're saved correctly",
     value: 363,
     firstAppearance: "4.2.0",
   }),
@@ -1679,7 +1746,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FTEXT_HISTORY",
-    comment: "FTexts have creation history data, removed Key, Namespaces, and SourceString",
+    comment:
+      "FTexts have creation history data, removed Key, Namespaces, and SourceString",
     value: 368,
     firstAppearance: "4.3.0",
   }),
@@ -1710,13 +1778,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FIXUP_MOTOR_UNITS",
-    comment: "change motors to use revolutions per second instead of rads/second",
+    comment:
+      "change motors to use revolutions per second instead of rads/second",
     value: 373,
     firstAppearance: "4.3.0",
   }),
   new VersionDetails({
     name: "VER_UE4_DEPRECATED_MOVEMENTCOMPONENT_MODIFIED_SPEEDS",
-    comment: 'deprecated MovementComponent functions including "ModifiedMaxSpeed" et al',
+    comment:
+      'deprecated MovementComponent functions including "ModifiedMaxSpeed" et al',
     value: 374,
     firstAppearance: "4.3.0",
   }),
@@ -1748,37 +1818,43 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_TRANSACTIONAL_TO_DATA_ASSETS",
-    comment: "Add RF_Transactional to data assets, fixing undo problems when editing them",
+    comment:
+      "Add RF_Transactional to data assets, fixing undo problems when editing them",
     value: 379,
     firstAppearance: "4.3.0",
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_LB_WEIGHTBLEND",
-    comment: "Change LB_AlphaBlend to LB_WeightBlend in ELandscapeLayerBlendType",
+    comment:
+      "Change LB_AlphaBlend to LB_WeightBlend in ELandscapeLayerBlendType",
     value: 380,
     firstAppearance: "4.3.0",
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_ROOTCOMPONENT_TO_FOLIAGEACTOR",
-    comment: "Add root component to an foliage actor, all foliage cluster components will be attached to a root",
+    comment:
+      "Add root component to an foliage actor, all foliage cluster components will be attached to a root",
     value: 381,
     firstAppearance: "4.3.0",
   }),
   new VersionDetails({
     name: "VER_UE4_FIX_MATERIAL_PROPERTY_OVERRIDE_SERIALIZE",
-    comment: "FMaterialInstanceBasePropertyOverrides didn't use proper UObject serialize",
+    comment:
+      "FMaterialInstanceBasePropertyOverrides didn't use proper UObject serialize",
     value: 382,
     firstAppearance: "4.3.0",
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_LINEAR_COLOR_SAMPLER",
-    comment: "Addition of linear color sampler. color sample type is changed to linear sampler if source texture !sRGB",
+    comment:
+      "Addition of linear color sampler. color sample type is changed to linear sampler if source texture !sRGB",
     value: 383,
     firstAppearance: "4.4.0",
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_STRING_ASSET_REFERENCES_MAP",
-    comment: "Added StringAssetReferencesMap to support renames of FStringAssetReference properties.",
+    comment:
+      "Added StringAssetReferencesMap to support renames of FStringAssetReference properties.",
     value: 384,
     firstAppearance: "4.4.0",
   }),
@@ -1791,7 +1867,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_LEVEL_STREAMING_DRAW_COLOR_TYPE_CHANGE",
-    comment: "Changed level streaming to have a linear color since the visualization doesn't gamma correct.",
+    comment:
+      "Changed level streaming to have a linear color since the visualization doesn't gamma correct.",
     value: 386,
     firstAppearance: "4.5.0",
   }),
@@ -1803,7 +1880,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SKELETON_ADD_SMARTNAMES",
-    comment: "Convert old curve names stored in anim assets into skeleton smartnames",
+    comment:
+      "Convert old curve names stored in anim assets into skeleton smartnames",
     value: 388,
     firstAppearance: "4.5.0",
   }),
@@ -1827,7 +1905,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SOUND_COMPRESSION_TYPE_ADDED",
-    comment: "USoundWave objects now contain details about compression scheme used.",
+    comment:
+      "USoundWave objects now contain details about compression scheme used.",
     value: 392,
     firstAppearance: "4.5.0",
   }),
@@ -1851,7 +1930,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_RENAME_SM3_TO_ES3_1",
-    comment: "Rename SM3 to ES3_1 and updates featurelevel material node selector",
+    comment:
+      "Rename SM3 to ES3_1 and updates featurelevel material node selector",
     value: 396,
     firstAppearance: "4.5.0",
   }),
@@ -1863,7 +1943,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_POST_DUPLICATE_NODE_GUID",
-    comment: "Duplicating Blueprints will regenerate NodeGuids after this version",
+    comment:
+      "Duplicating Blueprints will regenerate NodeGuids after this version",
     value: 398,
     firstAppearance: "4.5.0",
   }),
@@ -1882,7 +1963,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_RENAME_CAMERA_COMPONENT_CONTROL_ROTATION",
-    comment: "Rename UCameraComponent::bUsePawnViewRotation to bUsePawnControlRotation",
+    comment:
+      "Rename UCameraComponent::bUsePawnViewRotation to bUsePawnControlRotation",
     value: 401,
     firstAppearance: "4.5.0",
   }),
@@ -1920,7 +2002,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FOLIAGE_STATIC_LIGHTING_SUPPORT",
-    comment: "Static lighting support was re-added to foliage, and mobility was returned to static",
+    comment:
+      "Static lighting support was re-added to foliage, and mobility was returned to static",
     value: 407,
     firstAppearance: "4.6.0",
   }),
@@ -1932,7 +2015,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_REMOVE_SAVEGAMESUMMARY",
-    comment: "Remove UDEPRECATED_SaveGameSummary, required for UWorld::Serialize",
+    comment:
+      "Remove UDEPRECATED_SaveGameSummary, required for UWorld::Serialize",
     value: 409,
     firstAppearance: "4.6.0",
   }),
@@ -1944,7 +2028,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SLATE_BULK_FONT_DATA",
-    comment: "Made Slate font data use bulk data to store the embedded font data",
+    comment:
+      "Made Slate font data use bulk data to store the embedded font data",
     value: 411,
     firstAppearance: "4.6.0",
   }),
@@ -1962,7 +2047,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_GRAPH_INTERACTIVE_COMMENTBUBBLES",
-    comment: "Switch to new interactive comments, requires boundry conversion to preserve previous states",
+    comment:
+      "Switch to new interactive comments, requires boundry conversion to preserve previous states",
     value: 414,
     firstAppearance: "4.7.0",
   }),
@@ -1986,19 +2072,22 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_MONTAGE_BRANCHING_POINT_REMOVAL",
-    comment: "Removed BranchingPoints from AnimMontages and converted them to regular AnimNotifies.",
+    comment:
+      "Removed BranchingPoints from AnimMontages and converted them to regular AnimNotifies.",
     value: 418,
     firstAppearance: "4.7.0",
   }),
   new VersionDetails({
     name: "VER_UE4_BLUEPRINT_ENFORCE_CONST_IN_FUNCTION_OVERRIDES",
-    comment: "Enforce const-correctness in Blueprint implementations of native C++ const class methods",
+    comment:
+      "Enforce const-correctness in Blueprint implementations of native C++ const class methods",
     value: 419,
     firstAppearance: "4.7.0",
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_PIVOT_TO_WIDGET_COMPONENT",
-    comment: "Added pivot to widget components, need to load old versions as a 0,0 pivot, new default is 0.5,0.5",
+    comment:
+      "Added pivot to widget components, need to load old versions as a 0,0 pivot, new default is 0.5,0.5",
     value: 420,
     firstAppearance: "4.7.0",
   }),
@@ -2011,13 +2100,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FTEXT_HISTORY_DATE_TIMEZONE",
-    comment: "Added serialization of timezone to FTextHistory for AsDate operations.",
+    comment:
+      "Added serialization of timezone to FTextHistory for AsDate operations.",
     value: 422,
     firstAppearance: "4.7.0",
   }),
   new VersionDetails({
     name: "VER_UE4_SORT_ACTIVE_BONE_INDICES",
-    comment: "Sort ActiveBoneIndices on lods so that we can avoid doing it at run time",
+    comment:
+      "Sort ActiveBoneIndices on lods so that we can avoid doing it at run time",
     value: 423,
     firstAppearance: "4.7.0",
   }),
@@ -2029,7 +2120,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_MIKKTSPACE_IS_DEFAULT",
-    comment: "Make MikkTSpace the default tangent space calculation method for static meshes.",
+    comment:
+      "Make MikkTSpace the default tangent space calculation method for static meshes.",
     value: 425,
     firstAppearance: "4.7.0",
   }),
@@ -2047,13 +2139,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_LANDSCAPE_STATIC_SECTION_OFFSET",
-    comment: "Do not change landscape section offset on load under world composition",
+    comment:
+      "Do not change landscape section offset on load under world composition",
     value: 428,
     firstAppearance: "4.7.0",
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_MODIFIERS_RUNTIME_GENERATION",
-    comment: "New options for navigation data runtime generation (static, modifiers only, dynamic)",
+    comment:
+      "New options for navigation data runtime generation (static, modifiers only, dynamic)",
     value: 429,
     firstAppearance: "4.7.0",
   }),
@@ -2079,25 +2173,29 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_MERGED_ADD_MODIFIERS_RUNTIME_GENERATION_TO_4_7",
-    comment: "After merging VER_UE4_ADD_MODIFIERS_RUNTIME_GENERATION into 4.7 branch",
+    comment:
+      "After merging VER_UE4_ADD_MODIFIERS_RUNTIME_GENERATION into 4.7 branch",
     value: 433,
     firstAppearance: "4.7.0",
   }),
   new VersionDetails({
     name: "VER_UE4_AFTER_MERGING_ADD_MODIFIERS_RUNTIME_GENERATION_TO_4_7",
-    comment: "After merging VER_UE4_ADD_MODIFIERS_RUNTIME_GENERATION into 4.7 branch",
+    comment:
+      "After merging VER_UE4_ADD_MODIFIERS_RUNTIME_GENERATION into 4.7 branch",
     value: 434,
     firstAppearance: "4.8.0",
   }),
   new VersionDetails({
     name: "VER_UE4_SERIALIZE_LANDSCAPE_GRASS_DATA",
-    comment: "Landscape grass weightmap data is now generated in the editor and serialized.",
+    comment:
+      "Landscape grass weightmap data is now generated in the editor and serialized.",
     value: 435,
     firstAppearance: "4.8.0",
   }),
   new VersionDetails({
     name: "VER_UE4_OPTIONALLY_CLEAR_GPU_EMITTERS_ON_INIT",
-    comment: "New property to optionally prevent gpu emitters clearing existing particles on Init().",
+    comment:
+      "New property to optionally prevent gpu emitters clearing existing particles on Init().",
     value: 436,
     firstAppearance: "4.8.0",
   }),
@@ -2109,7 +2207,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_BLUEPRINT_GENERATED_CLASS_COMPONENT_TEMPLATES_PUBLIC",
-    comment: "Make sure that all template components from blueprint generated classes are flagged as public",
+    comment:
+      "Make sure that all template components from blueprint generated classes are flagged as public",
     value: 438,
     firstAppearance: "4.8.0",
   }),
@@ -2147,7 +2246,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_PACKAGE_SUMMARY_HAS_COMPATIBLE_ENGINE_VERSION",
-    comment: "Package summary includes an CompatibleWithEngineVersion field, separately to the version it's saved with",
+    comment:
+      "Package summary includes an CompatibleWithEngineVersion field, separately to the version it's saved with",
     value: 444,
     firstAppearance: "4.8.0",
   }),
@@ -2166,7 +2266,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_DEPRECATE_USER_WIDGET_DESIGN_SIZE",
-    comment: "Deprecate the variables used for sizing in the designer on UUserWidget",
+    comment:
+      "Deprecate the variables used for sizing in the designer on UUserWidget",
     value: 447,
     firstAppearance: "4.8.0",
   }),
@@ -2178,13 +2279,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FOLIAGE_WITH_ASSET_OR_CLASS",
-    comment: "Updated foliage to work with either FoliageType assets or blueprint classes",
+    comment:
+      "Updated foliage to work with either FoliageType assets or blueprint classes",
     value: 449,
     firstAppearance: "4.8.0",
   }),
   new VersionDetails({
     name: "VER_UE4_BODYINSTANCE_BINARY_SERIALIZATION",
-    comment: "Allows PhysicsSerializer to serialize shapes and actors for faster load times",
+    comment:
+      "Allows PhysicsSerializer to serialize shapes and actors for faster load times",
     value: 450,
     firstAppearance: "4.8.0",
   }),
@@ -2208,7 +2311,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SERIALIZE_LANDSCAPE_ES2_TEXTURES",
-    comment: "Serialize ES2 textures separately rather than overwriting the properties used on other platforms",
+    comment:
+      "Serialize ES2 textures separately rather than overwriting the properties used on other platforms",
     value: 454,
     firstAppearance: "4.9.0",
   }),
@@ -2239,13 +2343,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SERIALIZE_TEXT_IN_PACKAGES",
-    comment: "Pre-gathering of gatherable, localizable text in packages to optimize text gathering operation times",
+    comment:
+      "Pre-gathering of gatherable, localizable text in packages to optimize text gathering operation times",
     value: 459,
     firstAppearance: "4.9.0",
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_BLEND_MODE_TO_WIDGET_COMPONENT",
-    comment: "Added pivot to widget components, need to load old versions as a 0,0 pivot, new default is 0.5,0.5",
+    comment:
+      "Added pivot to widget components, need to load old versions as a 0,0 pivot, new default is 0.5,0.5",
     value: 460,
     firstAppearance: "4.9.0",
   }),
@@ -2257,13 +2363,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_REPLACE_SPRING_NOZ_PROPERTY",
-    comment: "Deprecate NoZSpring property on spring nodes to be replaced with TranslateZ property",
+    comment:
+      "Deprecate NoZSpring property on spring nodes to be replaced with TranslateZ property",
     value: 462,
     firstAppearance: "4.9.0",
   }),
   new VersionDetails({
     name: "VER_UE4_TIGHTLY_PACKED_ENUMS",
-    comment: "Keep enums tight and serialize their values as pairs of FName and value. Don't insert dummy values.",
+    comment:
+      "Keep enums tight and serialize their values as pairs of FName and value. Don't insert dummy values.",
     value: 463,
     firstAppearance: "4.9.0",
   }),
@@ -2300,19 +2408,22 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_NIAGARA_DATA_OBJECT_DEV_UI_FIX",
-    comment: "Fix BC on Niagara effects from the data object and dev UI changes.",
+    comment:
+      "Fix BC on Niagara effects from the data object and dev UI changes.",
     value: 469,
     firstAppearance: "4.9.0",
   }),
   new VersionDetails({
     name: "VER_UE4_FIXED_DEFAULT_ORIENTATION_OF_WIDGET_COMPONENT",
-    comment: "Fixed the default orientation of widget component so it faces down +x",
+    comment:
+      "Fixed the default orientation of widget component so it faces down +x",
     value: 470,
     firstAppearance: "4.9.0",
   }),
   new VersionDetails({
     name: "VER_UE4_REMOVED_MATERIAL_USED_WITH_UI_FLAG",
-    comment: "Removed bUsedWithUI flag from UMaterial and replaced it with a new material domain for UI",
+    comment:
+      "Removed bUsedWithUI flag from UMaterial and replaced it with a new material domain for UI",
     value: 471,
     firstAppearance: "4.9.0",
   }),
@@ -2342,7 +2453,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ADDED_NON_LINEAR_TRANSITION_BLENDS",
-    comment: "Added non-linear blending to anim transitions, deprecating old types",
+    comment:
+      "Added non-linear blending to anim transitions, deprecating old types",
     value: 476,
     firstAppearance: "4.9.0",
   }),
@@ -2366,7 +2478,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_BUILD_MESH_ADJ_BUFFER_FLAG_EXPOSED",
-    comment: "Adjacency buffer building no longer automatically handled based on triangle count, user-controlled",
+    comment:
+      "Adjacency buffer building no longer automatically handled based on triangle count, user-controlled",
     value: 480,
     firstAppearance: "4.9.0",
   }),
@@ -2414,13 +2527,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_K2NODE_VAR_REFERENCEGUIDS",
-    comment: "K2Node_Variable will properly have the VariableReference Guid set if available",
+    comment:
+      "K2Node_Variable will properly have the VariableReference Guid set if available",
     value: 488,
     firstAppearance: "4.11.0",
   }),
   new VersionDetails({
     name: "VER_UE4_SOUND_CONCURRENCY_PACKAGE",
-    comment: "Added support for sound concurrency settings structure and overrides",
+    comment:
+      "Added support for sound concurrency settings structure and overrides",
     value: 489,
     firstAppearance: "4.11.0",
   }),
@@ -2432,7 +2547,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_BLUEPRINT_CUSTOM_EVENT_CONST_INPUT",
-    comment: "Custom event nodes implicitly set 'const' on array and non-array pass-by-reference input params",
+    comment:
+      "Custom event nodes implicitly set 'const' on array and non-array pass-by-reference input params",
     value: 491,
     firstAppearance: "4.11.0",
   }),
@@ -2444,7 +2560,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_NO_ANIM_BP_CLASS_IN_GAMEPLAY_CODE",
-    comment: "UAnimBlueprintGeneratedClass can be replaced by a dynamic class. Use TSubclassOf<UAnimInstance> instead.",
+    comment:
+      "UAnimBlueprintGeneratedClass can be replaced by a dynamic class. Use TSubclassOf<UAnimInstance> instead.",
     value: 493,
     firstAppearance: "4.11.0",
   }),
@@ -2457,7 +2574,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FBX_IMPORT_DATA_RANGE_ENCAPSULATION",
-    comment: "Moved StartRange and EndRange in UFbxAnimSequenceImportData to use FInt32Interval",
+    comment:
+      "Moved StartRange and EndRange in UFbxAnimSequenceImportData to use FInt32Interval",
     value: 495,
     firstAppearance: "4.11.0",
   }),
@@ -2469,7 +2587,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_INSTANCED_STEREO_UNIFORM_UPDATE",
-    comment: "Updating custom material expression nodes for instanced stereo implementation",
+    comment:
+      "Updating custom material expression nodes for instanced stereo implementation",
     value: 497,
     firstAppearance: "4.11.0",
   }),
@@ -2481,7 +2600,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_INJECT_BLUEPRINT_STRUCT_PIN_CONVERSION_NODES",
-    comment: "Fixing up invalid struct-to-struct pin connections by injecting available conversion nodes",
+    comment:
+      "Fixing up invalid struct-to-struct pin connections by injecting available conversion nodes",
     value: 499,
     firstAppearance: "4.12.0",
   }),
@@ -2493,7 +2613,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FIX_SLOT_NAME_DUPLICATION",
-    comment: "Fixed duplicating slot node names in skeleton due to skeleton preload on compile",
+    comment:
+      "Fixed duplicating slot node names in skeleton due to skeleton preload on compile",
     value: 501,
     firstAppearance: "4.12.0",
   }),
@@ -2511,13 +2632,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_NAME_HASHES_SERIALIZED",
-    comment: "Name table hashes are calculated and saved out rather than at load time",
+    comment:
+      "Name table hashes are calculated and saved out rather than at load time",
     value: 504,
     firstAppearance: "4.12.0",
   }),
   new VersionDetails({
     name: "VER_UE4_INSTANCED_STEREO_UNIFORM_REFACTOR",
-    comment: "Updating custom material expression nodes for instanced stereo implementation refactor",
+    comment:
+      "Updating custom material expression nodes for instanced stereo implementation refactor",
     value: 505,
     firstAppearance: "4.13.0",
   }),
@@ -2543,7 +2666,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_PROPERTY_TAG_SET_MAP_SUPPORT",
-    comment: "FPropertyTag includes contained type(s) for Set and Map properties:",
+    comment:
+      "FPropertyTag includes contained type(s) for Set and Map properties:",
     value: 509,
     firstAppearance: "4.15.0",
   }),
@@ -2568,7 +2692,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ADDED_SWEEP_WHILE_WALKING_FLAG",
-    comment: "Added flag to control sweep behavior while walking in UCharacterMovementComponent.",
+    comment:
+      "Added flag to control sweep behavior while walking in UCharacterMovementComponent.",
     value: 513,
     firstAppearance: "4.16.0",
   }),
@@ -2581,19 +2706,22 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_POINTLIGHT_SOURCE_ORIENTATION",
-    comment: "Changed the source orientation of point lights to match spot lights (z axis)",
+    comment:
+      "Changed the source orientation of point lights to match spot lights (z axis)",
     value: 515,
     firstAppearance: "4.19.0",
   }),
   new VersionDetails({
     name: "VER_UE4_ADDED_PACKAGE_SUMMARY_LOCALIZATION_ID",
-    comment: "LocalizationId has been added to the package summary (editor-only)",
+    comment:
+      "LocalizationId has been added to the package summary (editor-only)",
     value: 516,
     firstAppearance: "4.19.0",
   }),
   new VersionDetails({
     name: "VER_UE4_FIX_WIDE_STRING_CRC",
-    comment: "Fixed case insensitive hashes of wide strings containing character values from 128-255",
+    comment:
+      "Fixed case insensitive hashes of wide strings containing character values from 128-255",
     value: 517,
     firstAppearance: "4.21.0",
   }),
@@ -2654,7 +2782,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "LARGE_WORLD_COORDINATES",
-    comment: "Large world coordinates converts a number of core types to double components by default.",
+    comment:
+      "Large world coordinates converts a number of core types to double components by default.",
     value: 1004,
     firstAppearance: "5.0.0",
   }),
@@ -2672,13 +2801,15 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FSOFTOBJECTPATH_REMOVE_ASSET_PATH_FNAMES",
-    comment: "Replace FName asset path in FSoftObjectPath with (package name, asset name) pair FTopLevelAssetPath",
+    comment:
+      "Replace FName asset path in FSoftObjectPath with (package name, asset name) pair FTopLevelAssetPath",
     value: 1007,
     firstAppearance: "5.1.0",
   }),
   new VersionDetails({
     name: "ADD_SOFTOBJECTPATH_LIST",
-    comment: "Add a soft object path list to the package summary for fast remap",
+    comment:
+      "Add a soft object path list to the package summary for fast remap",
     value: 1008,
     firstAppearance: "5.1.0",
   }),
@@ -2690,7 +2821,8 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "SCRIPT_SERIALIZATION_OFFSET",
-    comment: "Added script property serialization offset to export table entries for saved, versioned packages",
+    comment:
+      "Added script property serialization offset to export table entries for saved, versioned packages",
     value: 1010,
     firstAppearance: "5.4.0",
   }),

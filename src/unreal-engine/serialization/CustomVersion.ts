@@ -28,7 +28,10 @@ export class FCustomVersion {
   Version: number = 0;
   FriendlyName: string = "";
 
-  static fromStream(reader: AssetReader, format: ECustomVersionSerializationFormat) {
+  static fromStream(
+    reader: AssetReader,
+    format: ECustomVersionSerializationFormat,
+  ) {
     const result = new FCustomVersion();
     switch (format) {
       case ECustomVersionSerializationFormat.Enums:
@@ -64,7 +67,10 @@ export class FCustomVersion {
 export class FCustomVersionContainer {
   Versions: FCustomVersion[] = [];
 
-  static fromStream(reader: AssetReader, format: ECustomVersionSerializationFormat) {
+  static fromStream(
+    reader: AssetReader,
+    format: ECustomVersionSerializationFormat,
+  ) {
     const result = new FCustomVersionContainer();
     const count = reader.readUInt32();
     for (let i = 0; i < count; i++) {

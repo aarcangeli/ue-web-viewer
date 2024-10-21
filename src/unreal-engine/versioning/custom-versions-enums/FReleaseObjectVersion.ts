@@ -159,7 +159,8 @@ export const FReleaseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "NoSyncAsyncPhysAsset",
-    comment: "Physics asset bodies are either in the sync scene or the async scene, but not both",
+    comment:
+      "Physics asset bodies are either in the sync scene or the async scene, but not both",
     value: 2,
     firstAppearance: "4.13.0",
   }),
@@ -178,7 +179,8 @@ export const FReleaseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "UPropertryForMeshSectionSerialize",
-    comment: "Fix a serialization issue with static mesh FMeshSectionInfoMap FProperty",
+    comment:
+      "Fix a serialization issue with static mesh FMeshSectionInfoMap FProperty",
     value: 5,
     firstAppearance: "4.15.0",
   }),
@@ -227,7 +229,8 @@ export const FReleaseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RemovedMaterialSharedInputCollection",
-    comment: "Removed objects that were serialized as part of this material feature",
+    comment:
+      "Removed objects that were serialized as part of this material feature",
     value: 13,
     firstAppearance: "4.19.0",
   }),
@@ -245,7 +248,8 @@ export const FReleaseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixBrokenStateMachineReferencesInTransitionGetters",
-    comment: "During copy and paste transition getters could end up with broken state machine references",
+    comment:
+      "During copy and paste transition getters could end up with broken state machine references",
     value: 16,
     firstAppearance: "4.20.0",
   }),
@@ -263,7 +267,8 @@ export const FReleaseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "LinkTimeAnimBlueprintRootDiscoveryBugFix",
-    comment: "Bugfix for FAnimObjectVersion::LinkTimeAnimBlueprintRootDiscovery.",
+    comment:
+      "Bugfix for FAnimObjectVersion::LinkTimeAnimBlueprintRootDiscovery.",
     value: 19,
     firstAppearance: "4.21.0",
   }),
@@ -275,19 +280,22 @@ export const FReleaseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "PropertiesSerializeRepCondition",
-    comment: "Make sure the Blueprint Replicated Property Conditions are actually serialized properly.",
+    comment:
+      "Make sure the Blueprint Replicated Property Conditions are actually serialized properly.",
     value: 21,
     firstAppearance: "4.23.0",
   }),
   new VersionDetails({
     name: "FocalDistanceDisablesDOF",
-    comment: "DepthOfFieldFocalDistance at 0 now disables DOF instead of DepthOfFieldFstop at 0.",
+    comment:
+      "DepthOfFieldFocalDistance at 0 now disables DOF instead of DepthOfFieldFstop at 0.",
     value: 22,
     firstAppearance: "4.23.0",
   }),
   new VersionDetails({
     name: "Unused_SoundClass2DReverbSend",
-    comment: "Removed versioning, but version entry must still exist to keep assets saved with this version loadable",
+    comment:
+      "Removed versioning, but version entry must still exist to keep assets saved with this version loadable",
     value: 23,
     firstAppearance: "4.23.0",
   }),
@@ -304,7 +312,8 @@ export const FReleaseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "SerializeAnimModifierState",
-    comment: "Store applied version of Animation Modifier to use when reverting",
+    comment:
+      "Store applied version of Animation Modifier to use when reverting",
     value: 26,
     firstAppearance: "4.24.0",
   }),
@@ -328,19 +337,22 @@ export const FReleaseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FFieldPathOwnerSerialization",
-    comment: "FFieldPath will serialize the owner struct reference and only a short path to its property",
+    comment:
+      "FFieldPath will serialize the owner struct reference and only a short path to its property",
     value: 30,
     firstAppearance: "4.25.0",
   }),
   new VersionDetails({
     name: "MeshDescriptionNewFormat",
-    comment: "This was inadvertently added in UE5. The proper version for it is in in UE5MainStreamObjectVersion",
+    comment:
+      "This was inadvertently added in UE5. The proper version for it is in in UE5MainStreamObjectVersion",
     value: 31,
     firstAppearance: "5.0.0",
   }),
   new VersionDetails({
     name: "PinTypeIncludesUObjectWrapperFlag",
-    comment: "Pin types include a flag that propagates the 'CPF_UObjectWrapper' flag to generated properties",
+    comment:
+      "Pin types include a flag that propagates the 'CPF_UObjectWrapper' flag to generated properties",
     value: 32,
     firstAppearance: "4.26.0",
   }),
@@ -388,13 +400,15 @@ export const FReleaseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixupCopiedEventSections",
-    comment: "Some sequencer event sections that were copy-pasted left broken links to the director BP",
+    comment:
+      "Some sequencer event sections that were copy-pasted left broken links to the director BP",
     value: 40,
     firstAppearance: "4.27.0",
   }),
   new VersionDetails({
     name: "RemoteControlSerializeFunctionArgumentsSize",
-    comment: "Serialize the number of bytes written when serializing function arguments",
+    comment:
+      "Serialize the number of bytes written when serializing function arguments",
     value: 41,
     firstAppearance: "4.27.0",
   }),
@@ -406,7 +420,8 @@ export const FReleaseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "LonglatTextureCubeDefaultMaxResolution",
-    comment: "Remove default resolution limit of 512 pixels for cubemaps generated from long-lat sources",
+    comment:
+      "Remove default resolution limit of 512 pixels for cubemaps generated from long-lat sources",
     value: 43,
     firstAppearance: "4.27.0",
   }),
@@ -418,7 +433,8 @@ export const FReleaseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ReleaseObjectVersionFixup",
-    comment: "Dummy version to allow us to fix up the fact that ReleaseObjectVersion was changed elsewhere",
+    comment:
+      "Dummy version to allow us to fix up the fact that ReleaseObjectVersion was changed elsewhere",
     value: 31,
     firstAppearance: "4.26.0",
     lastAppearance: "4.27.2",
