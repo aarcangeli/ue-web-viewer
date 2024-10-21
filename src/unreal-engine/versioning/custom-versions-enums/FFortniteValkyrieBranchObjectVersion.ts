@@ -52,7 +52,8 @@ export const FFortniteValkyrieBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RefCountedOImplicitObjects",
-    comment: "switch the physics implicit objects unique/shared ptrs to be ref counted",
+    comment:
+      "switch the physics implicit objects unique/shared ptrs to be ref counted",
     value: 3,
     firstAppearance: "5.4.0",
   }),
@@ -70,7 +71,8 @@ export const FFortniteValkyrieBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixRestTransformsInGeometryCollectionComponent",
-    comment: "Fix rest transforms wrongly stored in geometry collection components",
+    comment:
+      "Fix rest transforms wrongly stored in geometry collection components",
     value: 6,
     firstAppearance: "5.4.0",
   }),

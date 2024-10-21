@@ -1,5 +1,9 @@
 import type { Asset } from "../../unreal-engine/serialization/Asset";
-import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
+import {
+  CollapsableSection,
+  IndentedRow,
+  SimpleDetailsView,
+} from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
 import type { FObjectImport } from "../../unreal-engine/serialization/ObjectImport";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
@@ -50,7 +54,9 @@ function makeTree(imports: ReadonlyArray<FObjectImport>): Node[] {
     }
   };
 
-  const convertedTable = imports.map((value, index) => new Node(value, -index - 1));
+  const convertedTable = imports.map(
+    (value, index) => new Node(value, -index - 1),
+  );
 
   for (const value of convertedTable) {
     if (value.objectImport.OuterIndex < 0) {
@@ -75,7 +81,9 @@ function makeTitle(projectApi: ProjectApi, node: Node) {
   return makeObjectTitle({
     onClick,
     objectName: node.ObjectName,
-    objectClass: node.ClassPackage.equals(CoreUObject) ? node.ClassName.text : `${node.ClassPackage}.${node.ClassName}`,
+    objectClass: node.ClassPackage.equals(CoreUObject)
+      ? node.ClassName.text
+      : `${node.ClassPackage}.${node.ClassName}`,
   });
 }
 
@@ -83,12 +91,18 @@ function RenderNodes(props: { tree: Node[] }) {
   const projectApi = useProjectApi();
 
   const recursiveSection = (node: Node) => (
-    <CollapsableSection key={node.index} name={makeTitle(projectApi, node)} hasChildren={Boolean(node.children.length)}>
+    <CollapsableSection
+      key={node.index}
+      name={makeTitle(projectApi, node)}
+      hasChildren={Boolean(node.children.length)}
+    >
       {node.children.map(recursiveSection)}
     </CollapsableSection>
   );
 
-  return <SimpleDetailsView>{props.tree.map(recursiveSection)}</SimpleDetailsView>;
+  return (
+    <SimpleDetailsView>{props.tree.map(recursiveSection)}</SimpleDetailsView>
+  );
 }
 
 function RawView(props: { asset: Asset }) {
@@ -96,12 +110,20 @@ function RawView(props: { asset: Asset }) {
     <SimpleDetailsView>
       {props.asset.imports.map((value, index) => (
         <CollapsableSection name={`Import ${-index - 1}`} key={index}>
-          <IndentedRow title={"Class Package"}>{value.ClassPackage.text}</IndentedRow>
+          <IndentedRow title={"Class Package"}>
+            {value.ClassPackage.text}
+          </IndentedRow>
           <IndentedRow title={"Class Name"}>{value.ClassName.text}</IndentedRow>
           <IndentedRow title={"Outer Index"}>{value.OuterIndex}</IndentedRow>
-          <IndentedRow title={"Object Name"}>{value.ObjectName.text}</IndentedRow>
-          <IndentedRow title={"Package Name"}>{value.PackageName.text}</IndentedRow>
-          <IndentedRow title={"bImportOptional"}>{value.bImportOptional ? "true" : "false"}</IndentedRow>
+          <IndentedRow title={"Object Name"}>
+            {value.ObjectName.text}
+          </IndentedRow>
+          <IndentedRow title={"Package Name"}>
+            {value.PackageName.text}
+          </IndentedRow>
+          <IndentedRow title={"bImportOptional"}>
+            {value.bImportOptional ? "true" : "false"}
+          </IndentedRow>
         </CollapsableSection>
       ))}
     </SimpleDetailsView>
@@ -112,7 +134,9 @@ export function ImportDetails(props: { asset: Asset }) {
   const imports = props.asset.imports;
 
   const tree = useMemo(() => makeTree(imports), [imports]);
-  const [scriptImports, objectImports] = partition(tree, (node) => node.ObjectName.startsWith("/Script/"));
+  const [scriptImports, objectImports] = partition(tree, (node) =>
+    node.ObjectName.startsWith("/Script/"),
+  );
 
   return (
     <Tabs isLazy>

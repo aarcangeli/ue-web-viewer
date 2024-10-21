@@ -24,7 +24,9 @@ export function makeNameFromParts(parts: Array<string | FName>) {
  *
  * @See FPackageName::ParseExportTextPath.
  */
-export function tryParseExportTextPath(path: string): [string, string] | undefined {
+export function tryParseExportTextPath(
+  path: string,
+): [string, string] | undefined {
   const match = path.match(/^(\/.+)'(.*)'$/);
   if (match) {
     return [match[1], match[2]];
