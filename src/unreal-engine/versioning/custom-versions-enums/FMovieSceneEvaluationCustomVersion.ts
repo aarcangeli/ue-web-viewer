@@ -33,7 +33,8 @@ export const FMovieSceneEvaluationCustomVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ChangeEvaluateNearestSectionDefault",
-    comment: "Changed EvalOptions.bEvaluateNearestSection to be false by default",
+    comment:
+      "Changed EvalOptions.bEvaluateNearestSection to be false by default",
     value: 1,
     firstAppearance: "4.17.0",
   }),
@@ -51,7 +52,8 @@ export const FMovieSceneEvaluationCustomVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "DeprecateEventGUIDs",
-    comment: "Removed GUID references to blueprint graphs and replaced with direct weak ptrs",
+    comment:
+      "Removed GUID references to blueprint graphs and replaced with direct weak ptrs",
     value: 4,
     firstAppearance: "4.26.0",
   }),

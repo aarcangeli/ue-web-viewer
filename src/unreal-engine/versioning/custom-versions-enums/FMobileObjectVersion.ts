@@ -39,7 +39,8 @@ export const FMobileObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "LQVolumetricLightmapLayers",
-    comment: "Added stationary point/spot light direct contribution to volumetric lightmaps. ",
+    comment:
+      "Added stationary point/spot light direct contribution to volumetric lightmaps. ",
     value: 2,
     firstAppearance: "4.19.0",
   }),

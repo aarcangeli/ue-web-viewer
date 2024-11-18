@@ -33,7 +33,9 @@ async function OpenItems(items: DataTransferItem[]): Promise<React.ReactNode> {
     throw new Error("Expected a directory with a single uproject file");
   }
 
-  const project = (await handles[0].children()).filter((file) => file.name.endsWith(".uproject"));
+  const project = (await handles[0].children()).filter((file) =>
+    file.name.endsWith(".uproject"),
+  );
   if (!project) {
     throw new Error("No uproject file found");
   }
@@ -50,7 +52,8 @@ function App() {
   const [version, setVersion] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-  const [currentContent, setCurrentContent] = React.useState<React.ReactNode>(null);
+  const [currentContent, setCurrentContent] =
+    React.useState<React.ReactNode>(null);
 
   async function DoOpenProject(items: DataTransferItem[]) {
     setVersion(version + 1);
@@ -70,7 +73,12 @@ function App() {
   }
 
   return (
-    <Flex className={"app"} direction={"column"} h={"100vh"} bg={useColorModeValue("white", "gray.900")}>
+    <Flex
+      className={"app"}
+      direction={"column"}
+      h={"100vh"}
+      bg={useColorModeValue("white", "gray.900")}
+    >
       <DropArea onFileDrop={DoOpenProject}>Drop a project here</DropArea>
 
       <Flex as={"header"} borderBottom="1px" borderColor={borderColor} h={16}>
@@ -79,7 +87,13 @@ function App() {
 
       {error && (
         <Box padding={2}>
-          <Alert status="error" variant="subtle" alignItems="center" justifyContent="center" height="200px">
+          <Alert
+            status="error"
+            variant="subtle"
+            alignItems="center"
+            justifyContent="center"
+            height="200px"
+          >
             <VStack flexGrow={1}>
               <AlertIcon boxSize="40px" mr={0} />
               <AlertTitle mt={4} mb={1} fontSize="lg">
@@ -87,13 +101,27 @@ function App() {
               </AlertTitle>
               <AlertDescription maxWidth="sm">{error}</AlertDescription>
             </VStack>
-            <CloseButton alignSelf="start" position="relative" right={-1} top={-1} onClick={() => setError(null)} />
+            <CloseButton
+              alignSelf="start"
+              position="relative"
+              right={-1}
+              top={-1}
+              onClick={() => setError(null)}
+            />
           </Alert>
         </Box>
       )}
 
       {loading && (
-        <Flex position={"absolute"} top={0} left={0} w={"100%"} h={"100%"} bg={"rgba(0, 0, 0, 0.5)"} zIndex={1000}>
+        <Flex
+          position={"absolute"}
+          top={0}
+          left={0}
+          w={"100%"}
+          h={"100%"}
+          bg={"rgba(0, 0, 0, 0.5)"}
+          zIndex={1000}
+        >
           <Flex m={"auto"}>
             <Spinner />
           </Flex>

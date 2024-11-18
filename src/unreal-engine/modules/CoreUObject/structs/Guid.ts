@@ -33,13 +33,18 @@ export class FGuid {
   }
 
   static fromString(str: string) {
-    const match = str.match(/{([0-9a-fA-F]{8})-([0-9a-fA-F]{4})-([0-9a-fA-F]{4})-([0-9a-fA-F]{4})-([0-9a-fA-F]{12})}/);
+    const match = str.match(
+      /{([0-9a-fA-F]{8})-([0-9a-fA-F]{4})-([0-9a-fA-F]{4})-([0-9a-fA-F]{4})-([0-9a-fA-F]{12})}/,
+    );
     if (!match) {
       throw new Error("Invalid GUID string");
     }
     const a = parseInt(match[1], 16);
     const b = ((parseInt(match[2], 16) << 16) | parseInt(match[3], 16)) >>> 0;
-    const c = ((parseInt(match[4], 16) << 16) | parseInt(match[5].substring(0, 4), 16)) >>> 0;
+    const c =
+      ((parseInt(match[4], 16) << 16) |
+        parseInt(match[5].substring(0, 4), 16)) >>>
+      0;
     const d = parseInt(match[5].substring(4), 16);
     return new FGuid(a, b, c, d);
   }
@@ -58,7 +63,9 @@ export class FGuid {
     const block2 = (this.B >>> 16).toString(16).padStart(4, "0");
     const block3 = (this.B & 0xffff).toString(16).padStart(4, "0");
     const block4 = (this.C >>> 16).toString(16).padStart(4, "0");
-    const block5 = (this.C & 0xffff).toString(16).padStart(4, "0") + this.D.toString(16).padStart(8, "0");
+    const block5 =
+      (this.C & 0xffff).toString(16).padStart(4, "0") +
+      this.D.toString(16).padStart(8, "0");
 
     const string = `${block1}-${block2}-${block3}-${block4}-${block5}`;
     switch (format) {

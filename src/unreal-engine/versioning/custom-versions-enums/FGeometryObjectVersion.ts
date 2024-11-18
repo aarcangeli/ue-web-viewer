@@ -39,7 +39,8 @@ export const FGeometryObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "DynamicMeshVertexLayoutChange",
-    comment: "Fix for serializing in Mesh vertices for new DynamicMeshVertex layout",
+    comment:
+      "Fix for serializing in Mesh vertices for new DynamicMeshVertex layout",
     value: 2,
     firstAppearance: "4.19.0",
   }),

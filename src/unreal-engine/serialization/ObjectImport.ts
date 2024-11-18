@@ -1,5 +1,8 @@
 import type { AssetReader } from "../AssetReader";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
+import {
+  EUnrealEngineObjectUE4Version,
+  EUnrealEngineObjectUE5Version,
+} from "../versioning/ue-versions";
 import type { FName } from "../types/Name";
 import { NAME_None } from "../types/Name";
 
@@ -30,11 +33,16 @@ export class FObjectImport {
     result.OuterIndex = reader.readInt32();
     result.ObjectName = reader.readName();
 
-    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_NON_OUTER_PACKAGE_IMPORT) {
+    if (
+      reader.fileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_NON_OUTER_PACKAGE_IMPORT
+    ) {
       result.PackageName = reader.readName();
     }
 
-    if (reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.OPTIONAL_RESOURCES) {
+    if (
+      reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.OPTIONAL_RESOURCES
+    ) {
       result.bImportOptional = reader.readBoolean();
     }
 

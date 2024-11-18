@@ -85,7 +85,10 @@ export class UObject {
     invariant(params.clazz, "Class cannot be null");
     invariant(params.name, "Object name cannot be null");
     invariant(!params.name.isNone, "Name cannot be None");
-    invariant(ValidObjectName.test(params.name.text), `Invalid object name: ${params.name.text}`);
+    invariant(
+      ValidObjectName.test(params.name.text),
+      `Invalid object name: ${params.name.text}`,
+    );
 
     this._class = params.clazz;
     this._name = params.name;
@@ -142,7 +145,9 @@ export class UObject {
    * Inner objects are weakly referenced, so they can be collected if there are no other references to them.
    */
   get innerObjects(): ReadonlyArray<UObject> {
-    return this._innerObjects.map((ref) => ref.deref()).filter((obj) => obj) as UObject[];
+    return this._innerObjects
+      .map((ref) => ref.deref())
+      .filter((obj) => obj) as UObject[];
   }
 
   /**
@@ -166,7 +171,10 @@ export class UObject {
   }
 
   deserialize(reader: AssetReader, resolver: ObjectResolver) {
-    invariant(!(this._flags & EObjectFlags.RF_ClassDefaultObject), "Cannot deserialize a default object");
+    invariant(
+      !(this._flags & EObjectFlags.RF_ClassDefaultObject),
+      "Cannot deserialize a default object",
+    );
 
     this.properties = readTaggedProperties(reader, true, resolver);
 
@@ -176,7 +184,10 @@ export class UObject {
   }
 
   deserializeDefaultObject(reader: AssetReader, resolver: ObjectResolver) {
-    invariant(this._flags & EObjectFlags.RF_ClassDefaultObject, "Can only deserialize a default object");
+    invariant(
+      this._flags & EObjectFlags.RF_ClassDefaultObject,
+      "Can only deserialize a default object",
+    );
 
     this.properties = readTaggedProperties(reader, true, resolver);
   }

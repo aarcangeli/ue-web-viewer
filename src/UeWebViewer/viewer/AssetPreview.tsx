@@ -1,7 +1,18 @@
 import type { Asset } from "../../unreal-engine/serialization/Asset";
 import React from "react";
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Tooltip } from "@chakra-ui/react";
-import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Tooltip,
+} from "@chakra-ui/react";
+import {
+  CollapsableSection,
+  IndentedRow,
+  SimpleDetailsView,
+} from "../components/SimpleDetailsView";
 import type { PropertyValue } from "../../unreal-engine/properties/TaggedProperty";
 import type { SerializationStatistics } from "../../unreal-engine/serialization/SerializationStatistics";
 import type { UObject } from "../../unreal-engine/modules/CoreUObject/objects/Object";
@@ -21,12 +32,21 @@ export function ObjectPreview(props: { object: UObject }) {
       <SimpleDetailsView>
         <CollapsableSection name={"Asset"}>
           <IndentedRow title={"Object"}>{exportedObjects.fullName}</IndentedRow>
-          <IndentedRow title={"Class"}>{exportedObjects.class.fullName}</IndentedRow>
-          <IndentedRow title={"Object Guid"}>{exportedObjects.objectGuid?.toString() || "None"}</IndentedRow>
+          <IndentedRow title={"Class"}>
+            {exportedObjects.class.fullName}
+          </IndentedRow>
+          <IndentedRow title={"Object Guid"}>
+            {exportedObjects.objectGuid?.toString() || "None"}
+          </IndentedRow>
         </CollapsableSection>
         <CollapsableSection name={"Properties"}>
           {exportedObjects.properties.map((property, index) =>
-            renderValue(index, property.nameString, property.value, makePropertyIcon(property.tag)),
+            renderValue(
+              index,
+              property.nameString,
+              property.value,
+              makePropertyIcon(property.tag),
+            ),
           )}
         </CollapsableSection>
       </SimpleDetailsView>
@@ -37,14 +57,23 @@ export function ObjectPreview(props: { object: UObject }) {
 export function AssetPreview(props: { asset: Asset }) {
   const exportedObjects = props.asset.mainObject;
 
-  return exportedObjects ? <ObjectPreview object={exportedObjects} /> : <Box>Asset not found</Box>;
+  return exportedObjects ? (
+    <ObjectPreview object={exportedObjects} />
+  ) : (
+    <Box>Asset not found</Box>
+  );
 }
 
 function makeIndexLabel(index: number) {
   return `Index [ ${index} ]`;
 }
 
-function renderValue(key: number, name: string, value: PropertyValue, icon?: React.ReactElement) {
+function renderValue(
+  key: number,
+  name: string,
+  value: PropertyValue,
+  icon?: React.ReactElement,
+) {
   switch (value.type) {
     case "numeric":
     case "boolean":
@@ -65,16 +94,30 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
       return (
         <CollapsableSection key={key} icon={icon} title={name} name={``}>
           {value.value.map((item, index) =>
-            renderValue(index, item.nameString, item.value, makePropertyIcon(item.tag)),
+            renderValue(
+              index,
+              item.nameString,
+              item.value,
+              makePropertyIcon(item.tag),
+            ),
           )}
         </CollapsableSection>
       );
     case "native-struct":
       if (value.value instanceof FMatrix44) {
         return (
-          <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value.value)}>
+          <CollapsableSection
+            initialExpanded={false}
+            key={key}
+            icon={icon}
+            title={name}
+            name={String(value.value)}
+          >
             {value.value.matrix.map((item, index) => (
-              <IndentedRow key={index} title={`M[${Math.floor(index / 4)}][${index % 4}]`}>
+              <IndentedRow
+                key={index}
+                title={`M[${Math.floor(index / 4)}][${index % 4}]`}
+              >
                 {String(item)}
               </IndentedRow>
             ))}
@@ -82,7 +125,12 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
         );
       }
       return (
-        <CollapsableSection key={key} icon={icon} title={name} name={String(value.value)}>
+        <CollapsableSection
+          key={key}
+          icon={icon}
+          title={name}
+          name={String(value.value)}
+        >
           {Object.keys(value.value).map((subKey, index) => (
             <IndentedRow key={index} title={subKey}>
               {String(value.value[subKey])}
@@ -98,8 +146,15 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
       );
     case "array":
       return (
-        <CollapsableSection key={key} icon={icon} title={name} name={`${value.value.length} Array elements`}>
-          {value.value.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
+        <CollapsableSection
+          key={key}
+          icon={icon}
+          title={name}
+          name={`${value.value.length} Array elements`}
+        >
+          {value.value.map((item, index) =>
+            renderValue(index, makeIndexLabel(index), item),
+          )}
         </CollapsableSection>
       );
     case "set":
@@ -111,18 +166,32 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
           name={
             <>
               {value.value.length} Set elements added
-              {value.elementsToRemove.length > 0 ? <>, {value.elementsToRemove.length} removed</> : ""}{" "}
+              {value.elementsToRemove.length > 0 ? (
+                <>, {value.elementsToRemove.length} removed</>
+              ) : (
+                ""
+              )}{" "}
               {makeHelpSetMap()}
             </>
           }
         >
           {value.elementsToRemove.length > 0 && (
-            <CollapsableSection title={"Removed elements"} name={`size = ${value.elementsToRemove.length}`}>
-              {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
+            <CollapsableSection
+              title={"Removed elements"}
+              name={`size = ${value.elementsToRemove.length}`}
+            >
+              {value.elementsToRemove.map((item, index) =>
+                renderValue(index, makeIndexLabel(index), item),
+              )}
             </CollapsableSection>
           )}
-          <CollapsableSection title={"Added elements"} name={`size = ${value.value.length}`}>
-            {value.value.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
+          <CollapsableSection
+            title={"Added elements"}
+            name={`size = ${value.value.length}`}
+          >
+            {value.value.map((item, index) =>
+              renderValue(index, makeIndexLabel(index), item),
+            )}
           </CollapsableSection>
         </CollapsableSection>
       );
@@ -135,18 +204,32 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
           name={
             <>
               {value.value.length} Map elements added
-              {value.elementsToRemove.length > 0 ? <>, {value.elementsToRemove.length} removed</> : ""}{" "}
+              {value.elementsToRemove.length > 0 ? (
+                <>, {value.elementsToRemove.length} removed</>
+              ) : (
+                ""
+              )}{" "}
               {makeHelpSetMap()}
             </>
           }
         >
           {value.elementsToRemove.length > 0 && (
-            <CollapsableSection title={"Removed elements"} name={`size = ${value.elementsToRemove.length}`}>
-              {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
+            <CollapsableSection
+              title={"Removed elements"}
+              name={`size = ${value.elementsToRemove.length}`}
+            >
+              {value.elementsToRemove.map((item, index) =>
+                renderValue(index, makeIndexLabel(index), item),
+              )}
             </CollapsableSection>
           )}
-          <CollapsableSection title={"Added elements"} name={`size = ${value.value.length}`}>
-            {value.value.map((item, index) => renderValue(index, makeMapKey(item[0]), item[1]))}
+          <CollapsableSection
+            title={"Added elements"}
+            name={`size = ${value.value.length}`}
+          >
+            {value.value.map((item, index) =>
+              renderValue(index, makeMapKey(item[0]), item[1]),
+            )}
           </CollapsableSection>
         </CollapsableSection>
       );
@@ -193,7 +276,9 @@ function renderStatistics(statistics: SerializationStatistics) {
         <Alert status="error">
           <AlertIcon />
           <Box>
-            <AlertTitle>The reading of this asset failed; The asset is partially read.</AlertTitle>
+            <AlertTitle>
+              The reading of this asset failed; The asset is partially read.
+            </AlertTitle>
             <AlertDescription>{statistics.error}</AlertDescription>
           </Box>
         </Alert>
@@ -205,7 +290,9 @@ function renderStatistics(statistics: SerializationStatistics) {
       <Box p={2}>
         <Alert status="warning">
           <AlertIcon />
-          <AlertTitle>Object has {statistics.extraBytes} unparsed bytes.</AlertTitle>
+          <AlertTitle>
+            Object has {statistics.extraBytes} unparsed bytes.
+          </AlertTitle>
         </Alert>
       </Box>
     );
@@ -215,7 +302,12 @@ function renderStatistics(statistics: SerializationStatistics) {
 
 function MakeHelpTooltip(props: { label: string }) {
   return (
-    <Tooltip label={props.label} verticalAlign="middle" placement={"top"} hasArrow>
+    <Tooltip
+      label={props.label}
+      verticalAlign="middle"
+      placement={"top"}
+      hasArrow
+    >
       <span>
         <Icon as={IoMdHelpCircleOutline} verticalAlign="middle" boxSize={5} />
       </span>

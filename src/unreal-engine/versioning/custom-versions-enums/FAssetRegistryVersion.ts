@@ -71,19 +71,22 @@ export const FAssetRegistryVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AddAssetRegistryState",
-    comment: "The first version of the runtime asset registry to include file versioning.",
+    comment:
+      "The first version of the runtime asset registry to include file versioning.",
     value: 2,
     firstAppearance: "4.26.0",
   }),
   new VersionDetails({
     name: "ChangedAssetData",
-    comment: "Added FAssetRegistryState and support for piecemeal serialization",
+    comment:
+      "Added FAssetRegistryState and support for piecemeal serialization",
     value: 3,
     firstAppearance: "4.26.0",
   }),
   new VersionDetails({
     name: "RemovedMD5Hash",
-    comment: "AssetData serialization format changed, versions before this are not readable",
+    comment:
+      "AssetData serialization format changed, versions before this are not readable",
     value: 4,
     firstAppearance: "4.26.0",
   }),
@@ -143,13 +146,15 @@ export const FAssetRegistryVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ClassPaths",
-    comment: "Added FIoHash for each FIoChunkId in the package to the AssetPackageData.",
+    comment:
+      "Added FIoHash for each FIoChunkId in the package to the AssetPackageData.",
     value: 14,
     firstAppearance: "5.1.0",
   }),
   new VersionDetails({
     name: "RemoveAssetPathFNames",
-    comment: "Classes are serialized as path names rather than short object names, e.g. /Script/Engine.StaticMesh",
+    comment:
+      "Classes are serialized as path names rather than short object names, e.g. /Script/Engine.StaticMesh",
     value: 15,
     firstAppearance: "5.1.0",
   }),

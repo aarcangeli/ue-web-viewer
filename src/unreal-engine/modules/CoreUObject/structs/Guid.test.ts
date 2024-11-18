@@ -29,10 +29,17 @@ test("check all 0", () => {
 });
 
 test("check from components", () => {
-  const guid = FGuid.fromComponents(0x11223344, 0x55667788, 0x99aabbcc, 0xddeeff00);
+  const guid = FGuid.fromComponents(
+    0x11223344,
+    0x55667788,
+    0x99aabbcc,
+    0xddeeff00,
+  );
   expect(guid.toString()).toBe("{11223344-5566-7788-99aa-bbccddeeff00}");
 });
 
 test("check invadli guid", () => {
-  expect(() => FGuid.fromString("11223344-5566-7788-99AA-BBCCDDEEFF00")).toThrowError("Invalid GUID string");
+  expect(() =>
+    FGuid.fromString("11223344-5566-7788-99AA-BBCCDDEEFF00"),
+  ).toThrowError("Invalid GUID string");
 });

@@ -112,7 +112,8 @@ export const FExternalPhysicsCustomObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RemovedConvexHullsFromTriangleMeshImplicitObject",
-    comment: "Format change, Removed Convex Hulls From Triangle Mesh Implicit Object",
+    comment:
+      "Format change, Removed Convex Hulls From Triangle Mesh Implicit Object",
     value: 1,
     firstAppearance: "4.24.0",
   }),
@@ -210,7 +211,8 @@ export const FExternalPhysicsCustomObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AddDynamicKinematicSOA",
-    comment: "Add an SOA which contains particles with full dynamic data but which are in the kinematic object state.",
+    comment:
+      "Add an SOA which contains particles with full dynamic data but which are in the kinematic object state.",
     value: 17,
     firstAppearance: "4.25.0",
   }),
@@ -331,7 +333,8 @@ export const FExternalPhysicsCustomObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "PhysicsMaterialSleepCounterThreshold",
-    comment: "Added serialization for the physics material sleep counter threshold",
+    comment:
+      "Added serialization for the physics material sleep counter threshold",
     value: 37,
     firstAppearance: "4.25.0",
   }),
@@ -343,7 +346,8 @@ export const FExternalPhysicsCustomObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RemoveShapeSimAndQueryDuplicateRepresentations",
-    comment: "Remove extra representations of per shape sim and query enabled flags",
+    comment:
+      "Remove extra representations of per shape sim and query enabled flags",
     value: 39,
     firstAppearance: "4.26.0",
   }),

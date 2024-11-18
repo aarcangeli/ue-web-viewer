@@ -26,7 +26,13 @@ export class FEngineVersion {
     return result;
   }
 
-  static fromComponents(major: number, minor: number, patch: number, changelist: number, branch: string) {
+  static fromComponents(
+    major: number,
+    minor: number,
+    patch: number,
+    changelist: number,
+    branch: string,
+  ) {
     const result = new FEngineVersion();
     result.Major = major;
     result.Minor = minor;
@@ -41,7 +47,10 @@ export class FEngineVersion {
    * This is equivalent to the `ToString(EVersionComponent::Branch)` method in C++.
    */
   toString() {
-    return `${this.Major}.${this.Minor}.${this.Patch}-${this.Changelist}` + (this.Branch ? `+${this.Branch}` : "");
+    return (
+      `${this.Major}.${this.Minor}.${this.Patch}-${this.Changelist}` +
+      (this.Branch ? `+${this.Branch}` : "")
+    );
   }
 
   toJSON() {

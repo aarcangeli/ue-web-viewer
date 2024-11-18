@@ -192,7 +192,8 @@ export const FUE5ReleaseStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "CustomPropertyAnimGraphNodesUseOptionalPinManager",
-    comment: "Custom property anim graph nodes (linked anim graphs, control rig etc.) now use optional pin manager",
+    comment:
+      "Custom property anim graph nodes (linked anim graphs, control rig etc.) now use optional pin manager",
     value: 11,
     firstAppearance: "5.0.0",
   }),
@@ -204,13 +205,15 @@ export const FUE5ReleaseStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "MaterialLayerStacksAreNotParameters",
-    comment: "Material layer stacks are no longer considered 'static parameters'",
+    comment:
+      "Material layer stacks are no longer considered 'static parameters'",
     value: 13,
     firstAppearance: "5.0.0",
   }),
   new VersionDetails({
     name: "MaterialInterfaceSavedCachedData",
-    comment: "CachedExpressionData is moved from UMaterial to UMaterialInterface",
+    comment:
+      "CachedExpressionData is moved from UMaterial to UMaterialInterface",
     value: 14,
     firstAppearance: "5.0.0",
   }),
@@ -229,7 +232,8 @@ export const FUE5ReleaseStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "WorldPartitionActorDescSerializeAttachParent",
-    comment: "Add support for linking to the attached parent actor in WorldPartitionActorDesc",
+    comment:
+      "Add support for linking to the attached parent actor in WorldPartitionActorDesc",
     value: 17,
     firstAppearance: "5.0.0",
   }),
@@ -285,13 +289,15 @@ export const FUE5ReleaseStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ConvolutionBloomIntensity",
-    comment: "Convolution bloom now take into account FPostProcessSettings::BloomIntensity for scatter dispersion.",
+    comment:
+      "Convolution bloom now take into account FPostProcessSettings::BloomIntensity for scatter dispersion.",
     value: 26,
     firstAppearance: "5.0.0",
   }),
   new VersionDetails({
     name: "WorldPartitionHLODActorDescSerializeHLODSubActors",
-    comment: "Serialize FHLODSubActors instead of FGuids in WorldPartition HLODActorDesc",
+    comment:
+      "Serialize FHLODSubActors instead of FGuids in WorldPartition HLODActorDesc",
     value: 27,
     firstAppearance: "5.0.0",
   }),
@@ -309,13 +315,15 @@ export const FUE5ReleaseStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "UpdatedDirectionalLightShadowDefaults",
-    comment: "Changed shadow defaults for directional light components, version needed to not affect old things",
+    comment:
+      "Changed shadow defaults for directional light components, version needed to not affect old things",
     value: 30,
     firstAppearance: "5.0.0",
   }),
   new VersionDetails({
     name: "GeometryCollectionConvexDefaults",
-    comment: "Refresh geometry collections that had not already generated convex bodies.",
+    comment:
+      "Refresh geometry collections that had not already generated convex bodies.",
     value: 31,
     firstAppearance: "5.0.0",
   }),
@@ -346,7 +354,8 @@ export const FUE5ReleaseStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "SerializeFloatPinDefaultValuesAsSinglePrecision",
-    comment: "For Blueprint real numbers, ensure that legacy float data is serialized as single-precision",
+    comment:
+      "For Blueprint real numbers, ensure that legacy float data is serialized as single-precision",
     value: 36,
     firstAppearance: "5.0.0",
   }),
@@ -358,19 +367,22 @@ export const FUE5ReleaseStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "StoreReflectionCaptureEncodedHDRDataInRG11B10Format",
-    comment: "Uses RG11B10 format to store the encoded reflection capture data on mobile",
+    comment:
+      "Uses RG11B10 format to store the encoded reflection capture data on mobile",
     value: 38,
     firstAppearance: "5.1.0",
   }),
   new VersionDetails({
     name: "RawAnimSequenceTrackSerializer",
-    comment: "Add WithSerializer type trait and implementation for FRawAnimSequenceTrack",
+    comment:
+      "Add WithSerializer type trait and implementation for FRawAnimSequenceTrack",
     value: 39,
     firstAppearance: "5.1.0",
   }),
   new VersionDetails({
     name: "RemoveDuplicatedStyleInfo",
-    comment: "Removed font from FEditableTextBoxStyle, and added FTextBlockStyle instead.",
+    comment:
+      "Removed font from FEditableTextBoxStyle, and added FTextBlockStyle instead.",
     value: 40,
     firstAppearance: "5.1.0",
   }),
@@ -406,7 +418,8 @@ export const FUE5ReleaseStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "WorldPartitionActorDescSerializeActorIsListedInSceneOutliner",
-    comment: "Serialize bActorIsListedInSceneOutliner in WorldPartitionActorDesc",
+    comment:
+      "Serialize bActorIsListedInSceneOutliner in WorldPartitionActorDesc",
     value: 46,
     firstAppearance: "5.3.0",
   }),
@@ -424,7 +437,8 @@ export const FUE5ReleaseStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ChaosClothFictitiousAngularVelocitySubframeFix",
-    comment: "Fix Chaos Cloth fictitious angular scale bug that requires existing parameter rescaling.",
+    comment:
+      "Fix Chaos Cloth fictitious angular scale bug that requires existing parameter rescaling.",
     value: 49,
     firstAppearance: "5.4.0",
   }),

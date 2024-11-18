@@ -37,7 +37,11 @@ function NewClass<T extends UClass>(
 
 // The "class" field is a circular reference, so we need a special "lazy" class to break the cycle.
 // The actual class will be set later.
-export const PACKAGE_CoreUObject = NewObject(UPackage, LazyClass, "/Script/CoreUObject");
+export const PACKAGE_CoreUObject = NewObject(
+  UPackage,
+  LazyClass,
+  "/Script/CoreUObject",
+);
 
 export const CLASS_Object = NewClass(UClass, LazyClass, "Object");
 export const CLASS_Class = NewClass(UClass, LazyClass, "Class", CLASS_Object);
@@ -54,4 +58,8 @@ PACKAGE_CoreUObject.addInner(CLASS_Package);
 
 /// A special class which represents an unknown class.
 export const UnknownClass = NewClass(UClass, CLASS_Class, "[Unknown Class]");
-export const UnknownObject = NewObject(UObject, UnknownClass, "[Unknown Object]");
+export const UnknownObject = NewObject(
+  UObject,
+  UnknownClass,
+  "[Unknown Object]",
+);

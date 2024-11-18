@@ -78,11 +78,25 @@ export function ProjectViewer(props: Props) {
   return (
     <ProjectApiProvider value={projectApi}>
       <Flex className={"project-viewer"} flex={1}>
-        <Flex direction={"column"} w={"400px"} borderRight="1px" borderColor={borderColor} p={2} gap={1}>
-          <TreeView<FileNode> ref={tree} nodes={nodes} loadChildren={loadChildNodes} onSelect={onSelect} />
+        <Flex
+          direction={"column"}
+          w={"400px"}
+          borderRight="1px"
+          borderColor={borderColor}
+          p={2}
+          gap={1}
+        >
+          <TreeView<FileNode>
+            ref={tree}
+            nodes={nodes}
+            loadChildren={loadChildNodes}
+            onSelect={onSelect}
+          />
         </Flex>
         <Flex direction={"column"} grow={1} shrink={1}>
-          {currentFile && currentFile.kind === "file" && <FileViewer file={currentFile}></FileViewer>}
+          {currentFile && currentFile.kind === "file" && (
+            <FileViewer file={currentFile}></FileViewer>
+          )}
         </Flex>
       </Flex>
     </ProjectApiProvider>

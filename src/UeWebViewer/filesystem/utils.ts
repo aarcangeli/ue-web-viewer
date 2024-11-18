@@ -1,7 +1,9 @@
 import type { FileApi } from "./FileApi";
 import { fromHandle } from "./FileSystemHandleApi";
 
-export async function getFilesFromItems(items: DataTransferItem[]): Promise<FileApi[]> {
+export async function getFilesFromItems(
+  items: DataTransferItem[],
+): Promise<FileApi[]> {
   // Try to get the file handle
   let fileHandles = await Promise.all(
     items.map((item) => {

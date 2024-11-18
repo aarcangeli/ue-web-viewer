@@ -4,10 +4,15 @@ import invariant from "tiny-invariant";
  * Split an array into 2 arrays based on a filter function.
  * @returns [trueValues, falseValues]
  */
-export function partition<T>(array: T[], filter: (e: T, idx: number, arr: T[]) => boolean): [T[], T[]] {
+export function partition<T>(
+  array: T[],
+  filter: (e: T, idx: number, arr: T[]) => boolean,
+): [T[], T[]] {
   const trueValues: T[] = [];
   const falseValues: [] = [];
-  array.forEach((e, idx, arr) => (filter(e, idx, arr) ? trueValues : falseValues).push(e));
+  array.forEach((e, idx, arr) =>
+    (filter(e, idx, arr) ? trueValues : falseValues).push(e),
+  );
   return [trueValues, falseValues];
 }
 

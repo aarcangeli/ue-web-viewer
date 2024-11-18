@@ -1,7 +1,9 @@
 import type { ObjectConstructionParams } from "./Object";
 import { UObject } from "./Object";
 
-export type ClassConstructionParams = ObjectConstructionParams & { superClazz?: UClass };
+export type ClassConstructionParams = ObjectConstructionParams & {
+  superClazz?: UClass;
+};
 
 export class UField extends UObject {}
 

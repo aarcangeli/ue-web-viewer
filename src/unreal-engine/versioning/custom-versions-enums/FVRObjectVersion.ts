@@ -36,19 +36,22 @@ export const FVRObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "UseFNameInsteadOfEControllerHandForMotionSource",
-    comment: "Change UMotionControllerComponent from using EControllerHand to FName for motion source",
+    comment:
+      "Change UMotionControllerComponent from using EControllerHand to FName for motion source",
     value: 1,
     firstAppearance: "4.19.0",
   }),
   new VersionDetails({
     name: "UseBoolsForARSessionConfigPlaneDetectionConfiguration",
-    comment: "Change how ARSessionConfig stores plane detection configuration from bitmask to bools",
+    comment:
+      "Change how ARSessionConfig stores plane detection configuration from bitmask to bools",
     value: 2,
     firstAppearance: "4.20.0",
   }),
   new VersionDetails({
     name: "UseSubobjectForStereoLayerShapeProperties",
-    comment: "Change how UStereoLayerComponent stores additional properties for non-quad layer types",
+    comment:
+      "Change how UStereoLayerComponent stores additional properties for non-quad layer types",
     value: 3,
     firstAppearance: "4.25.0",
   }),

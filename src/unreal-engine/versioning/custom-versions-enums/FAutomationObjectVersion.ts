@@ -23,7 +23,8 @@ export const FAutomationObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "DefaultToScreenshotCameraCutAndFixedTonemapping",
-    comment: "New automated screenshot test defaults for more consistent results",
+    comment:
+      "New automated screenshot test defaults for more consistent results",
     value: 1,
     firstAppearance: "4.19.0",
   }),

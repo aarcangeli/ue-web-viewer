@@ -1,13 +1,25 @@
-export function removePrefix(value: string, prefix: string, caseInsensitive = false) {
-  const startsWith = caseInsensitive ? value.toLowerCase().startsWith(prefix.toLowerCase()) : value.startsWith(prefix);
+export function removePrefix(
+  value: string,
+  prefix: string,
+  caseInsensitive = false,
+) {
+  const startsWith = caseInsensitive
+    ? value.toLowerCase().startsWith(prefix.toLowerCase())
+    : value.startsWith(prefix);
   if (startsWith) {
     return value.substring(prefix.length);
   }
   return value;
 }
 
-export function removeSuffix(value: string, suffix: string, caseInsensitive = false) {
-  const endsWith = caseInsensitive ? value.toLowerCase().endsWith(suffix.toLowerCase()) : value.endsWith(suffix);
+export function removeSuffix(
+  value: string,
+  suffix: string,
+  caseInsensitive = false,
+) {
+  const endsWith = caseInsensitive
+    ? value.toLowerCase().endsWith(suffix.toLowerCase())
+    : value.endsWith(suffix);
   if (endsWith) {
     return value.substring(0, value.length - suffix.length);
   }

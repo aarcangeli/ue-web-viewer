@@ -14,17 +14,18 @@ export enum FExternalPhysicsMaterialCustomObjectVersion {
   // endregion
 }
 
-export const FExternalPhysicsMaterialCustomObjectVersionDetails: VersionDetails[] = [
-  new VersionDetails({
-    name: "BeforeCustomVersionWasAdded",
-    comment: "Before any version changes were made",
-    value: 0,
-    firstAppearance: "4.25.0",
-  }),
-  new VersionDetails({
-    name: "AddedMaterialMasks",
-    comment: "Added material masks to Chaos",
-    value: 1,
-    firstAppearance: "4.25.0",
-  }),
-];
+export const FExternalPhysicsMaterialCustomObjectVersionDetails: VersionDetails[] =
+  [
+    new VersionDetails({
+      name: "BeforeCustomVersionWasAdded",
+      comment: "Before any version changes were made",
+      value: 0,
+      firstAppearance: "4.25.0",
+    }),
+    new VersionDetails({
+      name: "AddedMaterialMasks",
+      comment: "Added material masks to Chaos",
+      value: 1,
+      firstAppearance: "4.25.0",
+    }),
+  ];

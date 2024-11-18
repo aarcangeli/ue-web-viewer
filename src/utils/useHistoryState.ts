@@ -11,12 +11,22 @@ function getCurrentPath(): string | undefined {
  * And we want a readable URL.
  */
 function stupidEncodePath(path: string): string {
-  return path.replace(/ /g, "%20").replace(/#/g, "%23").replace(/%/g, "%25").replace(/&/g, "%26").replace(/\?/g, "%3F");
+  return path
+    .replace(/ /g, "%20")
+    .replace(/#/g, "%23")
+    .replace(/%/g, "%25")
+    .replace(/&/g, "%26")
+    .replace(/\?/g, "%3F");
 }
 
-export function useHistoryState(onChoosePath: (path: string | undefined) => void) {
+export function useHistoryState(
+  onChoosePath: (path: string | undefined) => void,
+) {
   // We useMemo instead of useRef because useMemo discards the value during hot reload.
-  const lastPathReported: { current: string | undefined } = useMemo(() => ({ current: undefined }), []);
+  const lastPathReported: { current: string | undefined } = useMemo(
+    () => ({ current: undefined }),
+    [],
+  );
 
   const reloadPath = useCallback(() => {
     const currentPath = getCurrentPath();

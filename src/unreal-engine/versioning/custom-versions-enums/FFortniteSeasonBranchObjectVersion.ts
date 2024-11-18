@@ -66,7 +66,8 @@ export const FFortniteSeasonBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RemappedEvaluateWorldPositionOffsetInRayTracing",
-    comment: "Remapped bEvaluateWorldPositionOffset to bEvaluateWorldPositionOffsetInRayTracing",
+    comment:
+      "Remapped bEvaluateWorldPositionOffset to bEvaluateWorldPositionOffsetInRayTracing",
     value: 4,
     firstAppearance: "5.3.0",
   }),
@@ -96,7 +97,8 @@ export const FFortniteSeasonBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "PhysicsAssetNewSolverSettings",
-    comment: "Transfer PhysicsAsset SolverSettings (iteration counts etc) to new structure",
+    comment:
+      "Transfer PhysicsAsset SolverSettings (iteration counts etc) to new structure",
     value: 9,
     firstAppearance: "5.3.0",
   }),
@@ -114,7 +116,8 @@ export const FFortniteSeasonBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ChaosImplicitObjectUnionLeafObjectsToInt32",
-    comment: "Changing Chaos::FImplicitObjectUnion to store an int32 vs a uint16 for NumLeafObjects.",
+    comment:
+      "Changing Chaos::FImplicitObjectUnion to store an int32 vs a uint16 for NumLeafObjects.",
     value: 12,
     firstAppearance: "5.4.0",
   }),

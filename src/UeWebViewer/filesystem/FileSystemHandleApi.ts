@@ -87,8 +87,18 @@ export class FileHandleApi implements FileApi {
   }
 }
 
-export async function fromHandle(handle: FileSystemHandle, parent: FileApi | null = null): Promise<FileApi> {
+export async function fromHandle(
+  handle: FileSystemHandle,
+  parent: FileApi | null = null,
+): Promise<FileApi> {
   const fullPath = parent ? `${parent.fullPath}/${handle.name}` : handle.name;
-  const isEmptyDir = handle.kind === "directory" && (await (handle as FileSystemDirectoryHandle).entries().next()).done;
-  return new FileHandleApi(handle as FileSystemFileHandle, parent, fullPath, isEmptyDir || false);
+  const isEmptyDir =
+    handle.kind === "directory" &&
+    (await (handle as FileSystemDirectoryHandle).entries().next()).done;
+  return new FileHandleApi(
+    handle as FileSystemFileHandle,
+    parent,
+    fullPath,
+    isEmptyDir || false,
+  );
 }

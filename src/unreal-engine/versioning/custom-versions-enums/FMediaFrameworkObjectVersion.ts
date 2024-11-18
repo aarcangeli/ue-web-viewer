@@ -25,13 +25,15 @@ export const FMediaFrameworkObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "SerializeGUIDsInMediaSourceInsteadOfPlainNames",
-    comment: "Serialize GUIDs instead of plain names for MediaSource platform/player map",
+    comment:
+      "Serialize GUIDs instead of plain names for MediaSource platform/player map",
     value: 1,
     firstAppearance: "4.26.0",
   }),
   new VersionDetails({
     name: "SerializeGUIDsInPlatformMediaSourceInsteadOfPlainNames",
-    comment: "Serialize GUIDs instead of plain names for PlatformMediaSource platform/mediasource map",
+    comment:
+      "Serialize GUIDs instead of plain names for PlatformMediaSource platform/mediasource map",
     value: 2,
     firstAppearance: "4.26.0",
   }),

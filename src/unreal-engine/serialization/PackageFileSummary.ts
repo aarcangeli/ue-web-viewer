@@ -2,8 +2,14 @@ import type { AssetReader } from "../AssetReader";
 import { EPackageFlags } from "../enums";
 import { FGuid, GUID_None } from "../modules/CoreUObject/structs/Guid";
 import { FEngineVersion } from "../types/EngineVersion";
-import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "./CustomVersion";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
+import {
+  ECustomVersionSerializationFormat,
+  FCustomVersionContainer,
+} from "./CustomVersion";
+import {
+  EUnrealEngineObjectUE4Version,
+  EUnrealEngineObjectUE5Version,
+} from "../versioning/ue-versions";
 
 /**
  * struct FGenerationInfo {
@@ -37,7 +43,8 @@ export class FPackageFileSummary {
   FileVersionUE4: number = 0;
   FileVersionUE5: number = 0;
   FileVersionLicenseeUE: number = 0;
-  CustomVersionContainer: FCustomVersionContainer = new FCustomVersionContainer();
+  CustomVersionContainer: FCustomVersionContainer =
+    new FCustomVersionContainer();
 
   // part 2: basic information
   TotalHeaderSize: number = 0;
@@ -117,11 +124,15 @@ export class FPackageFileSummary {
     /// positive number for UE1-UE3; negative for UE4+; < -8 for UE5
     result.LegacyFileVersion = reader.readInt32();
     if (result.LegacyFileVersion >= 0) {
-      throw new Error(`Unreal Engine 1-3 packages are not supported: ${result.LegacyFileVersion}`);
+      throw new Error(
+        `Unreal Engine 1-3 packages are not supported: ${result.LegacyFileVersion}`,
+      );
     }
     if (result.LegacyFileVersion < -8) {
       // Probably UE6
-      throw new Error(`Too futuristic file version: ${result.LegacyFileVersion}`);
+      throw new Error(
+        `Too futuristic file version: ${result.LegacyFileVersion}`,
+      );
     }
 
     if (result.LegacyFileVersion !== -4) {
@@ -153,11 +164,20 @@ export class FPackageFileSummary {
           format = ECustomVersionSerializationFormat.Optimized;
           break;
       }
-      result.CustomVersionContainer = FCustomVersionContainer.fromStream(reader, format);
+      result.CustomVersionContainer = FCustomVersionContainer.fromStream(
+        reader,
+        format,
+      );
     }
 
-    if (!result.FileVersionUE4 && !result.FileVersionUE5 && !result.FileVersionLicenseeUE) {
-      throw new Error("Unversioned package file are not supported in this viewer");
+    if (
+      !result.FileVersionUE4 &&
+      !result.FileVersionUE5 &&
+      !result.FileVersionLicenseeUE
+    ) {
+      throw new Error(
+        "Unversioned package file are not supported in this viewer",
+      );
     }
 
     // part 2: basic information
@@ -167,7 +187,9 @@ export class FPackageFileSummary {
     result.PackageFlags = reader.readUInt32();
 
     if (result.PackageFlags & EPackageFlags.PKG_FilterEditorOnly) {
-      throw new Error("Editor-only are filtered out, which is not supported in this viewer");
+      throw new Error(
+        "Editor-only are filtered out, which is not supported in this viewer",
+      );
     }
 
     // part 3: offset and count of various tables
@@ -175,16 +197,25 @@ export class FPackageFileSummary {
     result.NameCount = reader.readInt32();
     result.NameOffset = reader.readInt32();
 
-    if (result.FileVersionUE5 >= EUnrealEngineObjectUE5Version.ADD_SOFTOBJECTPATH_LIST) {
+    if (
+      result.FileVersionUE5 >=
+      EUnrealEngineObjectUE5Version.ADD_SOFTOBJECTPATH_LIST
+    ) {
       result.SoftObjectPathsCount = reader.readInt32();
       result.SoftObjectPathsOffset = reader.readInt32();
     }
 
-    if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_ADDED_PACKAGE_SUMMARY_LOCALIZATION_ID) {
+    if (
+      result.FileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_ADDED_PACKAGE_SUMMARY_LOCALIZATION_ID
+    ) {
       result.LocalizationId = reader.readString();
     }
 
-    if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_SERIALIZE_TEXT_IN_PACKAGES) {
+    if (
+      result.FileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_SERIALIZE_TEXT_IN_PACKAGES
+    ) {
       result.GatherableTextDataCount = reader.readInt32();
       result.GatherableTextDataOffset = reader.readInt32();
     }
@@ -197,12 +228,18 @@ export class FPackageFileSummary {
 
     result.DependsOffset = reader.readInt32();
 
-    if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_ADD_STRING_ASSET_REFERENCES_MAP) {
+    if (
+      result.FileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_ADD_STRING_ASSET_REFERENCES_MAP
+    ) {
       result.SoftPackageReferencesCount = reader.readInt32();
       result.SoftPackageReferencesOffset = reader.readInt32();
     }
 
-    if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_ADDED_SEARCHABLE_NAMES) {
+    if (
+      result.FileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_ADDED_SEARCHABLE_NAMES
+    ) {
       result.SearchableNamesOffset = reader.readInt32();
     }
 
@@ -212,7 +249,10 @@ export class FPackageFileSummary {
 
     result.Guid = FGuid.fromStream(reader);
 
-    if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_ADDED_PACKAGE_OWNER) {
+    if (
+      result.FileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_ADDED_PACKAGE_OWNER
+    ) {
       result.PersistentGuid = FGuid.fromStream(reader);
     } else {
       result.PersistentGuid = result.Guid;
@@ -220,8 +260,10 @@ export class FPackageFileSummary {
 
     // The owner persistent guid was added in VER_UE4_ADDED_PACKAGE_OWNER but removed in the next version VER_UE4_NON_OUTER_PACKAGE_IMPORT
     if (
-      result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_ADDED_PACKAGE_OWNER &&
-      result.FileVersionUE4 < EUnrealEngineObjectUE4Version.VER_UE4_NON_OUTER_PACKAGE_IMPORT
+      result.FileVersionUE4 >=
+        EUnrealEngineObjectUE4Version.VER_UE4_ADDED_PACKAGE_OWNER &&
+      result.FileVersionUE4 <
+        EUnrealEngineObjectUE4Version.VER_UE4_NON_OUTER_PACKAGE_IMPORT
     ) {
       // Ignore outer guid
       FGuid.fromStream(reader);
@@ -232,16 +274,28 @@ export class FPackageFileSummary {
       result.Generations.push(FGenerationInfo.fromStream(reader));
     }
 
-    if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_ENGINE_VERSION_OBJECT) {
+    if (
+      result.FileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_ENGINE_VERSION_OBJECT
+    ) {
       result.SavedByEngineVersion = FEngineVersion.fromStream(reader);
     } else {
       const EngineChangelist = reader.readInt32();
       if (EngineChangelist !== 0) {
-        result.SavedByEngineVersion = FEngineVersion.fromComponents(4, 0, 0, EngineChangelist, "");
+        result.SavedByEngineVersion = FEngineVersion.fromComponents(
+          4,
+          0,
+          0,
+          EngineChangelist,
+          "",
+        );
       }
     }
 
-    if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_PACKAGE_SUMMARY_HAS_COMPATIBLE_ENGINE_VERSION) {
+    if (
+      result.FileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_PACKAGE_SUMMARY_HAS_COMPATIBLE_ENGINE_VERSION
+    ) {
       result.CompatibleWithEngineVersion = FEngineVersion.fromStream(reader);
     } else {
       result.CompatibleWithEngineVersion = result.SavedByEngineVersion;
@@ -274,25 +328,37 @@ export class FPackageFileSummary {
     result.AssetRegistryDataOffset = reader.readInt32();
     result.BulkDataStartOffset = reader.readInt64();
 
-    if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_WORLD_LEVEL_INFO) {
+    if (
+      result.FileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_WORLD_LEVEL_INFO
+    ) {
       result.WorldTileInfoDataOffset = reader.readInt32();
     }
 
-    if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_CHANGED_CHUNKID_TO_BE_AN_ARRAY_OF_CHUNKIDS) {
+    if (
+      result.FileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_CHANGED_CHUNKID_TO_BE_AN_ARRAY_OF_CHUNKIDS
+    ) {
       const count = reader.readInt32();
       const chunkIds = [];
       for (let i = 0; i < count; i++) {
         chunkIds.push(reader.readInt32());
       }
       result.ChunkIDs = chunkIds;
-    } else if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_ADDED_CHUNKID_TO_ASSETDATA_AND_UPACKAGE) {
+    } else if (
+      result.FileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_ADDED_CHUNKID_TO_ASSETDATA_AND_UPACKAGE
+    ) {
       const chunkId = reader.readInt32();
       if (chunkId >= 0) {
         result.ChunkIDs = [chunkId];
       }
     }
 
-    if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_PRELOAD_DEPENDENCIES_IN_COOKED_EXPORTS) {
+    if (
+      result.FileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_PRELOAD_DEPENDENCIES_IN_COOKED_EXPORTS
+    ) {
       result.PreloadDependencyCount = reader.readInt32();
       result.PreloadDependencyOffset = reader.readInt32();
     } else {

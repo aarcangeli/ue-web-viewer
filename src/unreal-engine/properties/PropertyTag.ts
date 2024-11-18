@@ -1,7 +1,10 @@
 import { FName, NAME_None } from "../types/Name";
 import { EGuidFormats, FGuid } from "../modules/CoreUObject/structs/Guid";
 import type { AssetReader } from "../AssetReader";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
+import {
+  EUnrealEngineObjectUE4Version,
+  EUnrealEngineObjectUE5Version,
+} from "../versioning/ue-versions";
 import invariant from "tiny-invariant";
 import {
   EOverriddenPropertyOperation,
@@ -35,7 +38,8 @@ export class FPropertyTag {
 
   // extension
   serializeType: EPropertyTagSerializeType = EPropertyTagSerializeType.Unknown;
-  overrideOperation: EOverriddenPropertyOperation = EOverriddenPropertyOperation.None;
+  overrideOperation: EOverriddenPropertyOperation =
+    EOverriddenPropertyOperation.None;
   experimentalOverridableLogic: boolean = false;
 
   toString() {
@@ -47,7 +51,10 @@ export class FPropertyTag {
   }
 
   static fromStream(reader: AssetReader): FPropertyTag {
-    if (reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.PROPERTY_TAG_COMPLETE_TYPE_NAME) {
+    if (
+      reader.fileVersionUE5 >=
+      EUnrealEngineObjectUE5Version.PROPERTY_TAG_COMPLETE_TYPE_NAME
+    ) {
       return this.fromNewFormat(reader);
     } else {
       return this.fromLegacyStream(reader);
@@ -89,54 +96,92 @@ export class FPropertyTag {
     let typeName = new FPropertyTypeName(type);
     if (type.equals(StructProperty)) {
       legacyTag.structName = reader.readName();
-      typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.structName));
-      if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_STRUCT_GUID_IN_PROPERTY_TAG) {
+      typeName = typeName.addParameter(
+        FPropertyTypeName.fromName(legacyTag.structName),
+      );
+      if (
+        reader.fileVersionUE4 >=
+        EUnrealEngineObjectUE4Version.VER_UE4_STRUCT_GUID_IN_PROPERTY_TAG
+      ) {
         legacyTag.structGuid = FGuid.fromStream(reader);
         if (legacyTag.structGuid.isValid()) {
-          typeName = typeName.addParameter(FPropertyTypeName.fromGuid(legacyTag.structGuid));
+          typeName = typeName.addParameter(
+            FPropertyTypeName.fromGuid(legacyTag.structGuid),
+          );
         }
       }
     } else if (type.equals(BoolProperty)) {
       result.boolVal = reader.readUInt8() !== 0;
     } else if (type.equals(ByteProperty)) {
       legacyTag.enumName = reader.readName();
-      typeName = typeName.addParameter(parseLegacyEnumName(legacyTag.enumName.text));
+      typeName = typeName.addParameter(
+        parseLegacyEnumName(legacyTag.enumName.text),
+      );
     } else if (type.equals(EnumProperty)) {
       legacyTag.enumName = reader.readName();
-      typeName = typeName.addParameter(parseLegacyEnumName(legacyTag.enumName.text));
-      typeName = typeName.addParameter(FPropertyTypeName.fromName(ByteProperty));
+      typeName = typeName.addParameter(
+        parseLegacyEnumName(legacyTag.enumName.text),
+      );
+      typeName = typeName.addParameter(
+        FPropertyTypeName.fromName(ByteProperty),
+      );
     } else if (type.equals(ArrayProperty)) {
-      if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VAR_UE4_ARRAY_PROPERTY_INNER_TAGS) {
+      if (
+        reader.fileVersionUE4 >=
+        EUnrealEngineObjectUE4Version.VAR_UE4_ARRAY_PROPERTY_INNER_TAGS
+      ) {
         legacyTag.innerType = reader.readName();
-        typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.innerType));
+        typeName = typeName.addParameter(
+          FPropertyTypeName.fromName(legacyTag.innerType),
+        );
       }
     } else if (type.equals(OptionalProperty)) {
       legacyTag.innerType = reader.readName();
-      typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.innerType));
+      typeName = typeName.addParameter(
+        FPropertyTypeName.fromName(legacyTag.innerType),
+      );
     } else if (type.equals(SetProperty)) {
-      if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_PROPERTY_TAG_SET_MAP_SUPPORT) {
+      if (
+        reader.fileVersionUE4 >=
+        EUnrealEngineObjectUE4Version.VER_UE4_PROPERTY_TAG_SET_MAP_SUPPORT
+      ) {
         legacyTag.innerType = reader.readName();
-        typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.innerType));
+        typeName = typeName.addParameter(
+          FPropertyTypeName.fromName(legacyTag.innerType),
+        );
       }
     } else if (type.equals(MapProperty)) {
-      if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_PROPERTY_TAG_SET_MAP_SUPPORT) {
+      if (
+        reader.fileVersionUE4 >=
+        EUnrealEngineObjectUE4Version.VER_UE4_PROPERTY_TAG_SET_MAP_SUPPORT
+      ) {
         legacyTag.innerType = reader.readName();
         legacyTag.valueType = reader.readName();
-        typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.innerType));
-        typeName = typeName.addParameter(FPropertyTypeName.fromName(legacyTag.valueType));
+        typeName = typeName.addParameter(
+          FPropertyTypeName.fromName(legacyTag.innerType),
+        );
+        typeName = typeName.addParameter(
+          FPropertyTypeName.fromName(legacyTag.valueType),
+        );
       }
     }
     result.legacyData = legacyTag;
     result.typeName = typeName;
 
-    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_PROPERTY_GUID_IN_PROPERTY_TAG) {
+    if (
+      reader.fileVersionUE4 >=
+      EUnrealEngineObjectUE4Version.VER_UE4_PROPERTY_GUID_IN_PROPERTY_TAG
+    ) {
       const hasPropertyGuid = reader.readUInt8() !== 0;
       if (hasPropertyGuid) {
         result.propertyGuid = FGuid.fromStream(reader);
       }
     }
 
-    if (reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.PROPERTY_TAG_EXTENSION_AND_OVERRIDABLE_SERIALIZATION) {
+    if (
+      reader.fileVersionUE5 >=
+      EUnrealEngineObjectUE5Version.PROPERTY_TAG_EXTENSION_AND_OVERRIDABLE_SERIALIZATION
+    ) {
       result.readPropertyExtensions(reader);
     }
 
@@ -146,7 +191,10 @@ export class FPropertyTag {
   }
 
   private static fromNewFormat(reader: AssetReader) {
-    invariant(reader.fileVersionUE5 >= EUnrealEngineObjectUE5Version.PROPERTY_TAG_COMPLETE_TYPE_NAME);
+    invariant(
+      reader.fileVersionUE5 >=
+        EUnrealEngineObjectUE5Version.PROPERTY_TAG_COMPLETE_TYPE_NAME,
+    );
 
     const result = new FPropertyTag();
 
@@ -160,8 +208,12 @@ export class FPropertyTag {
     result.size = reader.readInt32();
 
     const flags = reader.readUInt8();
-    result.arrayIndex = flags & EPropertyTagFlags.HasArrayIndex ? reader.readInt32() : 0;
-    result.propertyGuid = flags & EPropertyTagFlags.HasPropertyGuid ? FGuid.fromStream(reader) : null;
+    result.arrayIndex =
+      flags & EPropertyTagFlags.HasArrayIndex ? reader.readInt32() : 0;
+    result.propertyGuid =
+      flags & EPropertyTagFlags.HasPropertyGuid
+        ? FGuid.fromStream(reader)
+        : null;
 
     if (flags & EPropertyTagFlags.HasPropertyExtensions) {
       result.readPropertyExtensions(reader);
@@ -246,7 +298,9 @@ export class FPropertyTypeName {
 
   static fromGuid(gui: FGuid) {
     // This behavior is from FPropertyTypeNameBuilder::AddGuid
-    return new FPropertyTypeName(FName.fromString(gui.toString(EGuidFormats.DigitsWithHyphensLower)));
+    return new FPropertyTypeName(
+      FName.fromString(gui.toString(EGuidFormats.DigitsWithHyphensLower)),
+    );
   }
 
   static fromString(name: string): FPropertyTypeName {
@@ -267,13 +321,20 @@ export class FPropertyTypeName {
 
   getParameter(index: number) {
     if (index >= this.innerTypes.length) {
-      throw new Error(`Expected inner type at index ${index}, but found only ${this.innerTypes.length} values.`);
+      throw new Error(
+        `Expected inner type at index ${index}, but found only ${this.innerTypes.length} values.`,
+      );
     }
     return this.innerTypes[index];
   }
 
   toString(): string {
-    return this.name.text + (this.innerTypes.length ? `(${this.innerTypes.map((x) => x.toString()).join(",")})` : "");
+    return (
+      this.name.text +
+      (this.innerTypes.length
+        ? `(${this.innerTypes.map((x) => x.toString()).join(",")})`
+        : "")
+    );
   }
 
   get text(): string {

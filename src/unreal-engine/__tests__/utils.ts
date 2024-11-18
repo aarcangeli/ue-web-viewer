@@ -28,7 +28,9 @@ export function getFixturePath(filename: string) {
 export function readAsset(filename: string) {
   const fullPath = getFixturePath(filename);
   const fileData = fs.readFileSync(fullPath);
-  const reader = new FullAssetReader(new DataView(fileData.buffer, 0, fileData.byteLength));
+  const reader = new FullAssetReader(
+    new DataView(fileData.buffer, 0, fileData.byteLength),
+  );
   const packageName = path.basename(filename, path.extname(filename));
   return new Asset(packageName, reader);
 }

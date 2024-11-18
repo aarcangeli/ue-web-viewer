@@ -55,7 +55,10 @@ interface Node<T extends MinimalNode> {
 const OVERSCAN_COUNT = 20;
 
 function useWindowSize() {
-  const [size, setSize] = React.useState({ width: window.innerWidth, height: window.innerHeight });
+  const [size, setSize] = React.useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
   React.useLayoutEffect(() => {
     function updateSize() {
@@ -72,7 +75,10 @@ function useWindowSize() {
 /**
  * This tree-view manages the scroll and resize of the component.
  */
-function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeViewApi<T> | undefined>) {
+function TreeViewFn<T extends MinimalNode>(
+  props: Props<T>,
+  ref: React.Ref<TreeViewApi<T> | undefined>,
+) {
   const { height } = useWindowSize();
   const [version, setVersion] = React.useState(0);
   const nextId = React.useRef(0);
@@ -231,41 +237,47 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
     [propsOnSelect],
   );
 
-  const doFind = useCallback((query: PatternQuery, direction: null | "up" | "down") => {
-    const tree = treeRef.current;
-    if (!tree) return;
+  const doFind = useCallback(
+    (query: PatternQuery, direction: null | "up" | "down") => {
+      const tree = treeRef.current;
+      if (!tree) return;
 
-    const visibleNodes = tree.visibleNodes;
-    const selectedNodes = tree.selectedNodes;
-    const currentSelection = selectedNodes.length > 0 ? selectedNodes[0] : null;
-    const selectionIndex = currentSelection ? visibleNodes.indexOf(currentSelection) : -1;
+      const visibleNodes = tree.visibleNodes;
+      const selectedNodes = tree.selectedNodes;
+      const currentSelection =
+        selectedNodes.length > 0 ? selectedNodes[0] : null;
+      const selectionIndex = currentSelection
+        ? visibleNodes.indexOf(currentSelection)
+        : -1;
 
-    let start;
-    switch (direction) {
-      case null:
-        start = selectionIndex >= 0 ? selectionIndex : 0;
-        break;
-      case "up":
-        start = Math.max(0, selectionIndex - 1);
-        break;
-      case "down":
-        start = Math.min(visibleNodes.length - 1, selectionIndex + 1);
-        break;
-    }
-
-    const delta = direction === "up" ? -1 : 1;
-    for (let i = start; i >= 0 && i < visibleNodes.length; i += delta) {
-      if (query.match(visibleNodes[i].data.value.name)) {
-        tree.select(visibleNodes[i].id, { focus: false });
-        return;
+      let start;
+      switch (direction) {
+        case null:
+          start = selectionIndex >= 0 ? selectionIndex : 0;
+          break;
+        case "up":
+          start = Math.max(0, selectionIndex - 1);
+          break;
+        case "down":
+          start = Math.min(visibleNodes.length - 1, selectionIndex + 1);
+          break;
       }
-    }
 
-    // If nothing found, search to the opposite direction
-    if (direction === null) {
-      doFind(query, "up");
-    }
-  }, []);
+      const delta = direction === "up" ? -1 : 1;
+      for (let i = start; i >= 0 && i < visibleNodes.length; i += delta) {
+        if (query.match(visibleNodes[i].data.value.name)) {
+          tree.select(visibleNodes[i].id, { focus: false });
+          return;
+        }
+      }
+
+      // If nothing found, search to the opposite direction
+      if (direction === null) {
+        doFind(query, "up");
+      }
+    },
+    [],
+  );
 
   return (
     <div
@@ -327,7 +339,13 @@ function NodeView<T extends MinimalNode>(props: NodeRendererProps<Node<T>>) {
   const query = useContext(searchCtx);
 
   return (
-    <Box mx={1} ref={props.dragHandle} pb={`${GAP}px`} display={"flex"} flexDirection={"row"}>
+    <Box
+      mx={1}
+      ref={props.dragHandle}
+      pb={`${GAP}px`}
+      display={"flex"}
+      flexDirection={"row"}
+    >
       <Box
         display={"inline-flex"}
         flexDirection={"row"}
@@ -375,16 +393,30 @@ function NodeView<T extends MinimalNode>(props: NodeRendererProps<Node<T>>) {
         >
           {value.icon}
         </Box>
-        <Text flexGrow={1} fontWeight={isSelected ? "bold" : "normal"} alignSelf={"center"}>
+        <Text
+          flexGrow={1}
+          fontWeight={isSelected ? "bold" : "normal"}
+          alignSelf={"center"}
+        >
           {!query && value.name}
-          {query && <HighlightedText text={value.name} query={query} isSelected={isSelected} />}
+          {query && (
+            <HighlightedText
+              text={value.name}
+              query={query}
+              isSelected={isSelected}
+            />
+          )}
         </Text>
       </Box>
     </Box>
   );
 }
 
-function HighlightedText(props: { text: string; query: PatternQuery; isSelected: boolean }) {
+function HighlightedText(props: {
+  text: string;
+  query: PatternQuery;
+  isSelected: boolean;
+}) {
   const text = props.text;
   const isSelected = props.isSelected;
 
@@ -395,7 +427,11 @@ function HighlightedText(props: { text: string; query: PatternQuery; isSelected:
           key={index}
           style={
             index % 2 === 1
-              ? { backgroundColor: isSelected ? "orange" : "yellow", color: "black", borderRadius: "2px" }
+              ? {
+                  backgroundColor: isSelected ? "orange" : "yellow",
+                  color: "black",
+                  borderRadius: "2px",
+                }
               : {}
           }
         >

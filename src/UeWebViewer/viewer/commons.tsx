@@ -7,7 +7,11 @@ import type { FName } from "../../unreal-engine/types/Name";
  * Just a utility method to render an object title which is common to both import and export details.
  * TODO: class may be clickable to open the asset.
  */
-export function makeObjectTitle(args: { onClick?: () => void; objectName: FName; objectClass: string }) {
+export function makeObjectTitle(args: {
+  onClick?: () => void;
+  objectName: FName;
+  objectClass: string;
+}) {
   const objectName = args.objectName.text;
 
   return (

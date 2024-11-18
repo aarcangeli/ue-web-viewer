@@ -12,7 +12,10 @@ export class FName {
   static fromString(name: string): FName {
     const i = name.lastIndexOf("_");
     if (i >= 0 && NUM_REGEX.test(name.substring(i + 1))) {
-      return new FName(name.substring(0, i), parseInt(name.substring(i + 1)) + 1);
+      return new FName(
+        name.substring(0, i),
+        parseInt(name.substring(i + 1)) + 1,
+      );
     }
     return new FName(name, 0);
   }
@@ -21,7 +24,10 @@ export class FName {
    * Compares this name with another name.
    */
   equals(other: FName) {
-    return this.number === other.number && this.name.toLowerCase() === other.name.toLowerCase();
+    return (
+      this.number === other.number &&
+      this.name.toLowerCase() === other.name.toLowerCase()
+    );
   }
 
   startsWith(prefix: string) {
@@ -89,7 +95,10 @@ export class FNameMap<V> {
     return this._map.delete(getMapKey(key));
   }
 
-  forEach(fn: (value: V, key: FName, map: FNameMap<V>) => void, thisArg?: unknown) {
+  forEach(
+    fn: (value: V, key: FName, map: FNameMap<V>) => void,
+    thisArg?: unknown,
+  ) {
     this._map.forEach((value) => {
       fn.call(thisArg, value[1], value[0], this);
     });

@@ -69,13 +69,15 @@ export const FUE5PrivateFrostyStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ChaosClothRemoveKinematicTethers",
-    comment: "Re-calculate the long range attachment to prevent kinematic tethers.",
+    comment:
+      "Re-calculate the long range attachment to prevent kinematic tethers.",
     value: 6,
     firstAppearance: "5.0.0",
   }),
   new VersionDetails({
     name: "SerializeSkeletalMeshMorphTargetRenderData",
-    comment: "Serializes the Morph Target render data for cooked platforms and the DDC",
+    comment:
+      "Serializes the Morph Target render data for cooked platforms and the DDC",
     value: 7,
     firstAppearance: "5.0.0",
   }),

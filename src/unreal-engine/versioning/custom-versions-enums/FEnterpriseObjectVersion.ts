@@ -56,7 +56,8 @@ export const FEnterpriseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixSerializationOfBulkAndExtraData",
-    comment: "Conditional serialization of bulk (UDatasmithScene) and extra (UDatasmithStaticMeshCADImportData) data ",
+    comment:
+      "Conditional serialization of bulk (UDatasmithScene) and extra (UDatasmithStaticMeshCADImportData) data ",
     value: 1,
     firstAppearance: "4.20.0",
   }),
@@ -68,7 +69,8 @@ export const FEnterpriseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "MediaFrameworkUserDataLazyObject",
-    comment: "Update FMediaFrameworkCaptureCameraViewportCameraOutputInfo with LazyObjectPtr",
+    comment:
+      "Update FMediaFrameworkCaptureCameraViewportCameraOutputInfo with LazyObjectPtr",
     value: 3,
     firstAppearance: "4.21.0",
   }),
@@ -98,19 +100,22 @@ export const FEnterpriseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "MeshDescriptionBulkDataGuidIsHash",
-    comment: "MeshDescriptionBulkData contains a bGuidIsHash so we can benefit from DDC caching.",
+    comment:
+      "MeshDescriptionBulkData contains a bGuidIsHash so we can benefit from DDC caching.",
     value: 8,
     firstAppearance: "4.24.0",
   }),
   new VersionDetails({
     name: "LiveLinkControllerSplitPerRole",
-    comment: "Splitting controller associated with a livelink component for each LiveLinkRole class hierarchy",
+    comment:
+      "Splitting controller associated with a livelink component for each LiveLinkRole class hierarchy",
     value: 9,
     firstAppearance: "4.25.0",
   }),
   new VersionDetails({
     name: "CoreTechParametricSurfaceOptim",
-    comment: "Change CoreTechParametricSurface serialization to be more efficient",
+    comment:
+      "Change CoreTechParametricSurface serialization to be more efficient",
     value: 10,
     firstAppearance: "4.25.0",
   }),

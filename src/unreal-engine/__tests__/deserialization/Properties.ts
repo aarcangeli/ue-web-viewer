@@ -13,7 +13,9 @@ expect.addSnapshotSerializer({
 describe("BP_NativeProperties", () => {
   test("Properties", () => {
     const asset = readAsset("ue-5.4.4/Content/BP_NativeProperties.uasset");
-    const object = asset.getByFullName("BP_NativeProperties.Default__BP_NativeProperties_C");
+    const object = asset.getByFullName(
+      "BP_NativeProperties.Default__BP_NativeProperties_C",
+    );
     invariant(object);
 
     expect(object.properties).toHaveLength(59);
@@ -26,7 +28,9 @@ describe("BP_NativeProperties", () => {
 describe("BP_StructProperties", () => {
   test("Properties", () => {
     const asset = readAsset("ue-5.4.4/Content/BP_StructProperties.uasset");
-    const object = asset.getByFullName("BP_StructProperties.Default__BP_StructProperties_C");
+    const object = asset.getByFullName(
+      "BP_StructProperties.Default__BP_StructProperties_C",
+    );
     invariant(object);
 
     expect(object.properties).toHaveLength(1);

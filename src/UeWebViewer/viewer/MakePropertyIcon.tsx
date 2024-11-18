@@ -1,5 +1,8 @@
 import React from "react";
-import type { FPropertyTag, FPropertyTypeName } from "../../unreal-engine/properties/PropertyTag";
+import type {
+  FPropertyTag,
+  FPropertyTypeName,
+} from "../../unreal-engine/properties/PropertyTag";
 import { EPropertyType } from "../../unreal-engine/properties/enums";
 import { Tooltip } from "@chakra-ui/react";
 import { Icon } from "@chakra-ui/icons";
@@ -35,7 +38,9 @@ const colors = new Map<EPropertyType, string>([
 const COLOR_STRUCT = "#0059CB";
 const COLOR_ENUM = "#006F65";
 
-const structColors = new FNameMap<string>([[FName.fromString("Transform"), "#FF7300"]]);
+const structColors = new FNameMap<string>([
+  [FName.fromString("Transform"), "#FF7300"],
+]);
 
 /**
  * Create a colored icon for a property
@@ -83,7 +88,10 @@ function makeInner(tag: FPropertyTag) {
       case EPropertyType.SetProperty:
         return makeSetColor(getColor(typeName.getParameter(0)));
       case EPropertyType.MapProperty:
-        return makeMapColor(getColor(typeName.getParameter(0)), getColor(typeName.getParameter(1)));
+        return makeMapColor(
+          getColor(typeName.getParameter(0)),
+          getColor(typeName.getParameter(1)),
+        );
       default:
         return makeSingularColor(getColor(typeName));
     }
@@ -99,7 +107,13 @@ function makeInner(tag: FPropertyTag) {
 
 function makeSingularColor(color: string) {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <rect x="2" y="5" width="12" height="6" rx="2" fill={color} />
     </svg>
   );
@@ -107,7 +121,13 @@ function makeSingularColor(color: string) {
 
 function makeArrayIcon(color: string) {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path d="M0 0H4V4H0V0Z" fill={color} />
       <path d="M6 0H10V4H6V0Z" fill={color} />
       <path d="M12 0H16V4H12V0Z" fill={color} />
@@ -123,7 +143,13 @@ function makeArrayIcon(color: string) {
 
 function makeSetColor(color: string) {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M12 7.99953C11.6688 7.70155 11.3735 7.36595 11.12 6.99955C10.947 6.79667 10.8146 6.56242 10.73 6.30955C10.6181 5.95638 10.5542 5.58976 10.54 5.21954C10.54 4.72435 10.5164 4.32739 10.4988 4.03112C10.4884 3.85473 10.48 3.71404 10.48 3.60955C10.4983 3.40004 10.4604 3.18944 10.37 2.99955C10.2624 2.71847 10.0759 2.47452 9.83278 2.29708C9.5897 2.11965 9.30048 2.01632 9 1.99955V0.999545H9.38C9.84979 0.983442 10.3198 1.02373 10.78 1.11955C11.1478 1.20587 11.4903 1.37711 11.78 1.61955C12.0164 1.84278 12.1802 2.13198 12.25 2.44955C12.3603 3.05294 12.4039 3.66662 12.38 4.27955C12.3706 4.6572 12.3907 5.03501 12.44 5.40954C12.4728 5.66728 12.5652 5.91382 12.71 6.12955C12.822 6.30653 12.9813 6.44858 13.17 6.53955C13.767 6.74067 14.3789 6.89448 15 6.99955V8.99951C14.3755 9.10406 13.7602 9.25787 13.16 9.45951C12.9713 9.55048 12.812 9.69252 12.7 9.86951C12.5552 10.0852 12.4628 10.3318 12.43 10.5895C12.3799 10.964 12.3599 11.3418 12.37 11.7195C12.3928 12.3324 12.3492 12.946 12.24 13.5495C12.1679 13.8662 12.0045 14.1548 11.77 14.3795C11.4778 14.6181 11.1362 14.7889 10.77 14.8795C10.3098 14.9753 9.83979 15.0156 9.37 14.9995H9V13.9995C9.2998 13.9803 9.58791 13.876 9.83056 13.6989C10.0732 13.5218 10.2603 13.2792 10.37 12.9995C10.456 12.8153 10.4939 12.6123 10.48 12.4095C10.48 12.1162 10.5 11.5762 10.54 10.7895C10.5542 10.4193 10.6181 10.0527 10.73 9.69951C10.8168 9.45067 10.9491 9.2201 11.12 9.01951C11.3698 8.64425 11.6654 8.30161 12 7.99953Z"
         fill={color}
@@ -138,7 +164,13 @@ function makeSetColor(color: string) {
 
 function makeMapColor(keyColor: string, valueColor: string) {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <rect width="4" height="4" fill={keyColor} />
       <rect y="6" width="4" height="4" fill={keyColor} />
       <rect y="12" width="4" height="4" fill={keyColor} />

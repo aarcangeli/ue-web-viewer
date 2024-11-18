@@ -13,8 +13,15 @@ export class CustomVersionGuid<E> {
   readonly details: VersionDetails[];
   readonly latestVersion: number;
 
-  constructor(args: { friendlyName: string; guid: FGuid; details: VersionDetails[] }) {
-    invariant(args.details.length > 0, "Custom version details must not be empty.");
+  constructor(args: {
+    friendlyName: string;
+    guid: FGuid;
+    details: VersionDetails[];
+  }) {
+    invariant(
+      args.details.length > 0,
+      "Custom version details must not be empty.",
+    );
     this.friendlyName = args.friendlyName;
     this.guid = args.guid;
     this.details = args.details;
