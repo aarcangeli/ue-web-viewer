@@ -34,7 +34,7 @@ async function OpenItems(items: DataTransferItem[]): Promise<React.ReactNode> {
   }
 
   const project = (await handles[0].children()).filter((file) => file.name.endsWith(".uproject"));
-  if (!project) {
+  if (!project.length) {
     throw new Error("No uproject file found");
   }
   if (project.length !== 1) {

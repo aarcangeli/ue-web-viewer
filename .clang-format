@@ -6,9 +6,9 @@ BreakConstructorInitializers: BeforeComma
 IndentCaseLabels: true
 MaxEmptyLinesToKeep: 1
 AllowShortFunctionsOnASingleLine: Empty
-AlwaysBreakTemplateDeclarations: Yes
+BreakTemplateDeclarations: Yes
 AlignEscapedNewlines: Left
-IndentRequires: true
+IndentRequiresClause: true
 MacroBlockBegin: "SLATE_BEGIN_ARGS|BEGIN_SHADER_PARAMETER_STRUCT"
 MacroBlockEnd: "SLATE_END_ARGS|END_SHADER_PARAMETER_STRUCT"
 StatementMacros:

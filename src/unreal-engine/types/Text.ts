@@ -52,7 +52,7 @@ export class FText {
           break;
         default:
           // There is much more to this, but we don't need it right now
-          throw new Error(`Unknown history type: ${historyType}`);
+          throw new Error(`TODO: Text history type not implemented: ${historyType}`);
       }
     }
 

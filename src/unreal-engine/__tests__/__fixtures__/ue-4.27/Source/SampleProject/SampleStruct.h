@@ -10,7 +10,7 @@ enum ESampleEnum {
     Second,
 };
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FSampleStruct {
     GENERATED_BODY()
 
