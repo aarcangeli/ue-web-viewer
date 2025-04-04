@@ -1,10 +1,15 @@
+import invariant from "tiny-invariant";
 const NUM_REGEX = /^([0-9]|[1-9][0-9]*)$/;
 
 export class FName {
   readonly name: string;
-  readonly number: number; // u32
+  readonly number: number;
 
   constructor(name: string, number: number) {
+    invariant(
+      name.length >= 0 && name.length < 0x10000_0000,
+      `Invalid number, must be a valid u32 value ${name.length}`,
+    );
     this.name = name;
     this.number = number;
   }

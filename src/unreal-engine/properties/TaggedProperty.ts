@@ -1,7 +1,9 @@
-import type { FPropertyTag } from "./PropertyTag";
-import type { FName } from "../types/Name";
 import type { UObject } from "../modules/CoreUObject/objects/Object";
+import type { FName } from "../types/Name";
 import type { FText } from "../types/Text";
+
+import { NativeStructs } from "./NativeStructs";
+import type { FPropertyTag } from "./PropertyTag";
 
 export class TaggedProperty {
   public readonly tag: FPropertyTag;
@@ -25,7 +27,7 @@ export class TaggedProperty {
   }
 }
 
-export interface booleanValue {
+export interface BooleanValue {
   type: "boolean";
   value: boolean;
 }
@@ -65,7 +67,7 @@ export interface TaggedStructValue {
  */
 export interface StructValue {
   type: "native-struct";
-  value: Record<string, any>;
+  value: NativeStructs;
 }
 
 export interface ScriptDelegate {
@@ -97,7 +99,7 @@ export interface SerializationError {
 }
 
 export type PropertyValue =
-  | booleanValue
+  | BooleanValue
   | NumericValue
   | NameValue
   | StringValue
@@ -110,13 +112,3 @@ export type PropertyValue =
   | SetValue
   | MapValue
   | SerializationError;
-
-/**
- * Utility function to create an error value.
- */
-export function makeError(message: string): SerializationError {
-  return {
-    type: "error",
-    message: message,
-  };
-}

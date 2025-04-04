@@ -1,32 +1,35 @@
+import invariant from "tiny-invariant";
+
 import type { AssetReader } from "../AssetReader";
 import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
+import { FBox } from "../modules/CoreUObject/structs/Box";
+import { FColor } from "../modules/CoreUObject/structs/Color";
+import { FDateTime } from "../modules/CoreUObject/structs/DateTime";
+import { FFrameNumber } from "../modules/CoreUObject/structs/FrameNumber";
+import { FGuid } from "../modules/CoreUObject/structs/Guid";
+import { FLinearColor } from "../modules/CoreUObject/structs/LinearColor";
+import { FMatrix44 } from "../modules/CoreUObject/structs/Matrix44";
+import { FPlane } from "../modules/CoreUObject/structs/Plane";
+import { FQuat } from "../modules/CoreUObject/structs/Quat";
+import { FRotator } from "../modules/CoreUObject/structs/Rotator";
+import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
+import { FTimespan } from "../modules/CoreUObject/structs/Timespan";
+import { FTransform } from "../modules/CoreUObject/structs/Transform";
+import { FTwoVectors } from "../modules/CoreUObject/structs/TwoVectors";
+import { FVector2 } from "../modules/CoreUObject/structs/Vector2";
+import { FVector3 } from "../modules/CoreUObject/structs/Vector3";
+import { FVector4 } from "../modules/CoreUObject/structs/Vector4";
+import { NAME_CoreUObject } from "../modules/names";
+import { EPropertyType } from "../properties/enums";
+import { NativeStructs } from "../properties/NativeStructs";
 import type { FPropertyTypeName } from "../properties/PropertyTag";
 import { FPropertyTag } from "../properties/PropertyTag";
 import type { MapValue, NumericValue, PropertyValue, SetValue } from "../properties/TaggedProperty";
 import { FName, FNameMap } from "../types/Name";
-import { NAME_CoreUObject } from "../modules/names";
-import { FGuid } from "../modules/CoreUObject/structs/Guid";
-import { FRotator } from "../modules/CoreUObject/structs/Rotator";
-import { FVector3 } from "../modules/CoreUObject/structs/Vector3";
-import { EPropertyType } from "../properties/enums";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
-import invariant from "tiny-invariant";
-import { FPlane } from "../modules/CoreUObject/structs/Plane";
-import { FQuat } from "../modules/CoreUObject/structs/Quat";
-import { readTaggedProperties } from "./properties-serialization";
-import { FVector2 } from "../modules/CoreUObject/structs/Vector2";
-import { FVector4 } from "../modules/CoreUObject/structs/Vector4";
-import { FBox } from "../modules/CoreUObject/structs/Box";
-import { FMatrix44 } from "../modules/CoreUObject/structs/Matrix44";
-import { FLinearColor } from "../modules/CoreUObject/structs/LinearColor";
-import { FColor } from "../modules/CoreUObject/structs/Color";
-import { FTwoVectors } from "../modules/CoreUObject/structs/TwoVectors";
-import { FTransform } from "../modules/CoreUObject/structs/Transform";
-import { FDateTime } from "../modules/CoreUObject/structs/DateTime";
-import { FTimespan } from "../modules/CoreUObject/structs/Timespan";
-import { FFrameNumber } from "../modules/CoreUObject/structs/FrameNumber";
-import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
 import { FText } from "../types/Text";
+import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
+
+import { readTaggedProperties } from "./properties-serialization";
 
 type PropertySerializer = (reader: AssetReader, resolver: ObjectResolver) => PropertyValue;
 
@@ -112,7 +115,7 @@ function makeCombinedName(packageName: FName | string, objectName: FName | strin
   return FName.fromString(`${packageName}.${objectName}`);
 }
 
-function makeStructReader<T extends object>(generator: (reader: AssetReader) => T): PropertySerializer {
+function makeStructReader(generator: (reader: AssetReader) => NativeStructs): PropertySerializer {
   return (reader) => ({ type: "native-struct", value: generator(reader) });
 }
 
@@ -122,9 +125,9 @@ function softObjectPathSerializer(reader: AssetReader, resolver: ObjectResolver)
   return { type: "native-struct", value: objectPath };
 }
 
-function makeLargeWorld<T extends object>(
-  generatorFloat: (reader: AssetReader) => T,
-  generatorDouble: (reader: AssetReader) => T,
+function makeLargeWorld(
+  generatorFloat: (reader: AssetReader) => NativeStructs,
+  generatorDouble: (reader: AssetReader) => NativeStructs,
 ): StructPropertySerializer {
   return [makeStructReader(generatorFloat), makeStructReader(generatorDouble)];
 }

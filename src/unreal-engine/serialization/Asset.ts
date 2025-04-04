@@ -1,19 +1,20 @@
-import type { AssetReader, FullAssetReader } from "../AssetReader";
-import { FPackageFileSummary } from "./PackageFileSummary";
-import { FObjectImport } from "./ObjectImport";
-import { EObjectFlags, FObjectExport } from "./ObjectExport";
 import invariant from "tiny-invariant";
-import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
-import { FName, NAME_None } from "../types/Name";
+
 import { removeExtension } from "../../utils/string-utils";
+import type { AssetReader, FullAssetReader } from "../AssetReader";
+import type { UClass } from "../modules/CoreUObject/objects/Class";
 import type { ObjectConstructionParams, ObjectResolver } from "../modules/CoreUObject/objects/Object";
-import { ELoadingPhase } from "../modules/CoreUObject/objects/Object";
-import { UObject, WeakObject } from "../modules/CoreUObject/objects/Object";
+import { ELoadingPhase, UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
 import { UPackage } from "../modules/CoreUObject/objects/Package";
 import { CLASS_Package, UnknownClass } from "../modules/global-instances";
-import type { UClass } from "../modules/CoreUObject/objects/Class";
-import { SerializationStatistics } from "./SerializationStatistics";
 import { makeNameFromParts } from "../path-utils";
+import { FName, NAME_None } from "../types/Name";
+import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
+
+import { EObjectFlags, FObjectExport } from "./ObjectExport";
+import { FObjectImport } from "./ObjectImport";
+import { FPackageFileSummary } from "./PackageFileSummary";
+import { SerializationStatistics } from "./SerializationStatistics";
 
 /**
  * Mock object which represents an object imported from another package.
@@ -40,10 +41,10 @@ export class Asset {
   readonly exports: ReadonlyArray<FObjectExport> = [];
 
   /// Cache of exported objects.
-  private readonly _exportedObjects: Array<WeakObject | symbol> = [];
+  private readonly _exportedObjects: Array<WeakObjectRef | symbol> = [];
 
   /// Cache of imported objects.
-  private readonly _importedObjects: Array<WeakObject> = [];
+  private readonly _importedObjects: Array<WeakObjectRef> = [];
 
   /**
    * The package object.
@@ -200,7 +201,7 @@ export class Asset {
   reloadObject(object: UObject) {
     const index =
       this._exportedObjects.findIndex((e) => {
-        return e instanceof WeakObject && e.deref() === object;
+        return e instanceof WeakObjectRef && e.deref() === object;
       }) + 1;
     if (index > 0) {
       object.loadingPhase = ELoadingPhase.None;
@@ -240,7 +241,7 @@ export class Asset {
   private getCachedObjectByIndex(index: number) {
     invariant(this.isIndexValid(index), `Invalid index ${index}`);
 
-    let value: WeakObject | symbol;
+    let value: WeakObjectRef | symbol;
     if (index == 0) {
       return null;
     } else if (index > 0) {
@@ -256,7 +257,7 @@ export class Asset {
       throw new Error(`Recursive object reference`);
     }
 
-    return (value as WeakObject)?.deref() ?? null;
+    return (value as WeakObjectRef)?.deref() ?? null;
   }
 
   private createExportObject(index: number, full: boolean): UObject {

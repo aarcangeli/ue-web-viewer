@@ -47,9 +47,13 @@ describe("Name", () => {
 
   it("should be case insensitive", () => {
     const name = FName.fromString("MyName");
-    expect(FName.fromString("MyName")).toEqual(name);
+    expect(name.equals(FName.fromString("myname"))).toBe(true);
+  });
 
-    const none = FName.fromString("none");
-    expect(none.isNone).toBe(true);
+  it("check none", () => {
+    expect(FName.fromString("none").isNone).toBe(true);
+    expect(FName.fromString("None").isNone).toBe(true);
+    expect(FName.fromString("None_0").isNone).toBe(false);
+    expect(FName.fromString("Value").isNone).toBe(false);
   });
 });
