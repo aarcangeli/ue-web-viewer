@@ -14,6 +14,7 @@ import type { FVector4 } from "../modules/CoreUObject/structs/Vector4";
 
 /**
  * All types that may be used as a native struct.
+ * (Sort alphabetically)
  */
 export type NativeStructs =
   | FBox
