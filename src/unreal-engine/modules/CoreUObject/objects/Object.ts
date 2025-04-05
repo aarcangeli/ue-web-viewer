@@ -169,7 +169,10 @@ export class UObject {
   }
 
   deserialize(reader: AssetReader, resolver: ObjectResolver) {
-    invariant(!(this._flags & EObjectFlags.RF_ClassDefaultObject), "Cannot deserialize a default object");
+    invariant(
+      !(this._flags & EObjectFlags.RF_ClassDefaultObject),
+      "Use deserializeDefaultObject() for default objects",
+    );
 
     this.properties = readTaggedProperties(reader, true, resolver);
 

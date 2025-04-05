@@ -35,6 +35,8 @@ type PropertySerializer = (reader: AssetReader, resolver: ObjectResolver) => Pro
 
 const StructProperty = FName.fromString("StructProperty");
 const ArrayProperty = FName.fromString("ArrayProperty");
+const SetProperty = FName.fromString("SetProperty");
+const MapProperty = FName.fromString("MapProperty");
 
 /**
  * A serializer for a struct property.
@@ -45,6 +47,12 @@ type StructPropertySerializer = PropertySerializer | [PropertySerializer, Proper
 export class UnknownPropertyType extends Error {
   constructor(public typeName: FPropertyTypeName) {
     super(`Unknown property type: ${typeName}`);
+  }
+}
+
+export class PropertyTooOldError extends Error {
+  constructor(public typeName: FPropertyTypeName) {
+    super(`Property '${typeName}' is too old to be read without knowing the type.`);
   }
 }
 
@@ -404,8 +412,7 @@ function getBytePropertyReader(
   // This is because FPropertyTag doesn't contain the full type name.
   if (fileVersionUE5 < EUnrealEngineObjectUE5Version.PROPERTY_TAG_COMPLETE_TYPE_NAME) {
     if (!typeName.getOptionalParameter(0)) {
-      console.warn("ByteProperty without type name, assuming byte");
-      return bytePropertyReader;
+      throw new PropertyTooOldError(typeName);
     }
   }
 
@@ -474,7 +481,20 @@ function convertFromLegacyTagIfNeeded(reader: AssetReader, tag: FPropertyTag): P
       return getLegacyStructArraySerializer(reader);
     }
     // The file is too old, we can't ready anything without knowing the struct type.
-    throw new UnknownPropertyType(tag.typeName);
+    throw new PropertyTooOldError(tag.typeName);
+  }
+
+  if (tag.legacyData.type.equals(SetProperty) && tag.legacyData.innerType?.equals(StructProperty)) {
+    // The file is too old, we can't ready anything without knowing the struct type.
+    throw new PropertyTooOldError(tag.typeName);
+  }
+
+  if (
+    tag.legacyData.type.equals(MapProperty) &&
+    (tag.legacyData.innerType?.equals(StructProperty) || tag.legacyData.valueType?.equals(StructProperty))
+  ) {
+    // The file is too old, we can't ready anything without knowing the struct type.
+    throw new PropertyTooOldError(tag.typeName);
   }
 
   return null;

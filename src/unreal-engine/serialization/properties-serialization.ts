@@ -6,7 +6,7 @@ import type { PropertyValue, SerializationError } from "../properties/TaggedProp
 import { TaggedProperty } from "../properties/TaggedProperty";
 import { EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 
-import { getPropertySerializerFromTag, UnknownPropertyType } from "./property-serializer";
+import { getPropertySerializerFromTag, PropertyTooOldError, UnknownPropertyType } from "./property-serializer";
 
 export function readTaggedProperties(reader: AssetReader, isUClass: boolean, resolver: ObjectResolver) {
   // from UStruct::SerializeVersionedTaggedProperties
@@ -28,6 +28,9 @@ export function readTaggedProperties(reader: AssetReader, isUClass: boolean, res
     const tag = FPropertyTag.fromStream(reader);
     if (tag.name.isNone) {
       break;
+    }
+    if (tag.name.equals("StructSet")) {
+      const t = 0;
     }
 
     properties.push(readTaggedProperty(tag, reader, resolver));
@@ -67,6 +70,9 @@ function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: Obj
           ? `Unknown property type '${e.typeName}' (FULL signature: '${typeName}')`
           : `Unknown property type '${typeName}'`;
       return makeError(message);
+    }
+    if (e instanceof PropertyTooOldError) {
+      return makeError(e.message);
     }
     console.error(e);
     return makeError(`Cannot get serializer of '${typeName}': ${e}`);

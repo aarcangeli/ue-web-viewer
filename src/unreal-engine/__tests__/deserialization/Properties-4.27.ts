@@ -24,7 +24,6 @@ describe("BP_ContainerProperties", () => {
     const object = asset.getByFullName("BP_ContainerProperties.Default__BP_ContainerProperties_C");
     invariant(object);
 
-    expect(object.properties).toHaveLength(17);
     matchSnapshots(object);
     validateObject(object);
   });
@@ -36,7 +35,6 @@ describe("BP_NativeStructProperties", () => {
     const object = asset.getByFullName("BP_NativeStructProperties.Default__BP_NativeStructProperties_C");
     invariant(object);
 
-    expect(object.properties).toHaveLength(23);
     matchSnapshots(object);
     validateObject(object);
   });

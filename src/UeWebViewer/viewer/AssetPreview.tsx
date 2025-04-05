@@ -139,11 +139,13 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
             </>
           }
         >
-          {value.elementsToRemove.length > 0 && (
-            <CollapsableSection title={"Removed elements"} name={`size = ${value.elementsToRemove.length}`}>
-              {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
-            </CollapsableSection>
-          )}
+          <CollapsableSection
+            title={"Removed elements"}
+            name={`size = ${value.elementsToRemove.length}`}
+            hasChildren={Boolean(value.elementsToRemove.length)}
+          >
+            {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
+          </CollapsableSection>
           <CollapsableSection title={"Added elements"} name={`size = ${value.value.length}`}>
             {value.value.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
           </CollapsableSection>
@@ -158,18 +160,37 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
           name={
             <>
               {value.value.length} Map elements added
-              {value.elementsToRemove.length > 0 ? <>, {value.elementsToRemove.length} removed</> : ""}{" "}
+              {value.elementsToRemove.length > 0 ? `, ${value.elementsToRemove.length} removed ` : " "}
               {makeHelpSetMap()}
             </>
           }
         >
-          {value.elementsToRemove.length > 0 && (
-            <CollapsableSection title={"Removed elements"} name={`size = ${value.elementsToRemove.length}`}>
-              {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
-            </CollapsableSection>
-          )}
+          <CollapsableSection
+            title={"Removed elements"}
+            name={`size = ${value.elementsToRemove.length}`}
+            hasChildren={Boolean(value.elementsToRemove.length)}
+          >
+            {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
+          </CollapsableSection>
           <CollapsableSection title={"Added elements"} name={`size = ${value.value.length}`}>
-            {value.value.map((item, index) => renderValue(index, makeMapKey(item[0]), item[1]))}
+            {value.value.map((item, index) => {
+              let [key, value] = item;
+              switch (key.type) {
+                case "boolean":
+                case "numeric":
+                case "name":
+                case "string":
+                  // For simple keys we can collapse the key and value into one row
+                  return renderValue(index, `Key [ ${key.value} ]`, value);
+                default:
+                  return (
+                    <CollapsableSection name={`Entry ${index}`}>
+                      {renderValue(index, "Key", key)}
+                      {renderValue(index, "Value", value)}
+                    </CollapsableSection>
+                  );
+              }
+            })}
           </CollapsableSection>
         </CollapsableSection>
       );
@@ -185,25 +206,11 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
   }
 }
 
-function makeMapKey(key: PropertyValue): string {
-  // Only scalar types are allowed as map keys
-  switch (key.type) {
-    case "boolean":
-    case "numeric":
-    case "name":
-    case "string":
-      return `Key [ ${key.value} ]`;
-    default:
-      console.error(`Unknown key ${key}`);
-      return `Unknown key ${key}`;
-  }
-}
-
 function makeHelpSetMap() {
   return (
     <MakeHelpTooltip
       label={
-        "Only added and removed elements are serialized on the asset, the diff applied to a default object to generate the final property element."
+        "Sets and maps use a special serialization format: only added and removed elements are stored in the asset. The final property is computed by applying these changes to the default object."
       }
     />
   );

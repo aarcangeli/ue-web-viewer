@@ -25,7 +25,10 @@ export class FName {
   /**
    * Compares this name with another name.
    */
-  equals(other: FName) {
+  equals(other: FName | string): boolean {
+    if (typeof other === "string") {
+      return this.text.toLowerCase() === other.toLowerCase();
+    }
     return this.number === other.number && this.name.toLowerCase() === other.name.toLowerCase();
   }
 
