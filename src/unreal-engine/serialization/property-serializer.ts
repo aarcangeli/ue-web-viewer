@@ -13,7 +13,6 @@ import { FPerPlatformFloat } from "../modules/CoreUObject/structs/PerPlatformFlo
 import { FPlane } from "../modules/CoreUObject/structs/Plane";
 import { FQuat } from "../modules/CoreUObject/structs/Quat";
 import { FRotator } from "../modules/CoreUObject/structs/Rotator";
-import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
 import { FTimespan } from "../modules/CoreUObject/structs/Timespan";
 import { FTransform } from "../modules/CoreUObject/structs/Transform";
 import { FTwoVectors } from "../modules/CoreUObject/structs/TwoVectors";
@@ -22,7 +21,7 @@ import { FVector3 } from "../modules/CoreUObject/structs/Vector3";
 import { FVector4 } from "../modules/CoreUObject/structs/Vector4";
 import { NAME_CoreUObject } from "../modules/names";
 import { EPropertyType } from "../properties/enums";
-import { NativeStructs } from "../properties/NativeStructs";
+import type { NativeStructs } from "../properties/NativeStructs";
 import type { FPropertyTypeName } from "../properties/PropertyTag";
 import { FPropertyTag } from "../properties/PropertyTag";
 import type { MapValue, NumericValue, PropertyValue, SetValue } from "../properties/TaggedProperty";

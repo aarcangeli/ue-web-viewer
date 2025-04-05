@@ -1,5 +1,5 @@
 import type { AssetReader } from "../../../AssetReader";
-import { FName } from "../../../types/Name";
+import type { FName } from "../../../types/Name";
 
 type FPerPlatformValue = {
   platform: FName;

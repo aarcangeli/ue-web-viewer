@@ -187,7 +187,7 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
           </CollapsableSection>
           <CollapsableSection title={"Added elements"} name={`size = ${value.value.length}`}>
             {value.value.map((item, index) => {
-              let [key, value] = item;
+              const [key, value] = item;
               switch (key.type) {
                 case "boolean":
                 case "numeric":

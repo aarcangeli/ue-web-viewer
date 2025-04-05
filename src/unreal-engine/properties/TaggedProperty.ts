@@ -2,7 +2,7 @@ import type { UObject } from "../modules/CoreUObject/objects/Object";
 import type { FName } from "../types/Name";
 import type { FText } from "../types/Text";
 
-import { NativeStructs } from "./NativeStructs";
+import type { NativeStructs } from "./NativeStructs";
 import type { FPropertyTag } from "./PropertyTag";
 
 export class TaggedProperty {

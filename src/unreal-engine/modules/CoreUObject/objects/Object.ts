@@ -9,7 +9,7 @@ import { readTaggedProperties } from "../../../serialization/properties-serializ
 import type { SerializationStatistics } from "../../../serialization/SerializationStatistics";
 import type { FName } from "../../../types/Name";
 import { FGuid } from "../structs/Guid";
-import { FSoftObjectPath } from "../structs/SoftObjectPath";
+import type { FSoftObjectPath } from "../structs/SoftObjectPath";
 
 import type { UClass } from "./Class";
 

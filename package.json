@@ -17,7 +17,7 @@
     "eslint": "eslint . --fix",
     "eslint:dump-config": "node eslint.config.js --dump",
     "eslint:inspector": "eslint-config-inspector",
-    "pre-commit": "yarn typecheck && yarn eslint && yarn test"
+    "pre-commit": "yarn typecheck && yarn eslint && yarn test && pre-commit run -a"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
