@@ -26,7 +26,7 @@ export function ObjectPreview(props: { object: UObject }) {
           <IndentedRow title={"Class"}>{exportedObjects.class.fullName}</IndentedRow>
           <IndentedRow title={"Object Guid"}>{exportedObjects.objectGuid?.toString() || "None"}</IndentedRow>
         </CollapsableSection>
-        <CollapsableSection name={"Properties"}>
+        <CollapsableSection name={"Serialized Properties"}>
           {exportedObjects.properties.map((property, index) =>
             renderValue(index, property.nameString, property.value, makePropertyIcon(property.tag)),
           )}
