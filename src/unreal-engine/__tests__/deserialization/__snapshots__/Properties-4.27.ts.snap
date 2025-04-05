@@ -2018,8 +2018,12 @@ TaggedProperty {
     "typeName": "StructProperty(SoftObjectPath)",
   },
   "value": {
-    "message": "Cannot read property: Error: Invariant failed: Invalid export index 7 (type: StructProperty(SoftObjectPath))",
-    "type": "error",
+    "type": "native-struct",
+    "value": FSoftObjectPath {
+      "assetName": "BasicProperties",
+      "packageName": "/Script/SampleProject",
+      "subPathString": "",
+    },
   },
 }
 `;
@@ -2046,8 +2050,12 @@ TaggedProperty {
     "typeName": "StructProperty(SoftClassPath)",
   },
   "value": {
-    "message": "Found 8 bytes found at the end of property value (type: StructProperty(SoftClassPath)).",
-    "type": "error",
+    "type": "native-struct",
+    "value": FSoftObjectPath {
+      "assetName": "Actor",
+      "packageName": "/Script/Engine",
+      "subPathString": "",
+    },
   },
 }
 `;

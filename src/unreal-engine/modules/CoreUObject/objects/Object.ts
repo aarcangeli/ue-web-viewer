@@ -9,6 +9,7 @@ import { readTaggedProperties } from "../../../serialization/properties-serializ
 import type { SerializationStatistics } from "../../../serialization/SerializationStatistics";
 import type { FName } from "../../../types/Name";
 import { FGuid } from "../structs/Guid";
+import { FSoftObjectPath } from "../structs/SoftObjectPath";
 
 import type { UClass } from "./Class";
 
@@ -17,7 +18,10 @@ import type { UClass } from "./Class";
  */
 const ValidObjectName = /^[^.:]+$/;
 
-export type ObjectResolver = (reader: AssetReader) => UObject | null;
+export interface ObjectResolver {
+  resolveObject: (reader: AssetReader) => UObject | null;
+  resolveSoftObject: (reader: AssetReader) => FSoftObjectPath;
+}
 
 export type ObjectConstructionParams = {
   clazz: UClass;

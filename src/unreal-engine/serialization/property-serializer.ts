@@ -128,9 +128,8 @@ function makeStructReader(generator: (reader: AssetReader) => NativeStructs): Pr
 }
 
 function softObjectPathSerializer(reader: AssetReader, resolver: ObjectResolver): PropertyValue {
-  const object = resolver(reader);
-  const objectPath = object ? FSoftObjectPath.fromObject(object) : FSoftObjectPath.empty();
-  return { type: "native-struct", value: objectPath };
+  const softObject = resolver.resolveSoftObject(reader);
+  return { type: "native-struct", value: softObject };
 }
 
 function makeLargeWorld(
@@ -266,7 +265,7 @@ function findFallbackSerializer(
     }
   });
   if (foundValue) {
-    console.log(`Guess struct type: ${packageName}.${structName}`);
+    console.log(`Guess struct type: '${structName}' => '${packageName}'`);
     const serializer = convertSerializer(fileVersionUE5, foundValue);
     if (serializer) {
       return serializer;
@@ -460,7 +459,10 @@ const readerByPropertyType = (() => {
   table[EPropertyType.StrProperty] = (reader) => ({ type: "string", value: reader.readString() });
   table[EPropertyType.TextProperty] = (reader) => ({ type: "text", value: FText.fromStream(reader) });
 
-  table[EPropertyType.ObjectProperty] = (reader, resolver) => ({ type: "object", object: resolver(reader) });
+  table[EPropertyType.ObjectProperty] = (reader, resolver) => ({
+    type: "object",
+    object: resolver.resolveObject(reader),
+  });
 
   return table;
 })();

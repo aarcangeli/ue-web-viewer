@@ -6,6 +6,7 @@ import type { UClass } from "../modules/CoreUObject/objects/Class";
 import type { ObjectConstructionParams, ObjectResolver } from "../modules/CoreUObject/objects/Object";
 import { ELoadingPhase, UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
 import { UPackage } from "../modules/CoreUObject/objects/Package";
+import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
 import { CLASS_Package, UnknownClass } from "../modules/global-instances";
 import { makeNameFromParts } from "../path-utils";
 import { FName, NAME_None } from "../types/Name";
@@ -39,6 +40,7 @@ export class Asset {
   readonly summary: Readonly<FPackageFileSummary> = new FPackageFileSummary();
   readonly imports: ReadonlyArray<FObjectImport> = [];
   readonly exports: ReadonlyArray<FObjectExport> = [];
+  readonly softObjects: ReadonlyArray<FSoftObjectPath> = [];
 
   /// Cache of exported objects.
   private readonly _exportedObjects: Array<WeakObjectRef | symbol> = [];
@@ -83,6 +85,7 @@ export class Asset {
     // Read other tables
     this.imports = readImportMap(reader, summary);
     this.exports = readExportMap(reader, summary);
+    this.softObjects = readSoftObjectsMap(reader, summary);
 
     // Create the package object
     this.package = new UPackage({
@@ -303,9 +306,20 @@ export class Asset {
       this._reader.seek(objectExport.SerialOffset);
       const subReader = this._reader.subReader(objectExport.SerialSize);
 
-      const resolver: ObjectResolver = (reader) => {
-        const index = reader.readInt32();
-        return index ? this.getObjectByIndex(index, false) : null;
+      const resolver: ObjectResolver = {
+        resolveObject: (reader: AssetReader) => {
+          const index = reader.readInt32();
+          return index ? this.getObjectByIndex(index, false) : null;
+        },
+        resolveSoftObject: (reader: AssetReader) => {
+          if (this.softObjects.length) {
+            const index = reader.readInt32();
+            invariant(index >= 0 && index < this.softObjects.length, `Invalid soft object index ${index}`);
+            return this.softObjects[index];
+          } else {
+            return FSoftObjectPath.fromStream(reader);
+          }
+        },
       };
 
       if (objectExport.objectFlags & EObjectFlags.RF_ClassDefaultObject) {
@@ -380,6 +394,21 @@ function readExportMap(reader: AssetReader, summary: FPackageFileSummary) {
     exports.push(value);
   }
   return exports;
+}
+
+function readSoftObjectsMap(reader: AssetReader, summary: FPackageFileSummary) {
+  if (!summary.SoftObjectPathsCount) {
+    return [];
+  }
+
+  reader.seek(summary.SoftObjectPathsOffset);
+
+  const softObjects = [];
+  for (let i = 0; i < summary.SoftObjectPathsCount; i++) {
+    const value = FSoftObjectPath.fromStream(reader);
+    softObjects.push(value);
+  }
+  return softObjects;
 }
 
 function isExportIndex(index: number) {

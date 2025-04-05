@@ -32,8 +32,10 @@ export function extendJest() {
 }
 
 /**
- * Validate that all properties are valid
- * @param object
+ * Matches all properties of the given object against their stored snapshots.
+ * This guarantees consistent serialization, even for properties from older versions.
+ *
+ * @param object The object whose properties should be checked against snapshots.
  */
 export function matchSnapshots(object: UObject) {
   for (const property of object.properties) {

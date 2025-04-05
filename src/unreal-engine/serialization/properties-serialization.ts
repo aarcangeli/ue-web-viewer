@@ -29,9 +29,6 @@ export function readTaggedProperties(reader: AssetReader, isUClass: boolean, res
     if (tag.name.isNone) {
       break;
     }
-    if (tag.name.equals("StructSet")) {
-      const t = 0;
-    }
 
     properties.push(readTaggedProperty(tag, reader, resolver));
   }
