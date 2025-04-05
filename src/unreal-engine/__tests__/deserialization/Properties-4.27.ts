@@ -21,11 +21,3 @@ describe("BP_ContainerProperties", () => {
     matchSnapshots(object);
   });
 });
-
-describe("BP_NativeStructProperties", () => {
-  test("Properties", () => {
-    const asset = readAsset(`${version}/Content/BP_NativeStructProperties.uasset`);
-    const object = asset.getByFullName("BP_NativeStructProperties.Default__BP_NativeStructProperties_C");
-    matchSnapshots(object);
-  });
-});

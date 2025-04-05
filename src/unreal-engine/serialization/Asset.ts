@@ -26,7 +26,7 @@ const RecursiveCheck = Symbol("RecursiveCheck");
 
 /**
  * This class permits to load data from an asset file.
- * An asset is composed by a root file (uasset or uexp) and an optional uexp file.
+ * An asset is composed by a root file (uasset or umap) and an optional uexp file.
  *
  * The first time an object is requested, it is loaded from the file and weakly cached.
  * All referenced objects are created empty, and are filled when requested.
@@ -53,14 +53,7 @@ export class Asset {
    */
   readonly package: UPackage;
 
-  /**
-   * Construct an asset from the given package name and reader.
-   * The created asset retains a reference to the reader to lazily load objects when needed.
-   * @param packageName The name of the package.
-   * @param reader The reader to read the package content.
-   * @param _reload Quick & dirty way to reload the reader.
-   */
-  constructor(
+  private constructor(
     packageName: string,
     reader: FullAssetReader,
     private _reload: (() => Promise<FullAssetReader>) | null = null,
@@ -93,6 +86,21 @@ export class Asset {
       name: FName.fromString(packageName),
       flags: 0,
     });
+  }
+
+  /**
+   * Construct an asset from the given package name and reader.
+   * The created asset retains a reference to the reader to lazily load objects when needed.
+   * @param packageName The name of the package.
+   * @param reader The reader to read the package content.
+   * @param reload Quick & dirty way to reload an asset when requested.
+   */
+  static fromStream(
+    packageName: string,
+    reader: FullAssetReader,
+    reload: (() => Promise<FullAssetReader>) | null = null,
+  ): Asset {
+    return new Asset(packageName, reader, reload);
   }
 
   makeFullNameByIndex(index: number): string {
@@ -197,7 +205,7 @@ export class Asset {
 
   private findIndexByFullName(fullName: string) {
     return this.exports.findIndex(
-      (e, index) => this.makeFullNameByIndex(index + 1).toLowerCase() === fullName.toLowerCase(),
+      (_, index) => this.makeFullNameByIndex(index + 1).toLowerCase() === fullName.toLowerCase(),
     );
   }
 

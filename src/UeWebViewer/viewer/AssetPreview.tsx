@@ -11,6 +11,7 @@ import { Icon } from "@chakra-ui/icons";
 import { makePropertyIcon } from "./MakePropertyIcon";
 import type { ITextData } from "../../unreal-engine/types/Text";
 import { ETextHistoryType, FTextHistory_Base } from "../../unreal-engine/types/Text";
+import { FPerPlatformFloat } from "../../unreal-engine/modules/CoreUObject/structs/PerPlatformFloat";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
@@ -104,6 +105,18 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
           </CollapsableSection>
         );
       }
+      if (value.value instanceof FPerPlatformFloat) {
+        return (
+          <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value.value)}>
+            <IndentedRow title={"Default"}>{value.value.Default}</IndentedRow>
+            {value.value.PerPlatform.map((item, index) => (
+              <IndentedRow key={index} title={`Override [ ${item.platform} ]`}>
+                {String(item.value)}
+              </IndentedRow>
+            ))}
+          </CollapsableSection>
+        );
+      }
       return (
         <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value.value)}>
           {Object.keys(value.value).map((subKey, index) => (
@@ -184,9 +197,9 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
                   return renderValue(index, `Key [ ${key.value} ]`, value);
                 default:
                   return (
-                    <CollapsableSection name={`Entry ${index}`}>
-                      {renderValue(index, "Key", key)}
-                      {renderValue(index, "Value", value)}
+                    <CollapsableSection key={index} name={`Entry ${index}`}>
+                      {renderValue(0, "Key", key)}
+                      {renderValue(1, "Value", value)}
                     </CollapsableSection>
                   );
               }

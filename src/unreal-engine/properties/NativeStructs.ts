@@ -4,6 +4,7 @@ import type { FFrameNumber } from "../modules/CoreUObject/structs/FrameNumber";
 import type { FGuid } from "../modules/CoreUObject/structs/Guid";
 import type { FLinearColor } from "../modules/CoreUObject/structs/LinearColor";
 import type { FMatrix44 } from "../modules/CoreUObject/structs/Matrix44";
+import { FPerPlatformFloat } from "../modules/CoreUObject/structs/PerPlatformFloat";
 import type { FRotator } from "../modules/CoreUObject/structs/Rotator";
 import type { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
 import type { FTransform } from "../modules/CoreUObject/structs/Transform";
@@ -23,6 +24,7 @@ export type NativeStructs =
   | FGuid
   | FLinearColor
   | FMatrix44
+  | FPerPlatformFloat
   | FRotator
   | FSoftObjectPath
   | FTransform

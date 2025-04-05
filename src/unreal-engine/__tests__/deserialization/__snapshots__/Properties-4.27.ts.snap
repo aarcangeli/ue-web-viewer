@@ -51,7 +51,7 @@ TaggedProperty {
   },
   "value": {
     "type": "numeric",
-    "value": 123,
+    "value": 10,
   },
 }
 `;
@@ -79,7 +79,7 @@ TaggedProperty {
   },
   "value": {
     "type": "numeric",
-    "value": 123,
+    "value": 11,
   },
 }
 `;
@@ -107,7 +107,7 @@ TaggedProperty {
   },
   "value": {
     "type": "numeric",
-    "value": 123,
+    "value": 12,
   },
 }
 `;
@@ -135,7 +135,7 @@ TaggedProperty {
   },
   "value": {
     "type": "numeric",
-    "value": 123,
+    "value": 13,
   },
 }
 `;
@@ -191,7 +191,7 @@ TaggedProperty {
   },
   "value": {
     "type": "numeric",
-    "value": 123,
+    "value": 15,
   },
 }
 `;
@@ -219,7 +219,7 @@ TaggedProperty {
   },
   "value": {
     "type": "numeric",
-    "value": 123,
+    "value": 16,
   },
 }
 `;
@@ -247,7 +247,7 @@ TaggedProperty {
   },
   "value": {
     "type": "numeric",
-    "value": 123,
+    "value": 17,
   },
 }
 `;
@@ -275,7 +275,7 @@ TaggedProperty {
   },
   "value": {
     "type": "numeric",
-    "value": 123,
+    "value": 40,
   },
 }
 `;
@@ -303,7 +303,7 @@ TaggedProperty {
   },
   "value": {
     "type": "numeric",
-    "value": 123,
+    "value": 50,
   },
 }
 `;
@@ -438,6 +438,98 @@ TaggedProperty {
       "enumName": null,
       "innerType": null,
       "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "SoftObjectPath",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "SoftObjectPath",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 12,
+    "typeName": "StructProperty(SoftObjectPath)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FSoftObjectPath {
+      "assetName": "BasicProperties",
+      "packageName": "/Script/SampleProject",
+      "subPathString": "",
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 17`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "SoftClassPath",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "SoftClassPath",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 12,
+    "typeName": "StructProperty(SoftClassPath)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FSoftObjectPath {
+      "assetName": "Actor",
+      "packageName": "/Script/Engine",
+      "subPathString": "",
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 18`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": null,
+      "structName": null,
+      "type": "ObjectProperty",
+      "valueType": null,
+    },
+    "name": "SubclassOf",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 4,
+    "typeName": "ObjectProperty",
+  },
+  "value": {
+    "object": [ref] /Script/Engine.ActorChannel,
+    "type": "object",
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 19`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
       "structName": "SampleStruct",
       "type": "StructProperty",
       "valueType": null,
@@ -528,6 +620,726 @@ TaggedProperty {
         },
       },
     ],
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 20`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Guid",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Guid",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 16,
+    "typeName": "StructProperty(Guid)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": "{1765abb8-4dec-d09d-cfdc-6e85ae694a92}",
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 21`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "IntPoint",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "IntPoint",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 8,
+    "typeName": "StructProperty(IntPoint)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FVector2 {
+      "X": 1,
+      "Y": 2,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 22`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "IntVector",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "IntVector",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 12,
+    "typeName": "StructProperty(IntVector)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FVector3 {
+      "X": 3,
+      "Y": 4,
+      "Z": 5,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 23`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Vector2D",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Vector2D",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 8,
+    "typeName": "StructProperty(Vector2D)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FVector2 {
+      "X": 6,
+      "Y": 7,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 24`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Vector",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Vector",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 12,
+    "typeName": "StructProperty(Vector)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FVector3 {
+      "X": 8,
+      "Y": 9,
+      "Z": 10,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 25`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Vector4",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Vector4",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 16,
+    "typeName": "StructProperty(Vector4)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FVector4 {
+      "W": 14,
+      "X": 11,
+      "Y": 12,
+      "Z": 13,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 26`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "TwoVectors",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "TwoVectors",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 24,
+    "typeName": "StructProperty(TwoVectors)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FTwoVectors {
+      "V1": FVector3 {
+        "X": 15,
+        "Y": 17,
+        "Z": 18,
+      },
+      "V2": FVector3 {
+        "X": 19,
+        "Y": 20,
+        "Z": 21,
+      },
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 27`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Matrix",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Matrix",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 64,
+    "typeName": "StructProperty(Matrix)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FMatrix44 {
+      "matrix": [
+        7,
+        0,
+        0,
+        0,
+        0,
+        8,
+        -0,
+        0,
+        -0,
+        0,
+        9,
+        0,
+        1,
+        2,
+        3,
+        1,
+      ],
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 28`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Plane",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Plane",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 16,
+    "typeName": "StructProperty(Plane)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FPlane {
+      "W": 1,
+      "X": 2,
+      "Y": 3,
+      "Z": 4,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 29`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Transform",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Transform",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 195,
+    "typeName": "StructProperty(Transform)",
+  },
+  "value": {
+    "type": "struct",
+    "value": [
+      TaggedProperty {
+        "tag": FPropertyTag {
+          "arrayIndex": 0,
+          "boolVal": false,
+          "experimentalOverridableLogic": false,
+          "legacyData": FLegacyPropertyTag {
+            "enumName": null,
+            "innerType": null,
+            "structGuid": "{00000000-0000-0000-0000-000000000000}",
+            "structName": "Quat",
+            "type": "StructProperty",
+            "valueType": null,
+          },
+          "name": "Rotation",
+          "overrideOperation": 0,
+          "propertyGuid": null,
+          "serializeType": 1,
+          "size": 16,
+          "typeName": "StructProperty(Quat)",
+        },
+        "value": {
+          "type": "native-struct",
+          "value": FQuat {
+            "W": 0.6830129027366638,
+            "X": 0.18301211297512054,
+            "Y": -0.5000002384185791,
+            "Z": 0.4999997019767761,
+          },
+        },
+      },
+      TaggedProperty {
+        "tag": FPropertyTag {
+          "arrayIndex": 0,
+          "boolVal": false,
+          "experimentalOverridableLogic": false,
+          "legacyData": FLegacyPropertyTag {
+            "enumName": null,
+            "innerType": null,
+            "structGuid": "{00000000-0000-0000-0000-000000000000}",
+            "structName": "Vector",
+            "type": "StructProperty",
+            "valueType": null,
+          },
+          "name": "Translation",
+          "overrideOperation": 0,
+          "propertyGuid": null,
+          "serializeType": 1,
+          "size": 12,
+          "typeName": "StructProperty(Vector)",
+        },
+        "value": {
+          "type": "native-struct",
+          "value": FVector3 {
+            "X": 1,
+            "Y": 2,
+            "Z": 3,
+          },
+        },
+      },
+      TaggedProperty {
+        "tag": FPropertyTag {
+          "arrayIndex": 0,
+          "boolVal": false,
+          "experimentalOverridableLogic": false,
+          "legacyData": FLegacyPropertyTag {
+            "enumName": null,
+            "innerType": null,
+            "structGuid": "{00000000-0000-0000-0000-000000000000}",
+            "structName": "Vector",
+            "type": "StructProperty",
+            "valueType": null,
+          },
+          "name": "Scale3D",
+          "overrideOperation": 0,
+          "propertyGuid": null,
+          "serializeType": 1,
+          "size": 12,
+          "typeName": "StructProperty(Vector)",
+        },
+        "value": {
+          "type": "native-struct",
+          "value": FVector3 {
+            "X": 7,
+            "Y": 8,
+            "Z": 9,
+          },
+        },
+      },
+    ],
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 30`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Rotator",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Rotator",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 12,
+    "typeName": "StructProperty(Rotator)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FRotator {
+      "Pitch": 2,
+      "Roll": 1,
+      "Yaw": 3,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 31`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Quat",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Quat",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 16,
+    "typeName": "StructProperty(Quat)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FQuat {
+      "W": 0.683012843132019,
+      "X": 0.18301235139369965,
+      "Y": -0.49999985098838806,
+      "Z": 0.5,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 32`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Box",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Box",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 25,
+    "typeName": "StructProperty(Box)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FBox {
+      "IsValid": false,
+      "Max": FVector3 {
+        "X": 4,
+        "Y": 5,
+        "Z": 6,
+      },
+      "Min": FVector3 {
+        "X": 1,
+        "Y": 2,
+        "Z": 3,
+      },
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 33`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "LinearColor",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "LinearColor",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 16,
+    "typeName": "StructProperty(LinearColor)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FLinearColor {
+      "A": 4,
+      "B": 3,
+      "G": 1,
+      "R": 2,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 34`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Color",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Color",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 4,
+    "typeName": "StructProperty(Color)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FColor {
+      "A": 0,
+      "B": 221,
+      "G": 81,
+      "R": 221,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 35`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "DateTime",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "DateTime",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 8,
+    "typeName": "StructProperty(DateTime)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FDateTime {
+      "Ticks": 638642891440000000n,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 36`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "Timespan",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "Timespan",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 8,
+    "typeName": "StructProperty(Timespan)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FTimespan {
+      "Ticks": 296698052960343400n,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 37`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "FrameNumber",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "FrameNumber",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 4,
+    "typeName": "StructProperty(FrameNumber)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FFrameNumber {
+      "Value": 666,
+    },
+  },
+}
+`;
+
+exports[`BP_BasicProperties Properties 38`] = `
+TaggedProperty {
+  "tag": FPropertyTag {
+    "arrayIndex": 0,
+    "boolVal": false,
+    "experimentalOverridableLogic": false,
+    "legacyData": FLegacyPropertyTag {
+      "enumName": null,
+      "innerType": null,
+      "structGuid": "{00000000-0000-0000-0000-000000000000}",
+      "structName": "PerPlatformFloat",
+      "type": "StructProperty",
+      "valueType": null,
+    },
+    "name": "PerPlatformFloat",
+    "overrideOperation": 0,
+    "propertyGuid": null,
+    "serializeType": 1,
+    "size": 24,
+    "typeName": "StructProperty(PerPlatformFloat)",
+  },
+  "value": {
+    "type": "native-struct",
+    "value": FPerPlatformFloat {
+      "Default": 20,
+      "PerPlatform": [
+        {
+          "platform": "IOS",
+          "value": 40,
+        },
+      ],
+    },
   },
 }
 `;
@@ -849,7 +1661,7 @@ TaggedProperty {
         "type": "object",
       },
       {
-        "object": [ref] /Script/SampleProject.NativeStructProperties,
+        "object": [ref] BP_ContainerProperties.BP_ContainerProperties,
         "type": "object",
       },
     ],
@@ -1060,7 +1872,7 @@ TaggedProperty {
         "type": "object",
       },
       {
-        "object": [ref] /Game/BP_NativeStructProperties.BP_NativeStructProperties,
+        "object": [ref] BP_ContainerProperties.BP_ContainerProperties,
         "type": "object",
       },
     ],
@@ -1249,7 +2061,7 @@ TaggedProperty {
       ],
       [
         {
-          "object": [ref] /Game/BP_NativeStructProperties.BP_NativeStructProperties,
+          "object": [ref] BP_ContainerProperties.BP_ContainerProperties,
           "type": "object",
         },
         {
@@ -1308,782 +2120,6 @@ TaggedProperty {
         },
       ],
     ],
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 1`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Guid",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Guid",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 16,
-    "typeName": "StructProperty(Guid)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": "{88dc80e5-4346-e7ac-6a47-bf9978182d6f}",
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 2`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "IntPoint",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "IntPoint",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 8,
-    "typeName": "StructProperty(IntPoint)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FVector2 {
-      "X": 1,
-      "Y": 2,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 3`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "IntVector",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "IntVector",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 12,
-    "typeName": "StructProperty(IntVector)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FVector3 {
-      "X": 1,
-      "Y": 2,
-      "Z": 3,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 4`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Vector2D",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Vector2D",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 8,
-    "typeName": "StructProperty(Vector2D)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FVector2 {
-      "X": 1,
-      "Y": 2,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 5`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Vector",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Vector",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 12,
-    "typeName": "StructProperty(Vector)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FVector3 {
-      "X": 1,
-      "Y": 2,
-      "Z": 3,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 6`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Vector4",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Vector4",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 16,
-    "typeName": "StructProperty(Vector4)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FVector4 {
-      "W": 4,
-      "X": 1,
-      "Y": 2,
-      "Z": 3,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 7`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "TwoVectors",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "TwoVectors",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 24,
-    "typeName": "StructProperty(TwoVectors)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FTwoVectors {
-      "V1": FVector3 {
-        "X": 1,
-        "Y": 2,
-        "Z": 3,
-      },
-      "V2": FVector3 {
-        "X": 4,
-        "Y": 5,
-        "Z": 6,
-      },
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 8`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Matrix",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Matrix",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 64,
-    "typeName": "StructProperty(Matrix)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FMatrix44 {
-      "matrix": [
-        7,
-        0,
-        0,
-        0,
-        0,
-        8,
-        -0,
-        0,
-        -0,
-        0,
-        9,
-        0,
-        1,
-        2,
-        3,
-        1,
-      ],
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 9`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Plane",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Plane",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 16,
-    "typeName": "StructProperty(Plane)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FPlane {
-      "W": 1,
-      "X": 2,
-      "Y": 3,
-      "Z": 4,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 10`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Transform",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Transform",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 195,
-    "typeName": "StructProperty(Transform)",
-  },
-  "value": {
-    "type": "struct",
-    "value": [
-      TaggedProperty {
-        "tag": FPropertyTag {
-          "arrayIndex": 0,
-          "boolVal": false,
-          "experimentalOverridableLogic": false,
-          "legacyData": FLegacyPropertyTag {
-            "enumName": null,
-            "innerType": null,
-            "structGuid": "{00000000-0000-0000-0000-000000000000}",
-            "structName": "Quat",
-            "type": "StructProperty",
-            "valueType": null,
-          },
-          "name": "Rotation",
-          "overrideOperation": 0,
-          "propertyGuid": null,
-          "serializeType": 1,
-          "size": 16,
-          "typeName": "StructProperty(Quat)",
-        },
-        "value": {
-          "type": "native-struct",
-          "value": FQuat {
-            "W": 0.683012843132019,
-            "X": 0.18301235139369965,
-            "Y": -0.49999985098838806,
-            "Z": 0.5,
-          },
-        },
-      },
-      TaggedProperty {
-        "tag": FPropertyTag {
-          "arrayIndex": 0,
-          "boolVal": false,
-          "experimentalOverridableLogic": false,
-          "legacyData": FLegacyPropertyTag {
-            "enumName": null,
-            "innerType": null,
-            "structGuid": "{00000000-0000-0000-0000-000000000000}",
-            "structName": "Vector",
-            "type": "StructProperty",
-            "valueType": null,
-          },
-          "name": "Translation",
-          "overrideOperation": 0,
-          "propertyGuid": null,
-          "serializeType": 1,
-          "size": 12,
-          "typeName": "StructProperty(Vector)",
-        },
-        "value": {
-          "type": "native-struct",
-          "value": FVector3 {
-            "X": 1,
-            "Y": 2,
-            "Z": 3,
-          },
-        },
-      },
-      TaggedProperty {
-        "tag": FPropertyTag {
-          "arrayIndex": 0,
-          "boolVal": false,
-          "experimentalOverridableLogic": false,
-          "legacyData": FLegacyPropertyTag {
-            "enumName": null,
-            "innerType": null,
-            "structGuid": "{00000000-0000-0000-0000-000000000000}",
-            "structName": "Vector",
-            "type": "StructProperty",
-            "valueType": null,
-          },
-          "name": "Scale3D",
-          "overrideOperation": 0,
-          "propertyGuid": null,
-          "serializeType": 1,
-          "size": 12,
-          "typeName": "StructProperty(Vector)",
-        },
-        "value": {
-          "type": "native-struct",
-          "value": FVector3 {
-            "X": 7,
-            "Y": 8,
-            "Z": 9,
-          },
-        },
-      },
-    ],
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 11`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Rotator",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Rotator",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 12,
-    "typeName": "StructProperty(Rotator)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FRotator {
-      "Pitch": 2,
-      "Roll": 1,
-      "Yaw": 3,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 12`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Quat",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Quat",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 16,
-    "typeName": "StructProperty(Quat)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FQuat {
-      "W": 0.6830127835273743,
-      "X": 0.1830124706029892,
-      "Y": -0.49999991059303284,
-      "Z": 0.4999999701976776,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 13`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Box",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Box",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 25,
-    "typeName": "StructProperty(Box)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FBox {
-      "IsValid": false,
-      "Max": FVector3 {
-        "X": 4,
-        "Y": 5,
-        "Z": 6,
-      },
-      "Min": FVector3 {
-        "X": 1,
-        "Y": 2,
-        "Z": 3,
-      },
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 14`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "LinearColor",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "LinearColor",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 16,
-    "typeName": "StructProperty(LinearColor)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FLinearColor {
-      "A": 4,
-      "B": 3,
-      "G": 1,
-      "R": 2,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 15`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Color",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Color",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 4,
-    "typeName": "StructProperty(Color)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FColor {
-      "A": 4,
-      "B": 3,
-      "G": 2,
-      "R": 1,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 16`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "DateTime",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "DateTime",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 8,
-    "typeName": "StructProperty(DateTime)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FDateTime {
-      "Ticks": 638642891440000000n,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 17`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "Timespan",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "Timespan",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 8,
-    "typeName": "StructProperty(Timespan)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FTimespan {
-      "Ticks": 296698052960343400n,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 18`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "FrameNumber",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "FrameNumber",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 4,
-    "typeName": "StructProperty(FrameNumber)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FFrameNumber {
-      "Value": 666,
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 19`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "SoftObjectPath",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "SoftObjectPath",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 12,
-    "typeName": "StructProperty(SoftObjectPath)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FSoftObjectPath {
-      "assetName": "BasicProperties",
-      "packageName": "/Script/SampleProject",
-      "subPathString": "",
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 20`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": "{00000000-0000-0000-0000-000000000000}",
-      "structName": "SoftClassPath",
-      "type": "StructProperty",
-      "valueType": null,
-    },
-    "name": "SoftClassPath",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 12,
-    "typeName": "StructProperty(SoftClassPath)",
-  },
-  "value": {
-    "type": "native-struct",
-    "value": FSoftObjectPath {
-      "assetName": "Actor",
-      "packageName": "/Script/Engine",
-      "subPathString": "",
-    },
-  },
-}
-`;
-
-exports[`BP_NativeStructProperties Properties 21`] = `
-TaggedProperty {
-  "tag": FPropertyTag {
-    "arrayIndex": 0,
-    "boolVal": false,
-    "experimentalOverridableLogic": false,
-    "legacyData": FLegacyPropertyTag {
-      "enumName": null,
-      "innerType": null,
-      "structGuid": null,
-      "structName": null,
-      "type": "ObjectProperty",
-      "valueType": null,
-    },
-    "name": "SubclassOf",
-    "overrideOperation": 0,
-    "propertyGuid": null,
-    "serializeType": 1,
-    "size": 4,
-    "typeName": "ObjectProperty",
-  },
-  "value": {
-    "object": [ref] /Script/Engine.ActorChannel,
-    "type": "object",
   },
 }
 `;

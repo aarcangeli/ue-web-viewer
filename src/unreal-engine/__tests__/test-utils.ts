@@ -30,5 +30,5 @@ export function readAsset(filename: string) {
   const fileData = fs.readFileSync(fullPath);
   const reader = new FullAssetReader(new DataView(fileData.buffer, 0, fileData.byteLength));
   const packageName = path.basename(filename, path.extname(filename));
-  return new Asset(packageName, reader);
+  return Asset.fromStream(packageName, reader);
 }

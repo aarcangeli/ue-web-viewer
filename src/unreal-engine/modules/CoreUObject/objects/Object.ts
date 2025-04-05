@@ -253,6 +253,6 @@ export class WeakObjectRef<T extends UObject = UObject> {
    * Retrieve the referenced object or null if it has been garbage collected.
    */
   deref(): T | null {
-    return (this._ref.deref() as T) ?? null;
+    return this._ref.deref() ?? null;
   }
 }
