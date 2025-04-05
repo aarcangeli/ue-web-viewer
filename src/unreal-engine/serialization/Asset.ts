@@ -1,19 +1,21 @@
-import type { AssetReader, FullAssetReader } from "../AssetReader";
-import { FPackageFileSummary } from "./PackageFileSummary";
-import { FObjectImport } from "./ObjectImport";
-import { EObjectFlags, FObjectExport } from "./ObjectExport";
 import invariant from "tiny-invariant";
-import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
-import { FName, NAME_None } from "../types/Name";
+
 import { removeExtension } from "../../utils/string-utils";
-import type { ObjectConstructionParams, ObjectResolver } from "../modules/CoreUObject/objects/Object";
-import { ELoadingPhase } from "../modules/CoreUObject/objects/Object";
-import { UObject, WeakObject } from "../modules/CoreUObject/objects/Object";
-import { UPackage } from "../modules/CoreUObject/objects/Package";
-import { CLASS_Package, UnknownClass } from "../modules/global-instances";
+import type { AssetReader, FullAssetReader } from "../AssetReader";
 import type { UClass } from "../modules/CoreUObject/objects/Class";
-import { SerializationStatistics } from "./SerializationStatistics";
+import type { ObjectConstructionParams, ObjectResolver } from "../modules/CoreUObject/objects/Object";
+import { ELoadingPhase, UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
+import { UPackage } from "../modules/CoreUObject/objects/Package";
+import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
+import { CLASS_Package, UnknownClass } from "../modules/global-instances";
 import { makeNameFromParts } from "../path-utils";
+import { FName, NAME_None } from "../types/Name";
+import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
+
+import { EObjectFlags, FObjectExport } from "./ObjectExport";
+import { FObjectImport } from "./ObjectImport";
+import { FPackageFileSummary } from "./PackageFileSummary";
+import { SerializationStatistics } from "./SerializationStatistics";
 
 /**
  * Mock object which represents an object imported from another package.
@@ -24,7 +26,7 @@ const RecursiveCheck = Symbol("RecursiveCheck");
 
 /**
  * This class permits to load data from an asset file.
- * An asset is composed by a root file (uasset or uexp) and an optional uexp file.
+ * An asset is composed by a root file (uasset or umap) and an optional uexp file.
  *
  * The first time an object is requested, it is loaded from the file and weakly cached.
  * All referenced objects are created empty, and are filled when requested.
@@ -38,26 +40,20 @@ export class Asset {
   readonly summary: Readonly<FPackageFileSummary> = new FPackageFileSummary();
   readonly imports: ReadonlyArray<FObjectImport> = [];
   readonly exports: ReadonlyArray<FObjectExport> = [];
+  readonly softObjects: ReadonlyArray<FSoftObjectPath> = [];
 
   /// Cache of exported objects.
-  private readonly _exportedObjects: Array<WeakObject | symbol> = [];
+  private readonly _exportedObjects: Array<WeakObjectRef | symbol> = [];
 
   /// Cache of imported objects.
-  private readonly _importedObjects: Array<WeakObject> = [];
+  private readonly _importedObjects: Array<WeakObjectRef> = [];
 
   /**
    * The package object.
    */
   readonly package: UPackage;
 
-  /**
-   * Construct an asset from the given package name and reader.
-   * The created asset retains a reference to the reader to lazily load objects when needed.
-   * @param packageName The name of the package.
-   * @param reader The reader to read the package content.
-   * @param _reload Quick & dirty way to reload the reader.
-   */
-  constructor(
+  private constructor(
     packageName: string,
     reader: FullAssetReader,
     private _reload: (() => Promise<FullAssetReader>) | null = null,
@@ -82,6 +78,7 @@ export class Asset {
     // Read other tables
     this.imports = readImportMap(reader, summary);
     this.exports = readExportMap(reader, summary);
+    this.softObjects = readSoftObjectsMap(reader, summary);
 
     // Create the package object
     this.package = new UPackage({
@@ -89,6 +86,21 @@ export class Asset {
       name: FName.fromString(packageName),
       flags: 0,
     });
+  }
+
+  /**
+   * Construct an asset from the given package name and reader.
+   * The created asset retains a reference to the reader to lazily load objects when needed.
+   * @param packageName The name of the package.
+   * @param reader The reader to read the package content.
+   * @param reload Quick & dirty way to reload an asset when requested.
+   */
+  static fromStream(
+    packageName: string,
+    reader: FullAssetReader,
+    reload: (() => Promise<FullAssetReader>) | null = null,
+  ): Asset {
+    return new Asset(packageName, reader, reload);
   }
 
   makeFullNameByIndex(index: number): string {
@@ -193,14 +205,14 @@ export class Asset {
 
   private findIndexByFullName(fullName: string) {
     return this.exports.findIndex(
-      (e, index) => this.makeFullNameByIndex(index + 1).toLowerCase() === fullName.toLowerCase(),
+      (_, index) => this.makeFullNameByIndex(index + 1).toLowerCase() === fullName.toLowerCase(),
     );
   }
 
   reloadObject(object: UObject) {
     const index =
       this._exportedObjects.findIndex((e) => {
-        return e instanceof WeakObject && e.deref() === object;
+        return e instanceof WeakObjectRef && e.deref() === object;
       }) + 1;
     if (index > 0) {
       object.loadingPhase = ELoadingPhase.None;
@@ -240,7 +252,7 @@ export class Asset {
   private getCachedObjectByIndex(index: number) {
     invariant(this.isIndexValid(index), `Invalid index ${index}`);
 
-    let value: WeakObject | symbol;
+    let value: WeakObjectRef | symbol;
     if (index == 0) {
       return null;
     } else if (index > 0) {
@@ -256,7 +268,7 @@ export class Asset {
       throw new Error(`Recursive object reference`);
     }
 
-    return (value as WeakObject)?.deref() ?? null;
+    return (value as WeakObjectRef)?.deref() ?? null;
   }
 
   private createExportObject(index: number, full: boolean): UObject {
@@ -302,9 +314,20 @@ export class Asset {
       this._reader.seek(objectExport.SerialOffset);
       const subReader = this._reader.subReader(objectExport.SerialSize);
 
-      const resolver: ObjectResolver = (reader) => {
-        const index = reader.readInt32();
-        return index ? this.getObjectByIndex(index, false) : null;
+      const resolver: ObjectResolver = {
+        resolveObject: (reader: AssetReader) => {
+          const index = reader.readInt32();
+          return index ? this.getObjectByIndex(index, false) : null;
+        },
+        resolveSoftObject: (reader: AssetReader) => {
+          if (this.softObjects.length) {
+            const index = reader.readInt32();
+            invariant(index >= 0 && index < this.softObjects.length, `Invalid soft object index ${index}`);
+            return this.softObjects[index];
+          } else {
+            return FSoftObjectPath.fromStream(reader);
+          }
+        },
       };
 
       if (objectExport.objectFlags & EObjectFlags.RF_ClassDefaultObject) {
@@ -379,6 +402,21 @@ function readExportMap(reader: AssetReader, summary: FPackageFileSummary) {
     exports.push(value);
   }
   return exports;
+}
+
+function readSoftObjectsMap(reader: AssetReader, summary: FPackageFileSummary) {
+  if (!summary.SoftObjectPathsCount) {
+    return [];
+  }
+
+  reader.seek(summary.SoftObjectPathsOffset);
+
+  const softObjects = [];
+  for (let i = 0; i < summary.SoftObjectPathsCount; i++) {
+    const value = FSoftObjectPath.fromStream(reader);
+    softObjects.push(value);
+  }
+  return softObjects;
 }
 
 function isExportIndex(index: number) {

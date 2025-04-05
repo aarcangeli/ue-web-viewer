@@ -1,21 +1,27 @@
-import type { FName } from "../../../types/Name";
 import invariant from "tiny-invariant";
-import type { UClass } from "./Class";
+
 import type { AssetReader } from "../../../AssetReader";
+import type { EPackageFlags } from "../../../enums";
+import { makeNameFromParts } from "../../../path-utils";
 import type { TaggedProperty } from "../../../properties/TaggedProperty";
+import { EObjectFlags } from "../../../serialization/ObjectExport";
 import { readTaggedProperties } from "../../../serialization/properties-serialization";
 import type { SerializationStatistics } from "../../../serialization/SerializationStatistics";
+import type { FName } from "../../../types/Name";
 import { FGuid } from "../structs/Guid";
-import { makeNameFromParts } from "../../../path-utils";
-import type { EPackageFlags } from "../../../enums";
-import { EObjectFlags } from "../../../serialization/ObjectExport";
+import type { FSoftObjectPath } from "../structs/SoftObjectPath";
+
+import type { UClass } from "./Class";
 
 /**
  * All characters are allowed except for '.' and ':'.
  */
 const ValidObjectName = /^[^.:]+$/;
 
-export type ObjectResolver = (reader: AssetReader) => UObject | null;
+export interface ObjectResolver {
+  resolveObject: (reader: AssetReader) => UObject | null;
+  resolveSoftObject: (reader: AssetReader) => FSoftObjectPath;
+}
 
 export type ObjectConstructionParams = {
   clazz: UClass;
@@ -35,21 +41,22 @@ export enum ELoadingPhase {
 }
 
 /**
- * The base class of all UE objects.
+ * Base class for all Unreal Engine objects.
  *
- * An object instance represents a single object in the UE4 runtime.
- * - Has a name, which is unique within its outer object.
- * - May have an outer object and inner objects.
- * - Has a class, which is an instance of {@link UClass} that represents the class of the object.
+ * Each instance represents a single object in the UE runtime:
+ * - Can have an outer object and may contain inner objects.
+ * - Has a unique name within its outer object.
+ * - Has a class, represented by a {@link UClass} instance.
+ * - Some instances are loaded from asset files.
+ * - Asset files contain a hierarchy of objects, rooted in a {@link UPackage} instance.
  *
- * We are not going to implement all the complexity of the UObject class, we only need the basic functionality to
- * read the properties of the objects.
+ * We're only implementing the minimal UObject functionality needed to read properties.
  *
- * On the C++ side, the UObject class extends UObjectBaseUtility, which extends UObjectBase.
- * However, UHT only manages UObject (see NoExportTypes.h)
+ * In C++, UObject inherits from UObjectBaseUtility, which in turn inherits from UObjectBase.
+ * However, UHT only handles UObject (see NoExportTypes.h).
  *
- * Do not use WeakRef to weakly reference UObject instances.
- * Use instead asWeakObject() to create a WeakObject instance.
+ * Do not use vanilla WeakRef to weakly reference UObject instances.
+ * Instead, use {@link asWeakObject()} to obtain a WeakObject.
  */
 export class UObject {
   private _outer: UObject | null = null;
@@ -66,7 +73,7 @@ export class UObject {
    *
    * This field is automatically populated together with the outer field.
    */
-  private readonly _innerObjects: Array<WeakObject> = [];
+  private readonly _innerObjects: Array<WeakObjectRef> = [];
 
   /**
    * Statistics about the serialization of this object.
@@ -166,7 +173,10 @@ export class UObject {
   }
 
   deserialize(reader: AssetReader, resolver: ObjectResolver) {
-    invariant(!(this._flags & EObjectFlags.RF_ClassDefaultObject), "Cannot deserialize a default object");
+    invariant(
+      !(this._flags & EObjectFlags.RF_ClassDefaultObject),
+      "Use deserializeDefaultObject() for default objects",
+    );
 
     this.properties = readTaggedProperties(reader, true, resolver);
 
@@ -195,8 +205,8 @@ export class UObject {
     this._class = clazz;
   }
 
-  asWeakObject(): WeakObject<this> {
-    return new WeakObject(this);
+  asWeakObject(): WeakObjectRef<this> {
+    return new WeakObjectRef(this);
   }
 }
 
@@ -227,16 +237,22 @@ function validateAddInner(parent: UObject, child: UObject) {
 }
 
 /**
- * A weak reference to a UObject.
+ * Represents a weak reference to a {@link UObject}.
+ *
+ * Unlike strong references, weak references do not prevent the object from being garbage collected.
+ * Use this to hold a non-owning reference to a UObject instance.
  */
-export class WeakObject<T extends UObject = UObject> {
+export class WeakObjectRef<T extends UObject = UObject> {
   private _ref: WeakRef<T>;
 
   constructor(value: T) {
     this._ref = new WeakRef(value);
   }
 
+  /**
+   * Retrieve the referenced object or null if it has been garbage collected.
+   */
   deref(): T | null {
-    return (this._ref.deref() as T) ?? null;
+    return this._ref.deref() ?? null;
   }
 }

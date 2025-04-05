@@ -1,10 +1,10 @@
-import globals from "globals";
 import pluginJs from "@eslint/js";
-import eslint from "typescript-eslint";
+import { defineFlatConfig } from "eslint-define-config";
 import reactPlugin from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
-import { defineFlatConfig } from "eslint-define-config";
+import globals from "globals";
+import eslint from "typescript-eslint";
 
 const config = defineFlatConfig([
   {

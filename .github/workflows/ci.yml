@@ -57,7 +57,7 @@ jobs:
           name: coverage
           path: coverage/lcov-report
 
-      - name: Upload artifacts ⬆️
+      - name: Upload "dist" artifacts ⬆️
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:

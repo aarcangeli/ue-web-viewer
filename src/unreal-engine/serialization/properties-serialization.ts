@@ -1,11 +1,12 @@
-import type { PropertyValue } from "../properties/TaggedProperty";
-import { makeError, TaggedProperty } from "../properties/TaggedProperty";
 import type { AssetReader } from "../AssetReader";
-import { FPropertyTag } from "../properties/PropertyTag";
-import { EPropertyTagExtension, EPropertyType } from "../properties/enums";
-import { EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
-import { getPropertySerializerFromTag, UnknownPropertyType } from "./property-serializer";
+import { EPropertyTagExtension, EPropertyType } from "../properties/enums";
+import { FPropertyTag } from "../properties/PropertyTag";
+import type { PropertyValue, SerializationError } from "../properties/TaggedProperty";
+import { TaggedProperty } from "../properties/TaggedProperty";
+import { EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
+
+import { getPropertySerializerFromTag, PropertyTooOldError, UnknownPropertyType } from "./property-serializer";
 
 export function readTaggedProperties(reader: AssetReader, isUClass: boolean, resolver: ObjectResolver) {
   // from UStruct::SerializeVersionedTaggedProperties
@@ -67,11 +68,15 @@ function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: Obj
           : `Unknown property type '${typeName}'`;
       return makeError(message);
     }
+    if (e instanceof PropertyTooOldError) {
+      return makeError(e.message);
+    }
+    console.error(e);
     return makeError(`Cannot get serializer of '${typeName}': ${e}`);
   }
 
   try {
-    const result = serializer(reader, resolver, typeName);
+    const result = serializer(reader, resolver);
 
     // Check that the reader has read all the bytes.
     // Properties are easy to read, if there are extra bytes, it's likely a bug.
@@ -84,4 +89,14 @@ function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: Obj
   } catch (e) {
     return makeError(`Cannot read property: ${e} (type: ${typeName})`);
   }
+}
+
+/**
+ * Utility function to create an error value.
+ */
+function makeError(message: string): SerializationError {
+  return {
+    type: "error",
+    message: message,
+  };
 }

@@ -1,8 +1,10 @@
-import { FName, NAME_None } from "../types/Name";
-import { EGuidFormats, FGuid } from "../modules/CoreUObject/structs/Guid";
-import type { AssetReader } from "../AssetReader";
-import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 import invariant from "tiny-invariant";
+
+import type { AssetReader } from "../AssetReader";
+import { EGuidFormats, FGuid } from "../modules/CoreUObject/structs/Guid";
+import { FName, NAME_None } from "../types/Name";
+import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
+
 import {
   EOverriddenPropertyOperation,
   EPropertyTagExtension,
@@ -21,6 +23,13 @@ const OptionalProperty = FName.fromString("OptionalProperty");
 const SetProperty = FName.fromString("SetProperty");
 const MapProperty = FName.fromString("MapProperty");
 
+/**
+ * Represents the header present before every property.
+ * It includes the property's name, type, size, and other metadata.
+ *
+ * Starting from Unreal Engine 5.4, a new type system was introduced,
+ * featuring a full hierarchy of property types. See {@link FPropertyTypeName}.
+ */
 export class FPropertyTag {
   name: FName = NAME_None;
   typeName: FPropertyTypeName = new FPropertyTypeName(NAME_None, []);
@@ -99,8 +108,11 @@ export class FPropertyTag {
     } else if (type.equals(BoolProperty)) {
       result.boolVal = reader.readUInt8() !== 0;
     } else if (type.equals(ByteProperty)) {
-      legacyTag.enumName = reader.readName();
-      typeName = typeName.addParameter(parseLegacyEnumName(legacyTag.enumName.text));
+      const enumName = reader.readName();
+      if (!enumName.isNone) {
+        typeName = typeName.addParameter(parseLegacyEnumName(enumName.text));
+      }
+      legacyTag.enumName = enumName;
     } else if (type.equals(EnumProperty)) {
       legacyTag.enumName = reader.readName();
       typeName = typeName.addParameter(parseLegacyEnumName(legacyTag.enumName.text));
@@ -209,8 +221,13 @@ class FLegacyPropertyTag {
 }
 
 /**
- * This struct is introduced in UE 5.4 and contains a hierarchy of property types.
- * Sometimes, the nodes may be missing for incomplete information.
+ * Introduced in Unreal Engine 5.4, this struct represents a hierarchical type system for properties.
+ *
+ * With this format it is possible to represent complex types such as array of arrays, or maps of maps, etc.
+ *
+ * Legacy property tags {@link FLegacyPropertyTag} are automatically converted to this format,
+ * so some information may be missing.
+ *
  * Known types are:
  * - StructProperty(structName(outer1,outer2,...), structGuid)
  * - EnumProperty(enumName(outer1,outer2,...), ByteProperty)
@@ -223,7 +240,7 @@ export class FPropertyTypeName {
   readonly name: FName;
   readonly innerTypes: ReadonlyArray<FPropertyTypeName>;
 
-  constructor(name: FName, innerTypes: ReadonlyArray<FPropertyTypeName> = []) {
+  constructor(name: FName, innerTypes: Array<FPropertyTypeName> = []) {
     this.name = name;
     this.innerTypes = innerTypes;
   }
@@ -234,7 +251,7 @@ export class FPropertyTypeName {
 
     const innerTypes: FPropertyTypeName[] = [];
     for (let i = 0; i < innerCount; ++i) {
-      innerTypes.push(this.fromStream(reader));
+      innerTypes.push(FPropertyTypeName.fromStream(reader));
     }
 
     return new FPropertyTypeName(name, innerTypes);

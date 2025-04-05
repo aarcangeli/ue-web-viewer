@@ -9,6 +9,9 @@ import { FMatrix44 } from "../../unreal-engine/modules/CoreUObject/structs/Matri
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { Icon } from "@chakra-ui/icons";
 import { makePropertyIcon } from "./MakePropertyIcon";
+import type { ITextData } from "../../unreal-engine/types/Text";
+import { ETextHistoryType, FTextHistory_Base } from "../../unreal-engine/types/Text";
+import { FPerPlatformFloat } from "../../unreal-engine/modules/CoreUObject/structs/PerPlatformFloat";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
@@ -24,7 +27,7 @@ export function ObjectPreview(props: { object: UObject }) {
           <IndentedRow title={"Class"}>{exportedObjects.class.fullName}</IndentedRow>
           <IndentedRow title={"Object Guid"}>{exportedObjects.objectGuid?.toString() || "None"}</IndentedRow>
         </CollapsableSection>
-        <CollapsableSection name={"Properties"}>
+        <CollapsableSection name={"Serialized Properties"}>
           {exportedObjects.properties.map((property, index) =>
             renderValue(index, property.nameString, property.value, makePropertyIcon(property.tag)),
           )}
@@ -44,6 +47,19 @@ function makeIndexLabel(index: number) {
   return `Index [ ${index} ]`;
 }
 
+function renderTextData(textData: ITextData) {
+  if (textData instanceof FTextHistory_Base) {
+    return (
+      <>
+        <IndentedRow title={"Namespace"}>{textData.namespace}</IndentedRow>
+        <IndentedRow title={"Key"}>{textData.key}</IndentedRow>
+        <IndentedRow title={"Source String"}>{textData.getSourceString()}</IndentedRow>
+      </>
+    );
+  }
+  return undefined;
+}
+
 function renderValue(key: number, name: string, value: PropertyValue, icon?: React.ReactElement) {
   switch (value.type) {
     case "numeric":
@@ -52,8 +68,16 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
     case "string":
       return (
         <IndentedRow key={key} icon={icon} title={name}>
-          {`${value.value}`}
+          {String(value.value)}
         </IndentedRow>
+      );
+    case "text":
+      return (
+        <CollapsableSection key={key} initialExpanded={false} icon={icon} title={name} name={value.value.toString()}>
+          <IndentedRow title={"Flags"}>{String(value.value.flags)}</IndentedRow>
+          <IndentedRow title={"History Type"}>{ETextHistoryType[value.value.textHistoryType]}</IndentedRow>
+          {renderTextData(value.value.textData)}
+        </CollapsableSection>
       );
     case "object":
       return (
@@ -81,11 +105,23 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
           </CollapsableSection>
         );
       }
+      if (value.value instanceof FPerPlatformFloat) {
+        return (
+          <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value.value)}>
+            <IndentedRow title={"Default"}>{value.value.Default}</IndentedRow>
+            {value.value.PerPlatform.map((item, index) => (
+              <IndentedRow key={index} title={`Override [ ${item.platform} ]`}>
+                {String(item.value)}
+              </IndentedRow>
+            ))}
+          </CollapsableSection>
+        );
+      }
       return (
-        <CollapsableSection key={key} icon={icon} title={name} name={String(value.value)}>
+        <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value.value)}>
           {Object.keys(value.value).map((subKey, index) => (
             <IndentedRow key={index} title={subKey}>
-              {String(value.value[subKey])}
+              {String((value.value as Record<string, any>)[subKey])}
             </IndentedRow>
           ))}
         </CollapsableSection>
@@ -116,11 +152,13 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
             </>
           }
         >
-          {value.elementsToRemove.length > 0 && (
-            <CollapsableSection title={"Removed elements"} name={`size = ${value.elementsToRemove.length}`}>
-              {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
-            </CollapsableSection>
-          )}
+          <CollapsableSection
+            title={"Removed elements"}
+            name={`size = ${value.elementsToRemove.length}`}
+            hasChildren={Boolean(value.elementsToRemove.length)}
+          >
+            {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
+          </CollapsableSection>
           <CollapsableSection title={"Added elements"} name={`size = ${value.value.length}`}>
             {value.value.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
           </CollapsableSection>
@@ -135,18 +173,37 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
           name={
             <>
               {value.value.length} Map elements added
-              {value.elementsToRemove.length > 0 ? <>, {value.elementsToRemove.length} removed</> : ""}{" "}
+              {value.elementsToRemove.length > 0 ? `, ${value.elementsToRemove.length} removed ` : " "}
               {makeHelpSetMap()}
             </>
           }
         >
-          {value.elementsToRemove.length > 0 && (
-            <CollapsableSection title={"Removed elements"} name={`size = ${value.elementsToRemove.length}`}>
-              {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
-            </CollapsableSection>
-          )}
+          <CollapsableSection
+            title={"Removed elements"}
+            name={`size = ${value.elementsToRemove.length}`}
+            hasChildren={Boolean(value.elementsToRemove.length)}
+          >
+            {value.elementsToRemove.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
+          </CollapsableSection>
           <CollapsableSection title={"Added elements"} name={`size = ${value.value.length}`}>
-            {value.value.map((item, index) => renderValue(index, makeMapKey(item[0]), item[1]))}
+            {value.value.map((item, index) => {
+              const [key, value] = item;
+              switch (key.type) {
+                case "boolean":
+                case "numeric":
+                case "name":
+                case "string":
+                  // For simple keys we can collapse the key and value into one row
+                  return renderValue(index, `Key [ ${key.value} ]`, value);
+                default:
+                  return (
+                    <CollapsableSection key={index} name={`Entry ${index}`}>
+                      {renderValue(0, "Key", key)}
+                      {renderValue(1, "Value", value)}
+                    </CollapsableSection>
+                  );
+              }
+            })}
           </CollapsableSection>
         </CollapsableSection>
       );
@@ -162,25 +219,11 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
   }
 }
 
-function makeMapKey(key: PropertyValue): string {
-  // Only scalar types are allowed as map keys
-  switch (key.type) {
-    case "boolean":
-    case "numeric":
-    case "name":
-    case "string":
-      return `Key [ ${key.value} ]`;
-    default:
-      console.error(`Unknown key ${key}`);
-      return `Unknown key ${key}`;
-  }
-}
-
 function makeHelpSetMap() {
   return (
     <MakeHelpTooltip
       label={
-        "Only added and removed elements are serialized on the asset, the diff applied to a default object to generate the final property element."
+        "Sets and maps use a special serialization format: only added and removed elements are stored in the asset. The final property is computed by applying these changes to the default object."
       }
     />
   );

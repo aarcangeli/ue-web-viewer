@@ -18,7 +18,7 @@ async function ReadAndParseFile(file: FileApi) {
     const content = await file.read();
     return new FullAssetReader(new DataView(content));
   };
-  return new Asset(file.name, await loadAsset(), loadAsset);
+  return Asset.fromStream(file.name, await loadAsset(), loadAsset);
 }
 
 const tabNames = [
