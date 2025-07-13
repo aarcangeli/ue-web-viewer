@@ -11,16 +11,7 @@ AlignEscapedNewlines: Left
 IndentRequiresClause: true
 MacroBlockBegin: "SLATE_BEGIN_ARGS|BEGIN_SHADER_PARAMETER_STRUCT"
 MacroBlockEnd: "SLATE_END_ARGS|END_SHADER_PARAMETER_STRUCT"
-StatementMacros:
-  [
-    "UPROPERTY",
-    "UFUNCTION",
-    "UCLASS",
-    "USTRUCT",
-    "UENUM",
-    "UINTERFACE",
-    "GENERATED_BODY",
-  ]
+StatementMacros: ["UPROPERTY", "UFUNCTION", "UCLASS", "USTRUCT", "UENUM", "UINTERFACE", "GENERATED_BODY"]
 IncludeCategories:
   - Regex: '.*\.generated\.h'
     Priority: 100

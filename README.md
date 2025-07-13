@@ -30,32 +30,3 @@ UE_IMPLEMENT_STRUCT("/Script/CoreUObject", Vector4);
 UClass::SerializeDefaultObject serializes the default object of a class
 UStruct::SerializeVersionedTaggedProperties serializes tagged properties
 ```
-
-## Documentation
-
-Always document your code.
-
-On typescript, use JSDoc comments [Reference](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html).
-
-## Can I use public field on typescript?
-
-Yes, you can.
-
-If you realize that a setter became necessary,
-you can replace the public field with a private field and a getter/setter without changing the class interface.
-
-Example:
-
-```typescript
-export class MyClass {
-  private _myField: number = 0;
-
-  get myField(): number {
-    return this._myField;
-  }
-
-  set myField(value: number) {
-    this._myField = value;
-  }
-}
-```
