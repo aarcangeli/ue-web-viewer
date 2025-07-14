@@ -4,19 +4,12 @@
 #include "JsonObjectConverter.h"
 
 /**
- * Replacement for FJsonObjectConverter::UStructToJsonObjectString,
- * following our custom formatting policy and fixing known issues.
+ * Converts a TSharedRef<FJsonObject> to a formatted JSON string.
  *
  * Note: The original method contains a bug where commas (",") are missing
  * between elements in JSON arrays of objects.
  */
-template <typename InStructType>
-bool CustomStructToString(const InStructType &InStruct, FString &OutJsonString) {
-    TSharedRef<FJsonObject> JsonObject = MakeShared<FJsonObject>();
-    if (!FJsonObjectConverter::UStructToJsonObject(InStructType::StaticStruct(), &InStruct, JsonObject)) {
-        return false;
-    }
-
+inline bool CustomStructToString(const TSharedRef<FJsonObject> &JsonObject, FString &OutJsonString) {
     const FString EOL = TEXT("\n");
     const FString INDENT = TEXT("\t");
 
@@ -162,15 +155,15 @@ bool CustomStructToString(const InStructType &InStruct, FString &OutJsonString) 
                 Builder.Append("{");
                 IndentLevel++;
                 bool IsFirst = true;
-                for (const auto &[Key, Value] : AsObject->Values) {
+                for (const auto &[ItKey, ItValue] : AsObject->Values) {
                     if (!IsFirst) {
                         Builder.Append(",");
                     }
                     Builder.Append(EOL);
                     WriteIndent();
-                    WriteString(Key);
+                    WriteString(ItKey);
                     Builder.Append(": ");
-                    if (!WriteJsonValue(*Value)) {
+                    if (!WriteJsonValue(*ItValue)) {
                         return false;
                     }
                     IsFirst = false;
