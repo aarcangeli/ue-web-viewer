@@ -1,0 +1,25 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "UAssetBrowseExporter",
+	"Description": "Utility tools for ue-web-viewer. See README.md for more details",
+	"Category": "Editor",
+	"CreatedBy": "Alessandro Arcangeli <alessandroarcangeli.rm@gmail.com>",
+	"CreatedByURL": "https://github.com/aarcangeli",
+	"DocsURL": "https://github.com/aarcangeli/ue-web-viewer",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"EnabledByDefault": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "UAssetBrowseExporter",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	]
+}

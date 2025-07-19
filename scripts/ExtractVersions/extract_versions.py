@@ -14,7 +14,7 @@ from scripts.utils import (
     make_header,
 )
 
-output_dir = Path(__file__).parent.parent / "src/unreal-engine/versioning"
+output_dir = Path(__file__).parent.parent.parent / "src/unreal-engine/versioning"
 """ Path where the output file will be saved """
 
 path_versions = output_dir / "ue-versions.ts"
