@@ -40,7 +40,7 @@ inline bool CustomStructToString(const TSharedRef<FJsonObject> &JsonObject, FStr
                     return true;
                 default:
                     // Must escape control characters
-                    return Char >= TCHAR(32) ? false : true;
+                    return Char < TCHAR(32);
             }
         };
 

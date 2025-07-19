@@ -329,11 +329,11 @@ TSharedPtr<FJsonValue> UExportLayoutCommandlet::GetPropertyValue(void *Object, c
     // Special case for FInt64Property and FUInt64Property
     if (auto CastedProperty = CastField<FInt64Property>(Property)) {
         const auto &Value = CastedProperty->GetPropertyValue_InContainer(Object, ArrayIndex);
-        return MakeShareable(new FJsonValueString(FString::Printf(TEXT("%llu"), Value)));
+        return MakeShareable(new FJsonValueString(LexToString(Value)));
     }
     if (auto CastedProperty = CastField<FUInt64Property>(Property)) {
         const auto &Value = CastedProperty->GetPropertyValue_InContainer(Object, ArrayIndex);
-        return MakeShareable(new FJsonValueString(FString::Printf(TEXT("%llu"), Value)));
+        return MakeShareable(new FJsonValueString(LexToString(Value)));
     }
 
     // floating point types
