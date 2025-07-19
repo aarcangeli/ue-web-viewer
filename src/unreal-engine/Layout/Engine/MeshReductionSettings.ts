@@ -1,5 +1,8 @@
 // This file is auto-generated, do not edit directly.
 
+import type { EMeshFeatureImportance } from "./EMeshFeatureImportance";
+import type { EStaticMeshReductionTerimationCriterion } from "./EStaticMeshReductionTerimationCriterion";
+
 export interface FMeshReductionSettings {
   PercentTriangles: number;
   MaxNumOfTriangles: number;
@@ -10,15 +13,15 @@ export interface FMeshReductionSettings {
   WeldingThreshold: number;
   HardAngleThreshold: number;
   BaseLODModel: number;
-  SilhouetteImportance: TODO__EMeshFeatureImportance;
-  TextureImportance: TODO__EMeshFeatureImportance;
-  ShadingImportance: TODO__EMeshFeatureImportance;
+  SilhouetteImportance: EMeshFeatureImportance;
+  TextureImportance: EMeshFeatureImportance;
+  ShadingImportance: EMeshFeatureImportance;
   bRecalculateNormals: boolean;
   bGenerateUniqueLightmapUVs: boolean;
   bKeepSymmetry: boolean;
   bVisibilityAided: boolean;
   bCullOccluded: boolean;
-  TerminationCriterion: Invalid__EnumProperty;
-  VisibilityAggressiveness: TODO__EMeshFeatureImportance;
-  VertexColorImportance: TODO__EMeshFeatureImportance;
+  TerminationCriterion: EStaticMeshReductionTerimationCriterion;
+  VisibilityAggressiveness: EMeshFeatureImportance;
+  VertexColorImportance: EMeshFeatureImportance;
 }

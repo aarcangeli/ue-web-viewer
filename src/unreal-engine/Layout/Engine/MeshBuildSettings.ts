@@ -1,6 +1,7 @@
 // This file is auto-generated, do not edit directly.
 
 import type { FVector } from "../CoreUObject/Vector";
+import type { UStaticMesh } from "./StaticMesh";
 
 export interface FMeshBuildSettings {
   bUseMikkTSpace: boolean;
@@ -22,6 +23,6 @@ export interface FMeshBuildSettings {
   BuildScale3D: FVector;
   DistanceFieldResolutionScale: number;
   DistanceFieldBias: number;
-  DistanceFieldReplacementMesh: Object;
+  DistanceFieldReplacementMesh: UStaticMesh;
   MaxLumenMeshCards: number;
 }

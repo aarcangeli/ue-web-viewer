@@ -6,6 +6,7 @@ export interface PackageInfo {
   packageName: string;
   classes: Array<ClassInfo>;
   structs: Array<StructInfo>;
+  enums: Array<EnumInfo>;
 }
 
 type BaseProperty<Name extends string> = {
@@ -13,7 +14,7 @@ type BaseProperty<Name extends string> = {
 };
 
 export type ChildPropertyInfo =
-  | (BaseProperty<"ByteProperty"> & { enumType?: string })
+  | (BaseProperty<"ByteProperty"> & { enumType?: EnumRef })
   | BaseProperty<"Int8Property">
   | BaseProperty<"Int16Property">
   | BaseProperty<"IntProperty">
@@ -44,7 +45,7 @@ export type ChildPropertyInfo =
   | BaseProperty<"MulticastInlineDelegateProperty">
   | BaseProperty<"MulticastSparseDelegateProperty">
   | BaseProperty<"TextProperty">
-  | (BaseProperty<"EnumProperty"> & { valueType: ChildPropertyInfo })
+  | (BaseProperty<"EnumProperty"> & { enumType: EnumRef })
   | BaseProperty<"FieldPathProperty">
   | (BaseProperty<"OptionalProperty"> & { valueType: ChildPropertyInfo })
 
@@ -52,7 +53,7 @@ export type ChildPropertyInfo =
   | BaseProperty<"Utf8StrProperty">
   | BaseProperty<"AnsiStrProperty">;
 
-type PropertyInfo = ChildPropertyInfo & {
+export type PropertyInfo = ChildPropertyInfo & {
   name: string;
   flagsLower: number;
   flagsUpper: number;
@@ -70,9 +71,20 @@ export interface StructInfo {
   properties: Array<PropertyInfo>;
 }
 
+export interface EnumInfo {
+  enumName: string;
+  enumFlags: number;
+  values: { [key: string]: number };
+}
+
 export interface ClassRef {
   package: string;
   class: string;
+}
+
+export interface EnumRef {
+  package: string;
+  enum: string;
 }
 
 export interface StructRef {

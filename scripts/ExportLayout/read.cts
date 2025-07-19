@@ -1,15 +1,19 @@
 import fs from "fs";
 import path from "path";
 
-import type {
+import {
   ChildPropertyInfo,
   ClassInfo,
   ClassRef,
+  EnumInfo,
+  EnumRef,
   LayoutDump,
   PackageInfo,
+  PropertyInfo,
   StructInfo,
   StructRef,
 } from "./LayoutDumpSchema";
+import { EPropertyFlags } from "../../src/unreal-engine/properties/enums";
 
 // Get some paths
 const layoutPath = path.join(__dirname, "LayoutDump.json");
@@ -67,43 +71,54 @@ class TSLayoutGenerator {
     return null;
   }
 
-  generateClass(aPackage: PackageInfo, aClass: ClassInfo) {
-    const name = `${aPackage.packageName}/${aClass.className}`;
-    const flag = this.generators.get(name);
-    if (flag === false) {
-      console.warn(`Circular dependency detected for ${name}, skipping generation.`);
-      return;
+  getEnum(enumRef: EnumRef): [PackageInfo, EnumInfo] | null {
+    const aPackage = this.getPackage(enumRef.package);
+    const aEnum = aPackage?.enums.find((aStruct) => aStruct.enumName === enumRef.enum);
+    if (aPackage && aEnum) {
+      return [aPackage, aEnum];
     }
-    if (flag === true) {
-      // Already generated, skip
-      return;
-    }
+    return null;
+  }
 
-    this.generators.set(name, false);
-    new TSFileGenerator(this, aPackage.packageName, aClass.className).generateClass(aClass);
-    this.generators.set(name, true);
+  generateClass(aPackage: PackageInfo, aClass: ClassInfo) {
+    this.doGenerate(`${aPackage.packageName}/${aClass.className}`, () => {
+      new TSFileGenerator(this, aPackage.packageName, aClass.className).generateClass(aClass);
+    });
   }
 
   generateStruct(aPackage: PackageInfo, aStruct: StructInfo) {
-    const name = `${aPackage.packageName}/${aStruct.structName}`;
+    this.doGenerate(`${aPackage.packageName}/${aStruct.structName}`, () => {
+      new TSFileGenerator(this, aPackage.packageName, aStruct.structName).generateStruct(aStruct);
+    });
+  }
+
+  generateEnum(aPackage: PackageInfo, aEnum: EnumInfo) {
+    this.doGenerate(`${aPackage.packageName}/${aEnum.enumName}`, () => {
+      new TSFileGenerator(this, aPackage.packageName, aEnum.enumName).generateEnum(aEnum);
+    });
+  }
+
+  private doGenerate(name: string, fn: () => void) {
     const flag = this.generators.get(name);
-    if (flag === false) {
-      console.warn(`Circular dependency detected for ${name}, skipping generation.`);
-      return;
-    }
-    if (flag === true) {
-      // Already generated, skip
+    if (flag !== undefined) {
+      // Already generated, skip.
+      // Circular dependencies are in fact not a problem
       return;
     }
 
     this.generators.set(name, false);
-    new TSFileGenerator(this, aPackage.packageName, aStruct.structName).generateStruct(aStruct);
+    fn();
     this.generators.set(name, true);
   }
 }
 
+function getBigint(value: number): bigint {
+  return BigInt(value) * BigInt(2 ** 32);
+}
+
 class TSFileGenerator {
   private imports: Map<string, string> = new Map();
+  private symbolsInThisFile: Set<string> = new Set();
   private lines: string[] = [];
   private currentIndent = "";
 
@@ -125,7 +140,15 @@ class TSFileGenerator {
     return this.importGeneric(aPackage, aStruct.structName, getStructName(aStruct));
   }
 
+  importEnumType(aPackage: PackageInfo, aStruct: EnumInfo): string {
+    return this.importGeneric(aPackage, aStruct.enumName, aStruct.enumName);
+  }
+
   private importGeneric(aPackage: PackageInfo, fileName: string, symbolName: string): string {
+    if (this.symbolsInThisFile.has(symbolName)) {
+      // Already imported in this file, no need to do it again
+      return symbolName;
+    }
     // Generate the import statement
     const path =
       aPackage.packageName == this.packageName
@@ -169,8 +192,20 @@ class TSFileGenerator {
     return this.importStructType(aPackage, aClass);
   }
 
+  resolveEnumRef(aEnum: EnumRef): string {
+    const values = this.generator.getEnum(aEnum);
+    if (!values) {
+      console.warn(`Could not resolve struct reference ${aEnum.enum} in package ${aEnum.package}`);
+      return `Invalid__${aEnum.enum}`;
+    }
+    const [aPackage, aEnun] = values;
+    this.generator.generateEnum(aPackage, aEnun);
+    return this.importEnumType(aPackage, aEnun);
+  }
+
   generateClass(aClass: ClassInfo) {
     let line = `export interface ${getClassName(aClass)}`;
+    this.symbolsInThisFile.add(getClassName(aClass));
 
     if (aClass.superClass) {
       line += ` extends ${this.resolveClassRef(aClass.superClass)}`;
@@ -180,11 +215,7 @@ class TSFileGenerator {
     this.addLine(line);
 
     this.withIndent(() => {
-      if (aClass.properties) {
-        for (const prop of aClass.properties) {
-          this.addLine(`${prop.name}: ${this.generateType(prop)};`);
-        }
-      }
+      this.exportProperties(aClass.properties);
 
       // UObject is a special case, add specific methods
       if (aClass.className === "Object") {
@@ -199,17 +230,50 @@ class TSFileGenerator {
     writeFile(this.outputPath, this.composePage());
   }
 
-  generateStruct(aStruct: StructInfo) {
-    let line = `export interface ${getStructName(aStruct)}`;
+  private exportProperties(properties: Array<PropertyInfo>) {
+    for (const prop of properties) {
+      if (prop.flagsLower & EPropertyFlags.Transient) {
+        // Skip transient properties
+        continue;
+      }
 
-    line += ` {`;
-    this.addLine(line);
+      let comment = "";
+      if (getBigint(prop.flagsUpper) & BigInt(EPropertyFlags.EditorOnly)) {
+        comment += " // Editor only property";
+      }
+      this.addLine(`${prop.name}: ${this.generateType(prop)};${comment}`);
+    }
+  }
+
+  generateStruct(aStruct: StructInfo) {
+    this.addLine(`export interface ${getStructName(aStruct)} {`);
+    this.symbolsInThisFile.add(getStructName(aStruct));
 
     this.withIndent(() => {
       if (aStruct.properties) {
         for (const prop of aStruct.properties) {
+          if (prop.flagsLower & EPropertyFlags.Transient) {
+            // Skip transient properties
+            continue;
+          }
           this.addLine(`${prop.name}: ${this.generateType(prop)};`);
         }
+      }
+    });
+
+    this.addLine(`}`);
+
+    console.log(`Generating struct: ${this.outputPath}`);
+    writeFile(this.outputPath, this.composePage());
+  }
+
+  generateEnum(aEnum: EnumInfo) {
+    this.addLine(`export enum ${aEnum.enumName} {`);
+    this.symbolsInThisFile.add(aEnum.enumName);
+
+    this.withIndent(() => {
+      for (const [enumName, enumValue] of Object.entries(aEnum.values)) {
+        this.addLine(`${enumName} = ${enumValue},`);
       }
     });
 
@@ -223,7 +287,7 @@ class TSFileGenerator {
     switch (property.type) {
       case "ByteProperty":
         if (property.enumType) {
-          return `TODO__${property.enumType}`;
+          return this.resolveEnumRef(property.enumType);
         }
         return "number";
       case "Int8Property":
@@ -240,10 +304,11 @@ class TSFileGenerator {
       case "BoolProperty":
         return "boolean";
       case "ObjectProperty":
+        return this.resolveClassRef(property.objectType);
       case "WeakObjectProperty":
       case "LazyObjectProperty":
       case "SoftObjectProperty":
-        return "Object";
+        break;
       case "ClassProperty":
       case "SoftClassProperty":
         return "Class";
@@ -271,7 +336,7 @@ class TSFileGenerator {
       case "TextProperty":
         break;
       case "EnumProperty":
-        break;
+        return this.resolveEnumRef(property.enumType);
       case "FieldPathProperty":
         break;
       case "OptionalProperty":

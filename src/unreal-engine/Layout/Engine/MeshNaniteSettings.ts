@@ -1,5 +1,7 @@
 // This file is auto-generated, do not edit directly.
 
+import type { ENaniteFallbackTarget } from "./ENaniteFallbackTarget";
+import type { ENaniteGenerateFallback } from "./ENaniteGenerateFallback";
 import type { FMeshDisplacementMap } from "./MeshDisplacementMap";
 import type { FNaniteAssemblyData } from "./NaniteAssemblyData";
 
@@ -18,8 +20,8 @@ export interface FMeshNaniteSettings {
   TargetMinimumResidencyInKB: number;
   KeepPercentTriangles: number;
   TrimRelativeError: number;
-  GenerateFallback: Invalid__EnumProperty;
-  FallbackTarget: Invalid__EnumProperty;
+  GenerateFallback: ENaniteGenerateFallback;
+  FallbackTarget: ENaniteFallbackTarget;
   FallbackPercentTriangles: number;
   FallbackRelativeError: number;
   MaxEdgeLengthFactor: number;

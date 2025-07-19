@@ -1,8 +1,10 @@
 // This file is auto-generated, do not edit directly.
 
+import type { ENaniteFallbackTarget } from "./ENaniteFallbackTarget";
+
 export interface FMeshRayTracingProxySettings {
   bEnabled: boolean;
-  FallbackTarget: Invalid__EnumProperty;
+  FallbackTarget: ENaniteFallbackTarget;
   FallbackPercentTriangles: number;
   FallbackRelativeError: number;
   LOD1PercentTriangles: number;

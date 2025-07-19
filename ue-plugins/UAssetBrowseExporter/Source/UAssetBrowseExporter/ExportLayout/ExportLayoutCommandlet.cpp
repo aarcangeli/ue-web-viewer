@@ -106,19 +106,23 @@ TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportPackage(const UPackage *Pa
     const auto Result = MakeShared<FJsonObject>();
     Result->SetStringField("packageName", Package->GetName());
 
-    // Iterate classes and structs
+    // Iterate Types
     const TArray<UObject *> ObjectsInPackage = GetSortedChildren(Package);
     TArray<TSharedPtr<FJsonValue>> Classes;
     TArray<TSharedPtr<FJsonValue>> Structs;
+    TArray<TSharedPtr<FJsonValue>> Enums;
     for (UObject *Object : ObjectsInPackage) {
         if (const auto Class = Cast<UClass>(Object); IsValid(Class) && !Class->HasAnyFlags(RF_ClassDefaultObject)) {
             Classes.Add(ExportClass(Class));
         } else if (const auto Struct = Cast<UScriptStruct>(Object); IsValid(Struct) && !Struct->HasAnyFlags(RF_ClassDefaultObject)) {
             Structs.Add(ExportStruct(Struct));
+        } else if (const auto Enum = Cast<UEnum>(Object); IsValid(Enum) && !Enum->HasAnyFlags(RF_ClassDefaultObject)) {
+            Enums.Add(ExportEnum(Enum));
         }
     }
     Result->SetArrayField("classes", MoveTemp(Classes));
     Result->SetArrayField("structs", MoveTemp(Structs));
+    Result->SetArrayField("enums", MoveTemp(Enums));
 
     return MakeShared<FJsonValueObject>(Result);
 }
@@ -127,6 +131,30 @@ TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportStruct(const UScriptStruct
     const auto Result = MakeShared<FJsonObject>();
     Result->SetStringField("structName", Struct->GetName());
     Result->SetField("properties", ExportProperties(Struct));
+    return MakeShared<FJsonValueObject>(Result);
+}
+
+TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportEnum(const UEnum *Enum) {
+    const auto Result = MakeShared<FJsonObject>();
+    Result->SetStringField("enumName", Enum->GetName());
+
+    // This not so good
+    EEnumFlags EnumFlags = EEnumFlags::None;
+    if (Enum->HasAnyEnumFlags(EEnumFlags::Flags)) {
+        EnumFlags |= EEnumFlags::Flags;
+    }
+    if (Enum->HasAnyEnumFlags(EEnumFlags::NewerVersionExists)) {
+        EnumFlags |= EEnumFlags::NewerVersionExists;
+    }
+    Result->SetNumberField("enumFlags", static_cast<std::underlying_type_t<EEnumFlags>>(EnumFlags));
+
+    const auto EnumValues = MakeShared<FJsonObject>();
+    for (int32 i = 0; i < Enum->NumEnums(); ++i) {
+        FString ValueName = Enum->GetNameStringByIndex(i);
+        checkf(!ValueName.IsEmpty(), TEXT("Enum %s has an empty value name at index %d"), *Enum->GetName(), i);
+        EnumValues->SetNumberField(ValueName, Enum->GetValueByIndex(i));
+    }
+    Result->SetObjectField("values", EnumValues);
     return MakeShared<FJsonValueObject>(Result);
 }
 
@@ -204,10 +232,10 @@ TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportProperty(const FProperty *
     } else if (const auto structProperty = CastField<FStructProperty>(Property)) {
         Result->SetField("structType", MakeStructRef(structProperty->Struct));
     } else if (const auto enumProperty = CastField<FEnumProperty>(Property)) {
-        Result->SetStringField("enumType", enumProperty->GetEnum()->GetName());
+        Result->SetField("enumType", MakeEnumRef(enumProperty->GetEnum()));
     } else if (const auto byteProperty = CastField<FByteProperty>(Property)) {
         if (byteProperty->Enum) {
-            Result->SetStringField("enumType", byteProperty->Enum->GetName());
+            Result->SetField("enumType", MakeEnumRef(byteProperty->Enum));
         }
     } else if (const auto optionalProperty = CastField<FOptionalProperty>(Property)) {
         Result->SetField("valueType", ExportProperty(optionalProperty->GetValueProperty()));
@@ -231,6 +259,13 @@ TSharedPtr<FJsonValue> UExportLayoutCommandlet::MakeStructRef(const UScriptStruc
     const auto JsonObject = MakeShared<FJsonObject>();
     JsonObject->SetStringField("package", Struct->GetOutermost()->GetName());
     JsonObject->SetStringField("struct", Struct->GetName());
+    return MakeShared<FJsonValueObject>(JsonObject);
+}
+
+TSharedPtr<FJsonValue> UExportLayoutCommandlet::MakeEnumRef(const UEnum *Enum) {
+    const auto JsonObject = MakeShared<FJsonObject>();
+    JsonObject->SetStringField("package", Enum->GetOutermost()->GetName());
+    JsonObject->SetStringField("enum", Enum->GetName());
     return MakeShared<FJsonValueObject>(JsonObject);
 }
 
@@ -333,20 +368,20 @@ TSharedPtr<FJsonValue> UExportLayoutCommandlet::GetPropertyValue(void *Object, c
     // Enum
     if (auto EnumProperty = CastField<FEnumProperty>(Property)) {
         void *Value = EnumProperty->ContainerPtrToValuePtr<void>(Object);
-        FName EnumValueName;
+        FString EnumValueName;
         if (const auto Enum = EnumProperty->GetEnum()) {
             const int64 IntValue = EnumProperty->GetUnderlyingProperty()->GetSignedIntPropertyValue(Value);
 
             // Write flags as "A | B | C"
             if (Enum->HasAnyEnumFlags(EEnumFlags::Flags)) {
                 if (IntValue != 0) {
-                    EnumValueName = *Enum->GetValueOrBitfieldAsString(IntValue);
+                    EnumValueName = Enum->GetValueOrBitfieldAsString(IntValue);
                 }
             } else {
-                EnumValueName = Enum->GetNameByValue(IntValue);
+                EnumValueName = Enum->GetNameStringByValue(IntValue);
             }
         }
-        return MakeShareable(new FJsonValueString(EnumValueName.ToString()));
+        return MakeShareable(new FJsonValueString(EnumValueName));
     }
     if (auto CastedProperty = CastField<FByteProperty>(Property)) {
         const auto Value = CastedProperty->GetPropertyValue_InContainer(Object, ArrayIndex);
@@ -366,14 +401,6 @@ TSharedPtr<FJsonValue> UExportLayoutCommandlet::GetPropertyValue(void *Object, c
         const auto &Value = CastedProperty->GetPropertyValue_InContainer(Object, ArrayIndex);
         if (IsValid(Value)) {
             return MakeShareable(new FJsonValueString(Value->GetPathName()));
-        }
-        return MakeShared<FJsonValueNull>();
-    }
-    if (auto WeakObjectPtr = CastField<FWeakObjectProperty>(Property)) {
-        void *Value = Property->ContainerPtrToValuePtr<void>(Object);
-        UObject *OldObjectValue = WeakObjectPtr->GetObjectPropertyValue(Value);
-        if (IsValid(OldObjectValue)) {
-            return MakeShareable(new FJsonValueString(OldObjectValue->GetPathName()));
         }
         return MakeShared<FJsonValueNull>();
     }

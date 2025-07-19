@@ -3,9 +3,10 @@
 import type { FMeshBuildSettings } from "./MeshBuildSettings";
 import type { FMeshReductionSettings } from "./MeshReductionSettings";
 import type { FPerPlatformFloat } from "../CoreUObject/PerPlatformFloat";
+import type { UStaticMeshDescriptionBulkData } from "./StaticMeshDescriptionBulkData";
 
 export interface FStaticMeshSourceModel {
-  StaticMeshDescriptionBulkData: Object;
+  StaticMeshDescriptionBulkData: UStaticMeshDescriptionBulkData;
   BuildSettings: FMeshBuildSettings;
   ReductionSettings: FMeshReductionSettings;
   CacheMeshDescriptionTrianglesCount: number;
