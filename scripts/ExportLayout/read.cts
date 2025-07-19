@@ -17,8 +17,9 @@ import { EPropertyFlags } from "../../src/unreal-engine/properties/enums";
 import invariant from "tiny-invariant";
 
 // Get some paths
-const layoutPath = path.join(__dirname, "LayoutDump.json");
-const repoRoot = path.resolve(__dirname, "..", "..");
+const dirname = __dirname;
+const layoutPath = path.join(dirname, "LayoutDump.json");
+const repoRoot = path.resolve(dirname, "..", "..");
 const outputDir = path.join(repoRoot, "src/unreal-engine/Layout");
 
 function main() {
@@ -31,18 +32,21 @@ function main() {
 
   const values = JSON.parse(fs.readFileSync(layoutPath, "utf-8")) as LayoutDump;
 
+  const interestingClasses = fs
+    .readFileSync(path.join(dirname, "InterestingClasses.txt"), "utf-8")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => !line.startsWith("#"))
+    .filter((line) => line.length > 0);
+
   const layoutGenerator = new TSLayoutGenerator(values);
   for (const aPackage of values.packages) {
     for (const aClass of aPackage.classes) {
-      if (isInteresting(aPackage.packageName, aClass.className)) {
+      if (interestingClasses.indexOf(aClass.className) !== -1) {
         layoutGenerator.generateClass(aPackage, aClass);
       }
     }
   }
-}
-
-function isInteresting(moduleName: string, className: string) {
-  return className == "StaticMesh";
 }
 
 class TSLayoutGenerator {
