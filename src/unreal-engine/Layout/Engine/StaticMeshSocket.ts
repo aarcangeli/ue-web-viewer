@@ -1,16 +1,16 @@
 // This file is auto-generated, do not edit directly.
 
-import type { FRotator } from "../CoreUObject/Rotator";
-import type { FVector } from "../CoreUObject/Vector";
-import type { UObject } from "../CoreUObject/Object";
+import { FRotator } from "../CoreUObject/Rotator";
+import { FVector } from "../CoreUObject/Vector";
+import { UObject } from "../CoreUObject/Object";
 import type { UStaticMesh } from "./StaticMesh";
 
-export interface UStaticMeshSocket extends UObject {
-  SocketName: string;
-  RelativeLocation: FVector;
-  RelativeRotation: FRotator;
-  RelativeScale: FVector;
-  Tag: string;
-  PreviewStaticMesh: UStaticMesh;
-  bSocketCreatedAtImport: boolean;
+export class UStaticMeshSocket extends UObject {
+  SocketName: string = "";
+  RelativeLocation: FVector = new FVector();
+  RelativeRotation: FRotator = new FRotator();
+  RelativeScale: FVector = new FVector();
+  Tag: string = "";
+  PreviewStaticMesh: UStaticMesh | null = null;
+  bSocketCreatedAtImport: boolean = false;
 }

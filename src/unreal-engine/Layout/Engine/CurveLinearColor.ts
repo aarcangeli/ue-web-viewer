@@ -1,15 +1,15 @@
 // This file is auto-generated, do not edit directly.
 
-import type { FRichCurve } from "./RichCurve";
-import type { UCurveBase } from "./CurveBase";
+import { FRichCurve } from "./RichCurve";
+import { UCurveBase } from "./CurveBase";
 
-export interface UCurveLinearColor extends UCurveBase {
-  FloatCurves: FRichCurve;
-  AdjustHue: number;
-  AdjustSaturation: number;
-  AdjustBrightness: number;
-  AdjustBrightnessCurve: number;
-  AdjustVibrance: number;
-  AdjustMinAlpha: number;
-  AdjustMaxAlpha: number;
+export class UCurveLinearColor extends UCurveBase {
+  FloatCurves: FRichCurve = new FRichCurve();
+  AdjustHue: number = 0;
+  AdjustSaturation: number = 0;
+  AdjustBrightness: number = 0;
+  AdjustBrightnessCurve: number = 0;
+  AdjustVibrance: number = 0;
+  AdjustMinAlpha: number = 0;
+  AdjustMaxAlpha: number = 0;
 }

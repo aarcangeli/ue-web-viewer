@@ -1,9 +1,9 @@
 // This file is auto-generated, do not edit directly.
 
 import type { UAssetImportData } from "./AssetImportData";
-import type { UObject } from "../CoreUObject/Object";
+import { UObject } from "../CoreUObject/Object";
 
-export interface UCurveBase extends UObject {
-  AssetImportData: UAssetImportData;
-  ImportPath: string;
+export class UCurveBase extends UObject {
+  AssetImportData: UAssetImportData | null = null;
+  ImportPath: string = "";
 }

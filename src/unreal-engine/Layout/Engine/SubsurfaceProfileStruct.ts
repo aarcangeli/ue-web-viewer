@@ -1,71 +1,27 @@
 // This file is auto-generated, do not edit directly.
 
-import type { ESubsurfaceImplementationTechniqueHint } from "./ESubsurfaceImplementationTechniqueHint";
-import type { FLinearColor } from "../CoreUObject/LinearColor";
+import { ESubsurfaceImplementationTechniqueHint } from "./ESubsurfaceImplementationTechniqueHint";
+import { FLinearColor } from "../CoreUObject/LinearColor";
 
 export class FSubsurfaceProfileStruct {
-  SurfaceAlbedo: FLinearColor;
-  MeanFreePathColor: FLinearColor;
-  MeanFreePathDistance: number;
-  WorldUnitScale: number;
-  bEnableBurley: boolean;
-  bEnableMeanFreePath: boolean;
-  Tint: FLinearColor;
-  ScatterRadius: number;
-  SubsurfaceColor: FLinearColor;
-  FalloffColor: FLinearColor;
-  BoundaryColorBleed: FLinearColor;
-  Implementation: ESubsurfaceImplementationTechniqueHint;
-  ExtinctionScale: number;
-  NormalScale: number;
-  ScatteringDistribution: number;
-  IOR: number;
-  Roughness0: number;
-  Roughness1: number;
-  LobeMix: number;
-  TransmissionTintColor: FLinearColor;
-
-  constructor(props: {
-    SurfaceAlbedo: FLinearColor;
-    MeanFreePathColor: FLinearColor;
-    MeanFreePathDistance: number;
-    WorldUnitScale: number;
-    bEnableBurley: boolean;
-    bEnableMeanFreePath: boolean;
-    Tint: FLinearColor;
-    ScatterRadius: number;
-    SubsurfaceColor: FLinearColor;
-    FalloffColor: FLinearColor;
-    BoundaryColorBleed: FLinearColor;
-    Implementation: ESubsurfaceImplementationTechniqueHint;
-    ExtinctionScale: number;
-    NormalScale: number;
-    ScatteringDistribution: number;
-    IOR: number;
-    Roughness0: number;
-    Roughness1: number;
-    LobeMix: number;
-    TransmissionTintColor: FLinearColor;
-  }) {
-    this.SurfaceAlbedo = props.SurfaceAlbedo;
-    this.MeanFreePathColor = props.MeanFreePathColor;
-    this.MeanFreePathDistance = props.MeanFreePathDistance;
-    this.WorldUnitScale = props.WorldUnitScale;
-    this.bEnableBurley = props.bEnableBurley;
-    this.bEnableMeanFreePath = props.bEnableMeanFreePath;
-    this.Tint = props.Tint;
-    this.ScatterRadius = props.ScatterRadius;
-    this.SubsurfaceColor = props.SubsurfaceColor;
-    this.FalloffColor = props.FalloffColor;
-    this.BoundaryColorBleed = props.BoundaryColorBleed;
-    this.Implementation = props.Implementation;
-    this.ExtinctionScale = props.ExtinctionScale;
-    this.NormalScale = props.NormalScale;
-    this.ScatteringDistribution = props.ScatteringDistribution;
-    this.IOR = props.IOR;
-    this.Roughness0 = props.Roughness0;
-    this.Roughness1 = props.Roughness1;
-    this.LobeMix = props.LobeMix;
-    this.TransmissionTintColor = props.TransmissionTintColor;
-  }
+  SurfaceAlbedo: FLinearColor = new FLinearColor();
+  MeanFreePathColor: FLinearColor = new FLinearColor();
+  MeanFreePathDistance: number = 0;
+  WorldUnitScale: number = 0;
+  bEnableBurley: boolean = false;
+  bEnableMeanFreePath: boolean = false;
+  Tint: FLinearColor = new FLinearColor();
+  ScatterRadius: number = 0;
+  SubsurfaceColor: FLinearColor = new FLinearColor();
+  FalloffColor: FLinearColor = new FLinearColor();
+  BoundaryColorBleed: FLinearColor = new FLinearColor();
+  Implementation: ESubsurfaceImplementationTechniqueHint = ESubsurfaceImplementationTechniqueHint.SIH_AFIS;
+  ExtinctionScale: number = 0;
+  NormalScale: number = 0;
+  ScatteringDistribution: number = 0;
+  IOR: number = 0;
+  Roughness0: number = 0;
+  Roughness1: number = 0;
+  LobeMix: number = 0;
+  TransmissionTintColor: FLinearColor = new FLinearColor();
 }

@@ -1,6 +1,5 @@
 // This file is auto-generated, do not edit directly.
 
-import type { UObject } from "../CoreUObject/Object";
+import { UObject } from "../CoreUObject/Object";
 
-// Empty class
-export type UMeshDescriptionBaseBulkData = UObject;
+export class UMeshDescriptionBaseBulkData extends UObject {}

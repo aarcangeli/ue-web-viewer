@@ -1,10 +1,10 @@
 // This file is auto-generated, do not edit directly.
 
-import type { FAssetImportInfo } from "./AssetImportInfo";
-import type { UObject } from "../CoreUObject/Object";
+import { FAssetImportInfo } from "./AssetImportInfo";
+import { UObject } from "../CoreUObject/Object";
 
-export interface UAssetImportData extends UObject {
-  SourceFilePath: string;
-  SourceFileTimestamp: string;
-  SourceData: FAssetImportInfo;
+export class UAssetImportData extends UObject {
+  SourceFilePath: string = "";
+  SourceFileTimestamp: string = "";
+  SourceData: FAssetImportInfo = new FAssetImportInfo();
 }

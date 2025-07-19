@@ -1,14 +1,14 @@
 // This file is auto-generated, do not edit directly.
 
-import type { FIntPoint } from "../CoreUObject/IntPoint";
-import type { TextureAddress } from "./TextureAddress";
-import type { UTexture } from "./Texture";
+import { FIntPoint } from "../CoreUObject/IntPoint";
+import { TextureAddress } from "./TextureAddress";
+import { UTexture } from "./Texture";
 
-export interface UTexture2D extends UTexture {
-  FirstResourceMemMip: number;
-  bHasBeenPaintedInEditor: boolean;
-  AddressX: TextureAddress;
-  AddressY: TextureAddress;
-  ImportedSize: FIntPoint;
-  CPUCopyTexture: UTexture2D;
+export class UTexture2D extends UTexture {
+  FirstResourceMemMip: number = 0;
+  bHasBeenPaintedInEditor: boolean = false;
+  AddressX: TextureAddress = TextureAddress.TA_Wrap;
+  AddressY: TextureAddress = TextureAddress.TA_Wrap;
+  ImportedSize: FIntPoint = new FIntPoint();
+  CPUCopyTexture: UTexture2D | null = null;
 }

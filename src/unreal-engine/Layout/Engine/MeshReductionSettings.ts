@@ -1,71 +1,27 @@
 // This file is auto-generated, do not edit directly.
 
-import type { EMeshFeatureImportance } from "./EMeshFeatureImportance";
-import type { EStaticMeshReductionTerimationCriterion } from "./EStaticMeshReductionTerimationCriterion";
+import { EMeshFeatureImportance } from "./EMeshFeatureImportance";
+import { EStaticMeshReductionTerimationCriterion } from "./EStaticMeshReductionTerimationCriterion";
 
 export class FMeshReductionSettings {
-  PercentTriangles: number;
-  MaxNumOfTriangles: number;
-  PercentVertices: number;
-  MaxNumOfVerts: number;
-  MaxDeviation: number;
-  PixelError: number;
-  WeldingThreshold: number;
-  HardAngleThreshold: number;
-  BaseLODModel: number;
-  SilhouetteImportance: EMeshFeatureImportance;
-  TextureImportance: EMeshFeatureImportance;
-  ShadingImportance: EMeshFeatureImportance;
-  bRecalculateNormals: boolean;
-  bGenerateUniqueLightmapUVs: boolean;
-  bKeepSymmetry: boolean;
-  bVisibilityAided: boolean;
-  bCullOccluded: boolean;
-  TerminationCriterion: EStaticMeshReductionTerimationCriterion;
-  VisibilityAggressiveness: EMeshFeatureImportance;
-  VertexColorImportance: EMeshFeatureImportance;
-
-  constructor(props: {
-    PercentTriangles: number;
-    MaxNumOfTriangles: number;
-    PercentVertices: number;
-    MaxNumOfVerts: number;
-    MaxDeviation: number;
-    PixelError: number;
-    WeldingThreshold: number;
-    HardAngleThreshold: number;
-    BaseLODModel: number;
-    SilhouetteImportance: EMeshFeatureImportance;
-    TextureImportance: EMeshFeatureImportance;
-    ShadingImportance: EMeshFeatureImportance;
-    bRecalculateNormals: boolean;
-    bGenerateUniqueLightmapUVs: boolean;
-    bKeepSymmetry: boolean;
-    bVisibilityAided: boolean;
-    bCullOccluded: boolean;
-    TerminationCriterion: EStaticMeshReductionTerimationCriterion;
-    VisibilityAggressiveness: EMeshFeatureImportance;
-    VertexColorImportance: EMeshFeatureImportance;
-  }) {
-    this.PercentTriangles = props.PercentTriangles;
-    this.MaxNumOfTriangles = props.MaxNumOfTriangles;
-    this.PercentVertices = props.PercentVertices;
-    this.MaxNumOfVerts = props.MaxNumOfVerts;
-    this.MaxDeviation = props.MaxDeviation;
-    this.PixelError = props.PixelError;
-    this.WeldingThreshold = props.WeldingThreshold;
-    this.HardAngleThreshold = props.HardAngleThreshold;
-    this.BaseLODModel = props.BaseLODModel;
-    this.SilhouetteImportance = props.SilhouetteImportance;
-    this.TextureImportance = props.TextureImportance;
-    this.ShadingImportance = props.ShadingImportance;
-    this.bRecalculateNormals = props.bRecalculateNormals;
-    this.bGenerateUniqueLightmapUVs = props.bGenerateUniqueLightmapUVs;
-    this.bKeepSymmetry = props.bKeepSymmetry;
-    this.bVisibilityAided = props.bVisibilityAided;
-    this.bCullOccluded = props.bCullOccluded;
-    this.TerminationCriterion = props.TerminationCriterion;
-    this.VisibilityAggressiveness = props.VisibilityAggressiveness;
-    this.VertexColorImportance = props.VertexColorImportance;
-  }
+  PercentTriangles: number = 0;
+  MaxNumOfTriangles: number = 0;
+  PercentVertices: number = 0;
+  MaxNumOfVerts: number = 0;
+  MaxDeviation: number = 0;
+  PixelError: number = 0;
+  WeldingThreshold: number = 0;
+  HardAngleThreshold: number = 0;
+  BaseLODModel: number = 0;
+  SilhouetteImportance: EMeshFeatureImportance = EMeshFeatureImportance.Off;
+  TextureImportance: EMeshFeatureImportance = EMeshFeatureImportance.Off;
+  ShadingImportance: EMeshFeatureImportance = EMeshFeatureImportance.Off;
+  bRecalculateNormals: boolean = false;
+  bGenerateUniqueLightmapUVs: boolean = false;
+  bKeepSymmetry: boolean = false;
+  bVisibilityAided: boolean = false;
+  bCullOccluded: boolean = false;
+  TerminationCriterion: EStaticMeshReductionTerimationCriterion = EStaticMeshReductionTerimationCriterion.Triangles;
+  VisibilityAggressiveness: EMeshFeatureImportance = EMeshFeatureImportance.Off;
+  VertexColorImportance: EMeshFeatureImportance = EMeshFeatureImportance.Off;
 }

@@ -1,11 +1,11 @@
 // This file is auto-generated, do not edit directly.
 
-import type { FPerQualityLevelInt } from "./PerQualityLevelInt";
-import type { UObject } from "../CoreUObject/Object";
+import { FPerQualityLevelInt } from "./PerQualityLevelInt";
+import { UObject } from "../CoreUObject/Object";
 
-export interface UStreamableRenderAsset extends UObject {
-  NumCinematicMipLevels: number;
-  NoRefStreamingLODBias: FPerQualityLevelInt;
-  NeverStream: boolean;
-  bGlobalForceMipLevelsToBeResident: boolean;
+export class UStreamableRenderAsset extends UObject {
+  NumCinematicMipLevels: number = 0;
+  NoRefStreamingLODBias: FPerQualityLevelInt = new FPerQualityLevelInt();
+  NeverStream: boolean = false;
+  bGlobalForceMipLevelsToBeResident: boolean = false;
 }

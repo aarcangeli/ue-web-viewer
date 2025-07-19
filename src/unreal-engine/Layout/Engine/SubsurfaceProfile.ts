@@ -1,10 +1,10 @@
 // This file is auto-generated, do not edit directly.
 
-import type { FGuid } from "../CoreUObject/Guid";
-import type { FSubsurfaceProfileStruct } from "./SubsurfaceProfileStruct";
-import type { UObject } from "../CoreUObject/Object";
+import { FGuid } from "../CoreUObject/Guid";
+import { FSubsurfaceProfileStruct } from "./SubsurfaceProfileStruct";
+import { UObject } from "../CoreUObject/Object";
 
-export interface USubsurfaceProfile extends UObject {
-  Settings: FSubsurfaceProfileStruct;
-  Guid: FGuid;
+export class USubsurfaceProfile extends UObject {
+  Settings: FSubsurfaceProfileStruct = new FSubsurfaceProfileStruct();
+  Guid: FGuid = new FGuid();
 }

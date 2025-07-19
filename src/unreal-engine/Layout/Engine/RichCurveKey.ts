@@ -1,39 +1,17 @@
 // This file is auto-generated, do not edit directly.
 
-import type { ERichCurveInterpMode } from "./ERichCurveInterpMode";
-import type { ERichCurveTangentMode } from "./ERichCurveTangentMode";
-import type { ERichCurveTangentWeightMode } from "./ERichCurveTangentWeightMode";
+import { ERichCurveInterpMode } from "./ERichCurveInterpMode";
+import { ERichCurveTangentMode } from "./ERichCurveTangentMode";
+import { ERichCurveTangentWeightMode } from "./ERichCurveTangentWeightMode";
 
 export class FRichCurveKey {
-  InterpMode: ERichCurveInterpMode;
-  TangentMode: ERichCurveTangentMode;
-  TangentWeightMode: ERichCurveTangentWeightMode;
-  Time: number;
-  Value: number;
-  ArriveTangent: number;
-  ArriveTangentWeight: number;
-  LeaveTangent: number;
-  LeaveTangentWeight: number;
-
-  constructor(props: {
-    InterpMode: ERichCurveInterpMode;
-    TangentMode: ERichCurveTangentMode;
-    TangentWeightMode: ERichCurveTangentWeightMode;
-    Time: number;
-    Value: number;
-    ArriveTangent: number;
-    ArriveTangentWeight: number;
-    LeaveTangent: number;
-    LeaveTangentWeight: number;
-  }) {
-    this.InterpMode = props.InterpMode;
-    this.TangentMode = props.TangentMode;
-    this.TangentWeightMode = props.TangentWeightMode;
-    this.Time = props.Time;
-    this.Value = props.Value;
-    this.ArriveTangent = props.ArriveTangent;
-    this.ArriveTangentWeight = props.ArriveTangentWeight;
-    this.LeaveTangent = props.LeaveTangent;
-    this.LeaveTangentWeight = props.LeaveTangentWeight;
-  }
+  InterpMode: ERichCurveInterpMode = ERichCurveInterpMode.RCIM_Linear;
+  TangentMode: ERichCurveTangentMode = ERichCurveTangentMode.RCTM_Auto;
+  TangentWeightMode: ERichCurveTangentWeightMode = ERichCurveTangentWeightMode.RCTWM_WeightedNone;
+  Time: number = 0;
+  Value: number = 0;
+  ArriveTangent: number = 0;
+  ArriveTangentWeight: number = 0;
+  LeaveTangent: number = 0;
+  LeaveTangentWeight: number = 0;
 }

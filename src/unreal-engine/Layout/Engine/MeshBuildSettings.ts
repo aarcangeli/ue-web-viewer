@@ -1,74 +1,28 @@
 // This file is auto-generated, do not edit directly.
 
-import type { FVector } from "../CoreUObject/Vector";
+import { FVector } from "../CoreUObject/Vector";
 import type { UStaticMesh } from "./StaticMesh";
 
 export class FMeshBuildSettings {
-  bUseMikkTSpace: boolean;
-  bRecomputeNormals: boolean;
-  bRecomputeTangents: boolean;
-  bComputeWeightedNormals: boolean;
-  bRemoveDegenerates: boolean;
-  bBuildReversedIndexBuffer: boolean;
-  bUseHighPrecisionTangentBasis: boolean;
-  bUseFullPrecisionUVs: boolean;
-  bUseBackwardsCompatibleF16TruncUVs: boolean;
-  bGenerateLightmapUVs: boolean;
-  bGenerateDistanceFieldAsIfTwoSided: boolean;
-  bSupportFaceRemap: boolean;
-  MinLightmapResolution: number;
-  SrcLightmapIndex: number;
-  DstLightmapIndex: number;
-  BuildScale: number;
-  BuildScale3D: FVector;
-  DistanceFieldResolutionScale: number;
-  DistanceFieldBias: number;
-  DistanceFieldReplacementMesh: UStaticMesh;
-  MaxLumenMeshCards: number;
-
-  constructor(props: {
-    bUseMikkTSpace: boolean;
-    bRecomputeNormals: boolean;
-    bRecomputeTangents: boolean;
-    bComputeWeightedNormals: boolean;
-    bRemoveDegenerates: boolean;
-    bBuildReversedIndexBuffer: boolean;
-    bUseHighPrecisionTangentBasis: boolean;
-    bUseFullPrecisionUVs: boolean;
-    bUseBackwardsCompatibleF16TruncUVs: boolean;
-    bGenerateLightmapUVs: boolean;
-    bGenerateDistanceFieldAsIfTwoSided: boolean;
-    bSupportFaceRemap: boolean;
-    MinLightmapResolution: number;
-    SrcLightmapIndex: number;
-    DstLightmapIndex: number;
-    BuildScale: number;
-    BuildScale3D: FVector;
-    DistanceFieldResolutionScale: number;
-    DistanceFieldBias: number;
-    DistanceFieldReplacementMesh: UStaticMesh;
-    MaxLumenMeshCards: number;
-  }) {
-    this.bUseMikkTSpace = props.bUseMikkTSpace;
-    this.bRecomputeNormals = props.bRecomputeNormals;
-    this.bRecomputeTangents = props.bRecomputeTangents;
-    this.bComputeWeightedNormals = props.bComputeWeightedNormals;
-    this.bRemoveDegenerates = props.bRemoveDegenerates;
-    this.bBuildReversedIndexBuffer = props.bBuildReversedIndexBuffer;
-    this.bUseHighPrecisionTangentBasis = props.bUseHighPrecisionTangentBasis;
-    this.bUseFullPrecisionUVs = props.bUseFullPrecisionUVs;
-    this.bUseBackwardsCompatibleF16TruncUVs = props.bUseBackwardsCompatibleF16TruncUVs;
-    this.bGenerateLightmapUVs = props.bGenerateLightmapUVs;
-    this.bGenerateDistanceFieldAsIfTwoSided = props.bGenerateDistanceFieldAsIfTwoSided;
-    this.bSupportFaceRemap = props.bSupportFaceRemap;
-    this.MinLightmapResolution = props.MinLightmapResolution;
-    this.SrcLightmapIndex = props.SrcLightmapIndex;
-    this.DstLightmapIndex = props.DstLightmapIndex;
-    this.BuildScale = props.BuildScale;
-    this.BuildScale3D = props.BuildScale3D;
-    this.DistanceFieldResolutionScale = props.DistanceFieldResolutionScale;
-    this.DistanceFieldBias = props.DistanceFieldBias;
-    this.DistanceFieldReplacementMesh = props.DistanceFieldReplacementMesh;
-    this.MaxLumenMeshCards = props.MaxLumenMeshCards;
-  }
+  bUseMikkTSpace: boolean = false;
+  bRecomputeNormals: boolean = false;
+  bRecomputeTangents: boolean = false;
+  bComputeWeightedNormals: boolean = false;
+  bRemoveDegenerates: boolean = false;
+  bBuildReversedIndexBuffer: boolean = false;
+  bUseHighPrecisionTangentBasis: boolean = false;
+  bUseFullPrecisionUVs: boolean = false;
+  bUseBackwardsCompatibleF16TruncUVs: boolean = false;
+  bGenerateLightmapUVs: boolean = false;
+  bGenerateDistanceFieldAsIfTwoSided: boolean = false;
+  bSupportFaceRemap: boolean = false;
+  MinLightmapResolution: number = 0;
+  SrcLightmapIndex: number = 0;
+  DstLightmapIndex: number = 0;
+  BuildScale: number = 0;
+  BuildScale3D: FVector = new FVector();
+  DistanceFieldResolutionScale: number = 0;
+  DistanceFieldBias: number = 0;
+  DistanceFieldReplacementMesh: UStaticMesh | null = null;
+  MaxLumenMeshCards: number = 0;
 }

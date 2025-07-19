@@ -1,10 +1,10 @@
 // This file is auto-generated, do not edit directly.
 
-import type { FGuid } from "../CoreUObject/Guid";
-import type { FSpecularProfileStruct } from "./SpecularProfileStruct";
-import type { UObject } from "../CoreUObject/Object";
+import { FGuid } from "../CoreUObject/Guid";
+import { FSpecularProfileStruct } from "./SpecularProfileStruct";
+import { UObject } from "../CoreUObject/Object";
 
-export interface USpecularProfile extends UObject {
-  Settings: FSpecularProfileStruct;
-  Guid: FGuid;
+export class USpecularProfile extends UObject {
+  Settings: FSpecularProfileStruct = new FSpecularProfileStruct();
+  Guid: FGuid = new FGuid();
 }

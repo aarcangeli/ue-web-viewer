@@ -129,19 +129,19 @@ class TSFileGenerator {
     return path.join(outputDir, `${shortPackageName(this.packageName)}/${this.fileName}.ts`);
   }
 
-  importClassType(aPackage: PackageInfo, aClass: ClassInfo): string {
-    return this.importGeneric(aPackage, aClass.className, getClassName(aClass));
+  importClassType(aPackage: PackageInfo, aClass: ClassInfo, asType: boolean): string {
+    return this.importGeneric(aPackage, aClass.className, getClassName(aClass), asType);
   }
 
-  importStructType(aPackage: PackageInfo, aStruct: StructInfo): string {
-    return this.importGeneric(aPackage, aStruct.structName, getStructName(aStruct));
+  importStructType(aPackage: PackageInfo, aStruct: StructInfo, asType: boolean): string {
+    return this.importGeneric(aPackage, aStruct.structName, getStructName(aStruct), asType);
   }
 
   importEnumType(aPackage: PackageInfo, aStruct: EnumInfo): string {
-    return this.importGeneric(aPackage, aStruct.enumName, aStruct.enumName);
+    return this.importGeneric(aPackage, aStruct.enumName, aStruct.enumName, false);
   }
 
-  private importGeneric(aPackage: PackageInfo, fileName: string, symbolName: string): string {
+  private importGeneric(aPackage: PackageInfo, fileName: string, symbolName: string, asType: boolean): string {
     if (this.symbolsInThisFile.has(symbolName)) {
       // Already imported in this file, no need to do it again
       return symbolName;
@@ -151,23 +151,17 @@ class TSFileGenerator {
       aPackage.packageName == this.packageName
         ? `./${fileName}`
         : `../${shortPackageName(aPackage.packageName)}/${fileName}`;
-    const fullImport = `import type { ${symbolName} } from ${JSON.stringify(path)};`;
-    this.addImport(symbolName, fullImport);
+    const fullImport = `import ${asType ? "type " : ""}{ ${symbolName} } from ${JSON.stringify(path)};`;
+
+    const existingImport = this.imports.get(symbolName);
+    if (!existingImport || !asType) {
+      this.imports.set(symbolName, fullImport);
+    }
+
     return symbolName;
   }
 
-  private addImport(symbolName: string, fullImport: string) {
-    const existingImport = this.imports.get(symbolName);
-    if (existingImport) {
-      if (existingImport !== fullImport) {
-        console.error(`ERROR: Duplicate import for ${symbolName} in package ${this.packageName}`);
-      }
-    } else {
-      this.imports.set(symbolName, fullImport);
-    }
-  }
-
-  resolveClassRef(classRef: ClassRef) {
+  resolveClassRef(classRef: ClassRef, asType = true) {
     const values = this.generator.getClass(classRef);
     if (!values) {
       console.warn(`Could not resolve class reference ${classRef.class} in package ${classRef.package}`);
@@ -175,10 +169,10 @@ class TSFileGenerator {
     }
     const [aPackage, aClass] = values;
     this.generator.generateClass(aPackage, aClass);
-    return this.importClassType(aPackage, aClass);
+    return this.importClassType(aPackage, aClass, asType);
   }
 
-  resolveStructRef(aStruct: StructRef): string {
+  resolveStructRef(aStruct: StructRef, asType = true): string {
     const values = this.generator.getStruct(aStruct);
     if (!values) {
       console.warn(`Could not resolve struct reference ${aStruct.struct} in package ${aStruct.package}`);
@@ -186,7 +180,7 @@ class TSFileGenerator {
     }
     const [aPackage, aClass] = values;
     this.generator.generateStruct(aPackage, aClass);
-    return this.importStructType(aPackage, aClass);
+    return this.importStructType(aPackage, aClass, asType);
   }
 
   resolveEnumRef(aEnum: EnumRef): string {
@@ -202,19 +196,12 @@ class TSFileGenerator {
 
   generateClass(aClass: ClassInfo) {
     const properties = aClass.properties.filter((prop) => !(prop.flagsLower & EPropertyFlags.Transient));
-    if (!properties.length && aClass.superClass) {
-      // use type alias
-      this.addLine(`// Empty class`);
-      this.addLine(`export type ${getClassName(aClass)} = ${this.resolveClassRef(aClass.superClass)};`);
-      writeFile(this.outputPath, this.composePage());
-      return;
-    }
 
-    let line = `export interface ${getClassName(aClass)}`;
+    let line = `export class ${getClassName(aClass)}`;
     this.symbolsInThisFile.add(getClassName(aClass));
 
     if (aClass.superClass) {
-      line += ` extends ${this.resolveClassRef(aClass.superClass)}`;
+      line += ` extends ${this.resolveClassRef(aClass.superClass, false)}`;
     }
 
     line += ` {`;
@@ -237,7 +224,7 @@ class TSFileGenerator {
 
   private writeProperties(properties: PropertyInfo[]) {
     for (const prop of properties) {
-      this.addLine(`${prop.name}: ${this.generateType(prop)};`);
+      this.addLine(`${prop.name}: ${this.generateType(prop)} = ${this.initializer(prop)};`);
     }
   }
 
@@ -251,21 +238,6 @@ class TSFileGenerator {
       this.withIndent(() => {
         // Fields
         this.writeProperties(properties);
-        this.addLine("");
-
-        this.addLine("constructor(props: {");
-        this.withIndent(() => {
-          for (const prop of properties) {
-            this.addLine(`${prop.name}: ${this.generateType(prop)};`);
-          }
-        });
-        this.addLine("}) {");
-        this.withIndent(() => {
-          for (const prop of properties) {
-            this.addLine(`this.${prop.name} = props.${prop.name};`);
-          }
-        });
-        this.addLine("}");
       });
       this.addLine(`}`);
     } else {
@@ -311,7 +283,7 @@ class TSFileGenerator {
       case "BoolProperty":
         return "boolean";
       case "ObjectProperty":
-        return this.resolveClassRef(property.objectType);
+        return `${this.resolveClassRef(property.objectType)} | null`;
       case "WeakObjectProperty":
       case "LazyObjectProperty":
       case "SoftObjectProperty":
@@ -351,6 +323,80 @@ class TSFileGenerator {
     }
     console.error("ERROR: generateType not implemented for property type:", property.type);
     return `Invalid__${property.type}`;
+  }
+
+  initializer(property: ChildPropertyInfo): string {
+    switch (property.type) {
+      case "ByteProperty":
+        if (property.enumType) {
+          return this.enumDefaultValue(property.enumType);
+        }
+        return "0";
+      case "Int8Property":
+      case "Int16Property":
+      case "IntProperty":
+      case "UInt32Property":
+      case "UInt16Property":
+      case "FloatProperty":
+      case "DoubleProperty":
+        return "0";
+      case "Int64Property":
+      case "UInt64Property":
+        return "0n";
+      case "BoolProperty":
+        return "false";
+      case "ObjectProperty":
+        return "null";
+      case "WeakObjectProperty":
+      case "LazyObjectProperty":
+      case "SoftObjectProperty":
+        break;
+      case "ClassProperty":
+      case "SoftClassProperty":
+        return "Class";
+      case "InterfaceProperty":
+        break;
+      case "NameProperty":
+      case "StrProperty":
+      case "Utf8StrProperty":
+      case "AnsiStrProperty":
+        return '""';
+      case "ArrayProperty":
+        return "[]";
+      case "MapProperty":
+        return "new Map()";
+      case "SetProperty":
+        break;
+      case "StructProperty":
+        return `new ${this.resolveStructRef(property.structType, false)}()`;
+      case "DelegateProperty":
+        break;
+      case "MulticastInlineDelegateProperty":
+        break;
+      case "MulticastSparseDelegateProperty":
+        break;
+      case "TextProperty":
+        break;
+      case "EnumProperty":
+        return this.enumDefaultValue(property.enumType);
+      case "FieldPathProperty":
+        break;
+      case "OptionalProperty":
+        break;
+    }
+    console.error("ERROR: initializer not implemented for property type:", property.type);
+    return `Invalid__${property.type}`;
+  }
+
+  private enumDefaultValue(enumType: EnumRef) {
+    const enumName = this.resolveEnumRef(enumType);
+
+    const enumContent = this.generator.getEnum(enumType);
+    invariant(enumContent);
+    const [, enumInfo] = enumContent;
+    const defaultValue = Object.keys(enumInfo.values)[0];
+
+    return `${enumName}.${defaultValue}`;
   }
 
   withIndent(callback: () => void) {
