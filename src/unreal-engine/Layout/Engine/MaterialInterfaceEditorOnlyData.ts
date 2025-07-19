@@ -2,4 +2,5 @@
 
 import type { UObject } from "../CoreUObject/Object";
 
-export interface UMaterialInterfaceEditorOnlyData extends UObject {}
+// Empty class
+export type UMaterialInterfaceEditorOnlyData = UObject;

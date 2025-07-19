@@ -119,9 +119,9 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
       }
       return (
         <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value.value)}>
-          {Object.keys(value.value).map((subKey, index) => (
+          {Object.entries(value.value).map(([subKey, subValue], index) => (
             <IndentedRow key={index} title={subKey}>
-              {String((value.value as Record<string, any>)[subKey])}
+              {String(subValue)}
             </IndentedRow>
           ))}
         </CollapsableSection>

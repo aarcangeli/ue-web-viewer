@@ -2,4 +2,5 @@
 
 import type { UMeshDescriptionBaseBulkData } from "../MeshDescription/MeshDescriptionBaseBulkData";
 
-export interface UStaticMeshDescriptionBulkData extends UMeshDescriptionBaseBulkData {}
+// Empty class
+export type UStaticMeshDescriptionBulkData = UMeshDescriptionBaseBulkData;

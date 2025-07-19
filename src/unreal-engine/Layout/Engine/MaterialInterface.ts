@@ -14,20 +14,20 @@ import type { USubsurfaceProfile } from "./SubsurfaceProfile";
 import type { UThumbnailInfo } from "./ThumbnailInfo";
 
 export interface UMaterialInterface extends UObject {
-  EditorOnlyData: UMaterialInterfaceEditorOnlyData; // Editor only property
+  EditorOnlyData: UMaterialInterfaceEditorOnlyData;
   SubsurfaceProfile: USubsurfaceProfile;
   SubsurfaceProfiles: Array<USubsurfaceProfile>;
   SpecularProfiles: Array<USpecularProfile>;
   NeuralProfile: UNeuralProfile;
   LightmassSettings: FLightmassMaterialInterfaceSettings;
-  TextureStreamingDataVersion: number; // Editor only property
+  TextureStreamingDataVersion: number;
   TextureStreamingData: Array<FMaterialTextureInfo>;
   AssetUserData: Array<UAssetUserData>;
   bIncludedInBaseGame: boolean;
-  PreviewMesh: FSoftObjectPath; // Editor only property
-  ThumbnailInfo: UThumbnailInfo; // Editor only property
-  LayerParameterExpansion: Map<string, boolean>; // Editor only property
-  ParameterOverviewExpansion: Map<string, boolean>; // Editor only property
-  AssetImportData: UAssetImportData; // Editor only property
-  LightingGuid: FGuid; // Editor only property
+  PreviewMesh: FSoftObjectPath;
+  ThumbnailInfo: UThumbnailInfo;
+  LayerParameterExpansion: Map<string, boolean>;
+  ParameterOverviewExpansion: Map<string, boolean>;
+  AssetImportData: UAssetImportData;
+  LightingGuid: FGuid;
 }

@@ -2,4 +2,5 @@
 
 import type { UObject } from "../CoreUObject/Object";
 
-export interface UAssetUserData extends UObject {}
+// Empty class
+export type UAssetUserData = UObject;

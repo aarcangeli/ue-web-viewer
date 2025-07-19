@@ -2,4 +2,5 @@
 
 import type { UObject } from "../CoreUObject/Object";
 
-export interface UMeshDescriptionBaseBulkData extends UObject {}
+// Empty class
+export type UMeshDescriptionBaseBulkData = UObject;

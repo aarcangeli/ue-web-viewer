@@ -2,8 +2,14 @@
 
 import type { FVector } from "./Vector";
 
-export interface FBoxSphereBounds {
+export class FBoxSphereBounds {
   Origin: FVector;
   BoxExtent: FVector;
   SphereRadius: number;
+
+  constructor(props: { Origin: FVector; BoxExtent: FVector; SphereRadius: number }) {
+    this.Origin = props.Origin;
+    this.BoxExtent = props.BoxExtent;
+    this.SphereRadius = props.SphereRadius;
+  }
 }

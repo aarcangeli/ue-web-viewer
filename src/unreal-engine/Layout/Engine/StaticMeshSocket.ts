@@ -11,6 +11,6 @@ export interface UStaticMeshSocket extends UObject {
   RelativeRotation: FRotator;
   RelativeScale: FVector;
   Tag: string;
-  PreviewStaticMesh: UStaticMesh; // Editor only property
-  bSocketCreatedAtImport: boolean; // Editor only property
+  PreviewStaticMesh: UStaticMesh;
+  bSocketCreatedAtImport: boolean;
 }

@@ -2,4 +2,5 @@
 
 import type { UObject } from "../CoreUObject/Object";
 
-export interface UThumbnailInfo extends UObject {}
+// Empty class
+export type UThumbnailInfo = UObject;

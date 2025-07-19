@@ -21,18 +21,18 @@ import type { UStreamableRenderAsset } from "./StreamableRenderAsset";
 import type { UThumbnailInfo } from "./ThumbnailInfo";
 
 export interface UStaticMesh extends UStreamableRenderAsset {
-  SourceModels: Array<FStaticMeshSourceModel>; // Editor only property
-  HiResSourceModel: FStaticMeshSourceModel; // Editor only property
-  SectionInfoMap: FMeshSectionInfoMap; // Editor only property
-  OriginalSectionInfoMap: FMeshSectionInfoMap; // Editor only property
-  LODGroup: string; // Editor only property
-  NumStreamedLODs: FPerPlatformInt; // Editor only property
-  ImportVersion: number; // Editor only property
-  MaterialRemapIndexPerImportVersion: Array<FMaterialRemapIndex>; // Editor only property
-  LightmapUVVersion: number; // Editor only property
-  bAutoComputeLODScreenSize: boolean; // Editor only property
-  Materials: Array<UMaterialInterface>; // Editor only property
-  NaniteSettings: FMeshNaniteSettings; // Editor only property
+  SourceModels: Array<FStaticMeshSourceModel>;
+  HiResSourceModel: FStaticMeshSourceModel;
+  SectionInfoMap: FMeshSectionInfoMap;
+  OriginalSectionInfoMap: FMeshSectionInfoMap;
+  LODGroup: string;
+  NumStreamedLODs: FPerPlatformInt;
+  ImportVersion: number;
+  MaterialRemapIndexPerImportVersion: Array<FMaterialRemapIndex>;
+  LightmapUVVersion: number;
+  bAutoComputeLODScreenSize: boolean;
+  Materials: Array<UMaterialInterface>;
+  NaniteSettings: FMeshNaniteSettings;
   MinQualityLevelLOD: FPerQualityLevelInt;
   MinLOD: FPerPlatformInt;
   ElementToIgnoreForTexFactor: number;
@@ -50,24 +50,24 @@ export interface UStaticMesh extends UStreamableRenderAsset {
   bHasNavigationData: boolean;
   bSupportUniformlyDistributedSampling: boolean;
   bSupportPhysicalMaterialMasks: boolean;
-  bUseLegacyTangentScaling: boolean; // Editor only property
-  RayTracingProxySettings: FMeshRayTracingProxySettings; // Editor only property
+  bUseLegacyTangentScaling: boolean;
+  RayTracingProxySettings: FMeshRayTracingProxySettings;
   bSupportRayTracing: boolean;
   bDoFastBuild: boolean;
   bIsBuiltAtRuntime: boolean;
   bAllowCPUAccess: boolean;
   bSupportGpuUniformlyDistributedSampling: boolean;
-  AssetImportData: UAssetImportData; // Editor only property
-  SourceFilePath: string; // Editor only property
-  SourceFileTimestamp: string; // Editor only property
-  ThumbnailInfo: UThumbnailInfo; // Editor only property
-  EditorCameraPosition: FAssetEditorOrbitCameraPosition; // Editor only property
-  bCustomizedCollision: boolean; // Editor only property
+  AssetImportData: UAssetImportData;
+  SourceFilePath: string;
+  SourceFileTimestamp: string;
+  ThumbnailInfo: UThumbnailInfo;
+  EditorCameraPosition: FAssetEditorOrbitCameraPosition;
+  bCustomizedCollision: boolean;
   Sockets: Array<UStaticMeshSocket>;
   PositiveBoundsExtension: FVector;
   NegativeBoundsExtension: FVector;
   ExtendedBounds: FBoxSphereBounds;
   AssetUserData: Array<UAssetUserData>;
-  EditableMesh: UObject; // Editor only property
-  ComplexCollisionMesh: UStaticMesh; // Editor only property
+  EditableMesh: UObject;
+  ComplexCollisionMesh: UStaticMesh;
 }

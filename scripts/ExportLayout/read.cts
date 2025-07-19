@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import {
+import type {
   ChildPropertyInfo,
   ClassInfo,
   ClassRef,
@@ -14,6 +14,7 @@ import {
   StructRef,
 } from "./LayoutDumpSchema";
 import { EPropertyFlags } from "../../src/unreal-engine/properties/enums";
+import invariant from "tiny-invariant";
 
 // Get some paths
 const layoutPath = path.join(__dirname, "LayoutDump.json");
@@ -112,10 +113,6 @@ class TSLayoutGenerator {
   }
 }
 
-function getBigint(value: number): bigint {
-  return BigInt(value) * BigInt(2 ** 32);
-}
-
 class TSFileGenerator {
   private imports: Map<string, string> = new Map();
   private symbolsInThisFile: Set<string> = new Set();
@@ -204,6 +201,15 @@ class TSFileGenerator {
   }
 
   generateClass(aClass: ClassInfo) {
+    const properties = aClass.properties.filter((prop) => !(prop.flagsLower & EPropertyFlags.Transient));
+    if (!properties.length && aClass.superClass) {
+      // use type alias
+      this.addLine(`// Empty class`);
+      this.addLine(`export type ${getClassName(aClass)} = ${this.resolveClassRef(aClass.superClass)};`);
+      writeFile(this.outputPath, this.composePage());
+      return;
+    }
+
     let line = `export interface ${getClassName(aClass)}`;
     this.symbolsInThisFile.add(getClassName(aClass));
 
@@ -215,7 +221,7 @@ class TSFileGenerator {
     this.addLine(line);
 
     this.withIndent(() => {
-      this.exportProperties(aClass.properties);
+      this.writeProperties(properties);
 
       // UObject is a special case, add specific methods
       if (aClass.className === "Object") {
@@ -226,44 +232,46 @@ class TSFileGenerator {
 
     this.addLine(`}`);
 
-    console.log(`Generating class: ${this.outputPath}`);
     writeFile(this.outputPath, this.composePage());
   }
 
-  private exportProperties(properties: Array<PropertyInfo>) {
+  private writeProperties(properties: PropertyInfo[]) {
     for (const prop of properties) {
-      if (prop.flagsLower & EPropertyFlags.Transient) {
-        // Skip transient properties
-        continue;
-      }
-
-      let comment = "";
-      if (getBigint(prop.flagsUpper) & BigInt(EPropertyFlags.EditorOnly)) {
-        comment += " // Editor only property";
-      }
-      this.addLine(`${prop.name}: ${this.generateType(prop)};${comment}`);
+      this.addLine(`${prop.name}: ${this.generateType(prop)};`);
     }
   }
 
   generateStruct(aStruct: StructInfo) {
-    this.addLine(`export interface ${getStructName(aStruct)} {`);
+    this.addLine(`export class ${getStructName(aStruct)} {`);
     this.symbolsInThisFile.add(getStructName(aStruct));
 
-    this.withIndent(() => {
-      if (aStruct.properties) {
-        for (const prop of aStruct.properties) {
-          if (prop.flagsLower & EPropertyFlags.Transient) {
-            // Skip transient properties
-            continue;
+    const properties = aStruct.properties.filter((prop) => !(prop.flagsLower & EPropertyFlags.Transient));
+
+    if (properties.length) {
+      this.withIndent(() => {
+        // Fields
+        this.writeProperties(properties);
+        this.addLine("");
+
+        this.addLine("constructor(props: {");
+        this.withIndent(() => {
+          for (const prop of properties) {
+            this.addLine(`${prop.name}: ${this.generateType(prop)};`);
           }
-          this.addLine(`${prop.name}: ${this.generateType(prop)};`);
-        }
-      }
-    });
+        });
+        this.addLine("}) {");
+        this.withIndent(() => {
+          for (const prop of properties) {
+            this.addLine(`this.${prop.name} = props.${prop.name};`);
+          }
+        });
+        this.addLine("}");
+      });
+      this.addLine(`}`);
+    } else {
+      this.appendToLines("}");
+    }
 
-    this.addLine(`}`);
-
-    console.log(`Generating struct: ${this.outputPath}`);
     writeFile(this.outputPath, this.composePage());
   }
 
@@ -279,7 +287,6 @@ class TSFileGenerator {
 
     this.addLine(`}`);
 
-    console.log(`Generating struct: ${this.outputPath}`);
     writeFile(this.outputPath, this.composePage());
   }
 
@@ -357,6 +364,11 @@ class TSFileGenerator {
     this.lines.push(this.currentIndent + line);
   }
 
+  private appendToLines(s: string) {
+    invariant(this.lines.length > 0);
+    this.lines[this.lines.length - 1] += s;
+  }
+
   composePage() {
     const allLines = [];
 
@@ -395,6 +407,7 @@ function getStructName(aClass: StructInfo): string {
 }
 
 function writeFile(outputPath: string, lines: string[]) {
+  console.log(`Writing ${outputPath}`);
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, lines.join("\n") + "\n", "utf-8");
 }

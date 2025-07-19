@@ -1,5 +1,9 @@
 // This file is auto-generated, do not edit directly.
 
-export interface FPlane4f {
+export class FPlane4f {
   W: number;
+
+  constructor(props: { W: number }) {
+    this.W = props.W;
+  }
 }

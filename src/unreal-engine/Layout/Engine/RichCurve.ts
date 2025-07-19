@@ -2,6 +2,10 @@
 
 import type { FRichCurveKey } from "./RichCurveKey";
 
-export interface FRichCurve {
+export class FRichCurve {
   Keys: Array<FRichCurveKey>;
+
+  constructor(props: { Keys: Array<FRichCurveKey> }) {
+    this.Keys = props.Keys;
+  }
 }

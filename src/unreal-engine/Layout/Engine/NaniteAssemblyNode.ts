@@ -2,8 +2,14 @@
 
 import type { FMatrix44f } from "../CoreUObject/Matrix44f";
 
-export interface FNaniteAssemblyNode {
+export class FNaniteAssemblyNode {
   ParentIndex: number;
   PartIndex: number;
   Transform: FMatrix44f;
+
+  constructor(props: { ParentIndex: number; PartIndex: number; Transform: FMatrix44f }) {
+    this.ParentIndex = props.ParentIndex;
+    this.PartIndex = props.PartIndex;
+    this.Transform = props.Transform;
+  }
 }

@@ -6,9 +6,9 @@ import type { UTexture } from "./Texture";
 
 export interface UTexture2D extends UTexture {
   FirstResourceMemMip: number;
-  bHasBeenPaintedInEditor: boolean; // Editor only property
+  bHasBeenPaintedInEditor: boolean;
   AddressX: TextureAddress;
   AddressY: TextureAddress;
   ImportedSize: FIntPoint;
-  CPUCopyTexture: UTexture2D; // Editor only property
+  CPUCopyTexture: UTexture2D;
 }
