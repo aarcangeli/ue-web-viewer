@@ -209,15 +209,13 @@ class TSFileGenerator {
 
     this.withIndent(() => {
       this.writeProperties(properties);
-
-      // UObject is a special case, add specific methods
-      if (aClass.className === "Object") {
-        this.addLine(`get outer(): UObject | null;`);
-        this.addLine(`get innerObjects(): ReadonlyArray<UObject>;`);
-      }
     });
 
-    this.addLine(`}`);
+    if (properties.length) {
+      this.addLine(`}`);
+    } else {
+      this.appendToLines("}");
+    }
 
     writeFile(this.outputPath, this.composePage());
   }
