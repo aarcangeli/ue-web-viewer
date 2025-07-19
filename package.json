@@ -17,6 +17,7 @@
     "eslint": "eslint . --fix",
     "eslint:dump-config": "node eslint.config.js --dump",
     "eslint:inspector": "eslint-config-inspector",
+    "export-layout": "tsx scripts/ExportLayout/export-layout.cts",
     "pre-commit": "yarn typecheck && yarn eslint && yarn test && pre-commit run -a"
   },
   "dependencies": {
@@ -55,6 +56,7 @@
     "react-icons": "^5.2.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^4.4.2",
     "typescript-eslint": "^8.8.0",
     "use-resize-observer": "^9.1.0",
