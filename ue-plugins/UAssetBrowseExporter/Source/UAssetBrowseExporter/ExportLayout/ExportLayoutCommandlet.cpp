@@ -118,7 +118,7 @@ TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportPackage(const UPackage *Pa
         }
     }
     Result->SetArrayField("classes", MoveTemp(Classes));
-    Result->SetArrayField("structs", MoveTemp(Classes));
+    Result->SetArrayField("structs", MoveTemp(Structs));
 
     return MakeShared<FJsonValueObject>(Result);
 }
@@ -195,12 +195,12 @@ TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportProperty(const FProperty *
     if (const auto objectProperty = CastField<FObjectProperty>(Property)) {
         Result->SetField("objectType", MakeClassRef(objectProperty->PropertyClass));
     } else if (const auto arrayProperty = CastField<FArrayProperty>(Property)) {
-        Result->SetField("valueType", ExportProperty(arrayProperty->Inner));
+        Result->SetField("innerType", ExportProperty(arrayProperty->Inner));
     } else if (const auto mapProperty = CastField<FMapProperty>(Property)) {
         Result->SetField("keyType", ExportProperty(mapProperty->KeyProp));
         Result->SetField("valueType", ExportProperty(mapProperty->ValueProp));
     } else if (const auto setProperty = CastField<FSetProperty>(Property)) {
-        Result->SetField("valueType", ExportProperty(setProperty->ElementProp));
+        Result->SetField("elementType", ExportProperty(setProperty->ElementProp));
     } else if (const auto structProperty = CastField<FStructProperty>(Property)) {
         Result->SetField("structType", MakeStructRef(structProperty->Struct));
     } else if (const auto enumProperty = CastField<FEnumProperty>(Property)) {

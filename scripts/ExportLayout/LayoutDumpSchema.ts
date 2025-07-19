@@ -2,7 +2,7 @@ export interface LayoutDump {
   packages: Array<PackageInfo>;
 }
 
-interface PackageInfo {
+export interface PackageInfo {
   packageName: string;
   classes: Array<ClassInfo>;
   structs: Array<StructInfo>;
@@ -12,8 +12,8 @@ type BaseProperty<Name extends string> = {
   type: Name;
 };
 
-type ChildPropertyInfo =
-  | BaseProperty<"ByteProperty">
+export type ChildPropertyInfo =
+  | (BaseProperty<"ByteProperty"> & { enumType?: string })
   | BaseProperty<"Int8Property">
   | BaseProperty<"Int16Property">
   | BaseProperty<"IntProperty">
@@ -33,12 +33,12 @@ type ChildPropertyInfo =
   | BaseProperty<"InterfaceProperty">
   | BaseProperty<"NameProperty">
   | BaseProperty<"StrProperty">
-  | (BaseProperty<"ArrayProperty"> & { valueType: ChildPropertyInfo })
+  | (BaseProperty<"ArrayProperty"> & { innerType: ChildPropertyInfo })
   | (BaseProperty<"MapProperty"> & {
       keyType: ChildPropertyInfo;
       valueType: ChildPropertyInfo;
     })
-  | (BaseProperty<"SetProperty"> & { valueType: ChildPropertyInfo })
+  | (BaseProperty<"SetProperty"> & { elementType: ChildPropertyInfo })
   | (BaseProperty<"StructProperty"> & { structType: StructRef })
   | BaseProperty<"DelegateProperty">
   | BaseProperty<"MulticastInlineDelegateProperty">
@@ -59,23 +59,23 @@ type PropertyInfo = ChildPropertyInfo & {
   arrayDim?: number;
 };
 
-interface ClassInfo {
+export interface ClassInfo {
   className: string;
   superClass: ClassRef | null;
   properties: Array<PropertyInfo>;
 }
 
-interface StructInfo {
+export interface StructInfo {
   structName: string;
   properties: Array<PropertyInfo>;
 }
 
-interface ClassRef {
+export interface ClassRef {
   package: string;
   class: string;
 }
 
-interface StructRef {
+export interface StructRef {
   package: string;
   struct: string;
 }
