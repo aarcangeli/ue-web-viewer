@@ -13,6 +13,10 @@ junit.xml
 /build
 /dist
 
+# this is a temporary file used while exporting the layout
+LayoutDump.json
+DefaultObjects.json
+
 # misc
 .DS_Store
 .env.local
