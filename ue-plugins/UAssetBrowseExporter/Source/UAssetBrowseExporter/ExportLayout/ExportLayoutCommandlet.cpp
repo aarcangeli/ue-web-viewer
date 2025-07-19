@@ -181,6 +181,9 @@ TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportProperty(const FProperty *
     // Export the name only for the root property
     if (Property->GetOwner<FProperty>() == nullptr) {
         Result->SetStringField("name", Property->GetName());
+        const auto PropertyFlags = Property->GetPropertyFlags();
+        Result->SetNumberField("flagsLower", static_cast<int32>(PropertyFlags));
+        Result->SetNumberField("flagsUpper", static_cast<int32>(PropertyFlags >> 32));
     }
 
     Result->SetStringField("type", Property->GetID().ToString());

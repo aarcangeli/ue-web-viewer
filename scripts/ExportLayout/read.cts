@@ -17,7 +17,7 @@ function main() {
   fs.mkdirSync(outputDir, { recursive: true });
 
   const values = JSON.parse(fs.readFileSync(layoutPath, "utf-8")) as LayoutDump;
-  // console.log(values);
+  console.log(values);
 }
 
 main();

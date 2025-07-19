@@ -54,6 +54,8 @@ type ChildPropertyInfo =
 
 type PropertyInfo = ChildPropertyInfo & {
   name: string;
+  flagsLower: number;
+  flagsUpper: number;
   arrayDim?: number;
 };
 

@@ -43,7 +43,7 @@ ln -s "$target_path" "$link_path"
 
 Set the plugin path using the `UE_ADDITIONAL_PLUGIN_PATHS` environment variable:
 
-## Export the classes of the engine:
+## Export all the engine's classes:
 
 To export the layout of engine classes:
 
