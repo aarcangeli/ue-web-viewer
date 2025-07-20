@@ -2,6 +2,7 @@ import type { AssetReader } from "../../../AssetReader";
 
 /**
  * Two-dimensional vector.
+ * Note: on Unreal this name is actually FVector2D
  */
 export class FVector2 {
   X: number = 0;

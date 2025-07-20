@@ -1,14 +1,14 @@
 import type { AssetReader } from "../../../AssetReader";
 
 import { FQuat } from "./Quat";
-import { FVector } from "./Vector3";
+import { FVector3 } from "./Vector3";
 
 export class FTransform {
   Rotation: FQuat;
-  Translation: FVector;
-  Scale3D: FVector;
+  Translation: FVector3;
+  Scale3D: FVector3;
 
-  constructor(Rotation: FQuat, Translation: FVector, Scale3D: FVector) {
+  constructor(Rotation: FQuat, Translation: FVector3, Scale3D: FVector3) {
     this.Rotation = Rotation;
     this.Translation = Translation;
     this.Scale3D = Scale3D;
@@ -16,15 +16,15 @@ export class FTransform {
 
   static fromFloat(reader: AssetReader) {
     const Rotation = FQuat.fromFloat(reader);
-    const Translation = FVector.fromFloat(reader);
-    const Scale3D = FVector.fromFloat(reader);
+    const Translation = FVector3.fromFloat(reader);
+    const Scale3D = FVector3.fromFloat(reader);
     return new FTransform(Rotation, Translation, Scale3D);
   }
 
   static fromDouble(reader: AssetReader) {
     const Rotation = FQuat.fromDouble(reader);
-    const Translation = FVector.fromDouble(reader);
-    const Scale3D = FVector.fromDouble(reader);
+    const Translation = FVector3.fromDouble(reader);
+    const Scale3D = FVector3.fromDouble(reader);
     return new FTransform(Rotation, Translation, Scale3D);
   }
 

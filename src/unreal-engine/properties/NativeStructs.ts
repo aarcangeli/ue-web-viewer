@@ -10,7 +10,7 @@ import type { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectP
 import type { FTransform } from "../modules/CoreUObject/structs/Transform";
 import type { FTwoVectors } from "../modules/CoreUObject/structs/TwoVectors";
 import type { FVector2 } from "../modules/CoreUObject/structs/Vector2";
-import type { FVector } from "../modules/CoreUObject/structs/Vector3";
+import type { FVector3 } from "../modules/CoreUObject/structs/Vector3";
 import type { FVector4 } from "../modules/CoreUObject/structs/Vector4";
 
 /**
@@ -30,5 +30,5 @@ export type NativeStructs =
   | FTransform
   | FTwoVectors
   | FVector2
-  | FVector
+  | FVector3
   | FVector4;

@@ -17,7 +17,7 @@ import { FTimespan } from "../modules/CoreUObject/structs/Timespan";
 import { FTransform } from "../modules/CoreUObject/structs/Transform";
 import { FTwoVectors } from "../modules/CoreUObject/structs/TwoVectors";
 import { FVector2 } from "../modules/CoreUObject/structs/Vector2";
-import { FVector } from "../modules/CoreUObject/structs/Vector3";
+import { FVector3 } from "../modules/CoreUObject/structs/Vector3";
 import { FVector4 } from "../modules/CoreUObject/structs/Vector4";
 import { NAME_CoreUObject } from "../modules/names";
 import { EPropertyType } from "../properties/enums";
@@ -152,9 +152,9 @@ const readerByStructName = new FNameMap<StructPropertySerializer>([
   [makeCombinedName(NAME_CoreUObject, "Vector2d"), makeLargeWorld(FVector2.fromFloat, FVector2.fromDouble)],
 
   // Vector3
-  [makeCombinedName(NAME_CoreUObject, "Vector3f"), makeStructReader(FVector.fromFloat)],
-  [makeCombinedName(NAME_CoreUObject, "Vector3d"), makeLargeWorld(FVector.fromFloat, FVector.fromDouble)],
-  [makeCombinedName(NAME_CoreUObject, "Vector"), makeLargeWorld(FVector.fromFloat, FVector.fromDouble)],
+  [makeCombinedName(NAME_CoreUObject, "Vector3f"), makeStructReader(FVector3.fromFloat)],
+  [makeCombinedName(NAME_CoreUObject, "Vector3d"), makeLargeWorld(FVector3.fromFloat, FVector3.fromDouble)],
+  [makeCombinedName(NAME_CoreUObject, "Vector"), makeLargeWorld(FVector3.fromFloat, FVector3.fromDouble)],
 
   // IntPoint / UintPoint
   [makeCombinedName(NAME_CoreUObject, "Int32Point"), makeStructReader(FVector2.fromInt32)],
@@ -173,12 +173,12 @@ const readerByStructName = new FNameMap<StructPropertySerializer>([
   [makeCombinedName(NAME_CoreUObject, "UintVector2"), makeStructReader(FVector2.fromUInt32)],
 
   // IntVector / UintVector
-  [makeCombinedName(NAME_CoreUObject, "Int32Vector"), makeStructReader(FVector.fromInt32)],
-  [makeCombinedName(NAME_CoreUObject, "Int64Vector"), makeStructReader(FVector.fromInt64)],
-  [makeCombinedName(NAME_CoreUObject, "Uint32Vector"), makeStructReader(FVector.fromUint32)],
-  [makeCombinedName(NAME_CoreUObject, "Uint64Vector"), makeStructReader(FVector.fromUint64)],
-  [makeCombinedName(NAME_CoreUObject, "IntVector"), makeStructReader(FVector.fromInt32)],
-  [makeCombinedName(NAME_CoreUObject, "UintVector"), makeStructReader(FVector.fromUint32)],
+  [makeCombinedName(NAME_CoreUObject, "Int32Vector"), makeStructReader(FVector3.fromInt32)],
+  [makeCombinedName(NAME_CoreUObject, "Int64Vector"), makeStructReader(FVector3.fromInt64)],
+  [makeCombinedName(NAME_CoreUObject, "Uint32Vector"), makeStructReader(FVector3.fromUint32)],
+  [makeCombinedName(NAME_CoreUObject, "Uint64Vector"), makeStructReader(FVector3.fromUint64)],
+  [makeCombinedName(NAME_CoreUObject, "IntVector"), makeStructReader(FVector3.fromInt32)],
+  [makeCombinedName(NAME_CoreUObject, "UintVector"), makeStructReader(FVector3.fromUint32)],
 
   // IntVector4 / UintVector4
   [makeCombinedName(NAME_CoreUObject, "Int32Vector4"), makeStructReader(FVector4.fromInt32)],

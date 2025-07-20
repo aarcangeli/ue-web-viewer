@@ -1,28 +1,28 @@
 import type { AssetReader } from "../../../AssetReader";
 
-import { FVector } from "./Vector3";
+import { FVector3 } from "./Vector3";
 
 export class FBox {
-  Min: FVector;
-  Max: FVector;
+  Min: FVector3;
+  Max: FVector3;
   IsValid: boolean;
 
-  constructor(Min: FVector, Max: FVector, IsValid: boolean) {
+  constructor(Min: FVector3, Max: FVector3, IsValid: boolean) {
     this.Min = Min;
     this.Max = Max;
     this.IsValid = IsValid;
   }
 
   static fromFloat(reader: AssetReader) {
-    const Min = FVector.fromFloat(reader);
-    const Max = FVector.fromFloat(reader);
+    const Min = FVector3.fromFloat(reader);
+    const Max = FVector3.fromFloat(reader);
     const IsValid = reader.readUInt8() !== 0;
     return new FBox(Min, Max, IsValid);
   }
 
   static fromDouble(reader: AssetReader) {
-    const Min = FVector.fromDouble(reader);
-    const Max = FVector.fromDouble(reader);
+    const Min = FVector3.fromDouble(reader);
+    const Max = FVector3.fromDouble(reader);
     const IsValid = reader.readUInt8() !== 0;
     return new FBox(Min, Max, IsValid);
   }
