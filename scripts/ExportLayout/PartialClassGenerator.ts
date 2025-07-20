@@ -1,5 +1,5 @@
 import path from "path";
-import type { ClassDeclaration, EnumDeclaration, Node, SourceFile } from "ts-morph";
+import type { ClassDeclaration, EnumDeclaration, JSDocableNode, NameableNode, Node, SourceFile } from "ts-morph";
 import { SyntaxKind } from "ts-morph";
 
 import type {
@@ -24,6 +24,8 @@ import {
 import { SymbolStorage } from "./SymbolStorage";
 
 type AnySymbol = ClassInfo | StructInfo | EnumInfo;
+
+const allFlags = ["nosort"];
 
 /**
  * This class is responsible for generating or updating TypeScript classes
@@ -196,6 +198,7 @@ export class PartialClassGenerator {
 
   private updateProperties(classDeclaration: ClassDeclaration, properties: Array<PropertyInfo>) {
     const resolver = this.makeResolver(classDeclaration.getSourceFile());
+    const flags = getFlags(classDeclaration);
 
     // Add or update new properties
     for (const property of properties) {
@@ -238,7 +241,7 @@ export class PartialClassGenerator {
       }
     }
 
-    if (ExportLayoutOptions.enforcePropertyOrder) {
+    if (ExportLayoutOptions.enforcePropertyOrder && !flags.includes("nosort")) {
       const classProperties = classDeclaration.getProperties();
 
       // Sort properties by their original order in the dump
@@ -410,4 +413,23 @@ function isStructInfo(symbol: AnySymbol): symbol is StructInfo {
 
 function isEnumInfo(symbol: AnySymbol): symbol is EnumInfo {
   return "enumName" in symbol;
+}
+
+function getFlags(declaration: JSDocableNode & NameableNode) {
+  const result: string[] = [];
+  for (const jsDoc of declaration.getJsDocs()) {
+    for (const row of jsDoc.getDescription().split("\n")) {
+      const strings = row.split("LayoutGenerator:", 2);
+      if (strings.length > 1) {
+        const flags = strings[1].split(",").map((flag) => flag.trim());
+        for (const flag of flags) {
+          if (!allFlags.includes(flag)) {
+            console.warn(`Unknown flag "${flag}" in JSDoc of ${declaration.getName()}`);
+          }
+          result.push(flag);
+        }
+      }
+    }
+  }
+  return result;
 }
