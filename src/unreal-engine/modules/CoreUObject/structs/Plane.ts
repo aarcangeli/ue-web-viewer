@@ -1,5 +1,8 @@
 import type { AssetReader } from "../../../AssetReader";
 
+/**
+ * LayoutGenerator: ignore
+ */
 export class FPlane {
   X: number = 0;
   Y: number = 0;
