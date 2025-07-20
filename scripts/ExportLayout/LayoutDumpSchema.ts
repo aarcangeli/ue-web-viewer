@@ -62,19 +62,23 @@ export type PropertyInfo = ChildPropertyInfo & {
 
 export interface ClassInfo {
   className: string;
+  packageName: string;
   superClass: ClassRef | null;
   properties: Array<PropertyInfo>;
 }
 
 export interface StructInfo {
   structName: string;
+  packageName: string;
+  superStruct: StructRef | null;
   properties: Array<PropertyInfo>;
 }
 
 export interface EnumInfo {
   enumName: string;
+  packageName: string;
   enumFlags: number;
-  values: { [key: string]: number };
+  values: [{ name: string; value: number }];
 }
 
 export interface ClassRef {

@@ -18,9 +18,9 @@ class UExportLayoutCommandlet : public UCommandlet {
 
     TSharedRef<FJsonObject> ExportLayout();
     TSharedRef<FJsonValue> ExportPackage(const UPackage *package);
+    TSharedRef<FJsonValue> ExportClass(const UClass *Class);
     TSharedRef<FJsonValue> ExportStruct(const UScriptStruct *Struct);
     TSharedRef<FJsonValue> ExportEnum(const UEnum *Enum);
-    TSharedRef<FJsonValue> ExportClass(const UClass *Class);
     TSharedRef<FJsonValue> ExportProperties(const UStruct *Struct);
     TSharedRef<FJsonValue> ExportProperty(const FProperty *Property);
 
