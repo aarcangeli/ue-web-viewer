@@ -1,6 +1,0 @@
-// This file is auto-generated, do not edit directly.
-
-export class FMaterialRemapIndex {
-  ImportVersionKey: number = 0;
-  MaterialRemap: Array<number> = [];
-}
