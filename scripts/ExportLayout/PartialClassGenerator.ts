@@ -1,5 +1,5 @@
 import path from "path";
-import type { ClassDeclaration, EnumDeclaration, JSDocableNode, NameableNode, Node, SourceFile } from "ts-morph";
+import type { ClassDeclaration, EnumDeclaration, JSDocableNode, Node, SourceFile } from "ts-morph";
 import { SyntaxKind } from "ts-morph";
 
 import type {
@@ -25,7 +25,7 @@ import { SymbolStorage } from "./SymbolStorage";
 
 type AnySymbol = ClassInfo | StructInfo | EnumInfo;
 
-const allFlags = ["nosort"];
+const allFlags = ["nosort", "ignore"];
 
 /**
  * This class is responsible for generating or updating TypeScript classes
@@ -66,6 +66,12 @@ export class PartialClassGenerator {
 
   private doSyncClass(classDeclaration: ClassDeclaration, classInfo: ClassInfo) {
     if (this.addToProcessing(classInfo)) {
+      const flags = getFlags(classDeclaration);
+      if (flags.includes("ignore")) {
+        console.log(`Ignoring class ${classInfo.packageName}.U${classInfo.className}`);
+        return;
+      }
+
       console.log(`Syncing class ${classInfo.packageName}.U${classInfo.className}`);
 
       // Sync extension
@@ -83,6 +89,12 @@ export class PartialClassGenerator {
 
   private doSyncStruct(classDeclaration: ClassDeclaration, structInfo: StructInfo) {
     if (this.addToProcessing(structInfo)) {
+      const flags = getFlags(classDeclaration);
+      if (flags.includes("ignore")) {
+        console.log(`Ignoring struct ${structInfo.packageName}.F${structInfo.structName}`);
+        return;
+      }
+
       console.log(`Syncing struct ${structInfo.packageName}.F${structInfo.structName}`);
 
       // Sync extension
@@ -100,6 +112,12 @@ export class PartialClassGenerator {
 
   private doSyncEnum(enumDeclaration: EnumDeclaration, enumInfo: EnumInfo) {
     if (this.addToProcessing(enumInfo)) {
+      const flags = getFlags(enumDeclaration);
+      if (flags.includes("ignore")) {
+        console.log(`Ignoring enum ${enumInfo.packageName}.${enumInfo.enumName}`);
+        return;
+      }
+
       console.log(`Syncing enum ${enumInfo.packageName}.${enumInfo.enumName}`);
 
       for (const { name, value } of enumInfo.values) {
@@ -129,6 +147,7 @@ export class PartialClassGenerator {
           return aIndex - bIndex;
         });
         for (let i = 0; i < members.length; i++) {
+          // For some reason, the child index is always even, so we divide by 2
           if (members[i].getChildIndex() / 2 != i) {
             const structure = members[i].getStructure();
             members[i].remove();
@@ -415,7 +434,7 @@ function isEnumInfo(symbol: AnySymbol): symbol is EnumInfo {
   return "enumName" in symbol;
 }
 
-function getFlags(declaration: JSDocableNode & NameableNode) {
+function getFlags(declaration: JSDocableNode & { getName(): string | undefined }) {
   const result: string[] = [];
   for (const jsDoc of declaration.getJsDocs()) {
     for (const row of jsDoc.getDescription().split("\n")) {
