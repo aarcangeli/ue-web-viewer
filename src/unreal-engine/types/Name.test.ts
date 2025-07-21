@@ -1,5 +1,5 @@
 // Test for Name
-import { FName } from "./Name";
+import { FName, FNameMap } from "./Name";
 
 describe("Name", () => {
   it("should parse a name #1", () => {
@@ -55,5 +55,28 @@ describe("Name", () => {
     expect(FName.fromString("None").isNone).toBe(true);
     expect(FName.fromString("None_0").isNone).toBe(false);
     expect(FName.fromString("Value").isNone).toBe(false);
+  });
+});
+
+describe("FNameMap", () => {
+  it("should create a map and add names", () => {
+    const map = new FNameMap();
+    map.set(FName.fromString("MyName"), "Value1");
+    map.set(FName.fromString("MyName_0"), "Value2");
+    map.set(FName.fromString("MyName_1"), "Value3");
+    expect(map.size).toBe(3);
+
+    // Add the same name again
+    map.set(FName.fromString("MyName"), "Value4");
+    expect(map.get(FName.fromString("mynAmE"))).toBe("Value4");
+    expect(map.size).toBe(3);
+  });
+
+  it("should get values by name", () => {
+    const map = new FNameMap();
+    map.set(FName.fromString("MyName"), "Value1");
+    expect(map.get(FName.fromString("MyName"))).toBe("Value1");
+    expect(map.get(FName.fromString("myname"))).toBe("Value1");
+    expect(map.get(FName.fromString("MyName_0"))).toBeUndefined();
   });
 });
