@@ -56,7 +56,10 @@ export const ExportLayoutOptions = {
   structRenames: new Map<string, string>([
     ["FVector2D", "FVector2"],
     ["FVector", "FVector3"],
+    ["FMatrix", "FMatrix44"],
   ]),
+
+  additionalPaths: ["../types/Name.ts"],
 };
 
 // invert matrix for structRenames

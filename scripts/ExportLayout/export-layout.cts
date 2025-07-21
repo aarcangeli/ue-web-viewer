@@ -1,18 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import type {
-  ClassInfo,
-  ClassRef,
-  EnumInfo,
-  EnumRef,
-  LayoutDump,
-  PackageInfo,
-  StructInfo,
-  StructRef,
-} from "./LayoutDumpSchema";
-import { EPropertyFlags } from "../../src/unreal-engine/properties/enums";
-import invariant from "tiny-invariant";
+import type { LayoutDump } from "./LayoutDumpSchema";
 import { PartialClassGenerator } from "./PartialClassGenerator";
 import { ExportLayoutOptions } from "./Options";
 
@@ -35,7 +24,7 @@ function main() {
   const generator = new PartialClassGenerator(outputDir, values);
 
   // First of all, update existing TS classes
-  // generator.updateExistingSymbols();
+  generator.updateExistingSymbols();
 
   for (const aPackage of values.packages) {
     for (const aClass of aPackage.classes) {

@@ -9,7 +9,8 @@ import { FFrameNumber } from "../modules/CoreUObject/structs/FrameNumber";
 import { FGuid } from "../modules/CoreUObject/structs/Guid";
 import { FLinearColor } from "../modules/CoreUObject/structs/LinearColor";
 import { FMatrix44 } from "../modules/CoreUObject/structs/Matrix44";
-import { FPerPlatformFloat } from "../modules/CoreUObject/structs/PerPlatformFloat";
+import { FPerPlatformFloat } from "../modules/CoreUObject/structs/PerPlatformProperties";
+import { FPerPlatformInt } from "../modules/CoreUObject/structs/PerPlatformProperties";
 import { FPlane } from "../modules/CoreUObject/structs/Plane";
 import { FQuat } from "../modules/CoreUObject/structs/Quat";
 import { FRotator } from "../modules/CoreUObject/structs/Rotator";
@@ -244,6 +245,7 @@ const readerByStructName = new FNameMap<StructPropertySerializer>([
   [makeCombinedName(NAME_CoreUObject, "SoftClassPath"), softObjectPathSerializer],
 
   [makeCombinedName(NAME_CoreUObject, "PerPlatformFloat"), makeStructReader(FPerPlatformFloat.fromStream)],
+  [makeCombinedName(NAME_CoreUObject, "PerPlatformInt"), makeStructReader(FPerPlatformInt.fromStream)],
 ]);
 
 /**

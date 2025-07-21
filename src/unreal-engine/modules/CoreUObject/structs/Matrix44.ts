@@ -23,6 +23,9 @@ export type ArrayType = [
  * Four-dimensional matrix.
  *
  *  Matrix elements are accessed with M[RowIndex][ColumnIndex].
+ *
+ * Note: on Unreal this name is actually FMatrix
+ *  LayoutGenerator: ignore
  */
 export class FMatrix44 {
   matrix: ArrayType = new Array(16).fill(0) as ArrayType;
@@ -35,12 +38,7 @@ export class FMatrix44 {
 
   static makeIdentity() {
     // prettier-ignore
-    return new FMatrix44([
-      1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1
-    ]);
+    return new FMatrix44([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ]);
   }
 
   static fromFloat(reader: AssetReader) {

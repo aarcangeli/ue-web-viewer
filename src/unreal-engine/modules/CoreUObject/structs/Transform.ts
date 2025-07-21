@@ -4,9 +4,9 @@ import { FQuat } from "./Quat";
 import { FVector3 } from "./Vector3";
 
 export class FTransform {
-  Rotation: FQuat;
-  Translation: FVector3;
-  Scale3D: FVector3;
+  Rotation: FQuat = new FQuat();
+  Translation: FVector3 = new FVector3();
+  Scale3D: FVector3 = new FVector3();
 
   constructor(Rotation: FQuat, Translation: FVector3, Scale3D: FVector3) {
     this.Rotation = Rotation;

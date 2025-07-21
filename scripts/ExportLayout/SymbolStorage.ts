@@ -2,10 +2,10 @@ import fs from "fs";
 import path from "path";
 import invariant from "tiny-invariant";
 import type { ClassDeclaration, EnumDeclaration } from "ts-morph";
-import { IndentationText, Project } from "ts-morph";
+import { IndentationText, Project, VariableDeclarationKind } from "ts-morph";
 
 import type { ClassInfo, EnumInfo, LayoutDump, StructInfo } from "./LayoutDumpSchema";
-import { getUhtName, logChange } from "./Options";
+import { ExportLayoutOptions, getUhtName, logChange } from "./Options";
 import { getClassName, getStructName, shortPackageName } from "./property-handler";
 
 type SymbolType = "class" | "struct" | "enum";
@@ -55,6 +55,12 @@ export class SymbolStorage {
     console.log(
       `Found ${this.classByName.size} classes, ${this.structByName.size} structs, and ${this.enumByName.size} enums in the project.`,
     );
+
+    // Add additional paths to the project
+    for (const additionalPath of ExportLayoutOptions.additionalPaths) {
+      const fullPath = path.join(this.rootDirectory, additionalPath);
+      this.project.addSourceFileAtPath(fullPath);
+    }
   }
 
   private getForgottenSymbols() {
@@ -210,13 +216,39 @@ export class SymbolStorage {
       }
 
       for (const anEnum of sourceFile.getEnums()) {
-        const objectName = anEnum.getName();
-        if (this.enumByName.has(objectName)) {
-          throw new Error(`Duplicate enum found for object name "${objectName}" in file "${fullPath}".`);
+        const enumName = anEnum.getName();
+        if (this.enumDumpByName.has(enumName)) {
+          if (this.enumByName.has(enumName)) {
+            throw new Error(`Duplicate enum found for object name "${enumName}" in file "${fullPath}".`);
+          }
+          this.enumByName.set(enumName, anEnum);
         }
-        this.enumByName.set(objectName, anEnum);
       }
     }
+  }
+
+  resolveSymbol(name: string) {
+    // Find a constant
+    for (const sourceFile of this.project.getSourceFiles()) {
+      const variableDeclaration = sourceFile.getVariableDeclaration(name);
+      if (variableDeclaration && variableDeclaration.hasExportKeyword()) {
+        const statement = variableDeclaration.getVariableStatement();
+        // The variable must be declared as const
+        if (statement && statement.getDeclarationKind() == VariableDeclarationKind.Const) {
+          return variableDeclaration;
+        }
+      }
+    }
+
+    // Find a class
+    for (const sourceFile of this.project.getSourceFiles()) {
+      const classDeclaration = sourceFile.getClass(name);
+      if (classDeclaration && classDeclaration.hasExportKeyword()) {
+        return classDeclaration;
+      }
+    }
+
+    throw new Error(`Constant "${name}" not found.`);
   }
 }
 

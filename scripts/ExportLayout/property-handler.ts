@@ -7,6 +7,13 @@ export interface TypeResolver {
   resolveStructRef(structRef: StructRef, asType: boolean): string;
   resolveEnumRef(enumRef: EnumRef, asType: boolean): string;
   getEnumInfo(enumRef: EnumRef): EnumInfo;
+
+  /**
+   * Resolve any global symbol, such as a constant or a class name.
+   * @param name
+   * @param asType
+   */
+  resolveSymbol(name: string, asType: boolean): string;
 }
 
 export function getPropertyType(property: ChildPropertyInfo, resolver: TypeResolver): string {
@@ -41,6 +48,7 @@ export function getPropertyType(property: ChildPropertyInfo, resolver: TypeResol
     case "InterfaceProperty":
       break;
     case "NameProperty":
+      return resolver.resolveSymbol("FName", true);
     case "StrProperty":
     case "Utf8StrProperty":
     case "AnsiStrProperty":
@@ -48,6 +56,10 @@ export function getPropertyType(property: ChildPropertyInfo, resolver: TypeResol
     case "ArrayProperty":
       return `Array<${getPropertyType(property.innerType, resolver)}>`;
     case "MapProperty":
+      if (isNameMap(property)) {
+        const nameMap = resolver.resolveSymbol("FNameMap", true);
+        return `${nameMap}<${getPropertyType(property.valueType, resolver)}>`;
+      }
       return `Map<${getPropertyType(property.keyType, resolver)}, ${getPropertyType(property.valueType, resolver)}>`;
     case "SetProperty":
       break;
@@ -104,6 +116,7 @@ export function getInitializer(property: ChildPropertyInfo, resolver: TypeResolv
     case "InterfaceProperty":
       break;
     case "NameProperty":
+      return resolver.resolveSymbol("NAME_None", false);
     case "StrProperty":
     case "Utf8StrProperty":
     case "AnsiStrProperty":
@@ -111,10 +124,17 @@ export function getInitializer(property: ChildPropertyInfo, resolver: TypeResolv
     case "ArrayProperty":
       return "[]";
     case "MapProperty":
+      if (isNameMap(property)) {
+        const nameMap = resolver.resolveSymbol("FNameMap", false);
+        return `new ${nameMap}()`;
+      }
       return "new Map()";
     case "SetProperty":
       break;
     case "StructProperty":
+      if (property.structType.struct == "Guid") {
+        return resolver.resolveSymbol("GUID_None", false);
+      }
       return `new ${resolver.resolveStructRef(property.structType, false)}()`;
     case "DelegateProperty":
       break;
@@ -159,4 +179,8 @@ export function shortPackageName(packageName: string): string {
 
 export function getPropertiesToExport(properties: PropertyInfo[]): PropertyInfo[] {
   return properties.filter((prop) => !(prop.flagsLower & EPropertyFlags.Transient));
+}
+
+function isNameMap(property: ChildPropertyInfo) {
+  return property.type == "MapProperty" && property.keyType.type == "NameProperty";
 }

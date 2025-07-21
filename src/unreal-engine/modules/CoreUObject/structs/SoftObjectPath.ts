@@ -9,18 +9,14 @@ import type { UObject } from "../objects/Object";
  * LayoutGenerator: ignore
  */
 export class FSoftObjectPath {
-  packageName: FName = NAME_None;
-  assetName: FName = NAME_None;
-  subPathString: string = "";
+  packageName: FName;
+  assetName: FName;
+  subPathString: string;
 
-  constructor(packageName: FName, assetName: FName, subPathString: string) {
+  constructor(packageName: FName = NAME_None, assetName: FName = NAME_None, subPathString: string = "") {
     this.packageName = packageName;
     this.assetName = assetName;
     this.subPathString = subPathString;
-  }
-
-  static empty() {
-    return new FSoftObjectPath(NAME_None, NAME_None, "");
   }
 
   // This is not used ATM, but may be used in the future.

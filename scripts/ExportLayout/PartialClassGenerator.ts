@@ -49,6 +49,12 @@ export class PartialClassGenerator {
     for (const [classDeclaration, classInfo] of this.storage.getAllClasses()) {
       this.doSyncClass(classDeclaration, classInfo);
     }
+    for (const [classDeclaration, structInfo] of this.storage.getAllStructs()) {
+      this.doSyncStruct(classDeclaration, structInfo);
+    }
+    for (const [enumDeclaration, enumInfo] of this.storage.getAllEnums()) {
+      this.doSyncEnum(enumDeclaration, enumInfo);
+    }
   }
 
   organizeImports() {
@@ -323,6 +329,11 @@ export class PartialClassGenerator {
         }
         return aEnum;
       },
+      resolveSymbol: (name: string, asType: boolean) => {
+        const variable = this.storage.resolveSymbol(name);
+        this.getOrCreateImport(sourceFile, variable.getSourceFile(), name, asType);
+        return name;
+      },
     };
   }
 
@@ -334,7 +345,11 @@ export class PartialClassGenerator {
 
     const relativePath = getRelativeImportPath(sourceFile, destination.getFilePath());
 
-    let importDecl = sourceFile.getImportDeclaration(relativePath);
+    let importDecl = sourceFile.getImportDeclaration(
+      (decl) =>
+        decl.getModuleSpecifierValue() === relativePath &&
+        decl.getNamedImports().find((i) => i.getName() === symbolName) !== undefined,
+    );
 
     if (importDecl) {
       const alreadyImported = importDecl.getNamedImports().find((i) => i.getName() === symbolName);
