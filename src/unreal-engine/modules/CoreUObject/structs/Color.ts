@@ -2,6 +2,7 @@ import type { AssetReader } from "../../../AssetReader";
 
 /**
  * RGBA color on integer scale (sRGB).
+ * LayoutGenerator: nosort
  */
 export class FColor {
   R: number = 0;
@@ -9,7 +10,7 @@ export class FColor {
   B: number = 0;
   A: number = 0;
 
-  constructor(R: number, G: number, B: number, A: number) {
+  constructor(R: number = 0, G: number = 0, B: number = 0, A: number = 0) {
     this.R = R;
     this.G = G;
     this.B = B;

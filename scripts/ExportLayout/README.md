@@ -23,8 +23,12 @@ The generated output includes:
 
    - For instructions, see [ue-plugins/UAssetBrowseExporter/README.md](../../ue-plugins/UAssetBrowseExporter/README.md)
 
-2. Run the script using Yarn:
+2. IMPORTANT: check that there are no uncommitted changes.
 
-```shell
-yarn run export-layout
-```
+3. Run the script using Yarn:
+
+   ```shell
+   yarn run export-layout
+   ```
+
+4. Check the generated files using git diff.

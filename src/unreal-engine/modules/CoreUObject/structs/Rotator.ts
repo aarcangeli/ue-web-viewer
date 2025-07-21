@@ -12,7 +12,7 @@ export class FRotator {
   readonly Yaw: number = 0;
   readonly Roll: number = 0;
 
-  private constructor(pitch: number, yaw: number, roll: number) {
+  constructor(pitch: number = 0, yaw: number = 0, roll: number = 0) {
     this.Pitch = pitch;
     this.Yaw = yaw;
     this.Roll = roll;

@@ -11,7 +11,7 @@ import { Icon } from "@chakra-ui/icons";
 import { makePropertyIcon } from "./MakePropertyIcon";
 import type { ITextData } from "../../unreal-engine/types/Text";
 import { ETextHistoryType, FTextHistory_Base } from "../../unreal-engine/types/Text";
-import { FPerPlatformFloat } from "../../unreal-engine/modules/CoreUObject/structs/PerPlatformFloat";
+import { FPerPlatformFloat } from "../../unreal-engine/modules/CoreUObject/structs/PerPlatformProperties";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
@@ -109,9 +109,9 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
         return (
           <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value.value)}>
             <IndentedRow title={"Default"}>{value.value.Default}</IndentedRow>
-            {value.value.PerPlatform.map((item, index) => (
-              <IndentedRow key={index} title={`Override [ ${item.platform} ]`}>
-                {String(item.value)}
+            {value.value.PerPlatform.map((platform, value, index) => (
+              <IndentedRow key={index} title={`Override [ ${platform} ]`}>
+                {String(value)}
               </IndentedRow>
             ))}
           </CollapsableSection>

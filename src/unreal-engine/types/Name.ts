@@ -115,8 +115,21 @@ export class FNameMap<V> {
     this._map.set(getMapKey(key), [key, value]);
   }
 
+  map<T>(callbackfn: (key: FName, value: V, index: number, map: FNameMap<V>) => T): T[] {
+    const result: T[] = [];
+    let index = 0;
+    this._map.forEach((value) => {
+      result.push(callbackfn(value[0], value[1], index++, this));
+    });
+    return result;
+  }
+
   get size() {
     return this._map.size;
+  }
+
+  toJSON() {
+    return this.map((key, value) => [key.toString(), value]);
   }
 }
 

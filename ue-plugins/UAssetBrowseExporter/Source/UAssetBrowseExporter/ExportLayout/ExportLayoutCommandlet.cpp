@@ -130,6 +130,8 @@ TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportPackage(const UPackage *Pa
 TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportStruct(const UScriptStruct *Struct) {
     const auto Result = MakeShared<FJsonObject>();
     Result->SetStringField("structName", Struct->GetName());
+    Result->SetStringField("packageName", Struct->GetOutermost()->GetName());
+    Result->SetField("superStruct", MakeStructRef(CastChecked<UScriptStruct>(Struct->GetSuperStruct(), ECastCheckedType::NullAllowed)));
     Result->SetField("properties", ExportProperties(Struct));
     return MakeShared<FJsonValueObject>(Result);
 }
@@ -137,6 +139,7 @@ TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportStruct(const UScriptStruct
 TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportEnum(const UEnum *Enum) {
     const auto Result = MakeShared<FJsonObject>();
     Result->SetStringField("enumName", Enum->GetName());
+    Result->SetStringField("packageName", Enum->GetOutermost()->GetName());
 
     // This not so good
     EEnumFlags EnumFlags = EEnumFlags::None;
@@ -148,19 +151,23 @@ TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportEnum(const UEnum *Enum) {
     }
     Result->SetNumberField("enumFlags", static_cast<std::underlying_type_t<EEnumFlags>>(EnumFlags));
 
-    const auto EnumValues = MakeShared<FJsonObject>();
+    TArray<TSharedPtr<FJsonValue>> EnumValues;
     for (int32 i = 0; i < Enum->NumEnums(); ++i) {
         FString ValueName = Enum->GetNameStringByIndex(i);
         checkf(!ValueName.IsEmpty(), TEXT("Enum %s has an empty value name at index %d"), *Enum->GetName(), i);
-        EnumValues->SetNumberField(ValueName, Enum->GetValueByIndex(i));
+        const auto Object = MakeShared<FJsonObject>();
+        Object->SetStringField("name", ValueName);
+        Object->SetNumberField("value", Enum->GetValueByIndex(i));
+        EnumValues.Add(MakeShared<FJsonValueObject>(Object));
     }
-    Result->SetObjectField("values", EnumValues);
+    Result->SetArrayField("values", EnumValues);
     return MakeShared<FJsonValueObject>(Result);
 }
 
 TSharedRef<FJsonValue> UExportLayoutCommandlet::ExportClass(const UClass *Class) {
     const auto Result = MakeShared<FJsonObject>();
     Result->SetStringField("className", Class->GetName());
+    Result->SetStringField("packageName", Class->GetOutermost()->GetName());
     Result->SetField("superClass", MakeClassRef(Class->GetSuperClass()));
     Result->SetField("properties", ExportProperties(Class));
     return MakeShared<FJsonValueObject>(Result);
@@ -256,6 +263,10 @@ TSharedPtr<FJsonValue> UExportLayoutCommandlet::MakeClassRef(const UClass *Class
 }
 
 TSharedPtr<FJsonValue> UExportLayoutCommandlet::MakeStructRef(const UScriptStruct *Struct) {
+    if (!Struct) {
+        return MakeShared<FJsonValueNull>();
+    }
+
     const auto JsonObject = MakeShared<FJsonObject>();
     JsonObject->SetStringField("package", Struct->GetOutermost()->GetName());
     JsonObject->SetStringField("struct", Struct->GetName());

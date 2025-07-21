@@ -3,13 +3,14 @@ import type { AssetReader } from "../../../AssetReader";
 /**
  * Three-dimensional vector.
  * Can be integer or floating point.
+ * Note: on Unreal this name is actually FVector
  */
 export class FVector3 {
   X: number = 0;
   Y: number = 0;
   Z: number = 0;
 
-  public constructor(X: number, Y: number, Z: number) {
+  public constructor(X: number = 0, Y: number = 0, Z: number = 0) {
     this.X = X;
     this.Y = Y;
     this.Z = Z;
@@ -58,6 +59,6 @@ export class FVector3 {
   }
 
   toString() {
-    return `FVector3{X: ${this.X}, Y: ${this.Y}, Z: ${this.Z}}`;
+    return `FVector{X: ${this.X}, Y: ${this.Y}, Z: ${this.Z}}`;
   }
 }

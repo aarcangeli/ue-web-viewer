@@ -1,25 +1,22 @@
 import type { AssetReader } from "../../../AssetReader";
+import { isShortPackageName, tryParseExportTextPath } from "../../../path-utils";
 import { FName, NAME_None } from "../../../types/Name";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../../../versioning/ue-versions";
-import { isShortPackageName, tryParseExportTextPath } from "../../../path-utils";
 import type { UObject } from "../objects/Object";
 
 /**
  * Represents a soft object path.
+ * LayoutGenerator: ignore
  */
 export class FSoftObjectPath {
-  packageName: FName = NAME_None;
-  assetName: FName = NAME_None;
-  subPathString: string = "";
+  packageName: FName;
+  assetName: FName;
+  subPathString: string;
 
-  constructor(packageName: FName, assetName: FName, subPathString: string) {
+  constructor(packageName: FName = NAME_None, assetName: FName = NAME_None, subPathString: string = "") {
     this.packageName = packageName;
     this.assetName = assetName;
     this.subPathString = subPathString;
-  }
-
-  static empty() {
-    return new FSoftObjectPath(NAME_None, NAME_None, "");
   }
 
   // This is not used ATM, but may be used in the future.

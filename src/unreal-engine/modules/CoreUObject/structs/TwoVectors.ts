@@ -1,16 +1,17 @@
 import type { AssetReader } from "../../../AssetReader";
+
 import { FVector3 } from "./Vector3";
 
 /**
  * A pair of 3D vectors.
  */
 export class FTwoVectors {
-  V1: FVector3;
-  V2: FVector3;
+  v1: FVector3 = new FVector3();
+  v2: FVector3 = new FVector3();
 
-  constructor(V1: FVector3, V2: FVector3) {
-    this.V1 = V1;
-    this.V2 = V2;
+  constructor(V1: FVector3 | undefined = undefined, V2: FVector3 | undefined = undefined) {
+    this.v1 = V1 ?? new FVector3();
+    this.v2 = V2 ?? new FVector3();
   }
 
   static fromFloat(reader: AssetReader) {
@@ -26,6 +27,6 @@ export class FTwoVectors {
   }
 
   toString() {
-    return `FTwoVectors{V1: ${this.V1}, V2: ${this.V2}}`;
+    return `FTwoVectors{V1: ${this.v1}, V2: ${this.v2}}`;
   }
 }

@@ -1,9 +1,0 @@
-# This file lists the classes for which we want to extract layout information.
-# When a class is selected, its full class hierarchy is also exported, along with all types referenced types in
-# its properties.
-#
-# Syntax:
-#   # The class "UStaticMesh" (without the initial "U") is selected.
-#   StaticMesh
-
-StaticMesh
