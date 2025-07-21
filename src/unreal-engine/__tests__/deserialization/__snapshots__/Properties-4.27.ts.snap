@@ -835,12 +835,12 @@ TaggedProperty {
   "value": {
     "type": "native-struct",
     "value": FTwoVectors {
-      "V1": FVector3 {
+      "v1": FVector3 {
         "X": 15,
         "Y": 17,
         "Z": 18,
       },
-      "V2": FVector3 {
+      "v2": FVector3 {
         "X": 19,
         "Y": 20,
         "Z": 21,
@@ -1334,10 +1334,10 @@ TaggedProperty {
     "value": FPerPlatformFloat {
       "Default": 20,
       "PerPlatform": [
-        {
-          "platform": "IOS",
-          "value": 40,
-        },
+        [
+          "IOS",
+          40,
+        ],
       ],
     },
   },

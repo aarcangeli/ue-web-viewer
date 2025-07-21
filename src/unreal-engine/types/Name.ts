@@ -127,6 +127,10 @@ export class FNameMap<V> {
   get size() {
     return this._map.size;
   }
+
+  toJSON() {
+    return this.map((key, value) => [key.toString(), value]);
+  }
 }
 
 export const NAME_None = new FName("None", 0);

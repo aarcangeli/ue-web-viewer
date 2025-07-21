@@ -19,14 +19,14 @@ export class FBox {
     const Min = FVector3.fromFloat(reader);
     const Max = FVector3.fromFloat(reader);
     const IsValid = reader.readUInt8() !== 0;
-    return this.fromData(Min, Max, IsValid);
+    return FBox.fromData(Min, Max, IsValid);
   }
 
   static fromDouble(reader: AssetReader) {
     const Min = FVector3.fromDouble(reader);
     const Max = FVector3.fromDouble(reader);
     const IsValid = reader.readUInt8() !== 0;
-    return this.fromData(Min, Max, IsValid);
+    return FBox.fromData(Min, Max, IsValid);
   }
 
   toString() {
