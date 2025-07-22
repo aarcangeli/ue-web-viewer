@@ -14,17 +14,23 @@ export interface ClassInfo {
 
 const MY_KEY = Symbol("myKey");
 
-type ObjectClass = {
+export type ObjectClass = {
   new (params: ObjectConstructionParams): UObject;
   // Inject the full class name into the constructor
   [MY_KEY]?: string;
 };
 
-const classRegistry = new Map<string, ObjectClass>();
+type ObjectClassPrivate = {
+  new (params: ObjectConstructionParams): UObject;
+  // Inject the full class name into the constructor
+  [MY_KEY]?: string;
+};
+
+const classRegistry = new Map<string, ObjectClassPrivate>();
 const matcher = /^\/Script\/(\w+)\.(\w+)$/;
 
 export function RegisterClass(fullClassName: string) {
-  return function (constructor: ObjectClass) {
+  return function (constructor: ObjectClassPrivate) {
     const match = matcher.exec(fullClassName);
     invariant(match, `Invalid class name format: ${fullClassName}. Expected format: /Script/Package.ClassName`);
     classRegistry.set(fullClassName, constructor);
@@ -32,19 +38,29 @@ export function RegisterClass(fullClassName: string) {
   };
 }
 
-export function instantiateObject(params: ObjectConstructionParams): UObject {
-  let currentClass: UClass | null = params.clazz;
+export function findClassOf(clazz: UClass): ObjectClass | null {
+  let currentClass: UClass | null = clazz;
 
   // Find the TS class with better match for the UObject class hierarchy
   while (currentClass) {
     const constructor = classRegistry.get(currentClass.fullName);
     if (constructor) {
-      return new constructor(params);
+      return constructor;
     }
     currentClass = currentClass.superClazz;
   }
 
   const constructor = classRegistry.get("/Script/CoreUObject.Object");
+  if (constructor) {
+    return constructor;
+  }
+
+  // Really strange, at least UObject should exist.
+  throw new Error(`No constructor found for class: ${clazz.fullName}`);
+}
+
+export function instantiateObject(params: ObjectConstructionParams): UObject {
+  const constructor = findClassOf(params.clazz);
   if (constructor) {
     return new constructor(params);
   }
@@ -53,12 +69,12 @@ export function instantiateObject(params: ObjectConstructionParams): UObject {
   throw new Error(`No constructor found for class: ${params.clazz.fullName}`);
 }
 
-export function getClassName(objectClass: ObjectClass) {
+export function getClassName(objectClass: ObjectClassPrivate) {
   return objectClass[MY_KEY];
 }
 
-export function getSuperClass(objectClass: ObjectClass) {
-  const prototype = Object.getPrototypeOf(objectClass) as ObjectClass;
+export function getSuperClass(objectClass: ObjectClassPrivate) {
+  const prototype = Object.getPrototypeOf(objectClass) as ObjectClassPrivate;
   return prototype?.[MY_KEY];
 }
 

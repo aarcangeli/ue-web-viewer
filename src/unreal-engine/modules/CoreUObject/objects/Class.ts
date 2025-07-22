@@ -1,6 +1,7 @@
 import invariant from "tiny-invariant";
 
 import { RegisterClass } from "../../../types/class-registry";
+import { isMissingImportedObject } from "../../error-elements";
 
 import type { ObjectConstructionParams } from "./Object";
 import { UObject } from "./Object";
@@ -38,6 +39,10 @@ export class UClass extends UStruct {
   constructor(params: ClassConstructionParams) {
     super(params);
     this.superClazz = params.superClazz ?? null;
+
+    if (isMissingImportedObject(this)) {
+      return;
+    }
 
     // Invariants
     if (this.superClazz) {

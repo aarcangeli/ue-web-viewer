@@ -4,6 +4,7 @@ import { UStaticMesh } from "../modules/Engine/objects/StaticMesh";
 import { NAME_Class, NAME_CoreUObject, NAME_Object, NAME_Package } from "../modules/names";
 
 import { FName } from "./Name";
+import type { IObjectContext } from "./object-context";
 import { MakeObjectContext } from "./object-context";
 
 describe("ObjectContext", () => {
@@ -132,16 +133,24 @@ describe("ObjectContext", () => {
   test("class creation", () => {
     const context = MakeObjectContext();
 
-    const testClass = context.findOrCreateClass(context.PACKAGE_CoreUObject, "TestClass");
+    const testClass = createClass(context, "TestClass", context.CLASS_Class);
     expect(testClass).toBeTruthy();
     expect(testClass.fullName).toBe("/Script/CoreUObject.TestClass");
     expect(testClass.outer).toBe(context.PACKAGE_CoreUObject);
     expect(testClass.class).toBe(context.CLASS_Class);
-
-    // The class should be empty initially
+    expect(testClass.superClazz).toBe(context.CLASS_Class);
     expect(testClass.innerObjects).toHaveLength(0);
 
+    const childClass = createClass(context, "ChildTestClass", testClass);
+    expect(childClass).toBeTruthy();
+    expect(childClass.fullName).toBe("/Script/CoreUObject.ChildTestClass");
+    expect(childClass.outer).toBe(context.PACKAGE_CoreUObject);
+    expect(childClass.class).toBe(context.CLASS_Class);
+    expect(childClass.superClazz).toBe(testClass);
+    expect(childClass.innerObjects).toHaveLength(0);
+
     expect(context.findClass(NAME_CoreUObject, FName.fromString("TestClass"))).toBe(testClass);
+    expect(context.findClass(NAME_CoreUObject, FName.fromString("ChildTestClass"))).toBe(childClass);
   });
 
   test("object creation", () => {
@@ -160,3 +169,12 @@ describe("ObjectContext", () => {
     expect(context.PACKAGE_CoreUObject.innerObjects).toContain(myMesh);
   });
 });
+
+function createClass(ctx: IObjectContext, className: string, superClazz: UClass) {
+  return new UClass({
+    outer: ctx.PACKAGE_CoreUObject,
+    clazz: ctx.CLASS_Class,
+    name: FName.fromString(className),
+    superClazz: superClazz,
+  });
+}

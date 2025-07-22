@@ -4,15 +4,15 @@ import invariant from "tiny-invariant";
 
 import { removeExtension } from "../../utils/string-utils";
 import type { AssetReader, FullAssetReader } from "../AssetReader";
-import type { UClass } from "../modules/CoreUObject/objects/Class";
+import { UClass } from "../modules/CoreUObject/objects/Class";
 import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
-import { UObject } from "../modules/CoreUObject/objects/Object";
-import { ELoadingPhase, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
+import { ELoadingPhase, UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
 import type { UPackage } from "../modules/CoreUObject/objects/Package";
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
-import { isMissingImportedObject, MissingImportedObject } from "../modules/error-elements";
+import { createMissingImportedObject, isMissingImportedObject } from "../modules/error-elements";
 import { NAME_CoreUObject, NAME_Package } from "../modules/names";
 import { makeNameFromParts } from "../path-utils";
+import { findClassOf } from "../types/class-registry";
 import { FName, NAME_None } from "../types/Name";
 import { MakeObjectContext } from "../types/object-context";
 import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
@@ -50,8 +50,6 @@ export class Asset {
 
   /// Cache of imported objects.
   private readonly _importedObjects: Array<WeakObjectRef> = [];
-
-  private readonly _unknownClass = this._context.findOrCreateClass(this._context.PACKAGE_CoreUObject, "UnknownClass");
 
   /**
    * The package object.
@@ -328,10 +326,25 @@ export class Asset {
         return existingChild;
       }
 
+      // Find or create the class
       const classPackage = this._context.findOrCreatePackage(importObject.ClassPackage);
-      const classInstance = this._context.findOrCreateClass(classPackage, importObject.ClassName);
+      let classInstance = classPackage.findInnerByFName(importObject.ClassName);
+      if (!classInstance) {
+        classInstance = new UClass({
+          outer: classPackage,
+          clazz: this._context.CLASS_Class,
+          name: importObject.ClassName,
+          // We don't have this information for imported objects
+          superClazz: this._context.CLASS_Class,
+        });
+      }
+      invariant(classInstance instanceof UClass, `Expected a class for import ${importObject.ObjectName}`);
 
-      return new MissingImportedObject({
+      console.log(`Creating missing ${classInstance.fullName}`);
+      const isClass = classInstance == this._context.CLASS_Class;
+      const fallbackClass = isClass ? UClass : UObject;
+      const myClass = findClassOf(classInstance) ?? fallbackClass;
+      return createMissingImportedObject(myClass, {
         outer: outer,
         clazz: classInstance,
         name: importObject.ObjectName,

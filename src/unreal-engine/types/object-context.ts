@@ -60,14 +60,6 @@ export interface IObjectContext {
    */
   findClass(packageName: FName, className: FName): UClass | null;
 
-  /**
-   * Creates a new class with the given name in the specified package.
-   * If a class with the same name already exists, it returns that class.
-   * @param outer The package in which to create the class, typically CoreUObject.
-   * @param className The name of the class to create.
-   */
-  findOrCreateClass(outer: UPackage, className: string | FName): UClass;
-
   /*
    * Creates a new object of the specified class with the given name.
    */
@@ -163,25 +155,6 @@ class ObjectContextImpl implements IObjectContext {
         }),
       );
     }
-  }
-
-  findOrCreateClass(outer: UPackage, className: string | FName) {
-    const classFName = className instanceof FName ? className : FName.fromString(className);
-    const existingClass = outer.findInnerByFName(classFName);
-    if (existingClass) {
-      invariant(existingClass instanceof UClass, `Expected class ${classFName} to be an instance of UClass`);
-      return existingClass;
-    }
-
-    // Create a new class if it doesn't exist.
-    const newClass = new UClass({
-      outer: outer,
-      clazz: this.CLASS_Class,
-      name: classFName,
-      superClazz: this.CLASS_Object,
-    });
-    this.classes.push(newClass);
-    return newClass;
   }
 
   findOrCreatePackage(packageName: FName, flags?: EPackageFlags): UPackage {
