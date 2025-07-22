@@ -1,3 +1,4 @@
+import { RegisterClass } from "../../../types/class-registry";
 import type { FName } from "../../../types/Name";
 import { NAME_None } from "../../../types/Name";
 import type { UObject } from "../../CoreUObject/objects/Object";
@@ -21,6 +22,7 @@ import type { UStaticMeshSocket } from "./StaticMeshSocket";
 import { UStreamableRenderAsset } from "./StreamableRenderAsset";
 import type { UThumbnailInfo } from "./ThumbnailInfo";
 
+@RegisterClass("/Script/Engine.StaticMesh")
 export class UStaticMesh extends UStreamableRenderAsset {
   SourceModels: Array<FStaticMeshSourceModel> = [];
   HiResSourceModel: FStaticMeshSourceModel = new FStaticMeshSourceModel();

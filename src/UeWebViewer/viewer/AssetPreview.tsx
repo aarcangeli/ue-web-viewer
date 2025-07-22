@@ -12,6 +12,7 @@ import { makePropertyIcon } from "./MakePropertyIcon";
 import type { ITextData } from "../../unreal-engine/types/Text";
 import { ETextHistoryType, FTextHistory_Base } from "../../unreal-engine/types/Text";
 import { FPerPlatformFloat } from "../../unreal-engine/modules/CoreUObject/structs/PerPlatformProperties";
+import { isMissingImportedObject } from "../../unreal-engine/modules/error-elements";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
@@ -23,8 +24,8 @@ export function ObjectPreview(props: { object: UObject }) {
       {statistics && renderStatistics(statistics)}
       <SimpleDetailsView>
         <CollapsableSection name={"Asset"}>
-          <IndentedRow title={"Object"}>{exportedObjects.fullName}</IndentedRow>
-          <IndentedRow title={"Class"}>{exportedObjects.class.fullName}</IndentedRow>
+          <IndentedRow title={"Object"}>{renderObjectName(exportedObjects)}</IndentedRow>
+          <IndentedRow title={"Class"}>{renderObjectName(exportedObjects.class)}</IndentedRow>
           <IndentedRow title={"Object Guid"}>{exportedObjects.objectGuid?.toString() || "None"}</IndentedRow>
         </CollapsableSection>
         <CollapsableSection name={"Serialized Properties"}>
@@ -35,6 +36,16 @@ export function ObjectPreview(props: { object: UObject }) {
       </SimpleDetailsView>
     </Box>
   );
+}
+
+function renderObjectName(object: UObject | null) {
+  if (!object) {
+    return "null";
+  }
+  if (isMissingImportedObject(object)) {
+    return <Box color={"red"}>Missing object: {object.fullName}</Box>;
+  }
+  return object.fullName;
 }
 
 export function AssetPreview(props: { asset: Asset }) {
@@ -82,7 +93,7 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
     case "object":
       return (
         <IndentedRow key={key} icon={icon} title={name}>
-          {value.object?.fullName ?? "null"}
+          {renderObjectName(value.object)}
         </IndentedRow>
       );
     case "struct":
@@ -129,7 +140,7 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
     case "delegate":
       return (
         <IndentedRow key={key} icon={icon} title={name}>
-          {value.object?.fullName ?? "null"}::{value.function.text}
+          {renderObjectName(value.object)}::{value.function.text}
         </IndentedRow>
       );
     case "array":

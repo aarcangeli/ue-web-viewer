@@ -1,27 +1,21 @@
 import fs from "fs";
-import path from "path";
 
 import type { LayoutDump } from "./LayoutDumpSchema";
 import { PartialClassGenerator } from "./PartialClassGenerator";
 import { ExportLayoutOptions } from "./Options";
-
-// Get some paths
-const dirname = __dirname;
-const layoutPath = path.join(dirname, "LayoutDump.json");
-const repoRoot = path.resolve(dirname, "..", "..");
-const outputDir = path.join(repoRoot, "src/unreal-engine/modules");
+import { generateIndex } from "./generate-index.cjs";
 
 function main() {
   console.log("Reading layout dump...");
-  console.log(`Repository root: ${repoRoot}`);
-  console.log(`Layout dump path: ${layoutPath}`);
-  console.log(`Output directory: ${outputDir}`);
+  console.log(`Repository root: ${ExportLayoutOptions.repoRoot}`);
+  console.log(`Layout dump path: ${ExportLayoutOptions.layoutPath}`);
+  console.log(`Output directory: ${ExportLayoutOptions.modulesDir}`);
 
-  fs.mkdirSync(outputDir, { recursive: true });
+  fs.mkdirSync(ExportLayoutOptions.modulesDir, { recursive: true });
 
-  const values = JSON.parse(fs.readFileSync(layoutPath, "utf-8")) as LayoutDump;
+  const values = JSON.parse(fs.readFileSync(ExportLayoutOptions.layoutPath, "utf-8")) as LayoutDump;
 
-  const generator = new PartialClassGenerator(outputDir, values);
+  const generator = new PartialClassGenerator(ExportLayoutOptions.modulesDir, values);
 
   // First of all, update existing TS classes
   generator.updateExistingSymbols();
@@ -41,6 +35,9 @@ function main() {
   }
 
   generator.flushSaves();
+
+  // Export the index file
+  generateIndex();
 }
 
 main();

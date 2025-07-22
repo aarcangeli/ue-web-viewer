@@ -1,3 +1,4 @@
+import { RegisterClass } from "../../../types/class-registry";
 import { UObject } from "../../CoreUObject/objects/Object";
 import type { FGuid } from "../../CoreUObject/structs/Guid";
 import { GUID_None } from "../../CoreUObject/structs/Guid";
@@ -12,6 +13,7 @@ import type { USpecularProfile } from "./SpecularProfile";
 import type { USubsurfaceProfile } from "./SubsurfaceProfile";
 import type { UThumbnailInfo } from "./ThumbnailInfo";
 
+@RegisterClass("/Script/Engine.MaterialInterface")
 export class UMaterialInterface extends UObject {
   EditorOnlyData: UMaterialInterfaceEditorOnlyData | null = null;
   SubsurfaceProfile: USubsurfaceProfile | null = null;

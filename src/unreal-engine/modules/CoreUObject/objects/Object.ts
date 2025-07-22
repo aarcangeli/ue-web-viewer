@@ -7,6 +7,7 @@ import type { TaggedProperty } from "../../../properties/TaggedProperty";
 import { EObjectFlags } from "../../../serialization/ObjectExport";
 import { readTaggedProperties } from "../../../serialization/properties-serialization";
 import type { SerializationStatistics } from "../../../serialization/SerializationStatistics";
+import { RegisterClass } from "../../../types/class-registry";
 import type { FName } from "../../../types/Name";
 import { FGuid } from "../structs/Guid";
 import type { FSoftObjectPath } from "../structs/SoftObjectPath";
@@ -24,6 +25,7 @@ export interface ObjectResolver {
 }
 
 export type ObjectConstructionParams = {
+  outer?: UObject | null;
   clazz: UClass;
   name: FName;
   flags?: EPackageFlags;
@@ -58,7 +60,10 @@ export enum ELoadingPhase {
  * Do not use vanilla WeakRef to weakly reference UObject instances.
  * Instead, use {@link asWeakObject()} to obtain a WeakObject.
  */
+@RegisterClass("/Script/CoreUObject.Object")
 export class UObject {
+  private readonly __type_UObject!: UObject;
+
   private _outer: UObject | null = null;
   private /*readonly*/ _class: UClass;
   private readonly _flags: EPackageFlags;
@@ -89,6 +94,7 @@ export class UObject {
   objectGuid: FGuid | null = null;
 
   constructor(params: ObjectConstructionParams) {
+    // Invariants
     invariant(params.clazz, "Class cannot be null");
     invariant(params.name, "Object name cannot be null");
     invariant(!params.name.isNone, "Name cannot be None");
@@ -97,6 +103,7 @@ export class UObject {
     this._class = params.clazz;
     this._name = params.name;
     this._flags = params.flags ?? 0;
+    params.outer?.addInner(this);
   }
 
   /**
@@ -153,9 +160,13 @@ export class UObject {
   }
 
   /**
-   * Adds a inner object to this object.
+   * Adds an inner object to this object.
    */
   addInner(inner: UObject) {
+    if (inner.outer == this) {
+      // Nothing to do
+      return;
+    }
     validateAddInner(this, inner);
     this._innerObjects.push(inner.asWeakObject());
     inner._outer = this;
@@ -205,6 +216,10 @@ export class UObject {
     this._class = clazz;
   }
 
+  isA(clazz: UClass): boolean {
+    return clazz.isChildOf(this._class);
+  }
+
   asWeakObject(): WeakObjectRef<this> {
     return new WeakObjectRef(this);
   }
@@ -213,11 +228,13 @@ export class UObject {
 /**
  * Hack to allow cyclic dependencies between UClass and UObject.
  * Do not use for anything else.
- * see global-instances.ts
+ * see object-context.ts
  */
 export const LazyClass = {} as UClass;
 
 function validateAddInner(parent: UObject, child: UObject) {
+  invariant((child as unknown) instanceof UObject, "Child must be an instance of UObject");
+  invariant(child.name);
   if (child.outer !== null) {
     throw new Error(`Object ${child.name.text} already has an outer object`);
   }

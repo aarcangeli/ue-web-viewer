@@ -22,10 +22,12 @@ import type { FTextureFormatSettings } from "../structs/TextureFormatSettings";
 import { FTextureSource } from "../structs/TextureSource";
 import { FTextureSourceColorSettings } from "../structs/TextureSourceColorSettings";
 
+import { RegisterClass } from "../../../types/class-registry";
 import type { UAssetImportData } from "./AssetImportData";
 import type { UAssetUserData } from "./AssetUserData";
 import { UStreamableRenderAsset } from "./StreamableRenderAsset";
 
+@RegisterClass("/Script/Engine.Texture")
 export class UTexture extends UStreamableRenderAsset {
   Source: FTextureSource = new FTextureSource();
   LightingGuid: FGuid = GUID_None;

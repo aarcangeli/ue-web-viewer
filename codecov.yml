@@ -1,0 +1,6 @@
+coverage:
+  status:
+    project:
+      default:
+        # Disable status checks for normal commits
+        only_pulls: true

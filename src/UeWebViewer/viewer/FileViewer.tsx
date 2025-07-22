@@ -18,7 +18,8 @@ async function ReadAndParseFile(file: FileApi) {
     const content = await file.read();
     return new FullAssetReader(new DataView(content));
   };
-  return Asset.fromStream(file.name, await loadAsset(), loadAsset);
+  // TODO: the name should be the virtual path of the file
+  return Asset.fromStream(`/Game/${file.name}`, await loadAsset(), loadAsset);
 }
 
 const tabNames = [

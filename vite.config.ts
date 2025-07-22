@@ -1,13 +1,19 @@
-import { defineConfig } from "vite";
+import { codecovVitePlugin } from "@codecov/vite-plugin";
 import react from "@vitejs/plugin-react-swc";
+import { defineConfig } from "vite";
 import json5Plugin from "vite-plugin-json5";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { codecovVitePlugin } from "@codecov/vite-plugin";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      useAtYourOwnRisk_mutateSwcOptions(options) {
+        // Use stage 3 decorators
+        options.jsc!.parser!.decorators = true;
+        options.jsc!.transform!.decoratorVersion = "2022-03";
+      },
+    }),
     json5Plugin(),
     tsconfigPaths(),
     codecovVitePlugin({

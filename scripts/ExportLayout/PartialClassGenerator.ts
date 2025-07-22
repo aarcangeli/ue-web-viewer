@@ -1,6 +1,5 @@
-import path from "path";
-import type { ClassDeclaration, EnumDeclaration, JSDocableNode, Node, SourceFile } from "ts-morph";
-import { SyntaxKind } from "ts-morph";
+import type { ClassDeclaration, Decorator, EnumDeclaration, JSDocableNode, SourceFile } from "ts-morph";
+import { Node, SyntaxKind } from "ts-morph";
 
 import type {
   ClassInfo,
@@ -22,6 +21,7 @@ import {
   getStructName,
 } from "./property-handler";
 import { SymbolStorage } from "./SymbolStorage";
+import { getOrCreateImport } from "./ts-utils";
 
 type AnySymbol = ClassInfo | StructInfo | EnumInfo;
 
@@ -72,6 +72,7 @@ export class PartialClassGenerator {
 
   private doSyncClass(classDeclaration: ClassDeclaration, classInfo: ClassInfo) {
     if (this.addToProcessing(classInfo)) {
+      const resolver = this.makeResolver(classDeclaration.getSourceFile());
       const flags = getFlags(classDeclaration);
       if (flags.includes("ignore")) {
         console.log(`Ignoring class ${classInfo.packageName}.U${classInfo.className}`);
@@ -83,9 +84,30 @@ export class PartialClassGenerator {
       // Sync extension
       let expectedExtends: string | undefined = undefined;
       if (classInfo.superClass) {
-        const resolver = this.makeResolver(classDeclaration.getSourceFile());
         expectedExtends = resolver.resolveClassRef(classInfo.superClass, false);
       }
+
+      // Sync decorator
+      let registerClass = classDeclaration.getDecorator("RegisterClass");
+      const expectedArguments = [`${classInfo.packageName}.${classInfo.className}`];
+      if (!registerClass) {
+        logChange(`Adding RegisterClass decorator to ${classInfo.packageName}.U${classInfo.className}`);
+        registerClass = classDeclaration.addDecorator({
+          name: resolver.resolveSymbol("RegisterClass", false),
+          arguments: expectedArguments,
+        });
+      }
+      const currentArguments = getArgumentsInDecorator(registerClass);
+      if (JSON.stringify(expectedArguments) !== JSON.stringify(currentArguments)) {
+        logChange(
+          `Updating RegisterClass decorator arguments from [${currentArguments.join(
+            ", ",
+          )}] to [${expectedArguments.join(", ")}]`,
+        );
+        registerClass.getArguments().forEach((arg) => registerClass.removeArgument(arg));
+        registerClass.addArguments(expectedArguments.map((el) => JSON.stringify(el)));
+      }
+
       this.syncExtension(classDeclaration, expectedExtends);
 
       this.updateProperties(classDeclaration, getPropertiesToExport(classInfo.properties));
@@ -301,7 +323,7 @@ export class PartialClassGenerator {
         this.addToQueue(this.storage.getClassDump(classRef.package, classRef.class));
         const existingClass = this.storage.getOrCreateSymbol(classRef.package, "class", classRef.class);
         const symbolName = getClassName(classRef.class);
-        this.getOrCreateImport(sourceFile, existingClass.getSourceFile(), symbolName, asType);
+        getOrCreateImport(sourceFile, existingClass.getSourceFile(), symbolName, asType);
         return symbolName;
       },
       resolveStructRef: (structRef: StructRef, asType: boolean) => {
@@ -309,13 +331,13 @@ export class PartialClassGenerator {
         this.addToQueue(this.storage.getStructDump(structRef.package, structName));
         const existingClass = this.storage.getOrCreateSymbol(structRef.package, "struct", structName);
         const symbolName = getStructName(structName);
-        this.getOrCreateImport(sourceFile, existingClass.getSourceFile(), symbolName, asType);
+        getOrCreateImport(sourceFile, existingClass.getSourceFile(), symbolName, asType);
         return symbolName;
       },
       resolveEnumRef: (enumRef: EnumRef, asType: boolean) => {
         this.addToQueue(this.storage.getEnumDump(enumRef.package, enumRef.enum));
         const existingEnum = this.storage.getOrCreateSymbol(enumRef.package, "enum", enumRef.enum);
-        this.getOrCreateImport(sourceFile, existingEnum.getSourceFile(), enumRef.enum, asType);
+        getOrCreateImport(sourceFile, existingEnum.getSourceFile(), enumRef.enum, asType);
         return enumRef.enum;
       },
       getEnumInfo: (enumRef) => {
@@ -331,92 +353,18 @@ export class PartialClassGenerator {
       },
       resolveSymbol: (name: string, asType: boolean) => {
         const variable = this.storage.resolveSymbol(name);
-        this.getOrCreateImport(sourceFile, variable.getSourceFile(), name, asType);
+        getOrCreateImport(sourceFile, variable.getSourceFile(), name, asType);
         return name;
       },
     };
   }
-
-  private getOrCreateImport(sourceFile: SourceFile, destination: SourceFile, symbolName: string, asType: boolean) {
-    if (sourceFile === destination) {
-      // No need to import from the same file
-      return;
-    }
-
-    const relativePath = getRelativeImportPath(sourceFile, destination.getFilePath());
-
-    let importDecl = sourceFile.getImportDeclaration(
-      (decl) =>
-        decl.getModuleSpecifierValue() === relativePath &&
-        decl.getNamedImports().find((i) => i.getName() === symbolName) !== undefined,
-    );
-
-    if (importDecl) {
-      const alreadyImported = importDecl.getNamedImports().find((i) => i.getName() === symbolName);
-      if (!alreadyImported) {
-        importDecl.addNamedImport({
-          name: symbolName,
-          isTypeOnly: asType,
-        });
-      }
-
-      // Remove the type-only flag if it was previously imported as type-only
-      if (alreadyImported && !asType) {
-        if (importDecl.isTypeOnly()) {
-          if (importDecl.getNamedImports().length === 1) {
-            importDecl.setIsTypeOnly(false);
-          } else {
-            // If there are other named imports, remove the item specifier and recreate a new import declaration
-            alreadyImported.remove();
-            importDecl = undefined;
-          }
-        } else if (alreadyImported.isTypeOnly()) {
-          alreadyImported.setIsTypeOnly(false);
-        }
-      }
-    }
-
-    if (!importDecl) {
-      sourceFile.addImportDeclaration({
-        moduleSpecifier: relativePath,
-        isTypeOnly: asType,
-        namedImports: [symbolName],
-      });
-    }
-  }
-}
-
-function getRelativeImportPath(from: SourceFile, toPath: string): string {
-  const fromDir = path.dirname(from.getFilePath());
-
-  let relPath = path.relative(fromDir, toPath).replace(/\\/g, "/");
-
-  // Remove the file extension if it exists
-  relPath = relPath.replace(/\.[tj]sx?$/, "");
-
-  // Ensure the path starts with "./" if it doesn't already
-  if (!relPath.startsWith(".")) {
-    relPath = "./" + relPath;
-  }
-
-  return relPath;
 }
 
 /**
  * Find the index where new properties should be inserted in a class definition.
  */
 function findPropertyInsertIndex(classDefinition: ClassDeclaration) {
-  const properties = classDefinition.getMembers();
-  return findLastIndex(properties, (p) => p.getKind() === SyntaxKind.PropertyDeclaration) + 1;
-}
-
-function findLastIndex<T>(arr: T[], predicate: (value: T, index: number, array: T[]) => boolean): number {
-  for (let i = arr.length - 1; i >= 0; i--) {
-    if (predicate(arr[i], i, arr)) {
-      return i;
-    }
-  }
-  return -1;
+  return classDefinition.getMembers().findLastIndex((p) => p.getKind() === SyntaxKind.PropertyDeclaration) + 1;
 }
 
 function ensureBlankLineBefore(existingProperty: Node) {
@@ -466,4 +414,12 @@ function getFlags(declaration: JSDocableNode & { getName(): string | undefined }
     }
   }
   return result;
+}
+
+function getArgumentsInDecorator(decorator: Decorator): Array<string | undefined> {
+  return decorator.getArguments().map((arg) => {
+    if (Node.isStringLiteral(arg)) {
+      return arg.getLiteralText();
+    }
+  });
 }

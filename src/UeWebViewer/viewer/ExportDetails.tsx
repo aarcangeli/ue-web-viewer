@@ -36,10 +36,7 @@ class Node {
 function makeTree(asset: Asset): Node[] {
   const sortNodesRecursively = (convertedTable: Node[]) => {
     convertedTable.sort((a: Node, b: Node) => {
-      return (
-        a.classFullName.localeCompare(b.classFullName) ||
-        a.objectExport.ObjectName.localeCompare(b.objectExport.ObjectName)
-      );
+      return a.objectExport.ObjectName.localeCompare(b.objectExport.ObjectName);
     });
 
     for (const value of convertedTable) {

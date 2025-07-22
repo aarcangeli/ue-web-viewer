@@ -1,6 +1,8 @@
+import { RegisterClass } from "../../../types/class-registry";
 import { FRichCurve } from "../structs/RichCurve";
 import { UCurveBase } from "./CurveBase";
 
+@RegisterClass("/Script/Engine.CurveLinearColor")
 export class UCurveLinearColor extends UCurveBase {
   FloatCurves: FRichCurve = new FRichCurve();
   AdjustHue: number = 0;

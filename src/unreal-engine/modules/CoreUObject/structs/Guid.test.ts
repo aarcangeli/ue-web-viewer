@@ -33,6 +33,6 @@ test("check from components", () => {
   expect(guid.toString()).toBe("{11223344-5566-7788-99aa-bbccddeeff00}");
 });
 
-test("check invadli guid", () => {
-  expect(() => FGuid.fromString("11223344-5566-7788-99AA-BBCCDDEEFF00")).toThrowError("Invalid GUID string");
+test("check invalid guid", () => {
+  expect(() => FGuid.fromString("11223344-5566-7788-99AA-BBCCDDEEFF00")).toThrow("Invalid GUID string");
 });

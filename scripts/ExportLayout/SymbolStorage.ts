@@ -58,8 +58,7 @@ export class SymbolStorage {
 
     // Add additional paths to the project
     for (const additionalPath of ExportLayoutOptions.additionalPaths) {
-      const fullPath = path.join(this.rootDirectory, additionalPath);
-      this.project.addSourceFileAtPath(fullPath);
+      this.project.addSourceFileAtPath(additionalPath);
     }
   }
 
@@ -248,11 +247,19 @@ export class SymbolStorage {
       }
     }
 
+    // Find a method
+    for (const sourceFile of this.project.getSourceFiles()) {
+      const functionDeclaration = sourceFile.getFunction(name);
+      if (functionDeclaration && functionDeclaration.hasExportKeyword()) {
+        return functionDeclaration;
+      }
+    }
+
     throw new Error(`Constant "${name}" not found.`);
   }
 }
 
-function getAllTsFiles(dirPath: string): string[] {
+export function getAllTsFiles(dirPath: string): string[] {
   const result: string[] = [];
 
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });

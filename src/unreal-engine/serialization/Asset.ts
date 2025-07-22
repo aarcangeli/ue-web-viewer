@@ -1,26 +1,26 @@
+import "../modules/all-objects";
+
 import invariant from "tiny-invariant";
 
 import { removeExtension } from "../../utils/string-utils";
 import type { AssetReader, FullAssetReader } from "../AssetReader";
 import type { UClass } from "../modules/CoreUObject/objects/Class";
-import type { ObjectConstructionParams, ObjectResolver } from "../modules/CoreUObject/objects/Object";
-import { ELoadingPhase, UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
-import { UPackage } from "../modules/CoreUObject/objects/Package";
+import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
+import { UObject } from "../modules/CoreUObject/objects/Object";
+import { ELoadingPhase, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
+import type { UPackage } from "../modules/CoreUObject/objects/Package";
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
-import { CLASS_Package, UnknownClass } from "../modules/global-instances";
+import { isMissingImportedObject, MissingImportedObject } from "../modules/error-elements";
+import { NAME_CoreUObject, NAME_Package } from "../modules/names";
 import { makeNameFromParts } from "../path-utils";
 import { FName, NAME_None } from "../types/Name";
+import { MakeObjectContext } from "../types/object-context";
 import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
 
 import { EObjectFlags, FObjectExport } from "./ObjectExport";
 import { FObjectImport } from "./ObjectImport";
 import { FPackageFileSummary } from "./PackageFileSummary";
 import { SerializationStatistics } from "./SerializationStatistics";
-
-/**
- * Mock object which represents an object imported from another package.
- */
-class MissingImportedObject extends UObject {}
 
 const RecursiveCheck = Symbol("RecursiveCheck");
 
@@ -34,7 +34,10 @@ const RecursiveCheck = Symbol("RecursiveCheck");
  * The root object is always an instance of {@link UPackage}.
  */
 export class Asset {
-  private readonly _packageName: string;
+  /** We have a dedicated context for this asset, in the future we may want to reuse it for other assets. */
+  private readonly _context = MakeObjectContext();
+
+  private readonly _packageName: FName;
   private readonly _reader: FullAssetReader;
 
   readonly summary: Readonly<FPackageFileSummary> = new FPackageFileSummary();
@@ -48,26 +51,25 @@ export class Asset {
   /// Cache of imported objects.
   private readonly _importedObjects: Array<WeakObjectRef> = [];
 
+  private readonly _unknownClass = this._context.findOrCreateClass(this._context.PACKAGE_CoreUObject, "UnknownClass");
+
   /**
    * The package object.
    */
   readonly package: UPackage;
 
   private constructor(
-    packageName: string,
+    packageName: FName,
     reader: FullAssetReader,
     private _reload: (() => Promise<FullAssetReader>) | null = null,
   ) {
     invariant(packageName, "Expected a package name");
     invariant(reader.tell() === 0, "Expected to be at the beginning of the stream");
 
-    // remove extension
-    packageName = removeExtension(packageName);
     this._packageName = packageName;
     this._reader = reader;
 
     // Read the package summary
-    reader.seek(0);
     const summary = FPackageFileSummary.fromStream(reader);
     this.summary = summary;
     reader.setVersion(summary.FileVersionUE4, summary.FileVersionUE5);
@@ -81,11 +83,7 @@ export class Asset {
     this.softObjects = readSoftObjectsMap(reader, summary);
 
     // Create the package object
-    this.package = new UPackage({
-      clazz: CLASS_Package,
-      name: FName.fromString(packageName),
-      flags: 0,
-    });
+    this.package = this._context.findOrCreatePackage(packageName);
   }
 
   /**
@@ -100,7 +98,7 @@ export class Asset {
     reader: FullAssetReader,
     reload: (() => Promise<FullAssetReader>) | null = null,
   ): Asset {
-    return new Asset(packageName, reader, reload);
+    return new Asset(FName.fromString(removeExtension(packageName)), reader, reload);
   }
 
   makeFullNameByIndex(index: number): string {
@@ -142,7 +140,7 @@ export class Asset {
    * name as the package.
    */
   get mainObject() {
-    const exportName = extractFileName(this._packageName);
+    const exportName = extractFileName(this._packageName.toString());
     let exportIndex = this.findRootExportByName(exportName);
 
     // If not found, try with the compiled version
@@ -166,23 +164,13 @@ export class Asset {
     }
 
     // Load the object
-    if (index > 0) {
+    if (isExportIndex(index)) {
       return this.createExportObject(index, full);
+    } else if (isImportIndex(index)) {
+      return this.lookupImportObject(index);
     } else {
-      invariant(index < 0);
-      // todo: import from another asset
-      // For now, all imports are treated as missing objects
-      const object = new MissingImportedObject({
-        clazz: UnknownClass,
-        name: this.getObjectName(index),
-        flags: 0,
-      });
-      this._importedObjects[-index - 1] = object.asWeakObject();
-      const outerIndex = this.getOuterIndex(index);
-      if (outerIndex != 0) {
-        this.getObjectByIndex(outerIndex).addInner(object);
-      }
-      return object;
+      // This should never happen, as we already check the index is not 0
+      throw new Error(`Invalid index ${index}`);
     }
   }
 
@@ -210,10 +198,7 @@ export class Asset {
   }
 
   reloadObject(object: UObject) {
-    const index =
-      this._exportedObjects.findIndex((e) => {
-        return e instanceof WeakObjectRef && e.deref() === object;
-      }) + 1;
+    const index = this._exportedObjects.findIndex((e) => e instanceof WeakObjectRef && e.deref() === object) + 1;
     if (index > 0) {
       object.loadingPhase = ELoadingPhase.None;
       this.serializeObject(this.exports[index - 1], object);
@@ -246,6 +231,12 @@ export class Asset {
     }
   }
 
+  private getObjectImport(index: number) {
+    invariant(isImportIndex(index), `Index ${index} must be an import index`);
+    invariant(this.isIndexValid(index), `Invalid index ${index}`);
+    return this.imports[-index - 1];
+  }
+
   /**
    * Retrieve the object at the given index, or null if not found or if the object has been garbage collected.
    */
@@ -272,35 +263,82 @@ export class Asset {
   }
 
   private createExportObject(index: number, full: boolean): UObject {
-    invariant(index > 0, `Index ${index} must be an export index`);
     invariant(this.isIndexValid(index), `Invalid export index ${index}`);
+    invariant(isExportIndex(index), `Index ${index} must be an export index`);
 
     const objectExport = this.exports[index - 1];
 
     const object = this.withRecursionCheck(index, () => {
       invariant(objectExport.ClassIndex != 0, `Expected a valid class index`);
       const clazz = this.getObjectByIndex(objectExport.ClassIndex, false) as UClass;
-      const object = this.instantiateObject({
-        clazz: clazz,
-        name: objectExport.ObjectName,
-        flags: objectExport.objectFlags,
-      });
 
-      // Attach the object to the outer
+      // Get the outer object
       const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex, false) : this.package;
-      outer.addInner(object);
+      if (isMissingImportedObject(clazz)) {
+        console.warn(
+          `Object ${objectExport.ObjectName} is based on an unknown class ${clazz.fullName}, using UObject as fallback`,
+        );
+        return new UObject({
+          outer: outer,
+          clazz: clazz,
+          name: objectExport.ObjectName,
+          flags: objectExport.objectFlags,
+        });
+      }
 
-      // Register the object
-      this._exportedObjects[index - 1] = object.asWeakObject();
-
-      return object;
+      return this._context.newObject(outer, clazz, objectExport.ObjectName, objectExport.objectFlags);
     });
+
+    // Register the object
+    this._exportedObjects[index - 1] = object.asWeakObject();
 
     // serialize
     if (full && object.loadingPhase === ELoadingPhase.None) {
       this.serializeObject(objectExport, object);
     }
 
+    return object;
+  }
+
+  private lookupImportObject(index: number): UObject {
+    invariant(this.isIndexValid(index), `Invalid export index ${index}`);
+    invariant(isImportIndex(index), `Index ${index} must be an export index`);
+
+    const object = (() => {
+      const importObject = this.getObjectImport(index);
+
+      // todo: try to import from another asset
+
+      // Create a fallback object if the import is not found
+      if (
+        importObject.OuterIndex === 0 &&
+        importObject.ClassPackage.equals(NAME_CoreUObject) &&
+        importObject.ClassName.equals(NAME_Package)
+      ) {
+        // Create the package object
+        return this._context.findOrCreatePackage(importObject.ObjectName);
+      }
+
+      // Lookup for an existing child object with the same name and class
+      const outer = this.getObjectByIndex(importObject.OuterIndex, false);
+      const existingChild = outer.findInnerByFName(importObject.ObjectName);
+
+      // There is already an object with the same name and class, return it
+      if (existingChild) {
+        return existingChild;
+      }
+
+      const classPackage = this._context.findOrCreatePackage(importObject.ClassPackage);
+      const classInstance = this._context.findOrCreateClass(classPackage, importObject.ClassName);
+
+      return new MissingImportedObject({
+        outer: outer,
+        clazz: classInstance,
+        name: importObject.ObjectName,
+      });
+    })();
+
+    this._importedObjects[-index - 1] = object.asWeakObject();
     return object;
   }
 
@@ -343,11 +381,6 @@ export class Asset {
       object.serializationStatistics = new SerializationStatistics(null, String(e));
       object.loadingPhase = ELoadingPhase.Error;
     }
-  }
-
-  private instantiateObject(params: ObjectConstructionParams) {
-    // todo: this should return a different class based on the UClass
-    return new UObject(params);
   }
 
   private withRecursionCheck(index: number, fn: () => UObject) {
@@ -421,6 +454,10 @@ function readSoftObjectsMap(reader: AssetReader, summary: FPackageFileSummary) {
 
 function isExportIndex(index: number) {
   return index > 0;
+}
+
+function isImportIndex(index: number) {
+  return index < 0;
 }
 
 function extractFileName(packageName: string) {

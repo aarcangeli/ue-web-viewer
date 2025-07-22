@@ -1,6 +1,13 @@
+import path from "path";
+
 import { getStructName } from "./property-handler";
 
+const dirname = __dirname;
+const repoRoot = path.resolve(__dirname, "..", "..");
+const src_dir = path.resolve(repoRoot, "src");
+
 export const ExportLayoutOptions = {
+  verbose: true,
   enforcePropertyOrder: true,
   enforceEnumOrder: true,
   overrideJSDoc: false,
@@ -10,12 +17,14 @@ export const ExportLayoutOptions = {
    */
   organizeImports: true,
 
-  verbose: true,
-
   /**
    * List of UCLASS that will be exported to TypeScript.
    */
   interestingTypes: ["StaticMesh"],
+
+  repoRoot: repoRoot,
+  layoutPath: path.join(dirname, "LayoutDump.json"),
+  modulesDir: path.join(repoRoot, "src/unreal-engine/modules"),
 
   /**
    * Unreal Engine's LWC system uses different types for float and double precision (e.g., FVector3f vs FVector3d).
@@ -59,7 +68,10 @@ export const ExportLayoutOptions = {
     ["FMatrix", "FMatrix44"],
   ]),
 
-  additionalPaths: ["../types/Name.ts"],
+  additionalPaths: [
+    path.resolve(src_dir, "unreal-engine/types/Name.ts"),
+    path.resolve(src_dir, "unreal-engine/types/class-registry.ts"),
+  ],
 };
 
 // invert matrix for structRenames
