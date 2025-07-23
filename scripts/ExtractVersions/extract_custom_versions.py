@@ -2,8 +2,9 @@ import re
 import time
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Generator, List
 
-from scripts.extract_versions import (
+from extract_versions import (
     output_dir,
     SerializationVersion,
     print_table,
@@ -11,7 +12,7 @@ from scripts.extract_versions import (
     aggregate_versions,
     format_details,
 )
-from scripts.utils import (
+from utils import (
     follow_paren,
     error,
     spawn_process,
@@ -60,7 +61,7 @@ guid_pattern = (
 )
 
 g_engine_root: Path
-g_unreal_tags: [str]
+g_unreal_tags: List[str]
 g_file_by_name: dict[str, list[Path]] = {}
 """ Map of file name (lowercase) to list of paths """
 
@@ -75,36 +76,39 @@ class CustomVersion:
     enum_values: list[SerializationVersion]
 
 
-def grab_source_files(unreal_path: Path) -> list[tuple[Path, str]]:
+def grab_source_files(tag: str) -> list[tuple[Path, str]]:
     print("Looking for source files...")
     start = time.time()
-    result = []
 
-    directories = [
-        "Engine/Source/Runtime",
-        "Engine/Source/Editor",
-    ]
-
-    for directory in directories:
-        result += list(unreal_path.glob(f"{directory}/**/*.h"))
-        result += list(unreal_path.glob(f"{directory}/**/*.cpp"))
-
-    # Index all files by name
-    for file in result:
+    # scan all files
+    for file in ls_files(tag):
+        # Index all files by name
         name = file.name.lower()
         if name not in g_file_by_name:
             g_file_by_name[name] = []
         g_file_by_name[name].append(file)
 
     # only files which may contain custom versions
-    result_files = []
-    for file in result:
-        if file.suffix.lower() == ".cpp":
-            source = read_file(file)
-            if has_custom_version_registration(source):
-                result_files.append((file, source))
+    already_scanned = set()
 
-    print(f"Found {len(result)} files in {time.time() - start:.2f}s")
+    result_files = []
+    for pattern in custom_version_registration:
+        # Use git grep to find files that contain custom version registration
+        files = grep_files(pattern, tag)
+        for file in files:
+            if file.suffix.lower() == ".cpp" and file not in already_scanned:
+                already_scanned.add(file)
+                source = get_git_file(g_engine_root, file, tag)
+                if has_custom_version_registration(source):
+                    result_files.append((file, source))
+
+            # Index all files by name
+            name = file.name.lower()
+            if name not in g_file_by_name:
+                g_file_by_name[name] = []
+            g_file_by_name[name].append(file)
+
+    print(f"Found {len(result_files)} files in {time.time() - start:.2f}s")
 
     return result_files
 
@@ -144,7 +148,7 @@ def find_guid(source: str, guid_field: str) -> str or None:
     return None
 
 
-def scan_possible_files(enum_name: str):
+def scan_possible_files(enum_name: str, latest_tag: str):
     def try_with_name(filename: str):
         filename = filename.lower()
         if filename in g_file_by_name:
@@ -170,22 +174,25 @@ def scan_possible_files(enum_name: str):
             "-C",
             g_engine_root,
             "grep",
-            "--cached",
             "--full-name",
             "--files-with-matches",
             enum_name,
+            latest_tag,
         ]
     )
     for filename in files.strip().split("\n"):
-        full_name = g_engine_root / filename
-        if full_name.is_file():
-            yield Path(full_name)
+        full_name = filename.strip().split(":")[1]
+        yield Path(full_name)
 
 
-def find_enum_definition(enum_name: str) -> list[SerializationVersion] or None:
-    for file in scan_possible_files(enum_name):
-        source = read_file(file)
-        relative_path = file.relative_to(g_engine_root)
+def find_enum_definition(
+    enum_name: str, latest_tag: str
+) -> list[SerializationVersion] or None:
+    if enum_name == "FMetaHumanIdentityCustomVersion":
+        t = 0
+
+    for relative_path in scan_possible_files(enum_name, latest_tag):
+        source = get_git_file(g_engine_root, relative_path, latest_tag)
 
         # Find nested struct syntax
         if parse_enum_with_name("latest", enum_name, source):
@@ -224,7 +231,9 @@ def find_guid_in_files(source: str, guid_field: str) -> str:
     error(f"Cannot find GUID for {guid_field}", False)
 
 
-def scan_for_custom_versions(source: str) -> list[CustomVersion]:
+def scan_for_custom_versions(
+    source: str, latest_tag: str
+) -> Generator[CustomVersion, None, None]:
     # Match all custom version registrations
     matches = re.findall(regex_custom_version, source)
 
@@ -236,7 +245,7 @@ def scan_for_custom_versions(source: str) -> list[CustomVersion]:
             guid_field, enum_name, friendly_name = matched.groups()
             print(f"Scanning enum {enum_name}")
 
-            enum_values = find_enum_definition(enum_name)
+            enum_values = find_enum_definition(enum_name, latest_tag)
 
             yield CustomVersion(
                 name,
@@ -291,24 +300,25 @@ def format_custom_versions_index(custom_versions: list[CustomVersion]) -> str:
         result += f"    details: {version.enum_name}.{version.enum_name}Details,\n"
         result += "});\n\n"
 
+    result += "export const allCustomVersions = [\n"
+    for version in custom_versions:
+        result += f'    "{version.name}",\n'
+    result += "];\n"
+
     return result
 
 
-def main():
+def extract_custom_versions(unreal_path: Path):
     global g_engine_root
     global g_unreal_tags
-
-    args = parse_global_args(
-        "Extract all custom eversion from Unreal Engine source code"
-    )
 
     if not output_dir.exists():
         output_dir.mkdir(parents=True)
 
-    g_engine_root = unreal_path = Path(args.unreal_engine_path)
+    g_engine_root = unreal_path
     g_unreal_tags = extract_tags(unreal_path)
 
-    files = grab_source_files(unreal_path)
+    files = grab_source_files(g_unreal_tags[-1])
     processed_names = set()
     custom_versions = []
 
@@ -316,7 +326,7 @@ def main():
         print(f"[{i + 1}/{len(files)}] Processing {source_file}")
 
         # Skip files that don't contain custom version registration
-        for custom_version in scan_for_custom_versions(source):
+        for custom_version in scan_for_custom_versions(source, g_unreal_tags[-1]):
             if custom_version.name in processed_names:
                 error(f"Duplicate custom version {custom_version.name}", False)
             processed_names.add(custom_version.name)
@@ -334,5 +344,37 @@ def main():
     )
 
 
+def grep_files(pattern: str, tag: str) -> list[Path]:
+    """Run git grep to find files matching the pattern in the specified tag."""
+    files = spawn_process(
+        [
+            "git",
+            "-C",
+            g_engine_root,
+            "grep",
+            "--full-name",
+            "--files-with-matches",
+            pattern,
+            tag,
+        ]
+    )
+    return [
+        Path(file.strip().split(":")[1]) for file in files.strip().split("\n") if file
+    ]
+
+
+def ls_files(tag: str) -> list[Path]:
+    """Run git grep to find files matching the pattern in the specified tag."""
+    # git ls-tree --name-only -r 5.6.0-release
+    files = spawn_process(
+        ["git", "-C", g_engine_root, "ls-tree", "--name-only", "-r", tag]
+    )
+    return [Path(file.strip()) for file in files.strip().split("\n") if file]
+
+
 if __name__ == "__main__":
-    main()
+    args = parse_global_args(
+        "Extract all custom eversion from Unreal Engine source code"
+    )
+
+    extract_custom_versions(Path(args.unreal_engine_path))

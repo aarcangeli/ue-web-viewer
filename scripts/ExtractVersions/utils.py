@@ -5,8 +5,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-g_use_prettify = False
-
 
 def error(message: str, die=True):
     print(f"ERROR: {message}", file=sys.stderr)
@@ -69,7 +67,7 @@ def compare_versions(a: str, b: str) -> int:
     return 0
 
 
-def extract_tags(unreal_path: Path):
+def extract_tags(unreal_path: Path) -> list[str]:
     command = ["git", "-C", unreal_path, "tag"]
 
     tags = spawn_process(command).split("\n")
@@ -104,9 +102,6 @@ def write_file(path: Path, content):
     with io.open(path, "w", encoding="utf-8", newline="\n") as f:
         f.write(content)
 
-    if g_use_prettify:
-        spawn_process(["npx", "prettier", "--write", path])
-
 
 def read_file(path):
     with io.open(path, "r", encoding="utf-8") as f:
@@ -114,16 +109,9 @@ def read_file(path):
 
 
 def parse_global_args(description):
-    global g_use_prettify
-
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("unreal_engine_path", help="Path to Unreal Engine repository")
-    parser.add_argument(
-        "--no-prettify", action="store_true", help="Do not prettify the output files"
-    )
     args = parser.parse_args()
-
-    g_use_prettify = not args.no_prettify
 
     return args
 

@@ -21,3 +21,18 @@ export function removeExtension(value: string) {
   }
   return value;
 }
+
+export function hexToArrayBuffer(hex: string): ArrayBuffer {
+  if (hex.length % 2 !== 0) {
+    throw new Error("Hex string must have an even length");
+  }
+
+  const buffer = new ArrayBuffer(hex.length / 2);
+  const view = new Uint8Array(buffer);
+
+  for (let i = 0; i < hex.length; i += 2) {
+    view[i / 2] = parseInt(hex.slice(i, i + 2), 16);
+  }
+
+  return buffer;
+}

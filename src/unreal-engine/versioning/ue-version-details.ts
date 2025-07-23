@@ -2706,4 +2706,34 @@ export const versionsDetails: VersionDetails[] = [
     value: 1012,
     firstAppearance: "5.4.0",
   }),
+  new VersionDetails({
+    name: "ASSETREGISTRY_PACKAGEBUILDDEPENDENCIES",
+    comment: "Changed UE::AssetRegistry::WritePackageData to include PackageBuildDependencies",
+    value: 1013,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "METADATA_SERIALIZATION_OFFSET",
+    comment: "Added meta data serialization offset to for saved, versioned packages",
+    value: 1014,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "VERSE_CELLS",
+    comment: "Added VCells to the object graph",
+    value: 1015,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "PACKAGE_SAVED_HASH",
+    comment: "Changed PackageFileSummary to write FIoHash PackageSavedHash instead of FGuid Guid",
+    value: 1016,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "OS_SUB_OBJECT_SHADOW_SERIALIZATION",
+    comment: "OS shadow serialization of subobjects",
+    value: 1017,
+    firstAppearance: "5.6.0",
+  }),
 ];

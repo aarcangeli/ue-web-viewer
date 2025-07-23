@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from scripts.utils import (
+from utils import (
     parse_block,
     error,
     extract_tags,
@@ -238,18 +238,12 @@ def aggregate_versions(
             )
 
 
-def main():
-    args = parse_global_args(
-        "Check all tags of UnrealEngine repository, and populate the tables of this directory"
-    )
-
+def extract_versions(unreal_path: Path):
     if not output_dir.exists():
         output_dir.mkdir(parents=True)
 
-    unreal_path = Path(args.unreal_engine_path)
     if not unreal_path.exists():
         print(f"Path {unreal_path} does not exist")
-    #         return
 
     version_by_name_ue4: list[SerializationVersion] = []
     version_by_name_ue5: list[SerializationVersion] = []
@@ -288,4 +282,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    args = parse_global_args(
+        "Check all tags of UnrealEngine repository, and populate the tables of this directory"
+    )
+
+    extract_versions(Path(args.unreal_engine_path))

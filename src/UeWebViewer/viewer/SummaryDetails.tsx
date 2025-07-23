@@ -11,7 +11,8 @@ export function SummaryDetails(props: { asset: Asset }) {
         <IndentedRow title={"Tag"}>0x{summary.Tag.toString(16)}</IndentedRow>
         <IndentedRow title={"Byte Order"}>{summary.LittleEndian ? "Little Endian" : "Big Endian"}</IndentedRow>
         <IndentedRow title={"LegacyFileVersion"}>
-          {summary.LegacyFileVersion} ({summary.LegacyFileVersion <= -8 ? "UE5" : "UE4"})
+          {summary.LegacyFileVersion} (
+          {summary.LegacyFileVersion <= -9 ? "UE5.6+" : summary.LegacyFileVersion <= -8 ? "UE5" : "UE4"})
         </IndentedRow>
         <IndentedRow title={"FileVersionUE4"}>{summary.FileVersionUE4}</IndentedRow>
         <IndentedRow title={"FileVersionUE5"}>{summary.FileVersionUE5}</IndentedRow>

@@ -936,4 +936,20 @@ export enum EUnrealEngineObjectUE5Version {
   /// Added property tag complete type name and serialization type
   PROPERTY_TAG_COMPLETE_TYPE_NAME = 1012,
   // endregion
+
+  // region Introduced with UE 5.5.0
+  /// Changed UE::AssetRegistry::WritePackageData to include PackageBuildDependencies
+  ASSETREGISTRY_PACKAGEBUILDDEPENDENCIES = 1013,
+  // endregion
+
+  // region Introduced with UE 5.6.0
+  /// Added meta data serialization offset to for saved, versioned packages
+  METADATA_SERIALIZATION_OFFSET = 1014,
+  /// Added VCells to the object graph
+  VERSE_CELLS = 1015,
+  /// Changed PackageFileSummary to write FIoHash PackageSavedHash instead of FGuid Guid
+  PACKAGE_SAVED_HASH = 1016,
+  /// OS shadow serialization of subobjects
+  OS_SUB_OBJECT_SHADOW_SERIALIZATION = 1017,
+  // endregion
 }

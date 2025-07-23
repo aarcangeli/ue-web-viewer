@@ -1,6 +1,7 @@
 import invariant from "tiny-invariant";
-import type { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
+
 import { FName } from "./types/Name";
+import type { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
 
 /**
  * Low level API to read binary data from an ArrayBuffer.
@@ -127,6 +128,13 @@ export class AssetReader {
     this.ensureBytes(8);
     const value = this.dataView.getFloat64(this.offset, this._littleEndian);
     this.offset += 8;
+    return value;
+  }
+
+  readBytes(length: number) {
+    this.ensureBytes(length);
+    const value = new Uint8Array(this.dataView.buffer, this.dataView.byteOffset + this.offset, length);
+    this.offset += length;
     return value;
   }
 
