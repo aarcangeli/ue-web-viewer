@@ -52,6 +52,10 @@ filename_hint = {
     "FOverlappingVerticesCustomVersion": "SkeletalMeshLegacyCustomVersions.h",
 }
 
+hardcoded_names = {
+    "FDynamicMaterialModelEditorOnlyDataVersion::Type": "FDynamicMaterialModelEditorOnlyDataVersion",
+}
+
 custom_version_registration = ["FCustomVersionRegistration", "FDevVersionRegistration"]
 
 # This is a list of known duplicates that should be renamed
@@ -288,10 +292,12 @@ def scan_for_custom_versions(
             continue
 
         # Starting from 5.6, some enums are declared in namespaces (eg: UE::LevelSnapshots::FSnapshotCustomVersion)
+        if enum_name in hardcoded_names:
+            enum_name = hardcoded_names[enum_name]
         if "::" in enum_name:
             enum_name = enum_name.split("::")[-1]
 
-        print(f"Scanning enum {friendly_name}")
+        print(f"Scanning enum {enum_name}")
 
         guid = find_guid_in_files(source, guid_prop, latest_tag)
         enum_values = find_enum_definition(enum_name, unreal_tags)
