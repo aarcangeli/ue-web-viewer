@@ -3,13 +3,18 @@ import io
 import re
 import subprocess
 import sys
+from functools import lru_cache
 from pathlib import Path
+from typing import NoReturn, List
 
 
-def error(message: str, die=True):
+def error(message: str) -> NoReturn:
     print(f"ERROR: {message}", file=sys.stderr)
-    if die:
-        sys.exit(1)
+    sys.exit(1)
+
+
+def warning(message: str):
+    print(f"WARNING: {message}", file=sys.stderr)
 
 
 def parse_block(source: str, prefix: str):
@@ -85,6 +90,7 @@ def clean_tag_name(tag):
     return tag.replace("-release", "")
 
 
+@lru_cache(maxsize=None)
 def get_git_file(root: Path, filename: str | Path, revision: str = "HEAD"):
     path_unix = str(filename).replace("\\", "/")
     return spawn_process(
@@ -127,3 +133,54 @@ def make_header():
         f"//\n"
     )
     return header
+
+
+def ls_files(root: Path, tag: str) -> list[Path]:
+    """Run git grep to find files matching the pattern in the specified tag."""
+    # git ls-tree --name-only -r 5.6.0-release
+    files = spawn_process(["git", "-C", root, "ls-tree", "--name-only", "-r", tag])
+    return [Path(file.strip()) for file in files.strip().split("\n") if file]
+
+
+def grep_files(root: Path, pattern: str, tag: str) -> list[Path]:
+    """Run git grep to find files matching the pattern in the specified tag."""
+    files = spawn_process(
+        [
+            "git",
+            "-C",
+            root,
+            "grep",
+            "--full-name",
+            "--files-with-matches",
+            pattern,
+            tag,
+        ]
+    )
+    return [
+        Path(file.strip().split(":")[1]) for file in files.strip().split("\n") if file
+    ]
+
+
+@lru_cache(maxsize=None)
+def get_files_by_name(root: Path, tag: str) -> dict[str, list[Path]]:
+    file_by_name: dict[str, list[Path]] = {}
+
+    # scan all files
+    for file in ls_files(root, tag):
+        # Index all files by name
+        name = file.name.lower()
+        if name not in file_by_name:
+            file_by_name[name] = []
+        file_by_name[name].append(file)
+
+    return file_by_name
+
+
+def get_full_name_from_filename(root: Path, file_name: str, tag: str) -> List[Path]:
+    file_name = file_name.lower()
+
+    file_by_name = get_files_by_name(root, tag)
+    if file_name in file_by_name:
+        return file_by_name[file_name]
+
+    return []

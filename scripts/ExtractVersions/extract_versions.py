@@ -12,6 +12,8 @@ from utils import (
     write_file,
     parse_global_args,
     make_header,
+    warning,
+    get_full_name_from_filename,
 )
 
 output_dir = Path(__file__).parent.parent.parent / "src/unreal-engine/versioning"
@@ -47,24 +49,37 @@ class SerializationVersion:
 
 
 def parse_enum_with_name(
-    tag: str, enum_name: str, source: str
+    engine_root: Path | None,
+    tag: str,
+    enum_name: str,
+    source: str,
 ) -> list[SerializationVersion] or None:
-    maybe_api = r"(?:[\w\d]+_API\s*)?"
+    maybe_api = r"(?:\w+_API\s*)?"
     maybe_class = r"(?:\s*class\b\s*)?"
+    maybe_numeric_type = r"(?::\s*\w+)?"
 
     if struct_block := parse_block(
         source, rf"(struct|namespace)\s+{maybe_api}{enum_name}"
     ):
-        if enum_block := parse_block(struct_block, rf"enum\s+{maybe_class}[\w\d]+"):
-            return parse_enum_content(tag, enum_block)
+        if enum_block := parse_block(
+            struct_block, rf"enum\s+{maybe_class}[\w\d]+\s*{maybe_numeric_type}"
+        ):
+            return parse_enum_content(engine_root, tag, enum_block)
 
     if enum_block := parse_block(
         source, rf"enum\s+{maybe_class}{maybe_api}{enum_name}(?:\s*:\s*[\w\d]+)?"
     ):
-        return parse_enum_content(tag, enum_block)
+        return parse_enum_content(engine_root, tag, enum_block)
+
+    return None
 
 
-def parse_enum_content(tag: str, enum_content: str) -> list[SerializationVersion]:
+def parse_enum_content(
+    engine_root: Path | None, tag: str, enum_content: str
+) -> list[SerializationVersion]:
+    if engine_root and "#include" in enum_content:
+        return parse_enums_from_inline_file(engine_root, tag, enum_content)
+
     rows = re.findall(regex_enum_row, enum_content)
     value = None
 
@@ -100,6 +115,70 @@ def parse_enum_content(tag: str, enum_content: str) -> list[SerializationVersion
         already_found.add(field_name)
 
         result.append(SerializationVersion(field_name, value, comment, tag, tag))
+        result.append(
+            SerializationVersion(
+                name=field_name,
+                value=value,
+                comment=comment,
+                first_appearance=tag,
+                last_appearance=tag,
+            )
+        )
+
+    return result
+
+
+def parse_enums_from_inline_file(
+    engine_root: Path, tag: str, enum_content: str
+) -> list[SerializationVersion]:
+    """
+    UE I hate you so much.
+    FFortniteMainBranchObjectVersion contains the enum definition inline in the file "FortniteMainBranchObjectVersions.inl"
+    So we need to parse that file instead of the main header file.
+    """
+
+    match = re.search(r"^\s*#\s*include\b\s*\"([^$\"]+)\"", enum_content, re.MULTILINE)
+    if not match:
+        error(f"Could not find include for tag {tag}")
+
+    inline_file = match.group(1).strip()
+    found_files = get_full_name_from_filename(engine_root, Path(inline_file).name, tag)
+    if len(found_files) != 1:
+        error(
+            f"Expected exactly one file for {inline_file} in tag {tag}, found {len(found_files)}"
+        )
+
+    source_file = get_git_file(engine_root, found_files[0], tag)
+
+    # Find macro name
+    # #define UE5_MAIN_VERSION(Version, ID) Version,
+    match = re.search(
+        r"^\s*#\s*define\s+(\w+)\s*\(Version, ID\) Version,\n",
+        source_file,
+        re.MULTILINE,
+    )
+    if not match:
+        error(f"Could not find macro definition in {inline_file} for tag {tag}")
+    macro_name = match.group(1).strip()
+
+    # FORTNITE_MAIN_VERSION(BeforeCustomVersionWasAdded, 0)
+    all_results = re.findall(
+        rf"(?://\s*(.*)\n)?{macro_name}\s*\(([^,]+),\s*([0-9]+)\s*\)", source_file
+    )
+    result = []
+    for comment, name, value in all_results:
+        result.append(
+            SerializationVersion(
+                name=name.strip(),
+                value=int(value),
+                comment=comment,
+                first_appearance=tag,
+                last_appearance=tag,
+            )
+        )
+
+    if not result:
+        error(f"No versions found in {inline_file} for tag {tag}")
 
     return result
 
@@ -108,7 +187,7 @@ def parse_version_enums(
     tag: str, enum_name: str, file: str
 ) -> list[SerializationVersion]:
     # find regex
-    enum_content = parse_enum_with_name(tag, enum_name, file)
+    enum_content = parse_enum_with_name(None, tag, enum_name, file)
     if not enum_content:
         error(f"Enum {enum_name} not found")
 
@@ -168,7 +247,7 @@ def format_version_details(
 
 
 def print_table(name, versions: list[SerializationVersion]):
-    result = "export enum %s {\n" % name
+    result = f"export enum {name} {{\n"
 
     last_ue_version = None
 
@@ -194,7 +273,7 @@ def validate_table(version_by_name_ue4: list[SerializationVersion]):
 
     for version in version_by_name_ue4:
         if version.value in seen_versions:
-            error(f"WARNING: Version number {version.value} is duplicated", False)
+            warning(f"WARNING: Version number {version.value} is duplicated")
         seen_versions.add(version.value)
 
 
@@ -210,8 +289,11 @@ def aggregate_versions(
 
         if found_index is not None:
             found_element = result_list[found_index]
+
+            # Apparently, there is a case in FCustomizableObjectCustomVersion where the value of a version changes between tags.
+            # Since we scan tags from the latest to the oldest, we can just ignore the value change and only use the latest version.
             if found_element.value != v.value:
-                error(
+                warning(
                     f"Field {v.name} has different version number {v.value} != {found_element.value}"
                 )
 
