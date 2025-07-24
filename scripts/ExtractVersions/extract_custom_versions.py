@@ -54,6 +54,7 @@ filename_hint = {
 
 hardcoded_names = {
     "FDynamicMaterialModelEditorOnlyDataVersion::Type": "FDynamicMaterialModelEditorOnlyDataVersion",
+    "NNERuntimeIREEModelDataVersion": "NNERuntimeIREE",
 }
 
 custom_version_registration = ["FCustomVersionRegistration", "FDevVersionRegistration"]
@@ -160,7 +161,7 @@ def format_guid(guid: str) -> str:
     assert match
 
     if pattern1 := match.group(1):
-        return f"FGuid.fromComponents({pattern1})"
+        return f"FGuid.fromComponents({pattern1.lower()})"
 
     if pattern2 := match.group(2):
         return f'FGuid.fromString("{{{pattern2}}}")'
@@ -169,7 +170,7 @@ def format_guid(guid: str) -> str:
 
 
 def find_guid(source: str, guid_prop: str) -> str or None:
-    standard = r"const FGuid __name__(?: = FGuid)?(" + guid_pattern + r");"
+    standard = r"const FGuid __name__(?:\s*=\s*FGuid)?(" + guid_pattern + r");"
 
     # Match GUID
     if matched := re.search(
@@ -265,7 +266,8 @@ def find_guid_in_files(source: str, guid_prop: str, latest_tag: str) -> str:
         if matched := find_guid(source_file, guid_prop):
             return matched
 
-    error(f"Cannot find GUID for {guid_prop}")
+    warning(f"Cannot find GUID for {guid_prop}")
+    return "__INVALID_GUID__"
 
 
 def scan_for_custom_versions(
@@ -294,6 +296,8 @@ def scan_for_custom_versions(
         # Starting from 5.6, some enums are declared in namespaces (eg: UE::LevelSnapshots::FSnapshotCustomVersion)
         if enum_name in hardcoded_names:
             enum_name = hardcoded_names[enum_name]
+        if friendly_name in hardcoded_names:
+            enum_name = hardcoded_names[friendly_name]
         if "::" in enum_name:
             enum_name = enum_name.split("::")[-1]
 
@@ -342,7 +346,7 @@ def format_custom_version(custom_version: CustomVersion, latest_version: str) ->
     result += f'  friendlyName: "{custom_version.friendly_name}",\n'
     result += f"  guid: {custom_version.guid},\n"
     result += f"  details: {custom_version.enum_name}Details,\n"
-    result += "});\n\n"
+    result += "});\n"
 
     return result
 
