@@ -4,5 +4,6 @@
 //
 
 import { FFortniteMainBranchObjectVersionGuid } from "./custom-versions-enums/FFortniteMainBranchObjectVersion";
+import type { CustomVersionGuid } from "./CustomVersionGuid";
 
-export const allCustomVersions = [FFortniteMainBranchObjectVersionGuid];
+export const allCustomVersions: ReadonlyArray<CustomVersionGuid<unknown>> = [FFortniteMainBranchObjectVersionGuid];
