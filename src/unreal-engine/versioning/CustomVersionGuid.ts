@@ -8,12 +8,14 @@ import invariant from "tiny-invariant";
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class CustomVersionGuid<E> {
+  readonly name: string;
   readonly guid: FGuid;
   readonly details: VersionDetails[];
   readonly latestVersion: number;
 
-  constructor(args: { guid: FGuid; details: VersionDetails[] }) {
+  constructor(args: { name: string; guid: FGuid; details: VersionDetails[] }) {
     invariant(args.details.length > 0, "Custom version details must not be empty.");
+    this.name = args.name;
     this.guid = args.guid;
     this.details = args.details;
     this.latestVersion = this.details[this.details.length - 1].value;

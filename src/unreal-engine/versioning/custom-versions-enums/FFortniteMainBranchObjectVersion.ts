@@ -1745,6 +1745,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
 ];
 
 export const FFortniteMainBranchObjectVersionGuid = new CustomVersionGuid<FFortniteMainBranchObjectVersion>({
+  name: "FFortniteMainBranchObjectVersion",
   guid: FGuid.fromComponents(0x601d1886, 0xac644f84, 0xaa16d3de, 0x0deac7d6),
   details: FFortniteMainBranchObjectVersionDetails,
 });

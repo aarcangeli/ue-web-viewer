@@ -444,7 +444,7 @@ def has_custom_version_registration(source: str) -> bool:
 
 
 def format_custom_version(custom_version: CustomVersion, latest_version: str) -> str:
-    result = make_header() + "\n"
+    result = make_header("extract_custom_versions.py") + "\n"
 
     result += (
         'import { VersionDetails, CustomVersionGuid } from "../CustomVersionGuid";\n'
@@ -464,6 +464,7 @@ def format_custom_version(custom_version: CustomVersion, latest_version: str) ->
 
     # Add the guid
     result += f"export const {custom_version.enum_name}Guid = new CustomVersionGuid<{custom_version.enum_name}>({{\n"
+    result += f'  name: "{custom_version.enum_name}",\n'
     result += f"  guid: {custom_version.guid},\n"
     result += f"  details: {custom_version.enum_name}Details,\n"
     result += "});\n"
@@ -472,16 +473,17 @@ def format_custom_version(custom_version: CustomVersion, latest_version: str) ->
 
 
 def format_custom_versions_index(custom_versions: list[CustomVersion]) -> str:
-    result = make_header() + "\n"
+    result = make_header("extract_custom_versions.py") + "\n"
 
     for version in custom_versions:
         result += (
             f"import {{ {version.enum_name}Guid }} "
             f'from "./custom-versions-enums/{version.enum_name}";\n'
         )
+    result += 'import type { CustomVersionGuid } from "./CustomVersionGuid";\n'
     result += "\n"
 
-    result += "export const allCustomVersions = [\n"
+    result += "export const allCustomVersions: ReadonlyArray<CustomVersionGuid<unknown>> = [\n"
     for version in custom_versions:
         result += f"    {version.enum_name}Guid,\n"
     result += "];\n"

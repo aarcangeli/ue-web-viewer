@@ -199,7 +199,7 @@ def format_versions(
     ue4_versions: list[SerializationVersion],
     ue5_versions: list[SerializationVersion],
 ):
-    result = make_header()
+    result = make_header("extract_versions.py")
     result += "// This file contains all the versions used by Unreal Engine to serialize objects\n"
     result += "// The global version number is placed in the summary of all assets\n"
     result += "// See ObjectVersion.h for more information\n\n"
@@ -236,7 +236,7 @@ def format_version_details(
     ue5_versions: list[SerializationVersion],
     latest_version,
 ):
-    result = f"{make_header()}\n"
+    result = f"{make_header('extract_versions.py')}\n"
     result += 'import { VersionDetails } from "./registry";\n\n'
 
     # Print merged version details
