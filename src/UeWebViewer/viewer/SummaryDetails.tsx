@@ -36,7 +36,7 @@ export function SummaryDetails(props: { asset: Asset }) {
         <IndentedRow title={"Import Count"}>{summary.ImportCount}</IndentedRow>
         <IndentedRow title={"Import Offset"}>{summary.ImportOffset}</IndentedRow>
         <IndentedRow title={"Depends Offset"}>{summary.DependsOffset}</IndentedRow>
-        <IndentedRow title={"Guid"}>{summary.Guid.toString()}</IndentedRow>
+        <IndentedRow title={"Saved Hash (ex Guid)"}>{summary.SavedHash.toString()}</IndentedRow>
         <IndentedRow title={"Persistent Guid"}>{summary.PersistentGuid.toString()}</IndentedRow>
       </CollapsableSection>
     </SimpleDetailsView>
