@@ -1,6 +1,6 @@
 import invariant from "tiny-invariant";
 
-import type { FCustomVersion, FCustomVersionContainer } from "./serialization/CustomVersion";
+import type { FCustomVersionContainer } from "./serialization/CustomVersion";
 import { FName } from "./types/Name";
 import type { CustomVersionGuid } from "./versioning/CustomVersionGuid";
 import type { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
