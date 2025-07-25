@@ -22,6 +22,19 @@ export function removeExtension(value: string) {
   return value;
 }
 
+/**
+ * Converts a hexadecimal string to an ArrayBuffer.
+ *
+ * @param {string} hex - The hexadecimal string to convert. Must have an even length.
+ * @returns {ArrayBuffer} - The resulting ArrayBuffer containing the binary data.
+ * @throws {Error} - Throws an error if the hex string has an odd length.
+ * 
+ * @example
+ * // Convert a hex string to an ArrayBuffer
+ * const hex = "48656c6c6f"; // "Hello" in hex
+ * const buffer = hexToArrayBuffer(hex);
+ * console.log(buffer); // ArrayBuffer { byteLength: 5 }
+ */
 export function hexToArrayBuffer(hex: string): ArrayBuffer {
   if (hex.length % 2 !== 0) {
     throw new Error(`Hex string must have an even length, got ${hex.length}`);
