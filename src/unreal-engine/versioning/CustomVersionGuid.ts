@@ -18,6 +18,11 @@ export class CustomVersionGuid<E> {
     this.details = args.details;
     this.latestVersion = this.details[this.details.length - 1].value;
   }
+
+  get defaultValue(): E {
+    // The default value is -1
+    return -1 as unknown as E;
+  }
 }
 
 /**

@@ -34,6 +34,9 @@ export class FIoHash {
     return new FIoHash(hex);
   }
 
+  /**
+   * Converts a FGuid to an FIoHash (little-endian).
+   */
   static fromGuid(guid: FGuid) {
     const buffer = new ArrayBuffer(20);
     const view = new DataView(buffer);
@@ -44,10 +47,9 @@ export class FIoHash {
     return this.fromBytes(new Uint8Array(buffer));
   }
 
-  equals(other: FIoHash): boolean {
-    return this.hash === other.hash;
-  }
-
+  /**
+   * Converts a FIoHash to a FGuid (little-endian).
+   */
   toGuid(): FGuid {
     invariant(this.hash !== defaultHash, "Cannot convert default hash to FGuid");
     const view = new DataView(hexToArrayBuffer(this.hash));
@@ -56,6 +58,10 @@ export class FIoHash {
     const c = view.getUint32(8, true);
     const d = view.getUint32(12, true);
     return FGuid.fromComponents(a, b, c, d);
+  }
+
+  equals(other: FIoHash): boolean {
+    return this.hash === other.hash;
   }
 
   isNone(): boolean {

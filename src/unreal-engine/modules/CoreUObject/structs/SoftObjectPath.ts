@@ -1,6 +1,10 @@
 import type { AssetReader } from "../../../AssetReader";
 import { isShortPackageName, tryParseExportTextPath } from "../../../path-utils";
 import { FName, NAME_None } from "../../../types/Name";
+import {
+  FFortniteMainBranchObjectVersion,
+  FFortniteMainBranchObjectVersionGuid,
+} from "../../../versioning/custom-versions-enums/FFortniteMainBranchObjectVersion";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../../../versioning/ue-versions";
 import type { UObject } from "../objects/Object";
 
@@ -38,11 +42,22 @@ export class FSoftObjectPath {
       const [packageName, assetName] = splitPath(reader.readName());
       const subPathString = reader.readString();
       return new FSoftObjectPath(packageName, assetName, subPathString);
-    } else {
+    } else if (
+      reader.getCustomVersion(FFortniteMainBranchObjectVersionGuid) <
+      FFortniteMainBranchObjectVersion.SoftObjectPathUtf8SubPaths
+    ) {
       // Package name, asset name, and sub-path string separately
       const assetPathName = reader.readName();
       const assetName = reader.readName();
+      // Note: UE uses a workaround to know if the subPathString is UTF-8 encoded or not.
+      // We trust that the version is correct and read the subPathString accordingly.
       const subPathString = reader.readString();
+      return new FSoftObjectPath(assetPathName, assetName, subPathString);
+    } else {
+      // The subPathString, is now UTF-8 encoded
+      const assetPathName = reader.readName();
+      const assetName = reader.readName();
+      const subPathString = reader.readStringUtf8();
       return new FSoftObjectPath(assetPathName, assetName, subPathString);
     }
   }

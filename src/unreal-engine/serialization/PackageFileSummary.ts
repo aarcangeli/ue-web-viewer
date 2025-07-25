@@ -39,7 +39,7 @@ export class FPackageFileSummary {
   FileVersionUE4: number = 0;
   FileVersionUE5: number = 0;
   FileVersionLicenseeUE: number = 0;
-  CustomVersionContainer: FCustomVersionContainer = new FCustomVersionContainer();
+  CustomVersionContainer: FCustomVersionContainer = new FCustomVersionContainer([]);
 
   // part 2: basic information
   TotalHeaderSize: number = 0;
@@ -240,6 +240,9 @@ export class FPackageFileSummary {
 
     if (result.FileVersionUE5 < EUnrealEngineObjectUE5Version.PACKAGE_SAVED_HASH) {
       const Guid = FGuid.fromStream(reader);
+
+      // For what I see, this conversion may produce different values if loaded from big-endian systems.
+      // However, this is the way UE4 does it, so we follow the same logic.
       result.SavedHash = FIoHash.fromGuid(Guid);
     }
 
