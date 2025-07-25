@@ -2,7 +2,7 @@ import re
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Generator, List
+from typing import Generator, List, Callable
 
 from extract_versions import (
     output_dir,
@@ -23,13 +23,12 @@ from utils import (
     warning,
     grep_files,
     get_full_name_from_filename,
+    read_file,
+    convert_pattern_to_regex,
+    fail_if_warnings,
+    TokenIterator,
+    TokenType,
 )
-
-# Debug purpose: If specified, filter the files and symbols to process.
-#   - debug_filter_path: filename (like SnapshotCustomVersion.cpp)
-#   - debug_specific_enum: the enum name (like "EVisualLoggerVersion")
-debug_filter_path = ""
-debug_specific_enum = ""
 
 # language=pythonregexp
 regex_custom_version = (
@@ -52,10 +51,13 @@ filename_hint = {
     "FOverlappingVerticesCustomVersion": "SkeletalMeshLegacyCustomVersions.h",
 }
 
-hardcoded_names = {
-    "FDynamicMaterialModelEditorOnlyDataVersion::Type": "FDynamicMaterialModelEditorOnlyDataVersion",
-    "NNERuntimeIREEModelDataVersion": "NNERuntimeIREE",
-}
+hardcoded_names = {}
+
+disallowed_files = [
+    "UECoreTests.cpp",
+]
+
+g_skipped_enums = []
 
 custom_version_registration = ["FCustomVersionRegistration", "FDevVersionRegistration"]
 
@@ -73,6 +75,9 @@ guid_pattern = (
     r")\s*[})]"
 )
 
+interesting_versions_path = Path(__file__).parent / "InterestingVersions.txt"
+NameFilter = Callable[[str], bool]
+
 g_engine_root: Path
 
 
@@ -80,35 +85,47 @@ g_engine_root: Path
 class CustomVersion:
     enum_name: str
     guid: str
-    friendly_name: str
     enum_values: list[SerializationVersion]
+
+
+def read_interesting_versions() -> NameFilter:
+    all_rules = []
+    for line in read_file(interesting_versions_path).splitlines():
+        line = line.strip()
+        # Ignore empty lines and comments
+        if not line or line.startswith("#"):
+            continue
+
+        all_rules.append(convert_pattern_to_regex(line))
+
+    return lambda name: any(re.search(rule, name) for rule in all_rules)
 
 
 def extract_custom_versions(unreal_path: Path):
     global g_engine_root
+    g_engine_root = unreal_path
 
     if not output_dir.exists():
         output_dir.mkdir(parents=True)
 
-    g_engine_root = unreal_path
+    enum_name_filter = read_interesting_versions()
 
     # List of Unreal Engine tags (eg: ["5.3.0-release", "5.3.1-release", ...])
     unreal_tags = extract_tags(unreal_path)
     latest_version = unreal_tags[-1]
 
+    # Starts by reading the list of files where a registration might be present
     files = grab_source_files(unreal_tags[-1])
     processed_names = set()
     custom_versions = []
-
-    # If filter_path is set, only process that file
-    if debug_filter_path:
-        files = [file for file in files if debug_filter_path in str(file)]
 
     for i, relative_path in enumerate(files):
         print(f"[{i + 1}/{len(files)}] Processing {relative_path}")
 
         # Skip files that don't contain custom version registration
-        for custom_version in scan_for_custom_versions(relative_path, unreal_tags):
+        for custom_version in scan_for_custom_versions(
+            relative_path, enum_name_filter, unreal_tags
+        ):
             enum_name = custom_version.enum_name
 
             if enum_name in known_duplicates:
@@ -139,6 +156,12 @@ def extract_custom_versions(unreal_path: Path):
         format_custom_versions_index(custom_versions),
     )
 
+    # Write skipped.txt
+    if g_skipped_enums:
+        skipped_file = Path(__file__).parent / "skipped.txt"
+        write_file(skipped_file, "\n".join(sorted(g_skipped_enums)))
+        print(f"Skipped {len(g_skipped_enums)} enums, see {skipped_file}")
+
 
 def grab_source_files(latest_tag: str) -> List[Path]:
     print("Looking for source files...")
@@ -153,7 +176,7 @@ def grab_source_files(latest_tag: str) -> List[Path]:
                 unique_files.add(file)
 
     print(f"Found {len(unique_files)} files in {time.time() - start:.2f}s")
-    return list(unique_files)
+    return sorted(list(unique_files))
 
 
 def format_guid(guid: str) -> str:
@@ -270,46 +293,144 @@ def find_guid_in_files(source: str, guid_prop: str, latest_tag: str) -> str:
     return "__INVALID_GUID__"
 
 
+def iterate_enum_registrations(source: str) -> List[str]:
+    """
+    Given a source code, iterate over all custom version registrations
+    eg:
+    FCustomVersionRegistration GEnumName(
+        FFooModifierVersion::GUID,
+        FFooModifierVersion::LatestVersion,
+        TEXT("MyFancyName")
+    );
+    returns "FAvaExtrudeModifierVersion::GUID"]
+    """
+
+    iterator = TokenIterator(source)
+
+    # State variables
+    current_namespace = None
+    result: List[str] = []
+
+    def try_read_qualified_name():
+        if name := iterator.read_token(TokenType.IDENTIFIER):
+            while iterator.token_text == "::":
+                iterator.advance()
+                next_part = iterator.expect_identifier()
+                name += "::" + next_part
+            return name
+
+        return None
+
+    def combine_name(name: str) -> str:
+        if current_namespace:
+            return f"{current_namespace}::{name}"
+        return name
+
+    def parse_single_item():
+        nonlocal current_namespace
+
+        # Skip "using namespace" statements
+        if iterator.read_token_text("using") and iterator.read_token_text("namespace"):
+            return
+
+        if iterator.read_token_text("namespace"):
+            if namespace_name := try_read_qualified_name():
+                if iterator.token_text != "{":
+                    error("Expected '{' after namespace declaration")
+
+                old_namespace = current_namespace
+                current_namespace = namespace_name
+                parse_block()
+                current_namespace = old_namespace
+
+        elif any([itm == iterator.token_text for itm in custom_version_registration]):
+            iterator.advance()
+
+            # Read the variable name
+            if name := iterator.read_token(TokenType.IDENTIFIER):
+                if iterator.token_text == ";":
+                    # FCustomVersionRegistration Registration;
+                    # Forward declaration, skip it
+                    return
+
+                iterator.expect_token_text(
+                    "(", f"Expected '(' after custom version registration {name}"
+                )
+                guid_prop = try_read_qualified_name()
+                if not guid_prop:
+                    error("Expected qualified name for GUID property")
+                # We can ignore the rest of the parameters
+
+                # Add the namespace name.
+                # Ok, to be precise if we are in namespace "A" it doesn't mean that the enum is really in "A",
+                # However, it seems that UE always uses this pattern
+                result.append(combine_name(guid_prop))
+
+        elif iterator.token_text == "{":
+            parse_block()
+            return
+
+        else:
+            # Advance unknown tokens
+            iterator.advance()
+
+    def parse_block():
+        assert iterator.token_text == "{"
+        iterator.advance()
+
+        while not iterator.is_eof() and iterator.token_text != "}":
+            parse_single_item()
+
+        if iterator.token_text == "}":
+            iterator.advance()
+
+    while not iterator.is_eof():
+        parse_single_item()
+
+    return result
+
+
 def scan_for_custom_versions(
     relative_path: Path,
+    enum_name_filter: NameFilter,
     unreal_tags: list[str],
 ) -> Generator[CustomVersion, None, None]:
     latest_tag = unreal_tags[-1]
     source = get_git_file(g_engine_root, relative_path, latest_tag)
 
-    # Match all custom version registrations
-    matches = re.findall(regex_custom_version, source)
+    if relative_path.name in disallowed_files:
+        print(f"Skipping {relative_path} as it is in the disallowed files list")
+        return
 
-    # Finds over all fields
-    # FCustomVersionRegistration field_name(guid_prop::GUID, enum_name::LatestVersion, TEXT("friendly_name"));
-    for field_name, content in matches:
-        # Match standard version declaration
-        matched = re.search(usual_pattern_declaration, content)
-        if not matched:
-            warning(f"Cannot parse custom version {field_name} in {relative_path}")
+    for guid_prop in iterate_enum_registrations(source):
+        # We expect that the enum name is in the guid declaration (like "EnumName::GUID")
+        guid_name = guid_prop.split("::")[-1]
+        if (
+            "GUID" != guid_name
+            and "guid" not in guid_name.lower()
+            and "Key" not in guid_name
+        ):
+            warning(
+                f"Custom version {guid_prop} in {relative_path} does not have a valid GUID property: {guid_prop}"
+            )
             continue
-        guid_prop, enum_name, friendly_name = matched.groups()
+        enum_name = guid_prop.rsplit("::", 1)[0]
 
-        if debug_specific_enum and enum_name != debug_specific_enum:
+        # Apply the filter
+        if not enum_name_filter(enum_name):
+            g_skipped_enums.append(enum_name)
             continue
 
-        # Starting from 5.6, some enums are declared in namespaces (eg: UE::LevelSnapshots::FSnapshotCustomVersion)
         if enum_name in hardcoded_names:
             enum_name = hardcoded_names[enum_name]
-        if friendly_name in hardcoded_names:
-            enum_name = hardcoded_names[friendly_name]
-        if "::" in enum_name:
-            enum_name = enum_name.split("::")[-1]
 
         print(f"Scanning enum {enum_name}")
-
         guid = find_guid_in_files(source, guid_prop, latest_tag)
         enum_values = find_enum_definition(enum_name, unreal_tags)
 
         yield CustomVersion(
             enum_name,
             guid,
-            friendly_name,
             enum_values,
         )
 
@@ -343,7 +464,6 @@ def format_custom_version(custom_version: CustomVersion, latest_version: str) ->
 
     # Add the guid
     result += f"export const {custom_version.enum_name}Guid = new CustomVersionGuid<{custom_version.enum_name}>({{\n"
-    result += f'  friendlyName: "{custom_version.friendly_name}",\n'
     result += f"  guid: {custom_version.guid},\n"
     result += f"  details: {custom_version.enum_name}Details,\n"
     result += "});\n"
@@ -375,3 +495,4 @@ if __name__ == "__main__":
     )
 
     extract_custom_versions(Path(args.unreal_engine_path))
+    fail_if_warnings()

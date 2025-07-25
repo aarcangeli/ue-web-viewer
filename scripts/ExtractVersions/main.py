@@ -2,7 +2,7 @@ from pathlib import Path
 
 from extract_custom_versions import extract_custom_versions
 from extract_versions import extract_versions
-from utils import parse_global_args
+from utils import parse_global_args, fail_if_warnings
 
 
 def main():
@@ -12,6 +12,7 @@ def main():
 
     extract_versions(Path(args.unreal_engine_path))
     extract_custom_versions(Path(args.unreal_engine_path))
+    fail_if_warnings()
 
 
 if __name__ == "__main__":

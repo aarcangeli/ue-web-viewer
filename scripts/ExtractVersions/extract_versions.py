@@ -14,6 +14,7 @@ from utils import (
     make_header,
     warning,
     get_full_name_from_filename,
+    fail_if_warnings,
 )
 
 output_dir = Path(__file__).parent.parent.parent / "src/unreal-engine/versioning"
@@ -369,3 +370,4 @@ if __name__ == "__main__":
     )
 
     extract_versions(Path(args.unreal_engine_path))
+    fail_if_warnings()
