@@ -3,7 +3,8 @@
 // noinspection JSUnusedGlobalSymbols
 //
 
-import { VersionDetails } from "../registry";
+import { VersionDetails, CustomVersionGuid } from "../CustomVersionGuid";
+import { FGuid } from "../../modules/CoreUObject/structs/Guid";
 
 export enum FFortniteMainBranchObjectVersion {
   // region Introduced with UE 4.20.0
@@ -169,7 +170,7 @@ export enum FFortniteMainBranchObjectVersion {
   RemappedEvaluateWorldPositionOffsetInRayTracing = 68,
   /// Water body collision settings are now those of the base UPrimitiveComponent, rather than duplicated in UWaterBodyComponent
   WaterBodyComponentCollisionSettingsRefactor = 69,
-  /// if a widget exposes its named slot to everyone (even if it has content), which by default they wont any longer.
+  /// if a widget exposes its named slot to everyone (even if it has content) which by default they wont any longer.
   WidgetInheritedNamedSlots = 70,
   /// Added water HLOD material
   WaterHLODSupportAdded = 71,
@@ -308,6 +309,158 @@ export enum FFortniteMainBranchObjectVersion {
   /// Skeletal Mesh optionally cooks half edge data per lod
   SkeletalHalfEdgeData = 134,
   // endregion
+
+  // region Introduced with UE 5.5.0
+  /// Combine graph contexts for AnimNext graphs
+  AnimNextCombineGraphContexts = 135,
+  /// Combine parameter blocks and graphs
+  AnimNextCombineParameterBlocksAndGraphs = 136,
+  /// Move workspaces to a seperate plugin
+  AnimNextMoveWorkspaces = 137,
+  /// Level Instance Property overrides
+  LevelInstancePropertyOverrides = 138,
+  /// Added FVolumetricLightMapGridDesc in MapBuildData
+  VolumetricLightMapGridDescSupport = 139,
+  /// Introduce new structure for customizing the landscape edit layer behavior
+  IntroduceLandscapeEditLayerClass = 140,
+  /// Change workspaces to store asset references as external objects
+  AnimNextWorkspaceEntryConversion = 141,
+  /// Add support for anytype in dataflow
+  DataflowAnyTypeSupport = 142,
+  /// Adding a new flag in RBAN Solver Setting to be able to use manifolds
+  PhysicsAssetUseManifoldFlags = 143,
+  /// Added support for to record sim and query data of Shape Instance data in CVD
+  SimAndQueryDataSupportInChaosVisualDebugger = 144,
+  /// Add the imported asset dependencies to the Cloth Asset USD Import node
+  ChaosClothAssetUSDImportNodeAddAssetDependencies = 145,
+  /// Changed HitLighting to HitLightingForReflections, and HitLighting now means hit lighting for entire Lumen
+  LumenRayLightingModeOverrideEnum = 146,
+  /// PCGPartitionActorDesc
+  PCGPartitionActorDesc = 147,
+  /// Target layers are now defined in the Landscape actor and not continuously synced from the assigned material.
+  LandscapeTargetLayersInLandscapeActor = 148,
+  /// Fix to get full name of templated type ( Tarray > TArray<Float> for example )
+  DataflowTemplatedTypeFix = 149,
+  /// Changes for LevelInstance support in StaticLighting
+  LevelInstanceStaticLightingSupport = 150,
+  /// PCGGridDescriptor
+  PCGGridDescriptor = 151,
+  /// AnimNext graphs now have public/private state
+  AnimNextGraphAccessSpecifiers = 152,
+  /// Added a more stable pixel depth offset mode.
+  MaterialPixelDepthOffsetMode = 153,
+  /// Added hideable pins to dataflow
+  DataflowHideablePins = 154,
+  /// Added multiple section import to the cloth asset skeletal mesh import node
+  ClothAssetSkeletalMeshMultiSectionImport = 155,
+  /// Serialize EditorBounds in WorldPartitionActorDesc
+  WorldPartitionActorDescSerializeEditorBounds = 156,
+  /// Fixup for the data that has been damaged by LandscapeTargetLayersInLandscapeActor (loss of landscape layer info object assignments)
+  FixupLandscapeTargetLayersInLandscapeActor = 157,
+  /// Allow custom import of morph target
+  MorphTargetCustomImport = 158,
+  /// Fix chaos cloth buckling stiffness parameter bug
+  ChaosClothAllowZeroBucklingStiffness = 159,
+  /// LevelSequenceUpgradeDynamicBindings was removed but was intended for this position. Putting this here to make sure versioning of subsequent assets remains the same
+  LevelSequenceUpgradeDynamicBindings_NoOp = 160,
+  /// AddToFrontend GFA now defaults to unload plugin on exit frontend
+  GameFeatureDataActionAddToFrontendDefaultToUnload = 161,
+  /// Upgraded movie scene 'dynamic bindings' to use the new Custom Bindings system
+  LevelSequenceUpgradeDynamicBindings = 162,
+  /// Changed the precision for the stored rotation on kinematic targets to match the precision used in particles
+  ChaosStoreKinematicTargetRotationAsSinglePrecision = 163,
+  /// PCG changes around the ApplyOnActor node, where we collapsed the TargetActor to the input pin.
+  PCGApplyOnActorNodeMoveTargetActorEdgeToInput = 164,
+  /// PlayingStateTracker type to improve replication reliability
+  TimelinePlayingStateTrackerDeprecation = 165,
+  /// Enable SkipOnlyEditorOnly style cooking of UStaticMeshComponent::MeshPaintTexture
+  MeshPaintTextureUsesEditorOnly = 166,
+  /// Fixup and synchronize some landscape properties that have moved to the property sharing/overriding system :
+  LandscapeBodyInstanceAsSharedProperty = 167,
+  /// Multiple changes to AnimNext modules, variables etc.
+  AnimNextModuleRefactor = 168,
+  /// Subsurface profile now has a guid to be able to select one of many in a Substrate material.
+  SubsurfaceProfileGuid = 169,
+  /// Added support for to record the new solver iteration settings in CVD
+  SolverIterationsDataSupportInChaosVisualDebugger = 170,
+  // endregion
+
+  // region Introduced with UE 5.6.0
+  /// Updated FColorMaterialInput to use FLinearColor instead of FColor
+  MaterialInputUsesLinearColor = 171,
+  /// Updated editor only AFunctionalTest running logic to run tests editor world if the actors don't support PIE
+  FunctionalTestCanRunInEditorWorld = 172,
+  /// Added support for display name in the Visual Logger
+  VisualLoggerSupportDisplayName = 173,
+  /// Added support for the GyroscopicTorque flag in CVD
+  GyroscopicTorquesSupportInChaosVisualDebugger = 174,
+  /// Added managed array property serialization
+  AddManagedArrayCollectionPropertySerialization = 175,
+  /// Landscape texture patches in Texture Asset source mode now use proper resolution when calculating transform
+  LandscapeTexturePatchUsesTextureAssetResolution = 176,
+  /// Added support for relative transform in WorldPartitionActorDesc
+  WorldPartitionActorDescSerializeRelativeTransform = 177,
+  /// Make sure scene graph entities are not public by default
+  SceneGraphEntitiesPrivateByDefault = 178,
+  /// Added debug color for physical materials
+  DebugColorForPhysicalMaterials = 179,
+  /// Added PreprocessedFontGeometry to FFontFaceData
+  AddedPreprocessedFontGeometry = 180,
+  /// Added Dynamic Mesh Sculpt Layer serialization
+  DynamicMeshSerializeSculptLayers = 181,
+  /// Fix reachable garbage object warnings from some legacy ASpatialHashRuntimeGridInfo actors
+  SpatialHashRuntimeGridInfoSpriteFixup = 182,
+  /// Removed UAnimSequence::bUseRawDataOnly flag alongside compression refactor
+  AnimSequenceRawDataOnlyFlagRemoval = 183,
+  /// HLOD relevancy of Level Instances was previously ignored, now taken into account. Reset to the default behavior.
+  ResetLevelInstanceHLODRelevancy = 184,
+  /// Updated default scene capture post-processing settings to reflect the underlying implementation overrides
+  SceneCaptureDefaultSettings = 185,
+  /// Add Cloth Asset Base class serialization
+  AddClothAssetBase = 186,
+  /// Add inline constant default values to the PCG graph nodes.
+  PCGInlineConstantDefaultValues = 187,
+  /// Add MaterialSubstrateSubsurfaceType type to UMaterialExpressionSubstrateSlabBSDF for replacing bUseSSSDifffusion
+  AddMaterialSubstrateSubsurfaceType = 188,
+  /// Added option to visualize runtime virtual textures' streamed mips only in PIE
+  AddedRuntimeVirtualTextureUseStreamingMipsInEditorMode = 189,
+  /// Media plate holdout composite components have been replaced by a checkbox
+  MediaPlateHoldoutComponentRemoval = 190,
+  /// Changed PCG landscape cache default from "serialize at cook" to "never serialize"
+  PCGLandscapeCacheDefaultSerializationChanged = 191,
+  /// FSoftObjectPath::SubPathString changed to FUtf8String
+  SoftObjectPathUtf8SubPaths = 192,
+  /// FSoftObjectPath::SubPathString could be saved with trailing NULs and need truncating
+  SoftObjectPathTrailingNULsMaintained = 193,
+  /// Water body components no longer need to maintain their own PhysicalMaterial property since they are primitive components. After this version, leverage that one instead.
+  WaterBodyPhysicalMaterialPropertyRemoval = 194,
+  /// PCG fixed attribute set -> point conversion passing through empty point data as-is and violating output pin type.
+  PCGAttributeSetToPointAlwaysConverts = 195,
+  /// Add per material slot overlay material data
+  MeshMaterialSlotOverlayMaterialAdded = 196,
+  /// Convert Sustrate glint density properly
+  ConvertGlintDensity = 197,
+  /// Introduced skinweight validation to avoid render crashes and disappearing simulation meshes
+  ClothAssetSkinweightsValidation = 198,
+  /// Switching verse from right handed to left handed
+  VerseRightToLeftHandedness = 199,
+  /// Added additional data required to record and represent particle data from the game thread (Kinematic targets, and SQ rejection reasons)
+  AdditionalGameThreadDataSupportInChaosVisualDebugger = 200,
+  /// Upgrade UMG widget blueprints using legacy animation API
+  UpgradeWidgetBlueprintLegacySequencePlayer = 201,
+  /// Changed clockwise detection algorithm for PCGSplineDirection node with the correct one, but add a version to not break previous nodes.
+  PCGSplineDirectionClockwiseFix = 202,
+  /// Rect Lights set in EV units had the wrong intensity (older files need a flag set to keep the old look)
+  RectLightFixedEVUnitConversion = 203,
+  /// Add particle bounds to data exported to CVD
+  ParticleInflatedBoundsInChaosVisualDebugger = 204,
+  /// Migrate properties from FLandscapeLayer to ULandscapeEditLayer
+  MigrateLandscapeEditLayerProperties = 205,
+  /// Added more context data to CVD's traced shapes so we can play it back at the solver stage level (not just game thread frames)
+  ThreadContextDataInChaosVisualDebuggerDebugDrawData = 206,
+  /// Changed default grid mode in surface sampler to a version that's more intuitive and less error-prone
+  PCGChangedSurfaceSamplerDefaultGridCreationMode = 207,
+  // endregion
 }
 
 export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
@@ -365,7 +518,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixUpNoneNameAnimationCurves",
-    comment: "Fix up None Named animation curve names, ",
+    comment: "Fix up None Named animation curve names,",
     value: 9,
     firstAppearance: "4.20.0",
   }),
@@ -518,7 +671,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixUpUnderwaterPostProcessMaterial",
-    comment: "Simplified WaterBody post process material handling ",
+    comment: "Simplified WaterBody post process material handling",
     value: 34,
     firstAppearance: "4.26.0",
   }),
@@ -596,7 +749,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RemoveLandscapeWaterInfo",
-    comment: "Remove the WaterVelocityHeightTexture dependency on MPC_Landscape and LandscapeWaterIndo ",
+    comment: "Remove the WaterVelocityHeightTexture dependency on MPC_Landscape and LandscapeWaterIndo",
     value: 47,
     firstAppearance: "4.27.0",
   }),
@@ -738,7 +891,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   new VersionDetails({
     name: "WidgetInheritedNamedSlots",
     comment:
-      "if a widget exposes its named slot to everyone (even if it has content), which by default they wont any longer.",
+      "if a widget exposes its named slot to everyone (even if it has content) which by default they wont any longer.",
     value: 70,
     firstAppearance: "5.1.0",
   }),
@@ -1135,4 +1288,464 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
     value: 134,
     firstAppearance: "5.4.0",
   }),
+  new VersionDetails({
+    name: "AnimNextCombineGraphContexts",
+    comment: "Combine graph contexts for AnimNext graphs",
+    value: 135,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "AnimNextCombineParameterBlocksAndGraphs",
+    comment: "Combine parameter blocks and graphs",
+    value: 136,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "AnimNextMoveWorkspaces",
+    comment: "Move workspaces to a seperate plugin",
+    value: 137,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "LevelInstancePropertyOverrides",
+    comment: "Level Instance Property overrides",
+    value: 138,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "VolumetricLightMapGridDescSupport",
+    comment: "Added FVolumetricLightMapGridDesc in MapBuildData",
+    value: 139,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "IntroduceLandscapeEditLayerClass",
+    comment: "Introduce new structure for customizing the landscape edit layer behavior",
+    value: 140,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "AnimNextWorkspaceEntryConversion",
+    comment: "Change workspaces to store asset references as external objects",
+    value: 141,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "DataflowAnyTypeSupport",
+    comment: "Add support for anytype in dataflow",
+    value: 142,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "PhysicsAssetUseManifoldFlags",
+    comment: "Adding a new flag in RBAN Solver Setting to be able to use manifolds",
+    value: 143,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "SimAndQueryDataSupportInChaosVisualDebugger",
+    comment: "Added support for to record sim and query data of Shape Instance data in CVD",
+    value: 144,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "ChaosClothAssetUSDImportNodeAddAssetDependencies",
+    comment: "Add the imported asset dependencies to the Cloth Asset USD Import node",
+    value: 145,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "LumenRayLightingModeOverrideEnum",
+    comment:
+      "Changed HitLighting to HitLightingForReflections, and HitLighting now means hit lighting for entire Lumen",
+    value: 146,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "PCGPartitionActorDesc",
+    comment: "PCGPartitionActorDesc",
+    value: 147,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "LandscapeTargetLayersInLandscapeActor",
+    comment:
+      "Target layers are now defined in the Landscape actor and not continuously synced from the assigned material.",
+    value: 148,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "DataflowTemplatedTypeFix",
+    comment: "Fix to get full name of templated type ( Tarray > TArray<Float> for example )",
+    value: 149,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "LevelInstanceStaticLightingSupport",
+    comment: "Changes for LevelInstance support in StaticLighting",
+    value: 150,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "PCGGridDescriptor",
+    comment: "PCGGridDescriptor",
+    value: 151,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "AnimNextGraphAccessSpecifiers",
+    comment: "AnimNext graphs now have public/private state",
+    value: 152,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "MaterialPixelDepthOffsetMode",
+    comment: "Added a more stable pixel depth offset mode.",
+    value: 153,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "DataflowHideablePins",
+    comment: "Added hideable pins to dataflow",
+    value: 154,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "ClothAssetSkeletalMeshMultiSectionImport",
+    comment: "Added multiple section import to the cloth asset skeletal mesh import node",
+    value: 155,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "WorldPartitionActorDescSerializeEditorBounds",
+    comment: "Serialize EditorBounds in WorldPartitionActorDesc",
+    value: 156,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "FixupLandscapeTargetLayersInLandscapeActor",
+    comment:
+      "Fixup for the data that has been damaged by LandscapeTargetLayersInLandscapeActor (loss of landscape layer info object assignments)",
+    value: 157,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "MorphTargetCustomImport",
+    comment: "Allow custom import of morph target",
+    value: 158,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "ChaosClothAllowZeroBucklingStiffness",
+    comment: "Fix chaos cloth buckling stiffness parameter bug",
+    value: 159,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "LevelSequenceUpgradeDynamicBindings_NoOp",
+    comment:
+      "LevelSequenceUpgradeDynamicBindings was removed but was intended for this position. Putting this here to make sure versioning of subsequent assets remains the same",
+    value: 160,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "GameFeatureDataActionAddToFrontendDefaultToUnload",
+    comment: "AddToFrontend GFA now defaults to unload plugin on exit frontend",
+    value: 161,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "LevelSequenceUpgradeDynamicBindings",
+    comment: "Upgraded movie scene 'dynamic bindings' to use the new Custom Bindings system",
+    value: 162,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "ChaosStoreKinematicTargetRotationAsSinglePrecision",
+    comment:
+      "Changed the precision for the stored rotation on kinematic targets to match the precision used in particles",
+    value: 163,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "PCGApplyOnActorNodeMoveTargetActorEdgeToInput",
+    comment: "PCG changes around the ApplyOnActor node, where we collapsed the TargetActor to the input pin.",
+    value: 164,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "TimelinePlayingStateTrackerDeprecation",
+    comment: "PlayingStateTracker type to improve replication reliability",
+    value: 165,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "MeshPaintTextureUsesEditorOnly",
+    comment: "Enable SkipOnlyEditorOnly style cooking of UStaticMeshComponent::MeshPaintTexture",
+    value: 166,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "LandscapeBodyInstanceAsSharedProperty",
+    comment:
+      "Fixup and synchronize some landscape properties that have moved to the property sharing/overriding system :",
+    value: 167,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "AnimNextModuleRefactor",
+    comment: "Multiple changes to AnimNext modules, variables etc.",
+    value: 168,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "SubsurfaceProfileGuid",
+    comment: "Subsurface profile now has a guid to be able to select one of many in a Substrate material.",
+    value: 169,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "SolverIterationsDataSupportInChaosVisualDebugger",
+    comment: "Added support for to record the new solver iteration settings in CVD",
+    value: 170,
+    firstAppearance: "5.5.0",
+  }),
+  new VersionDetails({
+    name: "MaterialInputUsesLinearColor",
+    comment: "Updated FColorMaterialInput to use FLinearColor instead of FColor",
+    value: 171,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "FunctionalTestCanRunInEditorWorld",
+    comment:
+      "Updated editor only AFunctionalTest running logic to run tests editor world if the actors don't support PIE",
+    value: 172,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "VisualLoggerSupportDisplayName",
+    comment: "Added support for display name in the Visual Logger",
+    value: 173,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "GyroscopicTorquesSupportInChaosVisualDebugger",
+    comment: "Added support for the GyroscopicTorque flag in CVD",
+    value: 174,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "AddManagedArrayCollectionPropertySerialization",
+    comment: "Added managed array property serialization",
+    value: 175,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "LandscapeTexturePatchUsesTextureAssetResolution",
+    comment:
+      "Landscape texture patches in Texture Asset source mode now use proper resolution when calculating transform",
+    value: 176,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "WorldPartitionActorDescSerializeRelativeTransform",
+    comment: "Added support for relative transform in WorldPartitionActorDesc",
+    value: 177,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "SceneGraphEntitiesPrivateByDefault",
+    comment: "Make sure scene graph entities are not public by default",
+    value: 178,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "DebugColorForPhysicalMaterials",
+    comment: "Added debug color for physical materials",
+    value: 179,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "AddedPreprocessedFontGeometry",
+    comment: "Added PreprocessedFontGeometry to FFontFaceData",
+    value: 180,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "DynamicMeshSerializeSculptLayers",
+    comment: "Added Dynamic Mesh Sculpt Layer serialization",
+    value: 181,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "SpatialHashRuntimeGridInfoSpriteFixup",
+    comment: "Fix reachable garbage object warnings from some legacy ASpatialHashRuntimeGridInfo actors",
+    value: 182,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "AnimSequenceRawDataOnlyFlagRemoval",
+    comment: "Removed UAnimSequence::bUseRawDataOnly flag alongside compression refactor",
+    value: 183,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "ResetLevelInstanceHLODRelevancy",
+    comment:
+      "HLOD relevancy of Level Instances was previously ignored, now taken into account. Reset to the default behavior.",
+    value: 184,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "SceneCaptureDefaultSettings",
+    comment:
+      "Updated default scene capture post-processing settings to reflect the underlying implementation overrides",
+    value: 185,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "AddClothAssetBase",
+    comment: "Add Cloth Asset Base class serialization",
+    value: 186,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "PCGInlineConstantDefaultValues",
+    comment: "Add inline constant default values to the PCG graph nodes.",
+    value: 187,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "AddMaterialSubstrateSubsurfaceType",
+    comment:
+      "Add MaterialSubstrateSubsurfaceType type to UMaterialExpressionSubstrateSlabBSDF for replacing bUseSSSDifffusion",
+    value: 188,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "AddedRuntimeVirtualTextureUseStreamingMipsInEditorMode",
+    comment: "Added option to visualize runtime virtual textures' streamed mips only in PIE ",
+    value: 189,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "MediaPlateHoldoutComponentRemoval",
+    comment: "Media plate holdout composite components have been replaced by a checkbox",
+    value: 190,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "PCGLandscapeCacheDefaultSerializationChanged",
+    comment: 'Changed PCG landscape cache default from "serialize at cook" to "never serialize"',
+    value: 191,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "SoftObjectPathUtf8SubPaths",
+    comment: "FSoftObjectPath::SubPathString changed to FUtf8String",
+    value: 192,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "SoftObjectPathTrailingNULsMaintained",
+    comment: "FSoftObjectPath::SubPathString could be saved with trailing NULs and need truncating",
+    value: 193,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "WaterBodyPhysicalMaterialPropertyRemoval",
+    comment:
+      "Water body components no longer need to maintain their own PhysicalMaterial property since they are primitive components. After this version, leverage that one instead.",
+    value: 194,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "PCGAttributeSetToPointAlwaysConverts",
+    comment:
+      "PCG fixed attribute set -> point conversion passing through empty point data as-is and violating output pin type.",
+    value: 195,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "MeshMaterialSlotOverlayMaterialAdded",
+    comment: "Add per material slot overlay material data",
+    value: 196,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "ConvertGlintDensity",
+    comment: "Convert Sustrate glint density properly",
+    value: 197,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "ClothAssetSkinweightsValidation",
+    comment: "Introduced skinweight validation to avoid render crashes and disappearing simulation meshes",
+    value: 198,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "VerseRightToLeftHandedness",
+    comment: "Switching verse from right handed to left handed",
+    value: 199,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "AdditionalGameThreadDataSupportInChaosVisualDebugger",
+    comment:
+      "Added additional data required to record and represent particle data from the game thread (Kinematic targets, and SQ rejection reasons)",
+    value: 200,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "UpgradeWidgetBlueprintLegacySequencePlayer",
+    comment: "Upgrade UMG widget blueprints using legacy animation API",
+    value: 201,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "PCGSplineDirectionClockwiseFix",
+    comment:
+      "Changed clockwise detection algorithm for PCGSplineDirection node with the correct one, but add a version to not break previous nodes.",
+    value: 202,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "RectLightFixedEVUnitConversion",
+    comment: "Rect Lights set in EV units had the wrong intensity (older files need a flag set to keep the old look)",
+    value: 203,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "ParticleInflatedBoundsInChaosVisualDebugger",
+    comment: "Add particle bounds to data exported to CVD",
+    value: 204,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "MigrateLandscapeEditLayerProperties",
+    comment: "Migrate properties from FLandscapeLayer to ULandscapeEditLayer",
+    value: 205,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "ThreadContextDataInChaosVisualDebuggerDebugDrawData",
+    comment:
+      "Added more context data to CVD's traced shapes so we can play it back at the solver stage level (not just game thread frames) ",
+    value: 206,
+    firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "PCGChangedSurfaceSamplerDefaultGridCreationMode",
+    comment: "Changed default grid mode in surface sampler to a version that's more intuitive and less error-prone",
+    value: 207,
+    firstAppearance: "5.6.0",
+  }),
 ];
+
+export const FFortniteMainBranchObjectVersionGuid = new CustomVersionGuid<FFortniteMainBranchObjectVersion>({
+  name: "FFortniteMainBranchObjectVersion",
+  guid: FGuid.fromComponents(0x601d1886, 0xac644f84, 0xaa16d3de, 0x0deac7d6),
+  details: FFortniteMainBranchObjectVersionDetails,
+});

@@ -71,6 +71,7 @@ export class Asset {
     const summary = FPackageFileSummary.fromStream(reader);
     this.summary = summary;
     reader.setVersion(summary.FileVersionUE4, summary.FileVersionUE5);
+    reader.setCustomVersions(summary.CustomVersionContainer);
 
     // read names, and set them in the reader so that can be used to read names from indexes
     reader.setNames(readNames(reader, summary));

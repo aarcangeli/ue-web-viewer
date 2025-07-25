@@ -1,6 +1,9 @@
 import invariant from "tiny-invariant";
-import type { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
+
+import type { FCustomVersionContainer } from "./serialization/CustomVersion";
 import { FName } from "./types/Name";
+import type { CustomVersionGuid } from "./versioning/CustomVersionGuid";
+import type { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
 
 /**
  * Low level API to read binary data from an ArrayBuffer.
@@ -15,6 +18,9 @@ export class AssetReader {
   protected _fileVersionUE4: EUnrealEngineObjectUE4Version | null = null;
   protected _fileVersionUE5: EUnrealEngineObjectUE5Version | null = null;
 
+  // Custom version container
+  protected _versionContainer: FCustomVersionContainer | null = null;
+
   // Pool of names filled during the reading of the asset.
   protected _names: string[] | null = null;
 
@@ -28,6 +34,15 @@ export class AssetReader {
   get fileVersionUE5(): EUnrealEngineObjectUE5Version {
     invariant(this._fileVersionUE5 !== null, "File version UE5 is not set yet");
     return this._fileVersionUE5;
+  }
+
+  getCustomVersion<E>(guid: CustomVersionGuid<E>): E {
+    invariant(this._versionContainer !== null, "Custom version container is not set yet");
+    const row = this._versionContainer.Versions.find((ver) => ver.Key.equals(guid.guid));
+    if (!row) {
+      return guid.defaultValue;
+    }
+    return row.Version as unknown as E;
   }
 
   tell() {
@@ -130,13 +145,23 @@ export class AssetReader {
     return value;
   }
 
+  readBytes(length: number) {
+    this.ensureBytes(length);
+    const value = new Uint8Array(this.dataView.buffer, this.dataView.byteOffset + this.offset, length);
+    this.offset += length;
+    return value;
+  }
+
   readString() {
     const length = this.readInt32();
     if (length === 0) {
       return "";
     }
     if (length < 0) {
-      throw new Error("Unicode string serialization is not supported at the moment");
+      const lengthUnicode = -length;
+      const bytes = this.readBytes(lengthUnicode * 2);
+      const encoding = this._littleEndian ? "utf-16le" : "utf-16be";
+      return new TextDecoder(encoding).decode(bytes);
     }
     this.ensureBytes(length);
     let result = "";
@@ -148,6 +173,20 @@ export class AssetReader {
     }
     this.offset += length;
     return result;
+  }
+
+  readStringUtf8() {
+    const length = this.readInt32();
+    invariant(length >= 0, "Length must be non-negative for UTF-8 strings");
+    if (length === 0) {
+      return "";
+    }
+    let bytes = this.readBytes(length);
+    // ensure the last byte is not a null terminator
+    if (bytes[bytes.length - 1] === 0) {
+      bytes = bytes.slice(0, -1);
+    }
+    return new TextDecoder("utf-8").decode(bytes);
   }
 
   readName(): FName {
@@ -200,6 +239,7 @@ export class AssetReader {
     reader._littleEndian = this._littleEndian;
     reader._fileVersionUE4 = this._fileVersionUE4;
     reader._fileVersionUE5 = this._fileVersionUE5;
+    reader._versionContainer = this._versionContainer;
     reader._names = this._names;
     return reader;
   }
@@ -220,5 +260,9 @@ export class FullAssetReader extends AssetReader {
   setVersion(fileVersionUE4: EUnrealEngineObjectUE4Version, fileVersionUE5: EUnrealEngineObjectUE5Version) {
     this._fileVersionUE4 = fileVersionUE4;
     this._fileVersionUE5 = fileVersionUE5;
+  }
+
+  setCustomVersions(versions: FCustomVersionContainer) {
+    this._versionContainer = versions;
   }
 }

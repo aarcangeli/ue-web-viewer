@@ -76,6 +76,10 @@ export class FGuid {
   isValid() {
     return this.A !== 0 || this.B !== 0 || this.C !== 0 || this.D !== 0;
   }
+
+  equals(other: FGuid) {
+    return this.A === other.A && this.B === other.B && this.C === other.C && this.D === other.D;
+  }
 }
 
 export const GUID_None = FGuid.fromComponents(0, 0, 0, 0);

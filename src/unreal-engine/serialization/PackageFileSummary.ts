@@ -2,8 +2,10 @@ import type { AssetReader } from "../AssetReader";
 import { EPackageFlags } from "../enums";
 import { FGuid, GUID_None } from "../modules/CoreUObject/structs/Guid";
 import { FEngineVersion } from "../types/EngineVersion";
-import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "./CustomVersion";
+import { FIoHash, HashNone } from "../types/IoHash";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
+
+import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "./CustomVersion";
 
 /**
  * struct FGenerationInfo {
@@ -37,7 +39,7 @@ export class FPackageFileSummary {
   FileVersionUE4: number = 0;
   FileVersionUE5: number = 0;
   FileVersionLicenseeUE: number = 0;
-  CustomVersionContainer: FCustomVersionContainer = new FCustomVersionContainer();
+  CustomVersionContainer: FCustomVersionContainer = new FCustomVersionContainer([]);
 
   // part 2: basic information
   TotalHeaderSize: number = 0;
@@ -53,6 +55,13 @@ export class FPackageFileSummary {
 
   GatherableTextDataCount: number = 0;
   GatherableTextDataOffset: number = 0;
+
+  cellExportCount: number = 0;
+  cellExportOffset: number = 0;
+  cellImportCount: number = 0;
+  cellImportOffset: number = 0;
+
+  metaDataOffset: number = 0;
 
   ExportCount: number = 0;
   ExportOffset: number = 0;
@@ -71,9 +80,8 @@ export class FPackageFileSummary {
 
   // part 4: more header fields and versioning
 
-  // deprecated in 4.27
-  // UPackage::Guid has not been used by the engine for a long time and FPackageFileSummary::Guid will be removed
-  Guid: FGuid = GUID_None;
+  // Hash of the Package's bytes when it was saved to disk.
+  SavedHash: FIoHash = HashNone;
 
   PersistentGuid: FGuid = GUID_None;
   LocalizationId: string = "";
@@ -119,7 +127,7 @@ export class FPackageFileSummary {
     if (result.LegacyFileVersion >= 0) {
       throw new Error(`Unreal Engine 1-3 packages are not supported: ${result.LegacyFileVersion}`);
     }
-    if (result.LegacyFileVersion < -8) {
+    if (result.LegacyFileVersion < -9) {
       // Probably UE6
       throw new Error(`Too futuristic file version: ${result.LegacyFileVersion}`);
     }
@@ -131,12 +139,22 @@ export class FPackageFileSummary {
 
     result.FileVersionUE4 = reader.readInt32();
 
-    if (result.LegacyFileVersion === -8) {
+    if (result.LegacyFileVersion <= -8) {
       result.FileVersionUE5 = reader.readInt32();
     }
 
     result.FileVersionLicenseeUE = reader.readInt32();
 
+    if (!result.FileVersionUE4 && !result.FileVersionUE5 && !result.FileVersionLicenseeUE) {
+      throw new Error("Unversioned package file are not supported in this viewer");
+    }
+
+    if (result.FileVersionUE5 >= EUnrealEngineObjectUE5Version.PACKAGE_SAVED_HASH) {
+      result.SavedHash = FIoHash.fromStream(reader);
+      result.TotalHeaderSize = reader.readInt32();
+    }
+
+    // Read CustomVersions
     if (result.LegacyFileVersion <= -2) {
       let format: ECustomVersionSerializationFormat;
       switch (result.LegacyFileVersion) {
@@ -156,13 +174,12 @@ export class FPackageFileSummary {
       result.CustomVersionContainer = FCustomVersionContainer.fromStream(reader, format);
     }
 
-    if (!result.FileVersionUE4 && !result.FileVersionUE5 && !result.FileVersionLicenseeUE) {
-      throw new Error("Unversioned package file are not supported in this viewer");
-    }
-
     // part 2: basic information
 
-    result.TotalHeaderSize = reader.readInt32();
+    if (result.FileVersionUE5 < EUnrealEngineObjectUE5Version.PACKAGE_SAVED_HASH) {
+      result.TotalHeaderSize = reader.readInt32();
+    }
+
     result.PackageName = reader.readString();
     result.PackageFlags = reader.readUInt32();
 
@@ -195,6 +212,17 @@ export class FPackageFileSummary {
     result.ImportCount = reader.readInt32();
     result.ImportOffset = reader.readInt32();
 
+    if (result.FileVersionUE5 >= EUnrealEngineObjectUE5Version.VERSE_CELLS) {
+      result.cellExportCount = reader.readInt32();
+      result.cellExportOffset = reader.readInt32();
+      result.cellImportCount = reader.readInt32();
+      result.cellImportOffset = reader.readInt32();
+    }
+
+    if (result.FileVersionUE5 >= EUnrealEngineObjectUE5Version.METADATA_SERIALIZATION_OFFSET) {
+      result.metaDataOffset = reader.readInt32();
+    }
+
     result.DependsOffset = reader.readInt32();
 
     if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_ADD_STRING_ASSET_REFERENCES_MAP) {
@@ -210,12 +238,18 @@ export class FPackageFileSummary {
 
     // part 4: more header fields and versioning
 
-    result.Guid = FGuid.fromStream(reader);
+    if (result.FileVersionUE5 < EUnrealEngineObjectUE5Version.PACKAGE_SAVED_HASH) {
+      const Guid = FGuid.fromStream(reader);
+
+      // For what I see, this conversion may produce different values if loaded from big-endian systems.
+      // However, this is the way UE4 does it, so we follow the same logic.
+      result.SavedHash = FIoHash.fromGuid(Guid);
+    }
 
     if (result.FileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_ADDED_PACKAGE_OWNER) {
       result.PersistentGuid = FGuid.fromStream(reader);
     } else {
-      result.PersistentGuid = result.Guid;
+      result.PersistentGuid = result.SavedHash.toGuid();
     }
 
     // The owner persistent guid was added in VER_UE4_ADDED_PACKAGE_OWNER but removed in the next version VER_UE4_NON_OUTER_PACKAGE_IMPORT

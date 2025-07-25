@@ -1,5 +1,5 @@
-import { FGuid, GUID_None } from "../modules/CoreUObject/structs/Guid";
 import type { AssetReader } from "../AssetReader";
+import { FGuid, GUID_None } from "../modules/CoreUObject/structs/Guid";
 
 /**
  * enum class ECustomVersionSerializationFormat : int8 {
@@ -62,14 +62,18 @@ export class FCustomVersion {
  * };
  */
 export class FCustomVersionContainer {
-  Versions: FCustomVersion[] = [];
+  readonly Versions: ReadonlyArray<FCustomVersion> = [];
 
   static fromStream(reader: AssetReader, format: ECustomVersionSerializationFormat) {
-    const result = new FCustomVersionContainer();
+    const versions: Array<FCustomVersion> = [];
     const count = reader.readUInt32();
     for (let i = 0; i < count; i++) {
-      result.Versions.push(FCustomVersion.fromStream(reader, format));
+      versions.push(FCustomVersion.fromStream(reader, format));
     }
-    return result;
+    return new FCustomVersionContainer(versions);
+  }
+
+  constructor(Versions: ReadonlyArray<FCustomVersion>) {
+    this.Versions = Versions;
   }
 }

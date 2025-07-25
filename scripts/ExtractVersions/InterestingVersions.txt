@@ -1,0 +1,6 @@
+# List of custom versions that we want to unpack to the "versioning" folder.
+#   * = Any sequence of characters (even none)
+#   ? = Any single character
+
+# Necessary for FSoftObjectPath serialization
+FFortniteMainBranchObjectVersion

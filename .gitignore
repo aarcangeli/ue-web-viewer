@@ -16,6 +16,7 @@ junit.xml
 # this is a temporary file used while exporting the layout
 LayoutDump.json
 DefaultObjects.json
+skipped.txt
 
 # misc
 .DS_Store
