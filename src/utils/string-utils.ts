@@ -24,7 +24,7 @@ export function removeExtension(value: string) {
 
 export function hexToArrayBuffer(hex: string): ArrayBuffer {
   if (hex.length % 2 !== 0) {
-    throw new Error("Hex string must have an even length");
+    throw new Error(`Hex string must have an even length, got ${hex.length}`);
   }
 
   const buffer = new ArrayBuffer(hex.length / 2);
