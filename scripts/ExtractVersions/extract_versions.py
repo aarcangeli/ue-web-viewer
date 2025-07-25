@@ -237,7 +237,7 @@ def format_version_details(
     latest_version,
 ):
     result = f"{make_header('extract_versions.py')}\n"
-    result += 'import { VersionDetails } from "./registry";\n\n'
+    result += 'import { VersionDetails } from "./CustomVersionGuid";\n\n'
 
     # Print merged version details
     result = format_details(
