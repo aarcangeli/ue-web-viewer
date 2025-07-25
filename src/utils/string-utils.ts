@@ -31,9 +31,8 @@ export function removeExtension(value: string) {
  *
  * @example
  * // Convert a hex string to an ArrayBuffer
- * const hex = "48656c6c6f"; // "Hello" in hex
- * const buffer = hexToArrayBuffer(hex);
- * console.log(buffer); // ArrayBuffer { byteLength: 5 }
+ * const buffer = hexToArrayBuffer("48656c6c6f");
+ * console.log(new TextDecoder().decode(buffer)); // Outputs: "Hello"
  */
 export function hexToArrayBuffer(hex: string): ArrayBuffer {
   if (hex.length % 2 !== 0) {
