@@ -28,7 +28,7 @@ export function removeExtension(value: string) {
  * @param {string} hex - The hexadecimal string to convert. Must have an even length.
  * @returns {ArrayBuffer} - The resulting ArrayBuffer containing the binary data.
  * @throws {Error} - Throws an error if the hex string has an odd length.
- * 
+ *
  * @example
  * // Convert a hex string to an ArrayBuffer
  * const hex = "48656c6c6f"; // "Hello" in hex
@@ -38,6 +38,9 @@ export function removeExtension(value: string) {
 export function hexToArrayBuffer(hex: string): ArrayBuffer {
   if (hex.length % 2 !== 0) {
     throw new Error(`Hex string must have an even length, got ${hex.length}`);
+  }
+  if (!/^[0-9a-fA-F]+$/.test(hex)) {
+    throw new Error(`Invalid hex string: ${hex}`);
   }
 
   const buffer = new ArrayBuffer(hex.length / 2);

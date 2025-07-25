@@ -32,4 +32,9 @@ describe("FIoHash", () => {
     expect(hash.toString()).toBe("11223da6ccf66409fe11b3306e1dc915cadd0188");
     expect(reader.remaining).toBe(0);
   });
+
+  it("shoukd throw an error for invalid stream data", () => {
+    expect(() => hexToArrayBuffer("2")).toThrow();
+    expect(() => hexToArrayBuffer("4g")).toThrow();
+  });
 });
