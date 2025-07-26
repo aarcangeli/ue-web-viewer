@@ -117,3 +117,5 @@ export class FTextHistory_Base implements ITextData {
     return this.sourceString;
   }
 }
+
+export const Text_None = new FText(0, ETextHistoryType.None, new FTextHistory_Base(null, null, ""));

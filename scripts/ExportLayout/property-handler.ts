@@ -72,7 +72,7 @@ export function getPropertyType(property: ChildPropertyInfo, resolver: TypeResol
     case "MulticastSparseDelegateProperty":
       break;
     case "TextProperty":
-      break;
+      return resolver.resolveSymbol("FText", true);
     case "EnumProperty":
       return resolver.resolveEnumRef(property.enumType, true);
     case "FieldPathProperty":
@@ -143,7 +143,7 @@ export function getInitializer(property: ChildPropertyInfo, resolver: TypeResolv
     case "MulticastSparseDelegateProperty":
       break;
     case "TextProperty":
-      break;
+      return `${resolver.resolveSymbol("Text_None", false)}`;
     case "EnumProperty":
       return enumDefaultValue(property.enumType, resolver);
     case "FieldPathProperty":

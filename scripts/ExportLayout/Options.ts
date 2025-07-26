@@ -20,7 +20,7 @@ export const ExportLayoutOptions = {
   /**
    * List of UCLASS that will be exported to TypeScript.
    */
-  interestingTypes: ["StaticMesh"],
+  interestingTypes: ["StaticMesh", "BlueprintGeneratedClass"],
 
   repoRoot: repoRoot,
   layoutPath: path.join(dirname, "LayoutDump.json"),
@@ -70,6 +70,7 @@ export const ExportLayoutOptions = {
 
   additionalPaths: [
     path.resolve(src_dir, "unreal-engine/types/Name.ts"),
+    path.resolve(src_dir, "unreal-engine/types/Text.ts"),
     path.resolve(src_dir, "unreal-engine/types/class-registry.ts"),
   ],
 };
