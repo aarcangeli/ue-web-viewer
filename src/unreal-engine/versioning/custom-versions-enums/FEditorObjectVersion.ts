@@ -130,11 +130,6 @@ export enum FEditorObjectVersion {
   /// Make sure we can have more then 255 material in the skeletal mesh source data
   SkeletalMeshSourceDataSupport16bitOfMaterialNumber = 40,
   // endregion
-
-  // region Introduced with UE 4.12.0
-  /// Fixed several issues with the gathered text cache stored in package headers
-  GatheredTextPackageCacheFixes = 2,
-  // endregion
 }
 
 export const FEditorObjectVersionDetails: VersionDetails[] = [
@@ -383,13 +378,6 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
     comment: "Make sure we can have more then 255 material in the skeletal mesh source data",
     value: 40,
     firstAppearance: "4.26.0",
-  }),
-  new VersionDetails({
-    name: "GatheredTextPackageCacheFixes",
-    comment: "Fixed several issues with the gathered text cache stored in package headers",
-    value: 2,
-    firstAppearance: "4.12.0",
-    lastAppearance: "4.12.5",
   }),
 ];
 

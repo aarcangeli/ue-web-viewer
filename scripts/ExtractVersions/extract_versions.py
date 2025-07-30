@@ -42,6 +42,12 @@ class SerializationVersion:
     first_appearance: str = None
     last_appearance: str = None
 
+    def __post_init__(self):
+        # Remove unwanted characters from the comment
+        self.comment = re.sub(r'[\u00A0\u2000-\u200B]+', ' ', self.comment).strip()
+        # Replace double spaces with single space
+        self.comment = re.sub(r'\s+', ' ', self.comment)
+
     def update_version(self, version):
         if compare_versions(version, self.first_appearance) < 0:
             self.first_appearance = version
@@ -282,6 +288,13 @@ def aggregate_versions(
     versions: list[SerializationVersion], result_list: list[SerializationVersion]
 ):
     for v in versions:
+        # Find a constant with the same value but different name
+        if any(it.value == v.value and it.name != v.name for it in result_list):
+            print(
+                f"Version {v.name} with value {v.value} already exists, skipping"
+            )
+            continue
+
         # Get the index of the version already stored in the list, if any
         found_index = next(
             (i for i, it in enumerate(result_list) if it.name == v.name),
@@ -334,7 +347,7 @@ def extract_versions(unreal_path: Path):
     tags = extract_tags(unreal_path) or error(f"Could not find tags in {unreal_path}")
     latest_version = tags[-1]
 
-    for tag in tags:
+    for tag in reversed(tags):
         # for tag in tags:
         print(f"Processing tag {tag}")
 
@@ -354,6 +367,11 @@ def extract_versions(unreal_path: Path):
     print("Validating tables")
     validate_table(version_by_name_ue4)
     validate_table(version_by_name_ue5)
+
+    # sort
+    print("Sorting versions")
+    version_by_name_ue4.sort(key=lambda v: v.value)
+    version_by_name_ue5.sort(key=lambda v: v.value)
 
     versions = format_versions(version_by_name_ue4, version_by_name_ue5)
     version_details = format_version_details(

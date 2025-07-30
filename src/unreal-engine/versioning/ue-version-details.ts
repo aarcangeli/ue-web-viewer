@@ -468,7 +468,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ADD_EDGRAPHNODE_GUID",
-    comment: "Add a NodeGuid to EdGraphNode, upping version to generate for existing nodes ",
+    comment: "Add a NodeGuid to EdGraphNode, upping version to generate for existing nodes",
     value: 174,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -1450,7 +1450,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FIX_ANIMATIONBASEPOSE_SERIALIZATION",
-    comment: "Fix base pose serialization ",
+    comment: "Fix base pose serialization",
     value: 331,
     firstAppearance: "4.0.1",
   }),
@@ -1954,7 +1954,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_LANDSCAPE_SERIALIZE_PHYSICS_MATERIALS",
-    comment: "Landscape serializes physical materials for collision objects ",
+    comment: "Landscape serializes physical materials for collision objects",
     value: 415,
     firstAppearance: "4.7.0",
   }),

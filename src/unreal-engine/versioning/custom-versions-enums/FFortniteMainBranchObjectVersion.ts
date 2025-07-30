@@ -1597,7 +1597,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AddedRuntimeVirtualTextureUseStreamingMipsInEditorMode",
-    comment: "Added option to visualize runtime virtual textures' streamed mips only in PIE ",
+    comment: "Added option to visualize runtime virtual textures' streamed mips only in PIE",
     value: 189,
     firstAppearance: "5.6.0",
   }),
@@ -1699,7 +1699,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ThreadContextDataInChaosVisualDebuggerDebugDrawData",
-    comment: "Added more context data to CVD's traced shapes so we can play it back at the solver stage level (not just game thread frames) ",
+    comment: "Added more context data to CVD's traced shapes so we can play it back at the solver stage level (not just game thread frames)",
     value: 206,
     firstAppearance: "5.6.0",
   }),

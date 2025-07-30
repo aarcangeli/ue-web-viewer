@@ -161,7 +161,7 @@ export enum FUE5MainStreamObjectVersion {
   FixGpuAlwaysRunningUpdateScriptNoneInterpolated = 73,
   /// World partition streaming policy serialization only for cooked builds
   WorldPartitionSerializeStreamingPolicyOnCook = 74,
-  /// Remove serialization of bounds relevant from  WorldPartitionActorDesc
+  /// Remove serialization of bounds relevant from WorldPartitionActorDesc
   WorldPartitionActorDescRemoveBoundsRelevantSerialization = 75,
   /// will be unable to be loaded
   AnimationDataModelInterface_BackedOut = 76,
@@ -723,7 +723,7 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "WorldPartitionActorDescRemoveBoundsRelevantSerialization",
-    comment: "Remove serialization of bounds relevant from  WorldPartitionActorDesc",
+    comment: "Remove serialization of bounds relevant from WorldPartitionActorDesc",
     value: 75,
     firstAppearance: "5.1.0",
   }),
@@ -741,7 +741,7 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "BackoutAnimationDataModelInterface",
-    comment: "Revert the IAnimationDataModel changes. Animation assets ",
+    comment: "Revert the IAnimationDataModel changes. Animation assets",
     value: 78,
     firstAppearance: "5.1.0",
   }),

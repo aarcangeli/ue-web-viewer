@@ -23,7 +23,7 @@ function generateFile(externalDir: string) {
   let output = `// This file is auto-generated. Do not edit directly.\n\n`;
 
   if (withDecompressor) {
-    output += `export { decompress } from "./decompressor/decompressor-api.js";\n`;
+    output += `export { decompress } from "./decompressor/decompressor-api";\n`;
   } else {
     output += "// oodle is not included in the build.\n";
     output += `type DecompressFn = (data: Uint8Array, size: number) => Promise<Uint8Array>;\n`;

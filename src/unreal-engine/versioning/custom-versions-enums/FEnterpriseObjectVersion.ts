@@ -51,11 +51,6 @@ export enum FEnterpriseObjectVersion {
   /// Replacement of UDatasmithParametricSurfaceData by UParametricSurfaceData
   AddedParametricSurfaceData = 11,
   // endregion
-
-  // region Introduced with UE 4.22.0
-  /// Addition of pointer to UDatasmithDataPrepRecipe
-  HasUDatasmithDataPrepRecipe = 6,
-  // endregion
 }
 
 export const FEnterpriseObjectVersionDetails: VersionDetails[] = [
@@ -67,7 +62,7 @@ export const FEnterpriseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixSerializationOfBulkAndExtraData",
-    comment: "Conditional serialization of bulk (UDatasmithScene) and extra (UDatasmithStaticMeshCADImportData) data ",
+    comment: "Conditional serialization of bulk (UDatasmithScene) and extra (UDatasmithStaticMeshCADImportData) data",
     value: 1,
     firstAppearance: "4.20.0",
   }),
@@ -97,7 +92,7 @@ export const FEnterpriseObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "HasUDataprepRecipe",
-    comment: "Addition of pointer to UDatasmithDataPrepRecipe ",
+    comment: "Addition of pointer to UDatasmithDataPrepRecipe",
     value: 6,
     firstAppearance: "4.23.0",
   }),
@@ -130,13 +125,6 @@ export const FEnterpriseObjectVersionDetails: VersionDetails[] = [
     comment: "Replacement of UDatasmithParametricSurfaceData by UParametricSurfaceData",
     value: 11,
     firstAppearance: "5.6.0",
-  }),
-  new VersionDetails({
-    name: "HasUDatasmithDataPrepRecipe",
-    comment: "Addition of pointer to UDatasmithDataPrepRecipe ",
-    value: 6,
-    firstAppearance: "4.22.0",
-    lastAppearance: "4.22.3",
   }),
 ];
 
