@@ -2,7 +2,7 @@ import type { AssetReader } from "../AssetReader";
 import { EPackageFlags } from "../enums";
 import { FGuid, GUID_None } from "../modules/CoreUObject/structs/Guid";
 import { FEngineVersion } from "../types/EngineVersion";
-import { FIoHash, HashNone } from "../types/IoHash";
+import { FIoHash, HashNone } from "../types/hash/IoHash";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 
 import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "./CustomVersion";

@@ -24,6 +24,10 @@ import { SerializationStatistics } from "./SerializationStatistics";
 
 const RecursiveCheck = Symbol("RecursiveCheck");
 
+export interface AssetApi {
+  get reader(): AssetReader;
+}
+
 /**
  * This class permits to load data from an asset file.
  * An asset is composed by a root file (uasset or umap) and an optional uexp file.
@@ -33,7 +37,7 @@ const RecursiveCheck = Symbol("RecursiveCheck");
  *
  * The root object is always an instance of {@link UPackage}.
  */
-export class Asset {
+export class Asset implements AssetApi {
   /** We have a dedicated context for this asset, in the future we may want to reuse it for other assets. */
   private readonly _context = MakeObjectContext();
 
@@ -83,6 +87,13 @@ export class Asset {
 
     // Create the package object
     this.package = this._context.findOrCreatePackage(packageName);
+    this.package.assetApi = this;
+  }
+
+  get reader(): AssetReader {
+    const assetReader = this._reader.clone();
+    assetReader.seek(0);
+    return assetReader;
   }
 
   /**
@@ -288,6 +299,8 @@ export class Asset {
       return this._context.newObject(outer, clazz, objectExport.ObjectName, objectExport.objectFlags);
     });
 
+    object.assetApi = this;
+
     // Register the object
     this._exportedObjects[index - 1] = object.asWeakObject();
 
@@ -388,7 +401,7 @@ export class Asset {
         object.deserialize(subReader, resolver);
       }
 
-      object.serializationStatistics = new SerializationStatistics(subReader.remaining, null);
+      object.serializationStatistics = new SerializationStatistics(subReader.getRemaining(), null);
       object.loadingPhase = ELoadingPhase.Full;
     } catch (e) {
       console.warn(`Error deserializing object ${object.fullName}; the object is partially loaded:`, e);

@@ -4,6 +4,9 @@ import { defineConfig } from "vite";
 import json5Plugin from "vite-plugin-json5";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+// Generate the src/externals/index.ts file
+import "./scripts/generate_externals";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [

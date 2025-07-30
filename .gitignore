@@ -12,6 +12,7 @@ junit.xml
 # production
 /build
 /dist
+/src/generated
 
 # this is a temporary file used while exporting the layout
 LayoutDump.json
@@ -31,3 +32,4 @@ yarn-error.log*
 
 .idea
 .vscode
+/src/externals

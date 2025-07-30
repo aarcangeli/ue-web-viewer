@@ -9,7 +9,7 @@ import eslint from "typescript-eslint";
 const config = defineFlatConfig([
   {
     name: "Globally ignored files",
-    ignores: ["dist/**"],
+    ignores: ["dist/**", "src/externals/**"],
   },
   {
     settings: {

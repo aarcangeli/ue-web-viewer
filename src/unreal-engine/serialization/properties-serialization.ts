@@ -80,9 +80,9 @@ function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: Obj
 
     // Check that the reader has read all the bytes.
     // Properties are easy to read, if there are extra bytes, it's likely a bug.
-    if (result.type != "error" && reader.remaining > 0) {
+    if (result.type != "error" && reader.getRemaining() > 0) {
       console.warn("Extra bytes found at the end of property value.");
-      return makeError(`Found ${reader.remaining} bytes found at the end of property value (type: ${typeName}).`);
+      return makeError(`Found ${reader.getRemaining()} bytes found at the end of property value (type: ${typeName}).`);
     }
 
     return result;

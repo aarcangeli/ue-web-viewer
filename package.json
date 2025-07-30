@@ -7,6 +7,7 @@
   "homepage": "https://aarcangeli.github.io/ue-web-viewer",
   "license": "MIT",
   "scripts": {
+    "prebuild": "tsx scripts/generate_externals.ts",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",

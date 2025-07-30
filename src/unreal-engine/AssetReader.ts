@@ -49,7 +49,7 @@ export class AssetReader {
     return this.offset;
   }
 
-  get remaining() {
+  getRemaining() {
     return this.dataView.byteLength - this.offset;
   }
 
@@ -152,6 +152,14 @@ export class AssetReader {
     return value;
   }
 
+  skip(length: number) {
+    if (length < 0) {
+      throw new Error("Length must be non-negative");
+    }
+    this.ensureBytes(length);
+    this.offset += length;
+  }
+
   readString() {
     const length = this.readInt32();
     if (length === 0) {
@@ -209,7 +217,7 @@ export class AssetReader {
     this.ensureBytes(size);
     const subDataView = new DataView(this.dataView.buffer, this.dataView.byteOffset + this.offset, size);
     this.offset += size;
-    return this.makeChild(subDataView);
+    return this.makeChild(subDataView, 0);
   }
 
   /**
@@ -217,11 +225,15 @@ export class AssetReader {
    * The changes to the new reader do not affect the original reader.
    */
   clone() {
-    return this.makeChild(this.dataView);
+    return this.makeChild(this.dataView, this.offset);
   }
 
   swapEndian() {
     this._littleEndian = !this._littleEndian;
+  }
+
+  setLittleEndian(value: boolean) {
+    this._littleEndian = value;
   }
 
   get littleEndian() {
@@ -234,8 +246,9 @@ export class AssetReader {
     }
   }
 
-  private makeChild(newBlob: DataView) {
+  private makeChild(newBlob: DataView, offset: number) {
     const reader = new AssetReader(newBlob);
+    reader.offset = offset;
     reader._littleEndian = this._littleEndian;
     reader._fileVersionUE4 = this._fileVersionUE4;
     reader._fileVersionUE5 = this._fileVersionUE5;

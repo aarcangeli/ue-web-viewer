@@ -34,7 +34,7 @@ export function removeExtension(value: string) {
  * const buffer = hexToArrayBuffer("48656c6c6f");
  * console.log(new TextDecoder().decode(buffer)); // Outputs: "Hello"
  */
-export function hexToArrayBuffer(hex: string): ArrayBuffer {
+export function hexToArrayBuffer(hex: string): Uint8Array {
   if (hex.length % 2 !== 0) {
     throw new Error(`Hex string must have an even length, got ${hex.length}`);
   }
@@ -42,12 +42,11 @@ export function hexToArrayBuffer(hex: string): ArrayBuffer {
     throw new Error(`Invalid hex string: ${hex}`);
   }
 
-  const buffer = new ArrayBuffer(hex.length / 2);
-  const view = new Uint8Array(buffer);
+  const array = new Uint8Array(hex.length / 2);
 
   for (let i = 0; i < hex.length; i += 2) {
-    view[i / 2] = parseInt(hex.slice(i, i + 2), 16);
+    array[i / 2] = parseInt(hex.slice(i, i + 2), 16);
   }
 
-  return buffer;
+  return array;
 }

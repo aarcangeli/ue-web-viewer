@@ -1,6 +1,6 @@
-import { hexToArrayBuffer } from "../../utils/string-utils";
-import { AssetReader } from "../AssetReader";
-import { FGuid } from "../modules/CoreUObject/structs/Guid";
+import { hexToArrayBuffer } from "../../../utils/string-utils";
+import { AssetReader } from "../../AssetReader";
+import { FGuid } from "../../modules/CoreUObject/structs/Guid";
 
 import { FIoHash, HashNone } from "./IoHash";
 
@@ -9,12 +9,12 @@ describe("FIoHash", () => {
     const ioHash = new FIoHash();
     expect(ioHash.toString()).toBe("0000000000000000000000000000000000000000");
     expect(ioHash.equals(HashNone)).toBe(true);
-    expect(ioHash.isNone()).toBe(true);
+    expect(ioHash.isNone).toBe(true);
   });
 
   test("should throw an error for an invalid hash", () => {
-    expect(() => new FIoHash("invalidhash")).toThrow("Invalid FIoHash");
-    expect(() => new FIoHash("000000000000000000000000000000000000000z")).toThrow("Invalid FIoHash");
+    expect(() => FIoHash.fromHex("invalidhash")).toThrow("Invalid FIoHash");
+    expect(() => FIoHash.fromHex("000000000000000000000000000000000000000z")).toThrow();
   });
 
   test("fromGuid", () => {
@@ -27,10 +27,10 @@ describe("FIoHash", () => {
   it("should deserialize from a stream", () => {
     const dataView = hexToArrayBuffer("11223da6ccf66409fe11b3306e1dc915cadd0188");
     expect(dataView.byteLength).toBe(20);
-    const reader = new AssetReader(new DataView(dataView));
+    const reader = new AssetReader(new DataView(dataView.buffer));
     const hash = FIoHash.fromStream(reader);
     expect(hash.toString()).toBe("11223da6ccf66409fe11b3306e1dc915cadd0188");
-    expect(reader.remaining).toBe(0);
+    expect(reader.getRemaining()).toBe(0);
   });
 
   it("shoukd throw an error for invalid stream data", () => {

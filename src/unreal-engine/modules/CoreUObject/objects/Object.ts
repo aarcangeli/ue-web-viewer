@@ -13,6 +13,7 @@ import { FGuid } from "../structs/Guid";
 import type { FSoftObjectPath } from "../structs/SoftObjectPath";
 
 import type { UClass } from "./Class";
+import type { AssetApi } from "../../../serialization/Asset";
 
 /**
  * All characters are allowed except for '.' and ':'.
@@ -91,6 +92,7 @@ export class UObject {
    */
   loadingPhase: ELoadingPhase = ELoadingPhase.None;
 
+  assetApi: AssetApi | null = null;
   objectGuid: FGuid | null = null;
 
   constructor(params: ObjectConstructionParams) {
