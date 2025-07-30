@@ -542,8 +542,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FontOutlineDropShadowFixup",
-    comment:
-      "Font outlines no longer apply to drop shadows for new objects but we maintain the opposite way for backwards compat",
+    comment: "Font outlines no longer apply to drop shadows for new objects but we maintain the opposite way for backwards compat",
     value: 13,
     firstAppearance: "4.21.0",
   }),
@@ -597,8 +596,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AllowSkeletalMeshToReduceTheBaseLOD",
-    comment:
-      "Allow reducing of the base LOD, we need to store some imported model data so we can reduce again from the same data.",
+    comment: "Allow reducing of the base LOD, we need to store some imported model data so we can reduce again from the same data.",
     value: 22,
     firstAppearance: "4.22.0",
   }),
@@ -610,8 +608,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "WidgetAnimationDefaultToSelfFail",
-    comment:
-      "Widgets upgraded with WidgetStopDuplicatingAnimations, may not correctly default-to-self for the widget parameter.",
+    comment: "Widgets upgraded with WidgetStopDuplicatingAnimations, may not correctly default-to-self for the widget parameter.",
     value: 24,
     firstAppearance: "4.22.0",
   }),
@@ -827,8 +824,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AnimDynamicsEditableChainParameters",
-    comment:
-      "Anim Dynamics Node Physics parameters for each body in a chain are now stored in an array and can be edited.",
+    comment: "Anim Dynamics Node Physics parameters for each body in a chain are now stored in an array and can be edited.",
     value: 60,
     firstAppearance: "5.1.0",
   }),
@@ -840,8 +836,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ChaosClothFasterDamping",
-    comment:
-      "Add faster damping calculations to the cloth simulation and rename previous Damping parameter to LocalDamping.",
+    comment: "Add faster damping calculations to the cloth simulation and rename previous Damping parameter to LocalDamping.",
     value: 62,
     firstAppearance: "5.1.0",
   }),
@@ -883,15 +878,13 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "WaterBodyComponentCollisionSettingsRefactor",
-    comment:
-      "Water body collision settings are now those of the base UPrimitiveComponent, rather than duplicated in UWaterBodyComponent",
+    comment: "Water body collision settings are now those of the base UPrimitiveComponent, rather than duplicated in UWaterBodyComponent",
     value: 69,
     firstAppearance: "5.1.0",
   }),
   new VersionDetails({
     name: "WidgetInheritedNamedSlots",
-    comment:
-      "if a widget exposes its named slot to everyone (even if it has content) which by default they wont any longer.",
+    comment: "if a widget exposes its named slot to everyone (even if it has content) which by default they wont any longer.",
     value: 70,
     firstAppearance: "5.1.0",
   }),
@@ -903,15 +896,13 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "PoseWatchMigrateSkeletonDrawParametersToPoseElement",
-    comment:
-      "Moved parameters affecting Skeleton pose rendering from the PoseWatch class to the PoseWatchPoseElement class.",
+    comment: "Moved parameters affecting Skeleton pose rendering from the PoseWatch class to the PoseWatchPoseElement class.",
     value: 72,
     firstAppearance: "5.1.0",
   }),
   new VersionDetails({
     name: "WaterExclusionVolumeExcludeAllDefault",
-    comment:
-      'Reset default value for Water exclusion volumes to make them more intuitive and support the "it just works" philosophy.',
+    comment: "Reset default value for Water exclusion volumes to make them more intuitive and support the \"it just works\" philosophy.",
     value: 73,
     firstAppearance: "5.1.0",
   }),
@@ -977,8 +968,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ChaosGeometryCollectionInternalFacesAttribute",
-    comment:
-      "Add an attribute to geometry collection to track internal faces, rather than relying on material ID numbering",
+    comment: "Add an attribute to geometry collection to track internal faces, rather than relying on material ID numbering",
     value: 84,
     firstAppearance: "5.3.0",
   }),
@@ -1044,8 +1034,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "WaterBodyStaticMeshComponents",
-    comment:
-      "Moved the water info mesh data and static water body meshes into new static mesh components for water bodies.",
+    comment: "Moved the water info mesh data and static water body meshes into new static mesh components for water bodies.",
     value: 95,
     firstAppearance: "5.3.0",
   }),
@@ -1087,8 +1076,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "WorldPartitionActorFilterStringAssetPath",
-    comment:
-      "FWorldPartitionActorFilter go back to FString serialize of AssetPaths to avoid FArchiveReplaceOrClearExternalReferences clearing CDO references on BP Compile",
+    comment: "FWorldPartitionActorFilter go back to FString serialize of AssetPaths to avoid FArchiveReplaceOrClearExternalReferences clearing CDO references on BP Compile",
     value: 102,
     firstAppearance: "5.3.0",
   }),
@@ -1123,15 +1111,13 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "WaterOwningZonePointerFixup",
-    comment:
-      "Water bodies before this version need to update their water zone on load since they won't have been serialized yet.",
+    comment: "Water bodies before this version need to update their water zone on load since they won't have been serialized yet.",
     value: 108,
     firstAppearance: "5.3.0",
   }),
   new VersionDetails({
     name: "WaterBodyStaticMeshDuplicateTransient",
-    comment:
-      "Set flags on water static meshes to duplicate transient to avoid underlying static mesh duplication issue",
+    comment: "Set flags on water static meshes to duplicate transient to avoid underlying static mesh duplication issue",
     value: 109,
     firstAppearance: "5.3.0",
   }),
@@ -1239,15 +1225,13 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixedTangentTransformForNonuniformBuildScale",
-    comment:
-      "Fix tangents for non-uniform build scales, and add a flag to optionally match the previous (incorrect) tangents",
+    comment: "Fix tangents for non-uniform build scales, and add a flag to optionally match the previous (incorrect) tangents",
     value: 127,
     firstAppearance: "5.4.0",
   }),
   new VersionDetails({
     name: "AnimNodeRootDefaultGroupChange",
-    comment:
-      "AnimNode Layers will now start in a Shared Group, instead of being each one on a different group at runtime",
+    comment: "AnimNode Layers will now start in a Shared Group, instead of being each one on a different group at runtime",
     value: 128,
     firstAppearance: "5.4.0",
   }),
@@ -1259,8 +1243,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AnimationSequenceCompressedDataRemoveDebugData",
-    comment:
-      "Removed debug information containing compressed data author, time etc. from animation DDC data as it introduces indeterminism",
+    comment: "Removed debug information containing compressed data author, time etc. from animation DDC data as it introduces indeterminism",
     value: 130,
     firstAppearance: "5.4.0",
   }),
@@ -1356,8 +1339,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "LumenRayLightingModeOverrideEnum",
-    comment:
-      "Changed HitLighting to HitLightingForReflections, and HitLighting now means hit lighting for entire Lumen",
+    comment: "Changed HitLighting to HitLightingForReflections, and HitLighting now means hit lighting for entire Lumen",
     value: 146,
     firstAppearance: "5.5.0",
   }),
@@ -1369,8 +1351,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "LandscapeTargetLayersInLandscapeActor",
-    comment:
-      "Target layers are now defined in the Landscape actor and not continuously synced from the assigned material.",
+    comment: "Target layers are now defined in the Landscape actor and not continuously synced from the assigned material.",
     value: 148,
     firstAppearance: "5.5.0",
   }),
@@ -1424,8 +1405,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FixupLandscapeTargetLayersInLandscapeActor",
-    comment:
-      "Fixup for the data that has been damaged by LandscapeTargetLayersInLandscapeActor (loss of landscape layer info object assignments)",
+    comment: "Fixup for the data that has been damaged by LandscapeTargetLayersInLandscapeActor (loss of landscape layer info object assignments)",
     value: 157,
     firstAppearance: "5.5.0",
   }),
@@ -1443,8 +1423,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "LevelSequenceUpgradeDynamicBindings_NoOp",
-    comment:
-      "LevelSequenceUpgradeDynamicBindings was removed but was intended for this position. Putting this here to make sure versioning of subsequent assets remains the same",
+    comment: "LevelSequenceUpgradeDynamicBindings was removed but was intended for this position. Putting this here to make sure versioning of subsequent assets remains the same",
     value: 160,
     firstAppearance: "5.5.0",
   }),
@@ -1462,8 +1441,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ChaosStoreKinematicTargetRotationAsSinglePrecision",
-    comment:
-      "Changed the precision for the stored rotation on kinematic targets to match the precision used in particles",
+    comment: "Changed the precision for the stored rotation on kinematic targets to match the precision used in particles",
     value: 163,
     firstAppearance: "5.5.0",
   }),
@@ -1487,8 +1465,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "LandscapeBodyInstanceAsSharedProperty",
-    comment:
-      "Fixup and synchronize some landscape properties that have moved to the property sharing/overriding system :",
+    comment: "Fixup and synchronize some landscape properties that have moved to the property sharing/overriding system :",
     value: 167,
     firstAppearance: "5.5.0",
   }),
@@ -1518,8 +1495,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "FunctionalTestCanRunInEditorWorld",
-    comment:
-      "Updated editor only AFunctionalTest running logic to run tests editor world if the actors don't support PIE",
+    comment: "Updated editor only AFunctionalTest running logic to run tests editor world if the actors don't support PIE",
     value: 172,
     firstAppearance: "5.6.0",
   }),
@@ -1543,8 +1519,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "LandscapeTexturePatchUsesTextureAssetResolution",
-    comment:
-      "Landscape texture patches in Texture Asset source mode now use proper resolution when calculating transform",
+    comment: "Landscape texture patches in Texture Asset source mode now use proper resolution when calculating transform",
     value: 176,
     firstAppearance: "5.6.0",
   }),
@@ -1592,15 +1567,13 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ResetLevelInstanceHLODRelevancy",
-    comment:
-      "HLOD relevancy of Level Instances was previously ignored, now taken into account. Reset to the default behavior.",
+    comment: "HLOD relevancy of Level Instances was previously ignored, now taken into account. Reset to the default behavior.",
     value: 184,
     firstAppearance: "5.6.0",
   }),
   new VersionDetails({
     name: "SceneCaptureDefaultSettings",
-    comment:
-      "Updated default scene capture post-processing settings to reflect the underlying implementation overrides",
+    comment: "Updated default scene capture post-processing settings to reflect the underlying implementation overrides",
     value: 185,
     firstAppearance: "5.6.0",
   }),
@@ -1618,8 +1591,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AddMaterialSubstrateSubsurfaceType",
-    comment:
-      "Add MaterialSubstrateSubsurfaceType type to UMaterialExpressionSubstrateSlabBSDF for replacing bUseSSSDifffusion",
+    comment: "Add MaterialSubstrateSubsurfaceType type to UMaterialExpressionSubstrateSlabBSDF for replacing bUseSSSDifffusion",
     value: 188,
     firstAppearance: "5.6.0",
   }),
@@ -1637,7 +1609,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "PCGLandscapeCacheDefaultSerializationChanged",
-    comment: 'Changed PCG landscape cache default from "serialize at cook" to "never serialize"',
+    comment: "Changed PCG landscape cache default from \"serialize at cook\" to \"never serialize\"",
     value: 191,
     firstAppearance: "5.6.0",
   }),
@@ -1655,15 +1627,13 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "WaterBodyPhysicalMaterialPropertyRemoval",
-    comment:
-      "Water body components no longer need to maintain their own PhysicalMaterial property since they are primitive components. After this version, leverage that one instead.",
+    comment: "Water body components no longer need to maintain their own PhysicalMaterial property since they are primitive components. After this version, leverage that one instead.",
     value: 194,
     firstAppearance: "5.6.0",
   }),
   new VersionDetails({
     name: "PCGAttributeSetToPointAlwaysConverts",
-    comment:
-      "PCG fixed attribute set -> point conversion passing through empty point data as-is and violating output pin type.",
+    comment: "PCG fixed attribute set -> point conversion passing through empty point data as-is and violating output pin type.",
     value: 195,
     firstAppearance: "5.6.0",
   }),
@@ -1693,8 +1663,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AdditionalGameThreadDataSupportInChaosVisualDebugger",
-    comment:
-      "Added additional data required to record and represent particle data from the game thread (Kinematic targets, and SQ rejection reasons)",
+    comment: "Added additional data required to record and represent particle data from the game thread (Kinematic targets, and SQ rejection reasons)",
     value: 200,
     firstAppearance: "5.6.0",
   }),
@@ -1706,8 +1675,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "PCGSplineDirectionClockwiseFix",
-    comment:
-      "Changed clockwise detection algorithm for PCGSplineDirection node with the correct one, but add a version to not break previous nodes.",
+    comment: "Changed clockwise detection algorithm for PCGSplineDirection node with the correct one, but add a version to not break previous nodes.",
     value: 202,
     firstAppearance: "5.6.0",
   }),
@@ -1731,8 +1699,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "ThreadContextDataInChaosVisualDebuggerDebugDrawData",
-    comment:
-      "Added more context data to CVD's traced shapes so we can play it back at the solver stage level (not just game thread frames) ",
+    comment: "Added more context data to CVD's traced shapes so we can play it back at the solver stage level (not just game thread frames) ",
     value: 206,
     firstAppearance: "5.6.0",
   }),

@@ -36,8 +36,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ASSET_REGISTRY_TAGS",
-    comment:
-      "Added asset registry tags to the package summary so the editor can learn more about the assets in the package without loading it",
+    comment: "Added asset registry tags to the package summary so the editor can learn more about the assets in the package without loading it",
     value: 112,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -261,8 +260,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ADDED_EXTRA_MESH_OPTIMIZATION_SETTINGS",
-    comment:
-      "Add additional settings to static and skeletal mesh optimization struct (FStaticMeshOptimizationSettings and FSkeletalMeshOptimizationSettings)",
+    comment: "Add additional settings to static and skeletal mesh optimization struct (FStaticMeshOptimizationSettings and FSkeletalMeshOptimizationSettings)",
     value: 144,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -742,8 +740,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_DEFAULT_ROOT_COMP_TRANSACTIONAL",
-    comment:
-      "The SimpleConstructionScript now marks the default root component as transactional, and bCreatedByConstructionScript true",
+    comment: "The SimpleConstructionScript now marks the default root component as transactional, and bCreatedByConstructionScript true",
     value: 213,
     firstAppearance: "4.0.1",
     lastAppearance: "4.6.1",
@@ -853,8 +850,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_REFACTOR_MATERIAL_EXPRESSION_SCENECOLOR_AND_SCENEDEPTH_INPUTS",
-    comment:
-      "Refactored material expression inputs for UMaterialExpressionSceneColor and UMaterialExpressionSceneDepth",
+    comment: "Refactored material expression inputs for UMaterialExpressionSceneColor and UMaterialExpressionSceneDepth",
     value: 231,
     firstAppearance: "4.0.1",
   }),
@@ -1430,7 +1426,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_WORLD_NAMED_AFTER_PACKAGE",
-    comment: 'Worlds have been renamed from "TheWorld" to be named after the package containing them',
+    comment: "Worlds have been renamed from \"TheWorld\" to be named after the package containing them",
     value: 327,
     firstAppearance: "4.0.1",
   }),
@@ -1574,8 +1570,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_FOLIAGE_MOVABLE_MOBILITY",
-    comment:
-      "Fix up old foliage components to have movable mobility (superseded by VER_UE4_FOLIAGE_STATIC_LIGHTING_SUPPORT)",
+    comment: "Fix up old foliage components to have movable mobility (superseded by VER_UE4_FOLIAGE_STATIC_LIGHTING_SUPPORT)",
     value: 351,
     firstAppearance: "4.1.0",
   }),
@@ -1629,8 +1624,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_VEHICLES_UNIT_CHANGE2",
-    comment:
-      "Vehicles use Nm for Torque instead of cm and RPM instead of rad/s part two (missed conversion for some variables",
+    comment: "Vehicles use Nm for Torque instead of cm and RPM instead of rad/s part two (missed conversion for some variables",
     value: 360,
     firstAppearance: "4.2.0",
   }),
@@ -1672,8 +1666,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_MOVE_LANDSCAPE_MICS_AND_TEXTURES_WITHIN_LEVEL",
-    comment:
-      "Change the outer of ULandscapeMaterialInstanceConstants and Landscape-related textures to the level in which they reside",
+    comment: "Change the outer of ULandscapeMaterialInstanceConstants and Landscape-related textures to the level in which they reside",
     value: 367,
     firstAppearance: "4.3.0",
   }),
@@ -1691,8 +1684,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_STORE_BONE_EXPORT_NAMES",
-    comment:
-      "Bone names stored as FName means that we can't guarantee the correct case on export, now we store a separate string for export purposes only",
+    comment: "Bone names stored as FName means that we can't guarantee the correct case on export, now we store a separate string for export purposes only",
     value: 370,
     firstAppearance: "4.3.0",
   }),
@@ -1716,7 +1708,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_DEPRECATED_MOVEMENTCOMPONENT_MODIFIED_SPEEDS",
-    comment: 'deprecated MovementComponent functions including "ModifiedMaxSpeed" et al',
+    comment: "deprecated MovementComponent functions including \"ModifiedMaxSpeed\" et al",
     value: 374,
     firstAppearance: "4.3.0",
   }),
@@ -1728,15 +1720,13 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_GAMEPLAY_TAG_CONTAINER_TAG_TYPE_CHANGE",
-    comment:
-      "Change GameplayTagContainers to have FGameplayTags instead of FNames; Required to fix-up native serialization",
+    comment: "Change GameplayTagContainers to have FGameplayTags instead of FNames; Required to fix-up native serialization",
     value: 376,
     firstAppearance: "4.3.0",
   }),
   new VersionDetails({
     name: "VER_UE4_FOLIAGE_SETTINGS_TYPE",
-    comment:
-      "Change from UInstancedFoliageSettings to UFoliageType, and change the api from being keyed on UStaticMesh* to UFoliageType*",
+    comment: "Change from UInstancedFoliageSettings to UFoliageType, and change the api from being keyed on UStaticMesh* to UFoliageType*",
     value: 377,
     firstAppearance: "4.3.0",
   }),
@@ -1784,8 +1774,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_BLUEPRINT_USE_SCS_ROOTCOMPONENT_SCALE",
-    comment:
-      "Apply scale from SCS RootComponent details in the Blueprint Editor to new actor instances at construction time",
+    comment: "Apply scale from SCS RootComponent details in the Blueprint Editor to new actor instances at construction time",
     value: 385,
     firstAppearance: "4.4.0",
   }),
@@ -1869,8 +1858,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_RENAME_CAMERA_COMPONENT_VIEW_ROTATION",
-    comment:
-      "Rename UCameraComponent::bUseControllerViewRotation to bUsePawnViewRotation (and change the default value)",
+    comment: "Rename UCameraComponent::bUseControllerViewRotation to bUsePawnViewRotation (and change the default value)",
     value: 399,
     firstAppearance: "4.5.0",
   }),
@@ -1906,15 +1894,13 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_CHARACTER_MOVEMENT_UPPER_IMPACT_BEHAVIOR",
-    comment:
-      "CharacterMovementComponent refactor of AdjustUpperHemisphereImpact and deprecation of some associated vars.",
+    comment: "CharacterMovementComponent refactor of AdjustUpperHemisphereImpact and deprecation of some associated vars.",
     value: 405,
     firstAppearance: "4.6.0",
   }),
   new VersionDetails({
     name: "VER_UE4_BP_MATH_VECTOR_EQUALITY_USES_EPSILON",
-    comment:
-      'Changed Blueprint math equality functions for vectors and rotators to operate as a "nearly" equals rather than "exact"',
+    comment: "Changed Blueprint math equality functions for vectors and rotators to operate as a \"nearly\" equals rather than \"exact\"",
     value: 406,
     firstAppearance: "4.6.0",
   }),
@@ -2004,8 +1990,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_PAWN_AUTO_POSSESS_AI",
-    comment:
-      "Added finer control over when AI Pawns are automatically possessed. Also renamed Pawn.AutoPossess to Pawn.AutoPossessPlayer indicate this was a setting for players and not AI.",
+    comment: "Added finer control over when AI Pawns are automatically possessed. Also renamed Pawn.AutoPossess to Pawn.AutoPossessPlayer indicate this was a setting for players and not AI.",
     value: 421,
     firstAppearance: "4.7.0",
   }),
@@ -2065,15 +2050,13 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_MERGED_ADD_MODIFIERS_RUNTIME_GENERATION_TO_4_7_DEPRECATED",
-    comment:
-      "Original version of VER_UE4_MERGED_ADD_MODIFIERS_RUNTIME_GENERATION_TO_4_7; renumbered to prevent blocking promotion in main.",
+    comment: "Original version of VER_UE4_MERGED_ADD_MODIFIERS_RUNTIME_GENERATION_TO_4_7; renumbered to prevent blocking promotion in main.",
     value: 431,
     firstAppearance: "4.7.0",
   }),
   new VersionDetails({
     name: "VER_UE4_AFTER_MERGED_ADD_MODIFIERS_RUNTIME_GENERATION_TO_4_7_DEPRECATED",
-    comment:
-      "Original version of VER_UE4_AFTER_MERGED_ADD_MODIFIERS_RUNTIME_GENERATION_TO_4_7; renumbered to prevent blocking promotion in main.",
+    comment: "Original version of VER_UE4_AFTER_MERGED_ADD_MODIFIERS_RUNTIME_GENERATION_TO_4_7; renumbered to prevent blocking promotion in main.",
     value: 432,
     firstAppearance: "4.7.0",
   }),
@@ -2115,8 +2098,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ACTOR_COMPONENT_CREATION_METHOD",
-    comment:
-      "Split out creation method on ActorComponents to distinguish between native, instance, and simple or user construction script",
+    comment: "Split out creation method on ActorComponents to distinguish between native, instance, and simple or user construction script",
     value: 439,
     firstAppearance: "4.8.0",
   }),
@@ -2140,8 +2122,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_REBUILD_HIERARCHICAL_INSTANCE_TREES",
-    comment:
-      'This doesn\'t do anything except trigger a rebuild on HISMC cluster trees, in this case to get a good "occlusion query" level',
+    comment: "This doesn't do anything except trigger a rebuild on HISMC cluster trees, in this case to get a good \"occlusion query\" level",
     value: 443,
     firstAppearance: "4.8.0",
   }),
@@ -2159,8 +2140,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_LANDSCAPE_SPLINE_CROSS_LEVEL_MESHES",
-    comment:
-      "Allowed landscape spline meshes to be stored into landscape streaming levels rather than the spline's level",
+    comment: "Allowed landscape spline meshes to be stored into landscape streaming levels rather than the spline's level",
     value: 446,
     firstAppearance: "4.8.0",
   }),
@@ -2226,8 +2206,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_LIBRARY_CATEGORIES_AS_FTEXT",
-    comment:
-      "Change UMaterialFunction::LibraryCategories to LibraryCategoriesText (old assets were saved before auto-conversion of FArrayProperty was possible)",
+    comment: "Change UMaterialFunction::LibraryCategories to LibraryCategoriesText (old assets were saved before auto-conversion of FArrayProperty was possible)",
     value: 457,
     firstAppearance: "4.9.0",
   }),
@@ -2281,8 +2260,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ADDED_NATIVE_SERIALIZATION_FOR_IMMUTABLE_STRUCTURES",
-    comment:
-      "Added WithSerializer for basic native structures like FVector, FColor etc to improve serialization performance",
+    comment: "Added WithSerializer for basic native structures like FVector, FColor etc to improve serialization performance",
     value: 466,
     firstAppearance: "4.9.0",
   }),
@@ -2450,8 +2428,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_SCS_STORES_ALLNODES_ARRAY",
-    comment:
-      "The SCS keeps a list of all nodes in its hierarchy rather than recursively building it each time it is requested",
+    comment: "The SCS keeps a list of all nodes in its hierarchy rather than recursively building it each time it is requested",
     value: 494,
     firstAppearance: "4.11.0",
   }),
@@ -2529,15 +2506,13 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_PRELOAD_DEPENDENCIES_IN_COOKED_EXPORTS",
-    comment:
-      "Cooked files contain the dependency graph for the event driven loader (the serialization is largely independent of the use of the new loader)",
+    comment: "Cooked files contain the dependency graph for the event driven loader (the serialization is largely independent of the use of the new loader)",
     value: 507,
     firstAppearance: "4.14.0",
   }),
   new VersionDetails({
     name: "VER_UE4_TemplateIndex_IN_COOKED_EXPORTS",
-    comment:
-      "Cooked files contain the TemplateIndex used by the event driven loader (the serialization is largely independent of the use of the new loader, i.e. this will be null if cooking for the old loader)",
+    comment: "Cooked files contain the TemplateIndex used by the event driven loader (the serialization is largely independent of the use of the new loader, i.e. this will be null if cooking for the old loader)",
     value: 508,
     firstAppearance: "4.14.0",
   }),
@@ -2555,8 +2530,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_64BIT_EXPORTMAP_SERIALSIZES",
-    comment:
-      "Increased size of SerialSize and SerialOffset in export map entries to 64 bit, allow support for bigger files",
+    comment: "Increased size of SerialSize and SerialOffset in export map entries to 64 bit, allow support for bigger files",
     value: 511,
     firstAppearance: "4.16.0",
   }),
@@ -2574,8 +2548,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VER_UE4_ADDED_SOFT_OBJECT_PATH",
-    comment:
-      "StringAssetReference changed to SoftObjectPath and swapped to serialize as a name+string instead of a string",
+    comment: "StringAssetReference changed to SoftObjectPath and swapped to serialize as a name+string instead of a string",
     value: 514,
     firstAppearance: "4.18.0",
   }),
@@ -2629,8 +2602,7 @@ export const versionsDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "INITIAL_VERSION",
-    comment:
-      "The original UE5 version, at the time this was added the UE4 version was 522, so UE5 will start from 1000 to show a clear difference",
+    comment: "The original UE5 version, at the time this was added the UE4 version was 522, so UE5 will start from 1000 to show a clear difference",
     value: 1000,
     firstAppearance: "5.0.0",
   }),

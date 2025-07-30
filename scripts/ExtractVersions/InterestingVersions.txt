@@ -2,5 +2,9 @@
 #   * = Any sequence of characters (even none)
 #   ? = Any single character
 
+FUE5MainStreamObjectVersion
+FEditorObjectVersion
+FEnterpriseObjectVersion
+
 # Necessary for FSoftObjectPath serialization
 FFortniteMainBranchObjectVersion

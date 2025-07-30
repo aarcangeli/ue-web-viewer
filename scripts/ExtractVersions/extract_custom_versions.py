@@ -151,6 +151,9 @@ def extract_custom_versions(unreal_path: Path):
                 output_file, format_custom_version(custom_version, latest_version)
             )
 
+    # Sort custom_versions by enum_name
+    custom_versions.sort(key=lambda cv: cv.enum_name)
+
     write_file(
         output_dir / "ue-custom-versions.ts",
         format_custom_versions_index(custom_versions),

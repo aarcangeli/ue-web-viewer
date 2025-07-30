@@ -207,7 +207,7 @@ def format_versions(
     result += print_table("EUnrealEngineObjectUE4Version", ue4_versions)
     result += print_table("EUnrealEngineObjectUE5Version", ue5_versions)
 
-    return result
+    return result.strip() + "\n"
 
 
 def escape_string(s):
@@ -331,7 +331,7 @@ def extract_versions(unreal_path: Path):
     version_by_name_ue4: list[SerializationVersion] = []
     version_by_name_ue5: list[SerializationVersion] = []
 
-    tags = extract_tags(unreal_path)
+    tags = extract_tags(unreal_path) or error(f"Could not find tags in {unreal_path}")
     latest_version = tags[-1]
 
     for tag in tags:
