@@ -35,6 +35,9 @@ export function removeExtension(value: string) {
  * console.log(new TextDecoder().decode(buffer)); // Outputs: "Hello"
  */
 export function hexToArrayBuffer(hex: string): Uint8Array {
+  if (hex.length === 0) {
+    return new Uint8Array(0);
+  }
   if (hex.length % 2 !== 0) {
     throw new Error(`Hex string must have an even length, got ${hex.length}`);
   }
@@ -49,4 +52,8 @@ export function hexToArrayBuffer(hex: string): Uint8Array {
   }
 
   return array;
+}
+
+export function toHex(n: number) {
+  return "0x" + (n >>> 0).toString(16).padStart(8, "0").toUpperCase();
 }

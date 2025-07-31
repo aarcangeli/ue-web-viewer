@@ -2,6 +2,8 @@ import type { AssetReader } from "../AssetReader";
 import invariant from "tiny-invariant";
 import { FBlake3Hash } from "./hash/Blake3Hash";
 import { decompress } from "../../externals";
+import { computeCrc } from "./hash/crc32";
+import { toHex } from "../../utils/string-utils";
 
 const HeaderSize = 64;
 const MagicNumber = 0xb7756362;
@@ -42,10 +44,16 @@ export class FHeader {
 }
 
 export async function uncompressData(reader: AssetReader): Promise<Uint8Array> {
-  // TODO: add CRC verification
+  const originalReader = reader.clone();
 
   // Read the header using a sub-reader
   const header = FHeader.fromStream(reader);
+
+  // Verify the magic number
+  const crc = computeHeaderCrc(header, originalReader);
+  if (header.crc32 !== crc) {
+    throw new Error(`CRC32 mismatch: expected ${toHex(header.crc32)}, got ${toHex(crc)}`);
+  }
 
   // If the file is not compressed, read and return the raw bytes
   if (header.method === EMethod.None) {
@@ -99,6 +107,23 @@ export enum EMethod {
   Oodle = 3,
   /** Header is followed by an array of compressed block sizes then the compressed blocks. */
   LZ4 = 4,
+}
+
+/**
+ * Returns the CRC32 of the header data.
+ * @param header The compressed data header.
+ * @param reader The reader positioned at the start of the header.
+ */
+function computeHeaderCrc(header: FHeader, reader: AssetReader): number {
+  // skip magic and crc32
+  reader.skip(8);
+
+  // Read the header, without the magic and crc32
+  const headerSize = header.method === EMethod.None ? HeaderSize : HeaderSize + header.blockCount * 4;
+  const headerBytes = reader.readBytes(headerSize - 8);
+
+  // Compute the CRC32 of the header
+  return computeCrc(headerBytes);
 }
 
 /**
