@@ -2127,9 +2127,7 @@ FPackageFileSummary {
   "PreloadDependencyCount": -1,
   "PreloadDependencyOffset": 0,
   "SavedByEngineVersion": "4.0.2-2034640+++depot+UE4-Releases+4.0",
-  "SavedHash": FIoHash {
-    "hash": "930040e5692a0a4eac5bc49a90968cfe00000000",
-  },
+  "SavedHash": "930040e5692a0a4eac5bc49a90968cfe00000000",
   "SearchableNamesOffset": 0,
   "SoftObjectPathsCount": 0,
   "SoftObjectPathsOffset": 0,
@@ -3267,9 +3265,7 @@ FPackageFileSummary {
   "PreloadDependencyCount": -1,
   "PreloadDependencyOffset": 30024,
   "SavedByEngineVersion": "0.0.0-0",
-  "SavedHash": FIoHash {
-    "hash": "d38efd49649b2a45a690f378d5a649ab00000000",
-  },
+  "SavedHash": "d38efd49649b2a45a690f378d5a649ab00000000",
   "SearchableNamesOffset": 9455,
   "SoftObjectPathsCount": 4,
   "SoftObjectPathsOffset": 4446,

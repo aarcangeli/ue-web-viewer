@@ -141,7 +141,8 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "GatheredTextProcessVersionFlagging",
-    comment: "Localizable text gathered and stored in packages is now flagged with a localizable text gathering process version",
+    comment:
+      "Localizable text gathered and stored in packages is now flagged with a localizable text gathering process version",
     value: 1,
     firstAppearance: "4.12.0",
   }),
@@ -153,7 +154,7 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RootMetaDataSupport",
-    comment: "Added support for \"root\" meta-data (meta-data not associated with a particular object in a package)",
+    comment: 'Added support for "root" meta-data (meta-data not associated with a particular object in a package)',
     value: 3,
     firstAppearance: "4.13.0",
   }),
@@ -195,7 +196,8 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "UPropertryForMeshSection",
-    comment: "Add UPROPERTY for TMap of Mesh section, so the serialize will be done normally (and export to text will work correctly)",
+    comment:
+      "Add UPROPERTY for TMap of Mesh section, so the serialize will be done normally (and export to text will work correctly)",
     value: 10,
     firstAppearance: "4.15.0",
   }),
@@ -219,7 +221,7 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AddedInlineFontFaceAssets",
-    comment: "Added \"Inline\" option to UFontFace assets",
+    comment: 'Added "Inline" option to UFontFace assets',
     value: 14,
     firstAppearance: "4.15.0",
   }),
@@ -255,7 +257,8 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "GatheredTextEditorOnlyPackageLocId",
-    comment: "Text gathered from properties now adds two variants: a version without the package localization ID (for use at runtime), and a version with it (which is editor-only)",
+    comment:
+      "Text gathered from properties now adds two variants: a version without the package localization ID (for use at runtime), and a version with it (which is editor-only)",
     value: 20,
     firstAppearance: "4.17.0",
   }),
@@ -327,13 +330,15 @@ export const FEditorObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "CultureInvariantTextSerializationKeyStability",
-    comment: "Avoid keying culture invariant display strings during serialization to avoid non-deterministic cooking issues",
+    comment:
+      "Avoid keying culture invariant display strings during serialization to avoid non-deterministic cooking issues",
     value: 32,
     firstAppearance: "4.23.0",
   }),
   new VersionDetails({
     name: "ScrollBarThicknessChange",
-    comment: "Change to UScrollBar and UScrollBox thickness property (removed implicit padding of 2, so thickness value must be incremented by 4).",
+    comment:
+      "Change to UScrollBar and UScrollBox thickness property (removed implicit padding of 2, so thickness value must be incremented by 4).",
     value: 33,
     firstAppearance: "4.23.0",
   }),

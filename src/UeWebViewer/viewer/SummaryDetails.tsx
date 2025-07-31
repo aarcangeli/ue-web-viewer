@@ -5,9 +5,24 @@ import { allCustomVersions } from "../../unreal-engine/versioning/ue-custom-vers
 import type { FCustomVersion } from "../../unreal-engine/serialization/CustomVersion";
 import { MakeHelpTooltip } from "./AssetPreview";
 import { ListItem, UnorderedList } from "@chakra-ui/react";
+import type { CustomVersionGuid } from "../../unreal-engine/versioning/CustomVersionGuid";
+
+type ResolvedVersion = {
+  versionGuid: CustomVersionGuid | undefined;
+  name: string;
+  value: number;
+};
 
 export function SummaryDetails(props: { asset: Asset }) {
   const summary = props.asset.summary;
+
+  const customVersions = summary.CustomVersionContainer.Versions.map(findCustomVersion).toSorted((a, b) => {
+    if (Boolean(a.versionGuid) !== Boolean(b.versionGuid)) {
+      // Sort the one with versionGuid first
+      return a.versionGuid ? -1 : 1;
+    }
+    return a.name.localeCompare(b.name);
+  });
 
   return (
     <SimpleDetailsView>
@@ -21,10 +36,10 @@ export function SummaryDetails(props: { asset: Asset }) {
             label={
               <UnorderedList>
                 <ListItem>
-                  <b>-8</b>: First UE5 release
+                  <b>-8</b>: First UE5 release (UE5.0 - UE5.5)
                 </ListItem>
                 <ListItem>
-                  <b>-9</b>: Just a policy update, introduced in UE5.6
+                  <b>-9</b>: Just a policy update (UE5.6+)
                 </ListItem>
               </UnorderedList>
             }
@@ -36,9 +51,9 @@ export function SummaryDetails(props: { asset: Asset }) {
           name={`Custom Versions (${summary.CustomVersionContainer.Versions.length})`}
           initialExpanded={false}
         >
-          {summary.CustomVersionContainer.Versions.map((version, index) => (
+          {customVersions.map((version, index) => (
             <IndentedRow key={index}>
-              {version.Key.toString()} {"=>"} {version.Version} {getVersionName(version)}
+              {version.name} {"=>"} {version.value}
             </IndentedRow>
           ))}
         </CollapsableSection>
@@ -59,34 +74,11 @@ export function SummaryDetails(props: { asset: Asset }) {
   );
 }
 
-function getVersionName(version: FCustomVersion) {
-  const customVersion = allCustomVersions.find((v) => v.guid.equals(version.Key));
-  if (customVersion) {
-    const value = customVersion.details.find((v) => v.value === version.Version);
-    if (value) {
-      return (
-        <MakeHelpTooltip
-          label={
-            <UnorderedList p={1}>
-              <ListItem>
-                <b>Enum Name:</b> {customVersion.name.toString()}
-              </ListItem>
-              <ListItem>
-                <b>Value:</b> {value.value}
-              </ListItem>
-              <ListItem>
-                <b>Value Name:</b> <i>{value.name}</i>
-              </ListItem>
-              <ListItem>
-                <b>First Appearance:</b>
-                {value.firstAppearance}
-              </ListItem>
-            </UnorderedList>
-          }
-        ></MakeHelpTooltip>
-      );
-    }
-    return `(${customVersion.name})`;
-  }
-  return "";
+function findCustomVersion(version: FCustomVersion): ResolvedVersion {
+  const versionGuid = allCustomVersions.find((v) => v.guid.equals(version.Key));
+  return {
+    versionGuid: versionGuid,
+    name: versionGuid ? versionGuid.name.toString() : version.Key.toString(),
+    value: version.Version,
+  };
 }

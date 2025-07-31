@@ -7,7 +7,7 @@ import invariant from "tiny-invariant";
  * @param T The type of the custom version (used for type checking).
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export class CustomVersionGuid<E> {
+export class CustomVersionGuid<E = unknown> {
   readonly name: string;
   readonly guid: FGuid;
   readonly details: VersionDetails[];

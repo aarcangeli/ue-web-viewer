@@ -72,6 +72,10 @@ export class FIoHash {
   get isNone(): boolean {
     return this.hash.every((byte) => byte === 0);
   }
+
+  toJSON() {
+    return this.toString();
+  }
 }
 
 export const HashNone = new FIoHash();

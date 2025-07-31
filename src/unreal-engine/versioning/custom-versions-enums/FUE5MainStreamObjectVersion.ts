@@ -315,7 +315,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AnimationAddedBlendProfileModes",
-    comment: "Added a new configurable BlendProfileMode that the user can setup to control the behavior of blend profiles.",
+    comment:
+      "Added a new configurable BlendProfileMode that the user can setup to control the behavior of blend profiles.",
     value: 7,
     firstAppearance: "5.0.0",
   }),
@@ -357,7 +358,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "GeometryCollectionNaniteTransient",
-    comment: "Nanite data is now transient in Geometry Collection similar to how RenderData is transient in StaticMesh.",
+    comment:
+      "Nanite data is now transient in Geometry Collection similar to how RenderData is transient in StaticMesh.",
     value: 14,
     firstAppearance: "5.0.0",
   }),
@@ -555,7 +557,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "SkyAtmosphereAffectsHeightFogWithBetterDefault",
-    comment: "The SkyAtmosphere now light up the heightfog by default, and by default the height fog has a black color.",
+    comment:
+      "The SkyAtmosphere now light up the heightfog by default, and by default the height fog has a black color.",
     value: 47,
     firstAppearance: "5.0.0",
   }),
@@ -633,7 +636,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VolumetricCloudReflectionSampleCountDefaultUpdate",
-    comment: "Fixed default value of volumetric cloud to be exact match with main view, more expenssive but we let user choosing how to lower the quality.",
+    comment:
+      "Fixed default value of volumetric cloud to be exact match with main view, more expenssive but we let user choosing how to lower the quality.",
     value: 60,
     firstAppearance: "5.1.0",
   }),
@@ -657,13 +661,15 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "RichCurveKeyInvalidTangentMode",
-    comment: "Fix-up for FRichCurveKey::TangentWeightMode, which were found to contain invalid value w.r.t the enum-type",
+    comment:
+      "Fix-up for FRichCurveKey::TangentWeightMode, which were found to contain invalid value w.r.t the enum-type",
     value: 64,
     firstAppearance: "5.1.0",
   }),
   new VersionDetails({
     name: "ForceUpdateAnimationAssetCurveTangents",
-    comment: "Enforcing new automatic tangent behaviour, enforcing auto-tangents for Key0 and KeyN to be flat, for Animation Assets.",
+    comment:
+      "Enforcing new automatic tangent behaviour, enforcing auto-tangents for Key0 and KeyN to be flat, for Animation Assets.",
     value: 65,
     firstAppearance: "5.1.0",
   }),
@@ -975,7 +981,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "OpenColorIOAssetCacheSerialization",
-    comment: "OpenColorIO transforms now serialize their generated texture(s) and shader code normally into the uasset.",
+    comment:
+      "OpenColorIO transforms now serialize their generated texture(s) and shader code normally into the uasset.",
     value: 117,
     firstAppearance: "5.3.0",
   }),
@@ -987,7 +994,8 @@ export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "VisualLoggerAddedSeparateWorldTime",
-    comment: "Visual Logger format now includes a WorldTimeStamp in addition to TimeStamp for easier debugging between multiple instances.",
+    comment:
+      "Visual Logger format now includes a WorldTimeStamp in addition to TimeStamp for easier debugging between multiple instances.",
     value: 119,
     firstAppearance: "5.4.0",
   }),

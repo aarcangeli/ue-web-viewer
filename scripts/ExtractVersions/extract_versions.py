@@ -44,9 +44,9 @@ class SerializationVersion:
 
     def __post_init__(self):
         # Remove unwanted characters from the comment
-        self.comment = re.sub(r'[\u00A0\u2000-\u200B]+', ' ', self.comment).strip()
+        self.comment = re.sub(r"[\u00A0\u2000-\u200B]+", " ", self.comment).strip()
         # Replace double spaces with single space
-        self.comment = re.sub(r'\s+', ' ', self.comment)
+        self.comment = re.sub(r"\s+", " ", self.comment)
 
     def update_version(self, version):
         if compare_versions(version, self.first_appearance) < 0:
@@ -290,9 +290,7 @@ def aggregate_versions(
     for v in versions:
         # Find a constant with the same value but different name
         if any(it.value == v.value and it.name != v.name for it in result_list):
-            print(
-                f"Version {v.name} with value {v.value} already exists, skipping"
-            )
+            print(f"Version {v.name} with value {v.value} already exists, skipping")
             continue
 
         # Get the index of the version already stored in the list, if any

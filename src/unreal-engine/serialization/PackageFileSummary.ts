@@ -167,7 +167,7 @@ export class FPackageFileSummary {
           format = ECustomVersionSerializationFormat.Guids;
           break;
         default:
-          // less than -5 (future versions)
+          // result.LegacyFileVersion <= -6 (future versions)
           format = ECustomVersionSerializationFormat.Optimized;
           break;
       }

@@ -1,7 +1,7 @@
 import type { Asset } from "../../unreal-engine/serialization/Asset";
 import type { ReactNode } from "react";
 import React from "react";
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Tooltip } from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, IconButton, Tooltip } from "@chakra-ui/react";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import type { PropertyValue } from "../../unreal-engine/properties/TaggedProperty";
 import type { SerializationStatistics } from "../../unreal-engine/serialization/SerializationStatistics";
@@ -275,6 +275,20 @@ export function MakeHelpTooltip(props: { label: ReactNode }) {
         <Icon mx={1} as={IoMdHelpCircleOutline} verticalAlign="middle" boxSize={5} />
       </span>
     </Tooltip>
+  );
+}
+
+export function MakeHelpButtonTooltip(props: { label: string; onClick: () => void }) {
+  return (
+    <IconButton
+      aria-label={props.label}
+      onClick={props.onClick}
+      variant={"link"}
+      ml={1}
+      icon={<Icon as={IoMdHelpCircleOutline} boxSize={5} />}
+      minWidth={0}
+      verticalAlign="middle"
+    />
   );
 }
 

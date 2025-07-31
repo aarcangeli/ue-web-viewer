@@ -9,9 +9,9 @@ import { FFortniteMainBranchObjectVersionGuid } from "./custom-versions-enums/FF
 import { FUE5MainStreamObjectVersionGuid } from "./custom-versions-enums/FUE5MainStreamObjectVersion";
 import type { CustomVersionGuid } from "./CustomVersionGuid";
 
-export const allCustomVersions: ReadonlyArray<CustomVersionGuid<unknown>> = [
-    FEditorObjectVersionGuid,
-    FEnterpriseObjectVersionGuid,
-    FFortniteMainBranchObjectVersionGuid,
-    FUE5MainStreamObjectVersionGuid,
+export const allCustomVersions: ReadonlyArray<CustomVersionGuid> = [
+  FEditorObjectVersionGuid,
+  FEnterpriseObjectVersionGuid,
+  FFortniteMainBranchObjectVersionGuid,
+  FUE5MainStreamObjectVersionGuid,
 ];
