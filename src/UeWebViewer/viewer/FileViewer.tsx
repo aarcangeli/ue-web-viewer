@@ -7,7 +7,8 @@ import { Asset } from "../../unreal-engine/serialization/Asset";
 import { ImportDetails } from "./ImportDetails";
 import { ExportDetails } from "./ExportDetails";
 import { SummaryDetails } from "./SummaryDetails";
-import { AssetPreview } from "./AssetPreview";
+
+import { AssetPreview } from "./preview/AssetPreview";
 
 export interface Props {
   file: FileApi;
