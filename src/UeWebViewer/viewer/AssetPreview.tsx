@@ -49,12 +49,6 @@ function renderObjectName(object: UObject | null) {
   return object.fullName;
 }
 
-export function AssetPreview(props: { asset: Asset }) {
-  const exportedObjects = props.asset.mainObject;
-
-  return exportedObjects ? <ObjectPreview object={exportedObjects} /> : <Box>Asset not found</Box>;
-}
-
 function makeIndexLabel(index: number) {
   return `Index [ ${index} ]`;
 }
