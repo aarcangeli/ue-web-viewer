@@ -18,7 +18,7 @@
     "eslint": "eslint . --fix",
     "eslint:dump-config": "node eslint.config.js --dump",
     "eslint:inspector": "eslint-config-inspector",
-    "export-layout": "tsx scripts/ExportLayout/export-layout.cts",
+    "export-layout": "tsx scripts/ExportLayout/export-layout.ts",
     "pre-commit": "yarn typecheck && yarn eslint && yarn test && pre-commit run -a"
   },
   "dependencies": {

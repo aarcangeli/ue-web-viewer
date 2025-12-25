@@ -1,9 +1,10 @@
 import path from "path";
 
 import { getStructName } from "./property-handler";
+import { fileURLToPath } from "node:url";
 
-const dirname = __dirname;
-const repoRoot = path.resolve(__dirname, "..", "..");
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(dirname, "..", "..");
 const src_dir = path.resolve(repoRoot, "src");
 
 export const ExportLayoutOptions = {

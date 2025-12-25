@@ -3,7 +3,7 @@ import fs from "fs";
 import type { LayoutDump } from "./LayoutDumpSchema";
 import { PartialClassGenerator } from "./PartialClassGenerator";
 import { ExportLayoutOptions } from "./Options";
-import { generateIndex } from "./generate-index.cjs";
+import { generateIndex } from "./generate-index.js";
 
 function main() {
   console.log("Reading layout dump...");

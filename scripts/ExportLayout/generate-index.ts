@@ -4,6 +4,9 @@ import type { SourceFile } from "ts-morph";
 import { IndentationText, Project } from "ts-morph";
 import path from "path";
 import { createModuleImport } from "./ts-utils";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
 
 /**
  * Returns true if the source file contains a class with the `RegisterClass` decorator.
@@ -38,6 +41,6 @@ export function generateIndex() {
   file.saveSync();
 }
 
-if (require.main === module) {
+if (process.argv[1] === __filename) {
   generateIndex();
 }
