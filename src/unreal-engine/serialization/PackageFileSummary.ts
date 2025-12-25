@@ -6,6 +6,7 @@ import { FIoHash, HashNone } from "../types/hash/IoHash";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../versioning/ue-versions";
 
 import { ECustomVersionSerializationFormat, FCustomVersionContainer } from "./CustomVersion";
+import { allCustomVersions } from "../versioning/ue-custom-versions";
 
 /**
  * struct FGenerationInfo {
@@ -77,6 +78,9 @@ export class FPackageFileSummary {
   SearchableNamesOffset: number = 0;
 
   ThumbnailTableOffset: number = 0;
+
+  ImportTypeHierarchiesCount: number = 0;
+  ImportTypeHierarchiesOffset: number = 0;
 
   // part 4: more header fields and versioning
 
@@ -174,6 +178,8 @@ export class FPackageFileSummary {
       result.CustomVersionContainer = FCustomVersionContainer.fromStream(reader, format);
     }
 
+    this.checkFileVersion(result);
+
     // part 2: basic information
 
     if (result.FileVersionUE5 < EUnrealEngineObjectUE5Version.PACKAGE_SAVED_HASH) {
@@ -235,6 +241,11 @@ export class FPackageFileSummary {
     }
 
     result.ThumbnailTableOffset = reader.readInt32();
+
+    if (result.FileVersionUE5 >= EUnrealEngineObjectUE5Version.IMPORT_TYPE_HIERARCHIES) {
+      result.ImportTypeHierarchiesCount = reader.readInt32();
+      result.ImportTypeHierarchiesOffset = reader.readInt32();
+    }
 
     // part 4: more header fields and versioning
 
@@ -335,5 +346,35 @@ export class FPackageFileSummary {
     }
 
     return result;
+  }
+
+  private static checkFileVersion(result: FPackageFileSummary) {
+    const problems: string[] = [];
+    if (result.FileVersionUE4 > EUnrealEngineObjectUE4Version.LatestVersion) {
+      problems.push(`FileVersionUE4 ${result.FileVersionUE4} > ${EUnrealEngineObjectUE4Version.LatestVersion}`);
+    }
+    if (result.FileVersionUE5 > EUnrealEngineObjectUE5Version.LatestVersion) {
+      problems.push(`FileVersionUE5 ${result.FileVersionUE5} > ${EUnrealEngineObjectUE5Version.LatestVersion}`);
+    }
+    for (const version of result.CustomVersionContainer.Versions) {
+      const knownVersion = allCustomVersions.find((v) => v.guid.equals(version.Key));
+      if (!knownVersion) {
+        // This might be an issue, but since there are many untracked custom versions, we don't warn about it for now.
+        // problems.push(`Unknown custom version GUID ${version.Key.toString()}`);
+      } else {
+        if (version.Version > knownVersion.latestVersion) {
+          problems.push(`Custom version ${knownVersion.name} ${version.Version} > ${knownVersion.latestVersion}`);
+        }
+      }
+    }
+    if (problems.length) {
+      const prefix = "The Unreal version used to save this asset is too new and may not be fully supported";
+      if (problems.length === 1) {
+        console.warn(`${prefix} (${problems[0]})`);
+      } else {
+        const merged = problems.map((a) => ` - ${a}`).join("\n");
+        console.warn(`${prefix}.\nList of problems:\n${merged}`);
+      }
+    }
   }
 }

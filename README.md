@@ -30,3 +30,22 @@ UE_IMPLEMENT_STRUCT("/Script/CoreUObject", Vector4);
 UClass::SerializeDefaultObject serializes the default object of a class
 UStruct::SerializeVersionedTaggedProperties serializes tagged properties
 ```
+
+### What to do when the engine is updated:
+
+1. Clone unreal engine in a local repository
+2. Run `python scripts/ExtractVersions/main.py <ue_path>` (More details on his [README.md](scripts/ExtractVersions/README.md))
+3. Run `pre-commit run -a`
+4. Inspect the diff, and verify if added versions need to be updated in local directory.
+
+   - Check new versions in `EUnrealEngineObjectUE4Version` and `EUnrealEngineObjectUE5Version`
+   - Check new custom versions as well.
+   - If a new code is added involving version checks, port the code to TypeScript.
+
+   ```c++
+     if (Sum.FileVersionUE >= EUnrealEngineObjectUE5Version::Never)
+     {
+         // This is probably a code you need to port to Typescript
+         Ar << NewProperty;
+     }
+   ```

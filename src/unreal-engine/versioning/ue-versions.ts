@@ -896,6 +896,9 @@ export enum EUnrealEngineObjectUE4Version {
   /// Fixed corrupt licensee flag in 4.26 assets
   VER_UE4_CORRECT_LICENSEE_FLAG = 522,
   // endregion
+
+  /// Always the latest known version
+  LatestVersion = VER_UE4_CORRECT_LICENSEE_FLAG,
 }
 
 export enum EUnrealEngineObjectUE5Version {
@@ -952,4 +955,12 @@ export enum EUnrealEngineObjectUE5Version {
   /// OS shadow serialization of subobjects
   OS_SUB_OBJECT_SHADOW_SERIALIZATION = 1017,
   // endregion
+
+  // region Introduced with UE 5.7.0
+  /// Adds a table of hierarchical type information for imports in a package
+  IMPORT_TYPE_HIERARCHIES = 1018,
+  // endregion
+
+  /// Always the latest known version
+  LatestVersion = IMPORT_TYPE_HIERARCHIES,
 }

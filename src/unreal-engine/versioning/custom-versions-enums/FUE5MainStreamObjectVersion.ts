@@ -268,6 +268,9 @@ export enum FUE5MainStreamObjectVersion {
   /// Added new material compilation validation for runtime virtual textures
   RuntimeVirtualTextureMaterialValidation = 121,
   // endregion
+
+  /// Always the latest known version
+  LatestVersion = RuntimeVirtualTextureMaterialValidation,
 }
 
 export const FUE5MainStreamObjectVersionDetails: VersionDetails[] = [

@@ -2736,4 +2736,10 @@ export const versionsDetails: VersionDetails[] = [
     value: 1017,
     firstAppearance: "5.6.0",
   }),
+  new VersionDetails({
+    name: "IMPORT_TYPE_HIERARCHIES",
+    comment: "Adds a table of hierarchical type information for imports in a package",
+    value: 1018,
+    firstAppearance: "5.7.0",
+  }),
 ];

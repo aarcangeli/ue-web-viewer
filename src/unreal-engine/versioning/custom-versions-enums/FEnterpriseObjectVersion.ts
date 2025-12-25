@@ -51,6 +51,9 @@ export enum FEnterpriseObjectVersion {
   /// Replacement of UDatasmithParametricSurfaceData by UParametricSurfaceData
   AddedParametricSurfaceData = 11,
   // endregion
+
+  /// Always the latest known version
+  LatestVersion = AddedParametricSurfaceData,
 }
 
 export const FEnterpriseObjectVersionDetails: VersionDetails[] = [

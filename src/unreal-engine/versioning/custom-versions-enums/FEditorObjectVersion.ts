@@ -130,6 +130,9 @@ export enum FEditorObjectVersion {
   /// Make sure we can have more then 255 material in the skeletal mesh source data
   SkeletalMeshSourceDataSupport16bitOfMaterialNumber = 40,
   // endregion
+
+  /// Always the latest known version
+  LatestVersion = SkeletalMeshSourceDataSupport16bitOfMaterialNumber,
 }
 
 export const FEditorObjectVersionDetails: VersionDetails[] = [

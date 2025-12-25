@@ -315,7 +315,7 @@ export enum FFortniteMainBranchObjectVersion {
   AnimNextCombineGraphContexts = 135,
   /// Combine parameter blocks and graphs
   AnimNextCombineParameterBlocksAndGraphs = 136,
-  /// Move workspaces to a seperate plugin
+  /// Move workspaces to a separate plugin
   AnimNextMoveWorkspaces = 137,
   /// Level Instance Property overrides
   LevelInstancePropertyOverrides = 138,
@@ -461,6 +461,48 @@ export enum FFortniteMainBranchObjectVersion {
   /// Changed default grid mode in surface sampler to a version that's more intuitive and less error-prone
   PCGChangedSurfaceSamplerDefaultGridCreationMode = 207,
   // endregion
+
+  // region Introduced with UE 5.7.0
+  /// Media plate overlay composite technique replacement with holdout composite
+  MediaPlateOverlayTechniqueRemoval = 208,
+  /// Added particle flag to allow/disallow partial island sleeping in the island the particle is in
+  PerParticleFlagToAllowPartialIslandSleepInConnectedIsland = 209,
+  /// Material Function Blend Deserialize Top/Bottom input nodes with clearer enum marker.
+  MaterialFunctionBlendTopBottomInputEnum = 210,
+  /// Cooked CPU-side morph target points are now stored internally in the same compressed format as the GPU morph data.
+  MorphTargetCookedCPUDataCompressed = 211,
+  /// AnimNext variables converted to references
+  AnimNextVariableReferences = 212,
+  /// The default distortion rendering mode used by the Lens Component is now the Lens Distortion Scene View Extension
+  LensComponentDefaultToDistortionSVE = 213,
+  /// Animation default blend option changed from Linear to HermiteCubic (aka SmoothStep, ease in / ease out)
+  ChangeDefaultAlphaBlendType = 214,
+  /// Moved Position/Velocity/Projection Iteration Counts from FChaosVDFRigidParticleControlFlags to FChaosVDParticleDynamicMisc
+  PerParticleIterationCountMovedToDynamicMisc = 215,
+  /// Added missing custom serialization for some properties in the ParticleDynamicMisc structure used by the Chaos Visual Debugger
+  AddedMissingSerializationForPropertiesInDynamicMisc = 216,
+  /// Change default value for deprecated bEnableWorldPartitionGenerationSources
+  PCGDeprecateWorldPartitionGenerationSources = 217,
+  /// Refactored the composite (plugin) actor scene capture management.
+  CompositeActorSceneCaptureRefactor = 218,
+  /// Moved HLOD Layer properties to an editor only optional object
+  HLODLayerEditorOnlyObject = 219,
+  /// Deduplicated particle debug names serialization in the Chaos Visual Debugger
+  DeduplicatedDebugNameSerializationInCVD = 220,
+  /// Add BloomGaussianIntensity and BloomConvolutionIntensity
+  SpecializeBloomIntensity = 221,
+  /// Add support for world partition actor component descriptors
+  WorldPartitionActorComponentDesc = 222,
+  /// Migrate Non-Edit layer landscapes to use the edit layer (ULandscapeEditLayer) system
+  MigrateLandscapeNonEditLayerToEditLayer = 223,
+  /// FDynamicMeshAttributeSet has Morph Targets.
+  DynamicMeshAttributesMorphTargets = 224,
+  /// Introduce landscape advanced weight blending
+  LandscapeAdvancedWeightBlending = 225,
+  // endregion
+
+  /// Always the latest known version
+  LatestVersion = LandscapeAdvancedWeightBlending,
 }
 
 export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
@@ -1302,7 +1344,7 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
   }),
   new VersionDetails({
     name: "AnimNextMoveWorkspaces",
-    comment: "Move workspaces to a seperate plugin",
+    comment: "Move workspaces to a separate plugin",
     value: 137,
     firstAppearance: "5.5.0",
   }),
@@ -1741,6 +1783,118 @@ export const FFortniteMainBranchObjectVersionDetails: VersionDetails[] = [
     comment: "Changed default grid mode in surface sampler to a version that's more intuitive and less error-prone",
     value: 207,
     firstAppearance: "5.6.0",
+  }),
+  new VersionDetails({
+    name: "MediaPlateOverlayTechniqueRemoval",
+    comment: "Media plate overlay composite technique replacement with holdout composite",
+    value: 208,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "PerParticleFlagToAllowPartialIslandSleepInConnectedIsland",
+    comment: "Added particle flag to allow/disallow partial island sleeping in the island the particle is in",
+    value: 209,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "MaterialFunctionBlendTopBottomInputEnum",
+    comment: "Material Function Blend Deserialize Top/Bottom input nodes with clearer enum marker.",
+    value: 210,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "MorphTargetCookedCPUDataCompressed",
+    comment:
+      "Cooked CPU-side morph target points are now stored internally in the same compressed format as the GPU morph data.",
+    value: 211,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "AnimNextVariableReferences",
+    comment: "AnimNext variables converted to references",
+    value: 212,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "LensComponentDefaultToDistortionSVE",
+    comment:
+      "The default distortion rendering mode used by the Lens Component is now the Lens Distortion Scene View Extension",
+    value: 213,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "ChangeDefaultAlphaBlendType",
+    comment: "Animation default blend option changed from Linear to HermiteCubic (aka SmoothStep, ease in / ease out)",
+    value: 214,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "PerParticleIterationCountMovedToDynamicMisc",
+    comment:
+      "Moved Position/Velocity/Projection Iteration Counts from FChaosVDFRigidParticleControlFlags to FChaosVDParticleDynamicMisc",
+    value: 215,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "AddedMissingSerializationForPropertiesInDynamicMisc",
+    comment:
+      "Added missing custom serialization for some properties in the ParticleDynamicMisc structure used by the Chaos Visual Debugger",
+    value: 216,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "PCGDeprecateWorldPartitionGenerationSources",
+    comment: "Change default value for deprecated bEnableWorldPartitionGenerationSources",
+    value: 217,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "CompositeActorSceneCaptureRefactor",
+    comment: "Refactored the composite (plugin) actor scene capture management.",
+    value: 218,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "HLODLayerEditorOnlyObject",
+    comment: "Moved HLOD Layer properties to an editor only optional object",
+    value: 219,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "DeduplicatedDebugNameSerializationInCVD",
+    comment: "Deduplicated particle debug names serialization in the Chaos Visual Debugger",
+    value: 220,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "SpecializeBloomIntensity",
+    comment: "Add BloomGaussianIntensity and BloomConvolutionIntensity",
+    value: 221,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "WorldPartitionActorComponentDesc",
+    comment: "Add support for world partition actor component descriptors",
+    value: 222,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "MigrateLandscapeNonEditLayerToEditLayer",
+    comment: "Migrate Non-Edit layer landscapes to use the edit layer (ULandscapeEditLayer) system",
+    value: 223,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "DynamicMeshAttributesMorphTargets",
+    comment: "FDynamicMeshAttributeSet has Morph Targets.",
+    value: 224,
+    firstAppearance: "5.7.0",
+  }),
+  new VersionDetails({
+    name: "LandscapeAdvancedWeightBlending",
+    comment: "Introduce landscape advanced weight blending",
+    value: 225,
+    firstAppearance: "5.7.0",
   }),
 ];
 

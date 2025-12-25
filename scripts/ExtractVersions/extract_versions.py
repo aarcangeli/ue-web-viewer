@@ -270,6 +270,9 @@ def print_table(name, versions: list[SerializationVersion]):
         result += f"  {version.name} = {version.value},\n"
     if last_ue_version:
         result += "  // endregion\n"
+    result += "\n"
+    result += "  /// Always the latest known version\n"
+    result += f"  LatestVersion = {versions[-1].name},\n"
     result += "}\n\n"
 
     return result

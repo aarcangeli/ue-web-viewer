@@ -486,7 +486,7 @@ def format_custom_versions_index(custom_versions: list[CustomVersion]) -> str:
     result += 'import type { CustomVersionGuid } from "./CustomVersionGuid";\n'
     result += "\n"
 
-    result += "export const allCustomVersions: ReadonlyArray<CustomVersionGuid<unknown>> = [\n"
+    result += "export const allCustomVersions: ReadonlyArray<CustomVersionGuid> = [\n"
     for version in custom_versions:
         result += f"    {version.enum_name}Guid,\n"
     result += "];\n"
