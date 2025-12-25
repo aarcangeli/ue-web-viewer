@@ -11,7 +11,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test": "vitest",
+    "test": "vitest run",
     "test:coverage": "vitest run --coverage --reporter=junit --outputFile=junit.xml",
     "test:update-snapshots": "vitest run -u",
     "typecheck": "tsc --noEmit",
@@ -19,7 +19,7 @@
     "eslint:dump-config": "node eslint.config.js --dump",
     "eslint:inspector": "eslint-config-inspector",
     "export-layout": "tsx scripts/ExportLayout/export-layout.ts",
-    "pre-commit": "yarn typecheck && yarn eslint && yarn test && pre-commit run -a"
+    "pre-commit": "yarn typecheck && yarn eslint && vitest run && pre-commit run -a"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
