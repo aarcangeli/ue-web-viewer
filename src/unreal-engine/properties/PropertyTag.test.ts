@@ -2,6 +2,7 @@ import { FPropertyTypeName } from "./PropertyTag";
 import { FGuid } from "../modules/CoreUObject/structs/Guid";
 import { FName } from "../types/Name";
 import { EPropertyType } from "./enums";
+import { describe, expect, it } from "vitest";
 
 describe("FPropertyTypeName", () => {
   it("Sample", () => {

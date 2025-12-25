@@ -1,5 +1,6 @@
 // Test for Name
 import { FName, FNameMap } from "./Name";
+import { describe, expect, it } from "vitest";
 
 describe("Name", () => {
   it("should parse a name #1", () => {

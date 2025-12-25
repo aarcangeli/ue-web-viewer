@@ -1,5 +1,6 @@
 import { computeCrc } from "./crc32";
 import { hexToArrayBuffer, toHex } from "../../../utils/string-utils";
+import { describe, expect, test } from "vitest";
 
 const tests: Array<[string, number]> = [
   /* 00 */ ["", 0x00000000],

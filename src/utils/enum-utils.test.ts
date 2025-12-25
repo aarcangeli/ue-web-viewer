@@ -1,4 +1,5 @@
 import { enumToFlags } from "./enum-utils";
+import { describe, expect, it } from "vitest";
 
 describe("enumToFlags", () => {
   it("should be able to combine multiple flag into one string", () => {

@@ -1,6 +1,6 @@
 import { FName } from "../types/Name";
 import { MakeObjectContext } from "../types/object-context";
-
+import { describe, expect, test } from "vitest";
 import { UClass } from "./CoreUObject/objects/Class";
 import { UObject } from "./CoreUObject/objects/Object";
 import { UPackage } from "./CoreUObject/objects/Package";
