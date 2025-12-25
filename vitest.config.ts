@@ -5,8 +5,8 @@ export default defineConfig({
   ...viteConfig,
   test: {
     coverage: {
-      include: ["src/**/*.ts", "src/**/*.tsx"],
-      exclude: ["node_modules", "tests"],
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["node_modules", "__tests__"],
     },
   },
 });
