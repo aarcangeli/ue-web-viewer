@@ -1,4 +1,5 @@
 import { FGuid } from "./Guid";
+import { expect, test } from "vitest";
 
 test("renders learn react link", () => {
   const guid = FGuid.fromString("{11223344-5566-7788-99AA-BBCCDDEEFF00}");

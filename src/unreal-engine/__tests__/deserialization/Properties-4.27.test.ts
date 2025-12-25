@@ -1,6 +1,6 @@
 import { readAsset } from "../test-utils";
-
 import { extendJest, matchSnapshots } from "./property-tests-utils";
+import { describe, test } from "vitest";
 
 extendJest();
 

@@ -2,7 +2,7 @@ import { UClass } from "../modules/CoreUObject/objects/Class";
 import { UPackage } from "../modules/CoreUObject/objects/Package";
 import { UStaticMesh } from "../modules/Engine/objects/StaticMesh";
 import { NAME_Class, NAME_CoreUObject, NAME_Object, NAME_Package } from "../modules/names";
-
+import { describe, expect, test } from "vitest";
 import { FName } from "./Name";
 import type { IObjectContext } from "./object-context";
 import { MakeObjectContext } from "./object-context";

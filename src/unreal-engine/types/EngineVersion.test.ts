@@ -1,4 +1,5 @@
 import { FEngineVersion } from "./EngineVersion";
+import { describe, expect, test } from "vitest";
 
 describe("FEngineVersion", () => {
   test("fromComponents", () => {

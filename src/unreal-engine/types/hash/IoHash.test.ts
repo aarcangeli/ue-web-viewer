@@ -1,7 +1,7 @@
 import { hexToArrayBuffer } from "../../../utils/string-utils";
 import { AssetReader } from "../../AssetReader";
 import { FGuid } from "../../modules/CoreUObject/structs/Guid";
-
+import { describe, expect, it, test } from "vitest";
 import { FIoHash, HashNone } from "./IoHash";
 
 describe("FIoHash", () => {

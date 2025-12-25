@@ -1,4 +1,5 @@
 import { PatternQuery } from "./PatternQuery";
+import { expect, test } from "vitest";
 
 test("basic query", () => {
   const query = new PatternQuery("test");

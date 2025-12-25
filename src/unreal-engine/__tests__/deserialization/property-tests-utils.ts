@@ -1,5 +1,6 @@
 import type { TaggedProperty } from "../../properties/TaggedProperty";
 import { UObject } from "../../modules/CoreUObject/objects/Object";
+import { expect } from "vitest";
 
 /**
  * Add matchers and serializer for properties testing
@@ -59,5 +60,11 @@ function shouldNotContainErrorProperties(property: TaggedProperty) {
     for (const field of property.value.value) {
       shouldNotContainErrorProperties(field);
     }
+  }
+}
+
+declare module "vitest" {
+  interface Assertion {
+    toBeValidProperty(): void;
   }
 }

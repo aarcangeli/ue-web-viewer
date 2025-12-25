@@ -1,4 +1,5 @@
 import { tryParseExportTextPath } from "./path-utils";
+import { describe, it, expect } from "vitest";
 
 describe("tryParseExportTextPath", () => {
   it("should Parse an export text", () => {

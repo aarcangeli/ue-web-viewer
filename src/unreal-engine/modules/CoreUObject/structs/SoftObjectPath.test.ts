@@ -1,4 +1,5 @@
 import { FSoftObjectPath } from "./SoftObjectPath";
+import { describe, expect, it } from "vitest";
 
 function exceptEmpty(softObjectPath: FSoftObjectPath) {
   expect(softObjectPath.packageName.text).toBe("None");
