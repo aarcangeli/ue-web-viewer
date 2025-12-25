@@ -32,15 +32,17 @@ jobs:
         run: yarn eslint:dump-config
 
       - name: Type check 🔍
+        id: typecheck
         run: yarn typecheck
 
       - name: ESLint 🧹
         id: eslint
+        if: ${{ success() || steps.typecheck.outcome == 'failure' }}
         run: yarn eslint
 
       - name: Run the tests and generate coverage report 🧪
         # Run the tests even if eslint fails
-        if: ${{ success() || steps.eslint.outcome == 'failure' }}
+        if: ${{ success() || steps.typecheck.outcome == 'failure' || steps.eslint.outcome == 'failure' }}
         run: yarn test:coverage
 
       - name: Build 🏗️
@@ -69,6 +71,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          report_type:
 
       # If the test fails, we still want to upload the test results
       - name: Upload test results to Codecov 🛡️
