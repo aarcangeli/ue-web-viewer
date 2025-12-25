@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TestActorUE4-0-2 Read MyBasicActor: exports 1`] = `
+exports[`TestActorUE4-0-2 > Read MyBasicActor > exports 1`] = `
 [
   FObjectExport {
     "ClassIndex": -7,
@@ -1780,7 +1780,7 @@ exports[`TestActorUE4-0-2 Read MyBasicActor: exports 1`] = `
 ]
 `;
 
-exports[`TestActorUE4-0-2 Read MyBasicActor: imports 1`] = `
+exports[`TestActorUE4-0-2 > Read MyBasicActor > imports 1`] = `
 [
   FObjectImport {
     "ClassName": "Actor",
@@ -2089,7 +2089,7 @@ exports[`TestActorUE4-0-2 Read MyBasicActor: imports 1`] = `
 ]
 `;
 
-exports[`TestActorUE4-0-2 Read MyBasicActor: summary 1`] = `
+exports[`TestActorUE4-0-2 > Read MyBasicActor > summary 1`] = `
 FPackageFileSummary {
   "AssetRegistryDataOffset": 76587,
   "BulkDataStartOffset": 91817,
@@ -2115,6 +2115,8 @@ FPackageFileSummary {
   ],
   "ImportCount": 38,
   "ImportOffset": 3694,
+  "ImportTypeHierarchiesCount": 0,
+  "ImportTypeHierarchiesOffset": 0,
   "LegacyFileVersion": -3,
   "LittleEndian": true,
   "LocalizationId": "",
@@ -2145,7 +2147,7 @@ FPackageFileSummary {
 }
 `;
 
-exports[`TestActorUE5-4-4 Read MyBasicActor: exports 1`] = `
+exports[`TestActorUE5-4-4 > Read MyBasicActor > exports 1`] = `
 [
   FObjectExport {
     "ClassIndex": -10,
@@ -2900,7 +2902,7 @@ exports[`TestActorUE5-4-4 Read MyBasicActor: exports 1`] = `
 ]
 `;
 
-exports[`TestActorUE5-4-4 Read MyBasicActor: imports 1`] = `
+exports[`TestActorUE5-4-4 > Read MyBasicActor > imports 1`] = `
 [
   FObjectImport {
     "ClassName": "Actor",
@@ -3161,7 +3163,7 @@ exports[`TestActorUE5-4-4 Read MyBasicActor: imports 1`] = `
 ]
 `;
 
-exports[`TestActorUE5-4-4 Read MyBasicActor: summary 1`] = `
+exports[`TestActorUE5-4-4 > Read MyBasicActor > summary 1`] = `
 FPackageFileSummary {
   "AssetRegistryDataOffset": 13480,
   "BulkDataStartOffset": 47621,
@@ -3253,6 +3255,8 @@ FPackageFileSummary {
   ],
   "ImportCount": 32,
   "ImportOffset": 4587,
+  "ImportTypeHierarchiesCount": 0,
+  "ImportTypeHierarchiesOffset": 0,
   "LegacyFileVersion": -8,
   "LittleEndian": true,
   "LocalizationId": "B6E7139CD376FFC1BE85243DBBE1F3E3",

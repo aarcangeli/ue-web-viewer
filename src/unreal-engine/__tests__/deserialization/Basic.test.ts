@@ -1,5 +1,6 @@
 import type { Asset } from "../../serialization/Asset";
 import { readAsset } from "../test-utils";
+import { describe, test, beforeAll, expect } from "vitest";
 
 // Try to load an asset saved with UE4.0.2
 describe("TestActorUE4-0-2", () => {
