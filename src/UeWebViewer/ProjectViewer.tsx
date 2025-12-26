@@ -8,6 +8,7 @@ import { FileViewer } from "./viewer/FileViewer";
 import { BiFileBlank, BiFolder } from "react-icons/bi";
 import { navigate, useHistoryState } from "../utils/useHistoryState";
 import { ProjectApi, ProjectApiProvider } from "./ProjectApi";
+import { ConfigIcon } from "./icons.gen";
 
 export interface Props {
   project: FileApi;
@@ -26,7 +27,7 @@ function makeNode(node: FileApi): FileNode {
     name: node.name,
     isLeaf: node.kind === "file",
     isEmpty: node.kind === "directory" && node.isEmptyDirectory(),
-    icon: node.kind === "directory" ? <BiFolder /> : <BiFileBlank />,
+    icon: node.name == "Config" ? <ConfigIcon /> : node.kind === "directory" ? <BiFolder /> : <BiFileBlank />,
   };
 }
 

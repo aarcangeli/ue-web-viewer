@@ -14,6 +14,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage --reporter=junit --outputFile=junit.xml",
     "test:update-snapshots": "vitest run -u",
+    "generate:icons": "ts-node scripts/generate-icons.ts ./src/UeWebViewer/icons ./src/UeWebViewer/icons.gen.ts",
     "typecheck": "tsc --noEmit",
     "eslint": "eslint . --fix",
     "eslint:dump-config": "node eslint.config.js --dump",
@@ -57,7 +58,7 @@
     "use-resize-observer": "^9.1.0",
     "vite": "^7.3.0",
     "vite-plugin-json5": "^1.1.2",
-    "vite-plugin-svgr": "^4.2.0",
+    "vite-plugin-svgr": "^4.5.0",
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^4.0.16",
     "web-vitals": "^2.1.0"
