@@ -128,8 +128,9 @@ function OpenObjectPreviewButton(props: { asset: AssetApi; index: number }) {
 }
 
 function ObjectPreviewContent(props: { asset: AssetApi; index: number }) {
-  const [asset, setAsset] = React.useState(props.asset);
+  const [asset] = React.useState(props.asset);
   const [object, setObject] = React.useState(() => props.asset.getObjectByIndex(props.index));
+  const [, setVersion] = React.useState(0);
 
   return (
     <>
@@ -143,10 +144,9 @@ function ObjectPreviewContent(props: { asset: AssetApi; index: number }) {
             variant={"ghost"}
             icon={<IoReload />}
             onClick={() => {
-              asset.reloadAsset().then((asset) => {
-                console.log("Reloaded asset", asset);
-                setAsset(asset);
-                setObject(asset.getByFullName(object.fullName));
+              asset.reloadAsset().then(() => {
+                setObject(object.freshObject);
+                setVersion((v) => v + 1);
               });
             }}
           />

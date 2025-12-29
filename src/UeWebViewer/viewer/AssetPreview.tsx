@@ -22,6 +22,19 @@ import { FTransform } from "../../unreal-engine/modules/CoreUObject/structs/Tran
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
 
+  // Reject mock objects
+  if (exportedObjects.isMockObject) {
+    return (
+      <Box p={2}>
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>{isMissingImportedObject(exportedObjects) ? "Missing object" : "Invalid object"}</AlertTitle>
+          <AlertDescription>{exportedObjects.fullName}</AlertDescription>
+        </Alert>
+      </Box>
+    );
+  }
+
   const statistics = exportedObjects.objectSource?.serializationStatistics;
 
   return (

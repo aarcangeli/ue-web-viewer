@@ -33,7 +33,7 @@ export interface AssetApi {
   getObjectName(index: number): FName;
   getObjectByIndex(index: number, full?: boolean): UObject;
   getByFullName(fullName: string): UObject;
-  reloadAsset(): Promise<AssetApi>;
+  reloadAsset(): Promise<void>;
 }
 
 /**
@@ -201,7 +201,7 @@ class Asset implements AssetApi {
     }
   }
 
-  async reloadAsset(): Promise<AssetApi> {
+  async reloadAsset(): Promise<void> {
     // if (!this._reload) {
     //   throw new Error("Reloading is not supported");
     // }
