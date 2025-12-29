@@ -9,7 +9,9 @@ import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "..
 import type { UObject } from "../objects/Object";
 
 /**
- * Represents a soft object path.
+ * Represents the full path to an object, so that it can be loaded on demand.
+ * This class is usually serialized with virtual operator<< from FArchive.
+ * The specific implementation of FArchive is responsible for reading/writing the data.
  * LayoutGenerator: ignore
  */
 export class FSoftObjectPath {
