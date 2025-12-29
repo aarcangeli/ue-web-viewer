@@ -23,8 +23,6 @@ type MissingImportedObject2<T> = T & {
  * All properties and methods will throw an error if accessed (except for basic properties like `name` and `outer`).
  */
 export class MissingImportedObject extends UObject {
-  private readonly __type_MissingImportedObject!: MissingImportedObject;
-
   constructor(params: ObjectConstructionParams) {
     super(params);
   }

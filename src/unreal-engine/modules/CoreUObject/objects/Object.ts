@@ -68,8 +68,6 @@ export enum ELoadingPhase {
  */
 @RegisterClass("/Script/CoreUObject.Object")
 export class UObject {
-  private readonly __type_UObject!: UObject;
-
   private _outer: UObject | null = null;
   private /*readonly*/ _class: UClass;
   private readonly _flags: EPackageFlags;
