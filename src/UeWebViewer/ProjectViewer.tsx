@@ -6,7 +6,7 @@ import { TreeView } from "./components/TreeView";
 import { fakeWait } from "./config";
 import { FileViewer } from "./viewer/FileViewer";
 import { BiFileBlank, BiFolder } from "react-icons/bi";
-import { navigate, useHistoryState } from "../utils/useHistoryState";
+import { navigate, useHistoryState } from "./utils/useHistoryState";
 import { ProjectApi, ProjectApiProvider } from "./ProjectApi";
 
 export interface Props {
