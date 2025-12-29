@@ -11,7 +11,7 @@ import { type USkeletalMeshSocket } from "./SkeletalMeshSocket";
 import { FSmartNameContainer } from "../structs/SmartNameContainer";
 import { type UBlendProfile } from "./BlendProfile";
 import { type FAnimSlotGroup } from "../structs/AnimSlotGroup";
-import { type FName, NAME_None } from "../../../types/Name";
+import { type FName, FNameMap, NAME_None } from "../../../types/Name";
 import { FPreviewAssetAttachContainer } from "../structs/PreviewAssetAttachContainer";
 import { type UAssetUserData } from "./AssetUserData";
 import type { AssetReader } from "../../../AssetReader";
@@ -53,11 +53,17 @@ export class USkeleton extends UObject {
 export class FReferenceSkeleton {
   RawRefBoneInfo: FMeshBoneInfo[] = [];
   RawRefBonePose: FTransform[] = [];
+  RawNameToIndexMap: FNameMap<number> = new FNameMap<number>();
 
   static fromStream(reader: AssetReader) {
     const result = new FReferenceSkeleton();
     result.RawRefBoneInfo = reader.readArray(() => FMeshBoneInfo.fromStream(reader));
     result.RawRefBonePose = reader.readArray(() => FTransform.fromStream(reader));
+
+    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_REFERENCE_SKELETON_REFACTOR) {
+      result.RawNameToIndexMap = reader.readNameMap(() => reader.readInt32());
+    }
+
     // todo: continue
     return result;
   }

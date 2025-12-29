@@ -1,7 +1,7 @@
 import invariant from "tiny-invariant";
 
 import type { FCustomVersionContainer } from "./serialization/CustomVersion";
-import { FName } from "./types/Name";
+import { FName, FNameMap } from "./types/Name";
 import type { CustomVersionGuid } from "./versioning/CustomVersionGuid";
 import type { EUnrealEngineObjectUE4Version } from "./versioning/ue-versions";
 import { EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
@@ -231,6 +231,20 @@ export class AssetReader {
       array.push(elementReader(this));
     }
     return array;
+  }
+
+  readNameMap<T>(valueReader: (reader: AssetReader) => T) {
+    const length = this.readInt32();
+    if (length < 0) {
+      throw new Error("Name map length must be non-negative");
+    }
+    const map = new FNameMap<T>();
+    for (let i = 0; i < length; i++) {
+      const name = this.readName();
+      const value = valueReader(this);
+      map.set(name, value);
+    }
+    return map;
   }
 
   /**

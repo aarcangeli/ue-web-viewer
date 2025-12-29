@@ -15,7 +15,7 @@ import { ETextHistoryType, FTextHistory_Base } from "../../unreal-engine/types/T
 import { FPerPlatformFloat } from "../../unreal-engine/modules/CoreUObject/structs/PerPlatformProperties";
 import { isMissingImportedObject } from "../../unreal-engine/modules/error-elements";
 import { USkeleton } from "../../unreal-engine/modules/Engine/objects/Skeleton";
-import { FName } from "../../unreal-engine/types/Name";
+import { FName, FNameMap } from "../../unreal-engine/types/Name";
 import type { NativeStructs } from "../../unreal-engine/properties/NativeStructs";
 import { FTransform } from "../../unreal-engine/modules/CoreUObject/structs/Transform";
 
@@ -88,37 +88,49 @@ function renderSpecificProperties(object: UObject) {
   return null;
 }
 
-function getSummary(value: object) {
+function getObjectSummary(value: object) {
   if ("summary" in value) {
     return String(value.summary) || undefined;
   }
   return undefined;
 }
 
-function renderGenericProperty(key: number, name: string, value: object, icon?: React.ReactElement) {
+type GenericType = number | object | FNameMap<GenericType> | FName;
+
+/**
+ * Render an unknown type.
+ */
+function renderGenericProperty(key: number, title: string, value: GenericType, icon?: React.ReactElement) {
+  if (value instanceof FNameMap) {
+    return (
+      <CollapsableSection initialExpanded={false} key={key} title={title} name={`size = ${value.size}`}>
+        {value.map((mapKey, mapValue, mapIndex) => renderGenericProperty(mapIndex, mapKey.toString(), mapValue))}
+      </CollapsableSection>
+    );
+  }
+  if (value instanceof FName) {
+    return (
+      <IndentedRow key={key} title={title}>
+        {value.toString()}
+      </IndentedRow>
+    );
+  }
+  if (value instanceof FTransform) {
+    return renderNativeStructProperty(key, title, value);
+  }
+  if (typeof value === "object") {
+    return (
+      <CollapsableSection initialExpanded={false} key={key} icon={icon} title={title} name={getObjectSummary(value)}>
+        {Object.entries(value).map(([subKey, subValue], index) => {
+          return renderGenericProperty(index, subKey, subValue as GenericType);
+        })}
+      </CollapsableSection>
+    );
+  }
   return (
-    <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={getSummary(value)}>
-      {Object.entries(value).map(([subKey, subValue], index) => {
-        if (subValue instanceof FName) {
-          return (
-            <IndentedRow key={index} title={subKey}>
-              {subValue.toString()}
-            </IndentedRow>
-          );
-        }
-        if (subValue instanceof FTransform) {
-          return renderNativeStructProperty(index, subKey, subValue);
-        }
-        if (subValue && typeof subValue === "object") {
-          return renderGenericProperty(index, subKey, subValue);
-        }
-        return (
-          <IndentedRow key={index} title={subKey}>
-            {String(subValue)}
-          </IndentedRow>
-        );
-      })}
-    </CollapsableSection>
+    <IndentedRow key={key} title={title}>
+      {String(value)}
+    </IndentedRow>
   );
 }
 
