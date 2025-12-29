@@ -3,8 +3,7 @@ import { RegisterClass } from "../../../types/class-registry";
 import { type FBoneNode } from "../structs/BoneNode";
 import { FTransform } from "../../CoreUObject/structs/Transform";
 import { EAxis } from "../../CoreUObject/enums/EAxis";
-import { FGuid } from "../../CoreUObject/structs/Guid";
-import { GUID_None } from "../../CoreUObject/structs/Guid";
+import { FGuid, GUID_None } from "../../CoreUObject/structs/Guid";
 import { type FVirtualBone } from "../structs/VirtualBone";
 import { FSoftObjectPath } from "../../CoreUObject/structs/SoftObjectPath";
 import { type USkeletalMeshSocket } from "./SkeletalMeshSocket";
@@ -21,6 +20,10 @@ import {
   FAnimPhysObjectVersion,
   FAnimPhysObjectVersionGuid,
 } from "../../../versioning/custom-versions-enums/FAnimPhysObjectVersion";
+import {
+  FFrameworkObjectVersion,
+  FFrameworkObjectVersionGuid,
+} from "../../../versioning/custom-versions-enums/FFrameworkObjectVersion";
 
 @RegisterClass("/Script/Engine.Skeleton")
 export class USkeleton extends UObject {
@@ -60,6 +63,7 @@ export class FReferenceSkeleton {
   RawNameToIndexMap: FNameMap<number> = new FNameMap<number>();
   AnimRetargetSources: FNameMap<FReferencePose> = new FNameMap<FReferencePose>();
   Guid: FGuid = GUID_None;
+  SmartNames: FNameMap<FSmartNameMapping> = new FNameMap<FSmartNameMapping>();
 
   static fromStream(reader: AssetReader, resolver: ObjectResolver) {
     const result = new FReferenceSkeleton();
@@ -76,6 +80,10 @@ export class FReferenceSkeleton {
 
     if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_SKELETON_GUID_SERIALIZATION) {
       result.Guid = FGuid.fromStream(reader);
+    }
+
+    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_SKELETON_ADD_SMARTNAMES) {
+      result.SmartNames = reader.readNameMap(() => FSmartNameMapping.fromStream(reader));
     }
 
     // todo: continue
@@ -130,6 +138,56 @@ export class FReferencePose {
       }
     } else {
       result.SourceReferenceMesh = resolver.readSoftObjectPtr(reader);
+    }
+
+    return result;
+  }
+}
+
+export class FSmartNameMapping {
+  CurveMetaDataMap: FNameMap<FCurveMetaData> = new FNameMap<FCurveMetaData>();
+
+  static fromStream(reader: AssetReader): FSmartNameMapping {
+    const result = new FSmartNameMapping();
+
+    // Skip deprecated fields
+    if (reader.getCustomVersion(FFrameworkObjectVersionGuid) >= FFrameworkObjectVersion.SmartNameRefactor) {
+      if (
+        reader.getCustomVersion(FAnimPhysObjectVersionGuid) <
+        FAnimPhysObjectVersion.SmartNameRefactorForDeterministicCooking
+      ) {
+        reader.readNameMap(() => FGuid.fromStream(reader));
+      }
+    } else if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_SKELETON_ADD_SMARTNAMES) {
+      reader.readUInt16();
+      reader.readArray(() => {
+        reader.readUInt16();
+        reader.readName();
+      });
+    }
+
+    if (reader.getCustomVersion(FFrameworkObjectVersionGuid) >= FFrameworkObjectVersion.MoveCurveTypesToSkeleton) {
+      result.CurveMetaDataMap = reader.readNameMap(() => FCurveMetaData.fromStream(reader));
+    }
+
+    return result;
+  }
+}
+
+export class FCurveMetaData {
+  bMaterial: boolean = false;
+  bMorphTarget: boolean = false;
+  LinkedBones: FName[] = [];
+  MaxLOD: number = -1;
+
+  static fromStream(reader: AssetReader): FCurveMetaData {
+    const result = new FCurveMetaData();
+    result.bMaterial = reader.readBoolean();
+    result.bMorphTarget = reader.readBoolean();
+    result.LinkedBones = reader.readArray(() => reader.readName());
+
+    if (reader.getCustomVersion(FAnimPhysObjectVersionGuid) >= FAnimPhysObjectVersion.AddLODToCurveMetaData) {
+      result.MaxLOD = reader.readUInt8();
     }
 
     return result;
