@@ -22,6 +22,7 @@ import {
 } from "./property-handler";
 import { SymbolStorage } from "./SymbolStorage";
 import { getOrCreateImport } from "./ts-utils";
+import invariant from "tiny-invariant";
 
 type AnySymbol = ClassInfo | StructInfo | EnumInfo;
 
@@ -155,6 +156,16 @@ export class PartialClassGenerator {
             name: name,
             initializer: value.toString(),
           });
+          continue;
+        }
+
+        // Verify the value of existing member
+        const member = enumDeclaration.getMember(name);
+        invariant(member);
+        const currentValue = member.getInitializer()?.getText();
+        if (currentValue !== value.toString()) {
+          logChange(`Updating enum member ${name} value from ${currentValue} to ${value}`);
+          member.setInitializer(value.toString());
         }
       }
 
