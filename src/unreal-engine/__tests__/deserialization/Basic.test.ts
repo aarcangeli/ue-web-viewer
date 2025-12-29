@@ -1,10 +1,10 @@
-import type { Asset } from "../../serialization/Asset";
+import type { AssetApi } from "../../serialization/Asset";
 import { readAsset } from "../test-utils";
-import { describe, test, beforeAll, expect } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 
 // Try to load an asset saved with UE4.0.2
 describe("TestActorUE4-0-2", () => {
-  let asset: Asset;
+  let asset: AssetApi;
 
   // Load asset file once
   beforeAll(() => {
@@ -34,7 +34,7 @@ describe("TestActorUE4-0-2", () => {
 
 // Try to load an asset saved with UE4.0.2
 describe("TestActorUE5-4-4", () => {
-  let asset: Asset;
+  let asset: AssetApi;
 
   // Load asset file once
   beforeAll(() => {

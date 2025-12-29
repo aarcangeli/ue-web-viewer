@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import { FullAssetReader } from "../AssetReader";
-import { Asset } from "../serialization/Asset";
+import { MakeSimpleAsset } from "../serialization/Asset";
 
 /**
  * Contains the path of __tests__ directory.
@@ -30,5 +30,5 @@ export function readAsset(filename: string) {
   const fileData = fs.readFileSync(fullPath);
   const reader = new FullAssetReader(new DataView(fileData.buffer, 0, fileData.byteLength));
   const packageName = path.basename(filename, path.extname(filename));
-  return Asset.fromStream(packageName, reader);
+  return MakeSimpleAsset(packageName, reader);
 }

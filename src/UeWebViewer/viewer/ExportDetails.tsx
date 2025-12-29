@@ -1,4 +1,4 @@
-import type { Asset } from "../../unreal-engine/serialization/Asset";
+import type { AssetApi } from "../../unreal-engine/serialization/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
 import {
@@ -33,7 +33,7 @@ class Node {
   ) {}
 }
 
-function makeTree(asset: Asset): Node[] {
+function makeTree(asset: AssetApi): Node[] {
   const sortNodesRecursively = (convertedTable: Node[]) => {
     convertedTable.sort((a: Node, b: Node) => {
       return a.objectExport.ObjectName.localeCompare(b.objectExport.ObjectName);
@@ -65,7 +65,7 @@ function makeTree(asset: Asset): Node[] {
   return convertedTable.filter((value) => value.objectExport.OuterIndex === 0);
 }
 
-function RawView(props: { asset: Asset }) {
+function RawView(props: { asset: AssetApi }) {
   const exports = props.asset.exports;
 
   return (
@@ -113,7 +113,7 @@ function RawView(props: { asset: Asset }) {
   );
 }
 
-function OpenObjectPreviewButton(props: { asset: Asset; index: number }) {
+function OpenObjectPreviewButton(props: { asset: AssetApi; index: number }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -127,7 +127,7 @@ function OpenObjectPreviewButton(props: { asset: Asset; index: number }) {
   );
 }
 
-function ObjectPreviewContent(props: { asset: Asset; index: number }) {
+function ObjectPreviewContent(props: { asset: AssetApi; index: number }) {
   const [asset, setAsset] = React.useState(props.asset);
   const [object, setObject] = React.useState(() => props.asset.getObjectByIndex(props.index));
 
@@ -160,7 +160,7 @@ function ObjectPreviewContent(props: { asset: Asset; index: number }) {
   );
 }
 
-function RenderNodes(props: { asset: Asset; tree: Node[] }) {
+function RenderNodes(props: { asset: AssetApi; tree: Node[] }) {
   const recursiveSection = (node: Node) => (
     <CollapsableSection
       key={node.index}
@@ -182,7 +182,7 @@ function RenderNodes(props: { asset: Asset; tree: Node[] }) {
   return <SimpleDetailsView>{props.tree.map(recursiveSection)}</SimpleDetailsView>;
 }
 
-export function ExportDetails(props: { asset: Asset }) {
+export function ExportDetails(props: { asset: AssetApi }) {
   const asset = props.asset;
   const tree = useMemo(() => makeTree(asset), [asset]);
 

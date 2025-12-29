@@ -1,5 +1,5 @@
-import type { ObjectConstructionParams } from "./CoreUObject/objects/Object";
-import { UObject } from "./CoreUObject/objects/Object";
+import type { UObject } from "./CoreUObject/objects/Object";
+import { type ObjectConstructionParams } from "./CoreUObject/objects/Object";
 
 const allowedProperties = new Set([
   "fullName",
@@ -17,16 +17,6 @@ const MissingImportedObjectSymbol = Symbol("MissingImportedObject");
 type MissingImportedObject2<T> = T & {
   [MissingImportedObjectSymbol]: true;
 };
-
-/**
- * A garbage object that represents an object that cannot be found.
- * All properties and methods will throw an error if accessed (except for basic properties like `name` and `outer`).
- */
-export class MissingImportedObject extends UObject {
-  constructor(params: ObjectConstructionParams) {
-    super(params);
-  }
-}
 
 export function createMissingImportedObject<T extends UObject, V extends ObjectConstructionParams>(
   originalClass: new (params: V) => T,

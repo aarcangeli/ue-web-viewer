@@ -3,18 +3,17 @@ import "../modules/all-objects";
 import invariant from "tiny-invariant";
 
 import { removeExtension } from "../../utils/string-utils";
-import type { AssetReader, FullAssetReader } from "../AssetReader";
+import { type AssetReader, type FullAssetReader } from "../AssetReader";
 import { UClass } from "../modules/CoreUObject/objects/Class";
-import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
-import { ELoadingPhase, UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
-import type { UPackage } from "../modules/CoreUObject/objects/Package";
+import { ELoadingPhase, type ObjectResolver, UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
+import { type UPackage } from "../modules/CoreUObject/objects/Package";
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
 import { createMissingImportedObject, isMissingImportedObject } from "../modules/mock-object";
 import { NAME_CoreUObject, NAME_Package } from "../modules/names";
 import { makeNameFromParts } from "../path-utils";
 import { findClassOf } from "../types/class-registry";
 import { FName, NAME_None } from "../types/Name";
-import { MakeObjectContext } from "../types/object-context";
+import { type IObjectContext, MakeObjectContext } from "../types/object-context";
 import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
 
 import { EObjectFlags, FObjectExport } from "./ObjectExport";
@@ -26,6 +25,30 @@ const RecursiveCheck = Symbol("RecursiveCheck");
 
 export interface AssetApi {
   get reader(): AssetReader;
+  get mainObject(): UObject | null;
+  get summary(): Readonly<FPackageFileSummary>;
+  get exports(): ReadonlyArray<Readonly<FObjectExport>>;
+  get imports(): ReadonlyArray<Readonly<FObjectImport>>;
+  makeFullNameByIndex(index: number): string;
+  getObjectName(index: number): FName;
+  getObjectByIndex(index: number, full?: boolean): UObject;
+  getByFullName(fullName: string): UObject;
+  reloadAsset(): Promise<AssetApi>;
+}
+
+/**
+ * Construct an asset from the given package name and reader.
+ * The created asset retains a reference to the reader to lazily load objects when needed.
+ * @param context The object context where to create the package and resolve external references.
+ * @param packageName The name of the package.
+ * @param reader The reader to read the package content.
+ */
+export function MakeAssetFromStream(context: IObjectContext, packageName: string, reader: FullAssetReader) {
+  return new Asset(context, FName.fromString(removeExtension(packageName)), reader);
+}
+
+export function MakeSimpleAsset(packageName: string, reader: FullAssetReader): AssetApi {
+  return new Asset(MakeObjectContext(), FName.fromString(removeExtension(packageName)), reader);
 }
 
 /**
@@ -37,17 +60,17 @@ export interface AssetApi {
  *
  * The root object is always an instance of {@link UPackage}.
  */
-export class Asset implements AssetApi {
+class Asset implements AssetApi {
   /** We have a dedicated context for this asset, in the future we may want to reuse it for other assets. */
-  private readonly _context = MakeObjectContext();
+  private readonly _context: IObjectContext;
 
   private readonly _packageName: FName;
   private readonly _reader: FullAssetReader;
 
-  readonly summary: Readonly<FPackageFileSummary> = new FPackageFileSummary();
-  readonly imports: ReadonlyArray<FObjectImport> = [];
-  readonly exports: ReadonlyArray<FObjectExport> = [];
-  readonly softObjects: ReadonlyArray<FSoftObjectPath> = [];
+  private readonly _summary: FPackageFileSummary;
+  private readonly _imports: ReadonlyArray<FObjectImport>;
+  private readonly _exports: ReadonlyArray<FObjectExport>;
+  private readonly _softObjects: ReadonlyArray<FSoftObjectPath>;
 
   /// Cache of exported objects.
   private readonly _exportedObjects: Array<WeakObjectRef | symbol> = [];
@@ -58,22 +81,19 @@ export class Asset implements AssetApi {
   /**
    * The root package loaded from this asset.
    */
-  readonly package: UPackage;
+  readonly _package: UPackage;
 
-  private constructor(
-    packageName: FName,
-    reader: FullAssetReader,
-    private _reload: (() => Promise<FullAssetReader>) | null = null,
-  ) {
+  constructor(context: IObjectContext, packageName: FName, reader: FullAssetReader) {
     invariant(packageName, "Expected a package name");
     invariant(reader.tell() === 0, "Expected to be at the beginning of the stream");
 
+    this._context = context;
     this._packageName = packageName;
     this._reader = reader;
 
     // Read the package summary
     const summary = FPackageFileSummary.fromStream(reader);
-    this.summary = summary;
+    this._summary = summary;
     reader.setVersion(summary.FileVersionUE4, summary.FileVersionUE5);
     reader.setCustomVersions(summary.CustomVersionContainer);
 
@@ -81,13 +101,13 @@ export class Asset implements AssetApi {
     reader.setNames(readNames(reader, summary));
 
     // Read other tables
-    this.imports = readImportMap(reader, summary);
-    this.exports = readExportMap(reader, summary);
-    this.softObjects = readSoftObjectsMap(reader, summary);
+    this._imports = readImportMap(reader, summary);
+    this._exports = readExportMap(reader, summary);
+    this._softObjects = readSoftObjectsMap(reader, summary);
 
     // Create the package object
-    this.package = this._context.findOrCreatePackage(packageName);
-    this.package.assetApi = this;
+    this._package = this._context.findOrCreatePackage(packageName);
+    this._package.assetApi = this;
   }
 
   get reader(): AssetReader {
@@ -96,19 +116,16 @@ export class Asset implements AssetApi {
     return assetReader;
   }
 
-  /**
-   * Construct an asset from the given package name and reader.
-   * The created asset retains a reference to the reader to lazily load objects when needed.
-   * @param packageName The name of the package.
-   * @param reader The reader to read the package content.
-   * @param reload Quick & dirty way to reload an asset when requested.
-   */
-  static fromStream(
-    packageName: string,
-    reader: FullAssetReader,
-    reload: (() => Promise<FullAssetReader>) | null = null,
-  ): Asset {
-    return new Asset(FName.fromString(removeExtension(packageName)), reader, reload);
+  get summary(): Readonly<FPackageFileSummary> {
+    return this._summary;
+  }
+
+  get exports() {
+    return this._exports;
+  }
+
+  get imports() {
+    return this._imports;
   }
 
   makeFullNameByIndex(index: number): string {
@@ -137,9 +154,9 @@ export class Asset implements AssetApi {
     invariant(this.isIndexValid(index), `Invalid index ${index}`);
 
     if (index < 0) {
-      return this.imports[-index - 1].ObjectName;
+      return this._imports[-index - 1].ObjectName;
     } else if (index > 0) {
-      return this.exports[index - 1].ObjectName;
+      return this._exports[index - 1].ObjectName;
     } else {
       return NAME_None;
     }
@@ -184,13 +201,14 @@ export class Asset implements AssetApi {
     }
   }
 
-  async reloadAsset() {
-    if (!this._reload) {
-      throw new Error("Reloading is not supported");
-    }
-
-    const reader = await this._reload();
-    return new Asset(this._packageName, reader, this._reload);
+  async reloadAsset(): Promise<AssetApi> {
+    // if (!this._reload) {
+    //   throw new Error("Reloading is not supported");
+    // }
+    //
+    // const reader = await this._reload();
+    // return new Asset(this._context, this._packageName, reader, this._reload);
+    throw new Error("Reloading the entire asset is not supported");
   }
 
   getByFullName(fullName: string) {
@@ -202,7 +220,7 @@ export class Asset implements AssetApi {
   }
 
   private findIndexByFullName(fullName: string) {
-    return this.exports.findIndex(
+    return this._exports.findIndex(
       (_, index) => this.makeFullNameByIndex(index + 1).toLowerCase() === fullName.toLowerCase(),
     );
   }
@@ -211,7 +229,7 @@ export class Asset implements AssetApi {
     const index = this._exportedObjects.findIndex((e) => e instanceof WeakObjectRef && e.deref() === object) + 1;
     if (index > 0) {
       object.loadingPhase = ELoadingPhase.None;
-      this.serializeObject(this.exports[index - 1], object);
+      this.serializeObject(this._exports[index - 1], object);
     }
   }
 
@@ -221,21 +239,21 @@ export class Asset implements AssetApi {
    * If not found, returns 0.
    */
   private findRootExportByName(exportName: string) {
-    const number = this.exports.findIndex((e) => e.OuterIndex == 0 && e.ObjectName.text === exportName);
+    const number = this._exports.findIndex((e) => e.OuterIndex == 0 && e.ObjectName.text === exportName);
     return number + 1;
   }
 
   private isIndexValid(index: number) {
-    return index >= -this.imports.length && index <= this.exports.length;
+    return index >= -this._imports.length && index <= this._exports.length;
   }
 
   private getOuterIndex(index: number) {
     invariant(this.isIndexValid(index), `Invalid index ${index}`);
 
     if (index < 0) {
-      return this.imports[-index - 1].OuterIndex;
+      return this._imports[-index - 1].OuterIndex;
     } else if (index > 0) {
-      return this.exports[index - 1].OuterIndex;
+      return this._exports[index - 1].OuterIndex;
     } else {
       return 0;
     }
@@ -244,7 +262,7 @@ export class Asset implements AssetApi {
   private getObjectImport(index: number) {
     invariant(isImportIndex(index), `Index ${index} must be an import index`);
     invariant(this.isIndexValid(index), `Invalid index ${index}`);
-    return this.imports[-index - 1];
+    return this._imports[-index - 1];
   }
 
   /**
@@ -276,14 +294,14 @@ export class Asset implements AssetApi {
     invariant(this.isIndexValid(index), `Invalid export index ${index}`);
     invariant(isExportIndex(index), `Index ${index} must be an export index`);
 
-    const objectExport = this.exports[index - 1];
+    const objectExport = this._exports[index - 1];
 
     const object = this.withRecursionCheck(index, () => {
       invariant(objectExport.ClassIndex != 0, `Expected a valid class index`);
       const clazz = this.getObjectByIndex(objectExport.ClassIndex, false) as UClass;
 
       // Get the outer object
-      const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex, false) : this.package;
+      const outer = objectExport.OuterIndex ? this.getObjectByIndex(objectExport.OuterIndex, false) : this._package;
       if (isMissingImportedObject(clazz)) {
         console.warn(
           `Object ${objectExport.ObjectName} is based on an unknown class ${clazz.fullName}, using UObject as fallback`,
@@ -391,10 +409,10 @@ export class Asset implements AssetApi {
           return index ? this.getObjectByIndex(index, false) : null;
         },
         readSoftObjectPtr: (reader: AssetReader) => {
-          if (this.softObjects.length) {
+          if (this._softObjects.length) {
             const index = reader.readInt32();
-            invariant(index >= 0 && index < this.softObjects.length, `Invalid soft object index ${index}`);
-            return this.softObjects[index];
+            invariant(index >= 0 && index < this._softObjects.length, `Invalid soft object index ${index}`);
+            return this._softObjects[index];
           } else {
             return FSoftObjectPath.fromStream(reader);
           }

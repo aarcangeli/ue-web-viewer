@@ -1,4 +1,4 @@
-import type { Asset } from "../../unreal-engine/serialization/Asset";
+import type { AssetApi } from "../../unreal-engine/serialization/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
 import type { FObjectImport } from "../../unreal-engine/serialization/ObjectImport";
@@ -91,7 +91,7 @@ function RenderNodes(props: { tree: Node[] }) {
   return <SimpleDetailsView>{props.tree.map(recursiveSection)}</SimpleDetailsView>;
 }
 
-function RawView(props: { asset: Asset }) {
+function RawView(props: { asset: AssetApi }) {
   return (
     <SimpleDetailsView>
       {props.asset.imports.map((value, index) => (
@@ -108,7 +108,7 @@ function RawView(props: { asset: Asset }) {
   );
 }
 
-export function ImportDetails(props: { asset: Asset }) {
+export function ImportDetails(props: { asset: AssetApi }) {
   const imports = props.asset.imports;
 
   const tree = useMemo(() => makeTree(imports), [imports]);

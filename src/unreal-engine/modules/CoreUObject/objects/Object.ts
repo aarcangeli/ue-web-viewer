@@ -6,7 +6,8 @@ import { makeNameFromParts } from "../../../path-utils";
 import type { TaggedProperty } from "../../../properties/TaggedProperty";
 import { EObjectFlags } from "../../../serialization/ObjectExport";
 import { readTaggedProperties } from "../../../serialization/properties-serialization";
-import type { SerializationStatistics } from "../../../serialization/SerializationStatistics";
+import type { ObjectSource } from "../../../serialization/SerializationStatistics";
+import { type SerializationStatistics } from "../../../serialization/SerializationStatistics";
 import { RegisterClass } from "../../../types/class-registry";
 import type { FName } from "../../../types/Name";
 import { FGuid } from "../structs/Guid";
@@ -89,6 +90,8 @@ export class UObject {
    * Only set if the object was deserialized from an asset.
    */
   serializationStatistics: SerializationStatistics | null = null;
+
+  objectSource: ObjectSource | null = null;
 
   /**
    * The loading phase of the object.

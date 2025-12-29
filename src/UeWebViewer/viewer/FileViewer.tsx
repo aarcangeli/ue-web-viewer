@@ -3,11 +3,13 @@ import type { FileApi } from "../filesystem/FileApi";
 import React, { useEffect, useState } from "react";
 import { FullAssetReader } from "../../unreal-engine/AssetReader";
 import invariant from "tiny-invariant";
-import { Asset } from "../../unreal-engine/serialization/Asset";
+import type { AssetApi } from "../../unreal-engine/serialization/Asset";
+import { MakeAssetFromStream } from "../../unreal-engine/serialization/Asset";
 import { ImportDetails } from "./ImportDetails";
 import { ExportDetails } from "./ExportDetails";
 import { SummaryDetails } from "./SummaryDetails";
 import { AssetPreview } from "./AssetPreview";
+import { MakeObjectContext } from "../../unreal-engine/types/object-context";
 
 export interface Props {
   file: FileApi;
@@ -19,7 +21,7 @@ async function ReadAndParseFile(file: FileApi) {
     return new FullAssetReader(new DataView(content));
   };
   // TODO: the name should be the virtual path of the file
-  return Asset.fromStream(`/Game/${file.name}`, await loadAsset(), loadAsset);
+  return MakeAssetFromStream(MakeObjectContext(), `/Game/${file.name}`, await loadAsset());
 }
 
 const tabNames = [
@@ -41,7 +43,7 @@ export function FileViewer(props: Props) {
   invariant(props.file.kind === "file", "Expected a file");
   const [tabIndex, setTabIndex] = useState(getTabIndexFromHash);
 
-  const [asset, setAsset] = React.useState<Asset>();
+  const [asset, setAsset] = React.useState<AssetApi>();
 
   useEffect(() => {
     setAsset(undefined);

@@ -1,4 +1,4 @@
-import type { Asset } from "../../unreal-engine/serialization/Asset";
+import type { AssetApi } from "../../unreal-engine/serialization/Asset";
 import type { ReactNode } from "react";
 import React from "react";
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, IconButton, Tooltip } from "@chakra-ui/react";
@@ -22,7 +22,7 @@ import { FTransform } from "../../unreal-engine/modules/CoreUObject/structs/Tran
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
 
-  const statistics = exportedObjects.serializationStatistics;
+  const statistics = exportedObjects.objectSource?.serializationStatistics;
 
   return (
     <Box>
@@ -54,7 +54,7 @@ function renderObjectName(object: UObject | null) {
   return object.fullName;
 }
 
-export function AssetPreview(props: { asset: Asset }) {
+export function AssetPreview(props: { asset: AssetApi }) {
   const exportedObjects = props.asset.mainObject;
 
   return exportedObjects ? <ObjectPreview object={exportedObjects} /> : <Box>Asset not found</Box>;
