@@ -2,6 +2,7 @@ import { codecovVitePlugin } from "@codecov/vite-plugin";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
 import json5Plugin from "vite-plugin-json5";
+import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 // Generate the src/externals/index.ts file
@@ -19,6 +20,7 @@ export default defineConfig({
     }),
     json5Plugin(),
     tsconfigPaths(),
+    svgr(),
     codecovVitePlugin({
       enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
       bundleName: "ue-web-viewer",
