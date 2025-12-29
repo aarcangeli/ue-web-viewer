@@ -1,7 +1,7 @@
 import { type ObjectResolver, UObject } from "../../CoreUObject/objects/Object";
 import { RegisterClass } from "../../../types/class-registry";
 import { type FBoneNode } from "../structs/BoneNode";
-import { type FTransform } from "../../CoreUObject/structs/Transform";
+import { FTransform } from "../../CoreUObject/structs/Transform";
 import { EAxis } from "../../CoreUObject/enums/EAxis";
 import type { FGuid } from "../../CoreUObject/structs/Guid";
 import { GUID_None } from "../../CoreUObject/structs/Guid";
@@ -52,10 +52,13 @@ export class USkeleton extends UObject {
 
 export class FReferenceSkeleton {
   RawRefBoneInfo: FMeshBoneInfo[] = [];
+  RawRefBonePose: FTransform[] = [];
 
   static fromStream(reader: AssetReader) {
     const result = new FReferenceSkeleton();
     result.RawRefBoneInfo = reader.readArray(() => FMeshBoneInfo.fromStream(reader));
+    result.RawRefBonePose = reader.readArray(() => FTransform.fromStream(reader));
+    // todo: continue
     return result;
   }
 }

@@ -3,7 +3,8 @@ import invariant from "tiny-invariant";
 import type { FCustomVersionContainer } from "./serialization/CustomVersion";
 import { FName } from "./types/Name";
 import type { CustomVersionGuid } from "./versioning/CustomVersionGuid";
-import type { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
+import type { EUnrealEngineObjectUE4Version } from "./versioning/ue-versions";
+import { EUnrealEngineObjectUE5Version } from "./versioning/ue-versions";
 
 /**
  * Low level API to read binary data from an ArrayBuffer.
@@ -250,6 +251,10 @@ export class AssetReader {
 
   get littleEndian() {
     return this._littleEndian;
+  }
+
+  get isLargeWorldCoordinates() {
+    return this.fileVersionUE5 >= EUnrealEngineObjectUE5Version.LARGE_WORLD_COORDINATES;
   }
 
   private ensureBytes(number: number) {
