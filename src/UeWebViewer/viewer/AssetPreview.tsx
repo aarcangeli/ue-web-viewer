@@ -13,7 +13,7 @@ import { makePropertyIcon } from "./MakePropertyIcon";
 import type { ITextData } from "../../unreal-engine/types/Text";
 import { ETextHistoryType, FTextHistory_Base } from "../../unreal-engine/types/Text";
 import { FPerPlatformFloat } from "../../unreal-engine/modules/CoreUObject/structs/PerPlatformProperties";
-import { isMissingImportedObject } from "../../unreal-engine/modules/error-elements";
+import { isMissingImportedObject } from "../../unreal-engine/modules/mock-object";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;

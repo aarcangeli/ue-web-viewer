@@ -12,10 +12,10 @@ const allowedProperties = new Set([
   "asWeakObject",
 ]);
 
-const symbol = Symbol("MissingImportedObject");
+const MissingImportedObjectSymbol = Symbol("MissingImportedObject");
 
 type MissingImportedObject2<T> = T & {
-  [symbol]: true;
+  [MissingImportedObjectSymbol]: true;
 };
 
 /**
@@ -35,11 +35,14 @@ export function createMissingImportedObject<T extends UObject, V extends ObjectC
   params: V,
 ): T {
   const MissingImportedObjectClass = class MissingImportObject extends originalClass {};
-  (MissingImportedObjectClass.prototype as any)[symbol] = true;
+  (MissingImportedObjectClass.prototype as any)[MissingImportedObjectSymbol] = true;
   const result = new MissingImportedObjectClass(params) as MissingImportedObject2<T>;
 
   return new Proxy(result, {
     get(target, prop) {
+      if (prop == "isMockObject") {
+        return true;
+      }
       if (typeof prop === "string" && !allowedProperties.has(prop)) {
         throw new Error(`Attempted to access property '${prop}' on a MissingImportedObject`);
       }
@@ -52,5 +55,5 @@ export function createMissingImportedObject<T extends UObject, V extends ObjectC
 }
 
 export function isMissingImportedObject(obj: UObject): boolean {
-  return symbol in obj;
+  return MissingImportedObjectSymbol in obj;
 }

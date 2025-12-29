@@ -1,7 +1,7 @@
 import invariant from "tiny-invariant";
 
 import { RegisterClass } from "../../../types/class-registry";
-import { isMissingImportedObject } from "../../error-elements";
+import { isMissingImportedObject } from "../../mock-object";
 
 import type { ObjectConstructionParams } from "./Object";
 import { UObject } from "./Object";

@@ -9,7 +9,7 @@ import type { ObjectResolver } from "../modules/CoreUObject/objects/Object";
 import { ELoadingPhase, UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
 import type { UPackage } from "../modules/CoreUObject/objects/Package";
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
-import { createMissingImportedObject, isMissingImportedObject } from "../modules/error-elements";
+import { createMissingImportedObject, isMissingImportedObject } from "../modules/mock-object";
 import { NAME_CoreUObject, NAME_Package } from "../modules/names";
 import { makeNameFromParts } from "../path-utils";
 import { findClassOf } from "../types/class-registry";
@@ -56,7 +56,7 @@ export class Asset implements AssetApi {
   private readonly _importedObjects: Array<WeakObjectRef> = [];
 
   /**
-   * The package object.
+   * The root package loaded from this asset.
    */
   readonly package: UPackage;
 
@@ -316,57 +316,63 @@ export class Asset implements AssetApi {
     invariant(this.isIndexValid(index), `Invalid export index ${index}`);
     invariant(isImportIndex(index), `Index ${index} must be an export index`);
 
-    const object = (() => {
-      const importObject = this.getObjectImport(index);
+    const importObject = this.getObjectImport(index);
 
-      // todo: try to import from another asset
-
-      // Create a fallback object if the import is not found
-      if (
-        importObject.OuterIndex === 0 &&
-        importObject.ClassPackage.equals(NAME_CoreUObject) &&
-        importObject.ClassName.equals(NAME_Package)
-      ) {
-        // Create the package object
-        return this._context.findOrCreatePackage(importObject.ObjectName);
-      }
-
-      // Lookup for an existing child object with the same name and class
-      const outer = this.getObjectByIndex(importObject.OuterIndex, false);
-      const existingChild = outer.findInnerByFName(importObject.ObjectName);
-
-      // There is already an object with the same name and class, return it
-      if (existingChild) {
-        return existingChild;
-      }
-
-      // Find or create the class
-      const classPackage = this._context.findOrCreatePackage(importObject.ClassPackage);
-      let classInstance = classPackage.findInnerByFName(importObject.ClassName);
-      if (!classInstance) {
-        classInstance = new UClass({
-          outer: classPackage,
-          clazz: this._context.CLASS_Class,
-          name: importObject.ClassName,
-          // We don't have this information for imported objects
-          superClazz: this._context.CLASS_Class,
-        });
-      }
-      invariant(classInstance instanceof UClass, `Expected a class for import ${importObject.ObjectName}`);
-
-      console.log(`Creating missing ${classInstance.fullName}`);
-      const isClass = classInstance == this._context.CLASS_Class;
-      const fallbackClass = isClass ? UClass : UObject;
-      const myClass = findClassOf(classInstance) ?? fallbackClass;
-      return createMissingImportedObject(myClass, {
-        outer: outer,
-        clazz: classInstance,
-        name: importObject.ObjectName,
-      });
-    })();
-
+    // TODO: We should load the object if it's from another package.
+    const object = this.createFakeObject(importObject);
     this._importedObjects[-index - 1] = object.asWeakObject();
     return object;
+  }
+
+  /**
+   * At the moment, we don't load imported objects from other assets.
+   * So, we create a fake object with the following rules:
+   * - For packages, we create a package object (if not already existing in the context).
+   * - For other objects, we create a child item of the outer, with the same name and class.
+   */
+  private createFakeObject(importObject: FObjectImport): UObject {
+    // Create a fallback object if the import is not found
+    if (
+      importObject.OuterIndex === 0 &&
+      importObject.ClassPackage.equals(NAME_CoreUObject) &&
+      importObject.ClassName.equals(NAME_Package)
+    ) {
+      // Create the package object, without loading it from file.
+      return this._context.findOrCreatePackage(importObject.ObjectName);
+    }
+
+    // Lookup for an existing child object with the same name and class
+    const outer = this.getObjectByIndex(importObject.OuterIndex, false);
+
+    // There is already an object with the same name, return it
+    const existingChild = outer.findInnerByFName(importObject.ObjectName);
+    if (existingChild) {
+      return existingChild;
+    }
+
+    // Find or create the class
+    const classPackage = this._context.findOrCreatePackage(importObject.ClassPackage);
+    let classInstance = classPackage.findInnerByFName(importObject.ClassName);
+    if (!classInstance) {
+      classInstance = new UClass({
+        outer: classPackage,
+        clazz: this._context.CLASS_Class,
+        name: importObject.ClassName,
+        // We don't have this information for imported objects
+        superClazz: this._context.CLASS_Class,
+      });
+    }
+    invariant(classInstance instanceof UClass, `Expected a class for import ${importObject.ObjectName}`);
+
+    console.log(`Creating missing ${classInstance.fullName}`);
+    const isClass = classInstance == this._context.CLASS_Class;
+    const fallbackClass = isClass ? UClass : UObject;
+    const myClass = findClassOf(classInstance) ?? fallbackClass;
+    return createMissingImportedObject(myClass, {
+      outer: outer,
+      clazz: classInstance,
+      name: importObject.ObjectName,
+    });
   }
 
   private serializeObject(objectExport: FObjectExport, object: UObject) {

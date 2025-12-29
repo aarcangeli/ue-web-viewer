@@ -7,7 +7,7 @@ import { UClass } from "../modules/CoreUObject/objects/Class";
 import type { UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
 import { LazyClass } from "../modules/CoreUObject/objects/Object";
 import { UPackage } from "../modules/CoreUObject/objects/Package";
-import { isMissingImportedObject } from "../modules/error-elements";
+import { isMissingImportedObject } from "../modules/mock-object";
 import { NAME_Class, NAME_CoreUObject, NAME_Object, NAME_Package } from "../modules/names";
 
 import { getAllClasses, instantiateObject } from "./class-registry";
@@ -120,7 +120,6 @@ class ObjectContextImpl implements IObjectContext {
 
   /**
    * Iterate over the class registry and populate the class hierarchy.
-   * @private
    */
   private reloadClassHierarchy() {
     for (const classItem of getAllClasses()) {
@@ -211,8 +210,8 @@ class ObjectContextImpl implements IObjectContext {
   }
 
   /**
-   * Reflection systems often work recursively.
-   * For example, given a field `mesh: UStaticMesh`:
+   * Unreal's Reflection systems works recursively (like java and others):
+   * For example, given an instance `mesh: UStaticMesh`:
    * - `mesh.GetClass()` returns the `UStaticMesh` class,
    * - `mesh.GetClass().GetClass()` returns the `UClass` class,
    * - `mesh.GetClass().GetClass().GetClass()` returns the same `UClass` instance.

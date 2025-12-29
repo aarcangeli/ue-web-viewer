@@ -4,7 +4,7 @@ import { describe, expect, test } from "vitest";
 import { UClass } from "./CoreUObject/objects/Class";
 import { UObject } from "./CoreUObject/objects/Object";
 import { UPackage } from "./CoreUObject/objects/Package";
-import { createMissingImportedObject, isMissingImportedObject } from "./error-elements";
+import { createMissingImportedObject, isMissingImportedObject } from "./mock-object";
 
 describe("MissingImportedObject", () => {
   test("Missing Object", () => {

@@ -47,11 +47,16 @@ export enum ELoadingPhase {
  * Base class for all Unreal Engine objects.
  *
  * Each instance represents a single object in the UE runtime:
- * - Can have an outer object and may contain inner objects.
- * - Has a unique name within its outer object.
- * - Has a class, represented by a {@link UClass} instance.
+ * - Can have an outer object {@link outer} (strongly referenced) and may contain inner objects {@link innerObjects} (weakly referenced).
+ * - Has a unique name within its outer object {@link name}.
+ * - Has a class, represented by a {@link UClass} instance {@link class}.
  * - Some instances are loaded from asset files.
- * - Asset files contain a hierarchy of objects, rooted in a {@link UPackage} instance.
+ * - Root objects are always packages (instances of {@link UPackage}).
+ *
+ * In our implementation we also add some functionalities:
+ * - An instance may be mocked (eg: for missing asset, lazy loading, etc.).
+ * - An instance may be dynamically swapped to another instance (eg: for hot-reloading external changes).
+ *   - Use the method {@link freshObject} to get the most up-to-date instance.
  *
  * We're only implementing the minimal UObject functionality needed to read properties.
  *
@@ -120,7 +125,7 @@ export class UObject {
   /**
    * Returns the class of the object.
    * This field is always set and cannot be changed.
-   * The class of Class is itself.
+   * The class of UClass is itself.
    */
   get class(): UClass {
     invariant(this._class !== LazyClass, "Class not initialized");
@@ -132,7 +137,7 @@ export class UObject {
   }
 
   get outer(): UObject | null {
-    return this._outer;
+    return this._outer?.freshObject ?? null;
   }
 
   get nameParts(): FName[] {
@@ -158,7 +163,7 @@ export class UObject {
    * Inner objects are weakly referenced, so they can be collected if there are no other references to them.
    */
   get innerObjects(): ReadonlyArray<UObject> {
-    return this._innerObjects.map((ref) => ref.deref()).filter((obj) => obj) as UObject[];
+    return this._innerObjects.map((ref) => ref.deref()?.freshObject).filter((obj) => obj) as UObject[];
   }
 
   /**
@@ -222,8 +227,32 @@ export class UObject {
     return clazz.isChildOf(this._class);
   }
 
+  /**
+   * Returns the most up-to-date instance of this object.
+   * The instance may be swapped for multiple reasons:
+   * - The asset file has changed on disk.
+   * - The file was missing, and became available later.
+   * - The file was intentionally not loaded at first, and was loaded later.
+   *
+   * The new instance must have the same outer, name and class as this instance.
+   * The JavaScript class may be different, for the following reasons:
+   * - For mock objects, it may be replaced with a real object.
+   * - Real objects may become mock objects.
+   */
+  get freshObject(): this {
+    // TODO: implement
+    return this;
+  }
+
   asWeakObject(): WeakObjectRef<this> {
     return new WeakObjectRef(this);
+  }
+
+  /**
+   * Returns true if this object is a mock object.
+   */
+  get isMockObject(): boolean {
+    return false;
   }
 }
 
