@@ -100,6 +100,10 @@ export class FReferenceSkeleton {
 
     return result;
   }
+
+  get summary(): string {
+    return `Bones: ${this.RawRefBoneInfo.length}`;
+  }
 }
 
 export class FMeshBoneInfo {
