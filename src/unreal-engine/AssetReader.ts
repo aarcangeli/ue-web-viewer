@@ -220,6 +220,18 @@ export class AssetReader {
     return this.makeChild(subDataView, 0);
   }
 
+  readArray<T>(elementReader: (reader: AssetReader) => T): T[] {
+    const length = this.readInt32();
+    if (length < 0) {
+      throw new Error("Array length must be non-negative");
+    }
+    const array: T[] = [];
+    for (let i = 0; i < length; i++) {
+      array.push(elementReader(this));
+    }
+    return array;
+  }
+
   /**
    * Creates a new reader with the same buffer and state.
    * The changes to the new reader do not affect the original reader.

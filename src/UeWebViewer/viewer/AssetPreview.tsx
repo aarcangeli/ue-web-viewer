@@ -14,6 +14,8 @@ import type { ITextData } from "../../unreal-engine/types/Text";
 import { ETextHistoryType, FTextHistory_Base } from "../../unreal-engine/types/Text";
 import { FPerPlatformFloat } from "../../unreal-engine/modules/CoreUObject/structs/PerPlatformProperties";
 import { isMissingImportedObject } from "../../unreal-engine/modules/error-elements";
+import { USkeleton } from "../../unreal-engine/modules/Engine/objects/Skeleton";
+import { FName } from "../../unreal-engine/types/Name";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
@@ -29,6 +31,7 @@ export function ObjectPreview(props: { object: UObject }) {
           <IndentedRow title={"Class"}>{renderObjectName(exportedObjects.class)}</IndentedRow>
           <IndentedRow title={"Object Guid"}>{exportedObjects.objectGuid?.toString() || "None"}</IndentedRow>
         </CollapsableSection>
+        {renderSpecificProperties(exportedObjects)}
         <CollapsableSection name={"Serialized Properties"}>
           {exportedObjects.properties.map((property, index) =>
             renderValue(index, property.nameString, property.value, makePropertyIcon(property.tag)),
@@ -70,6 +73,48 @@ function renderTextData(textData: ITextData) {
     );
   }
   return undefined;
+}
+
+function renderSpecificProperties(object: UObject) {
+  if (object instanceof USkeleton) {
+    return (
+      <CollapsableSection name={"Skeleton"}>
+        {renderGenericProperty(0, "ReferenceSkeleton", object.ReferenceSkeleton)}
+      </CollapsableSection>
+    );
+  }
+  return null;
+}
+
+function getSummary(value: object) {
+  if ("summary" in value) {
+    return String(value.summary) || undefined;
+  }
+  return undefined;
+}
+
+function renderGenericProperty(key: number, name: string, value: object, icon?: React.ReactElement) {
+  return (
+    <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={getSummary(value)}>
+      {Object.entries(value).map(([subKey, subValue], index) => {
+        if (subValue instanceof FName) {
+          return (
+            <IndentedRow key={index} title={subKey}>
+              {subValue.toString()}
+            </IndentedRow>
+          );
+        }
+        if (subValue && typeof subValue === "object") {
+          return renderGenericProperty(index, subKey, subValue);
+        }
+        return (
+          <IndentedRow key={index} title={subKey}>
+            {String(subValue)}
+          </IndentedRow>
+        );
+      })}
+    </CollapsableSection>
+  );
 }
 
 function renderValue(key: number, name: string, value: PropertyValue, icon?: React.ReactElement) {
