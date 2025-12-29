@@ -119,11 +119,12 @@ export enum EPropertyTagFlags {
   BoolTrue = 0x10,
 }
 
-export enum EPropertyFlags {
-  None = 0x00,
-  Transient = 0x0000000000002000,
-  EditorOnly = 0x0000000800000000,
-}
+export const EPropertyFlags = {
+  None: 0x00,
+  Transient: 0x0000000000002000,
+  EditorOnly: 0x0000000800000000,
+  SkipSerialization: 0x0080000000000000n,
+} as const;
 
 export function getTypeByName(name: FName) {
   return propertyByName.get(name.text.toLowerCase());

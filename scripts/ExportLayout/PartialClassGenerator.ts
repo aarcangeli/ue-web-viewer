@@ -22,10 +22,11 @@ import {
 } from "./property-handler";
 import { SymbolStorage } from "./SymbolStorage";
 import { getOrCreateImport } from "./ts-utils";
+import invariant from "tiny-invariant";
 
 type AnySymbol = ClassInfo | StructInfo | EnumInfo;
 
-const allFlags = ["nosort", "ignore"];
+const allFlags = ["ignore"];
 
 /**
  * This class is responsible for generating or updating TypeScript classes
@@ -155,6 +156,16 @@ export class PartialClassGenerator {
             name: name,
             initializer: value.toString(),
           });
+          continue;
+        }
+
+        // Verify the value of existing member
+        const member = enumDeclaration.getMember(name);
+        invariant(member);
+        const currentValue = member.getInitializer()?.getText();
+        if (currentValue !== value.toString()) {
+          logChange(`Updating enum member ${name} value from ${currentValue} to ${value}`);
+          member.setInitializer(value.toString());
         }
       }
 
@@ -245,7 +256,6 @@ export class PartialClassGenerator {
 
   private updateProperties(classDeclaration: ClassDeclaration, properties: Array<PropertyInfo>) {
     const resolver = this.makeResolver(classDeclaration.getSourceFile());
-    const flags = getFlags(classDeclaration);
 
     // Add or update new properties
     for (const property of properties) {
@@ -288,26 +298,14 @@ export class PartialClassGenerator {
       }
     }
 
-    if (ExportLayoutOptions.enforcePropertyOrder && !flags.includes("nosort")) {
-      const classProperties = classDeclaration.getProperties();
-
-      // Sort properties by their original order in the dump
-      classProperties.sort((a, b) => {
-        const aIndex = properties.findIndex((p) => p.name === a.getName());
-        const bIndex = properties.findIndex((p) => p.name === b.getName());
-
-        const isAFound = aIndex !== -1;
-        const isBFound = bIndex !== -1;
-        if (isAFound != isBFound) {
-          // If one of them is not found, we want to push it to the end
-          return isAFound ? -1 : 1;
+    if (ExportLayoutOptions.warnExtraProperties) {
+      const currentProperties = classDeclaration.getProperties().map((p) => p.getName());
+      for (const currentProperty of currentProperties) {
+        if (!properties.find((p) => p.name === currentProperty)) {
+          console.warn(
+            `Warning: Property "${currentProperty}" exists in class "${classDeclaration.getName()}" but not in layout dump.`,
+          );
         }
-
-        return aIndex - bIndex;
-      });
-
-      for (let i = 0; i < classProperties.length; i++) {
-        classProperties[i].setOrder(i);
       }
     }
   }
@@ -397,6 +395,10 @@ function isEnumInfo(symbol: AnySymbol): symbol is EnumInfo {
   return "enumName" in symbol;
 }
 
+/**
+ * Get layout generator flags from JSDoc comments.
+ * Example: `LayoutGenerator: ignore`
+ */
 function getFlags(declaration: JSDocableNode & { getName(): string | undefined }) {
   const result: string[] = [];
   for (const jsDoc of declaration.getJsDocs()) {

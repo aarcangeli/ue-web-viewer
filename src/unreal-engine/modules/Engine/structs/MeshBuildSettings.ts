@@ -20,7 +20,6 @@ export class FMeshBuildSettings {
   BuildScale: number = 0;
   BuildScale3D: FVector3 = new FVector3();
   DistanceFieldResolutionScale: number = 0;
-  DistanceFieldBias: number = 0;
   DistanceFieldReplacementMesh: UStaticMesh | null = null;
   MaxLumenMeshCards: number = 0;
 }

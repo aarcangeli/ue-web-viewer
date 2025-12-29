@@ -38,9 +38,10 @@ export function getPropertyType(property: ChildPropertyInfo, resolver: TypeResol
       return "boolean";
     case "ObjectProperty":
       return `${resolver.resolveClassRef(property.objectType, true)} | null`;
+    case "SoftObjectProperty":
+      return `${resolver.resolveSymbol("FSoftObjectPath", true)}`;
     case "WeakObjectProperty":
     case "LazyObjectProperty":
-    case "SoftObjectProperty":
       break;
     case "ClassProperty":
     case "SoftClassProperty":
@@ -81,7 +82,7 @@ export function getPropertyType(property: ChildPropertyInfo, resolver: TypeResol
       break;
   }
   console.error("ERROR: generateType not implemented for property type:", property.type);
-  return `Invalid__${property.type}`;
+  return `ERROR__${property.type}`;
 }
 
 export function getInitializer(property: ChildPropertyInfo, resolver: TypeResolver): string {
@@ -106,9 +107,10 @@ export function getInitializer(property: ChildPropertyInfo, resolver: TypeResolv
       return "false";
     case "ObjectProperty":
       return "null";
+    case "SoftObjectProperty":
+      return `new ${resolver.resolveSymbol("FSoftObjectPath", false)}()`;
     case "WeakObjectProperty":
     case "LazyObjectProperty":
-    case "SoftObjectProperty":
       break;
     case "ClassProperty":
     case "SoftClassProperty":
@@ -152,7 +154,7 @@ export function getInitializer(property: ChildPropertyInfo, resolver: TypeResolv
       break;
   }
   console.error("ERROR: initializer not implemented for property type:", property.type);
-  return `Invalid__${property.type}`;
+  return `ERROR__${property.type}`;
 }
 
 function enumDefaultValue(enumType: EnumRef, resolver: TypeResolver) {
@@ -178,7 +180,12 @@ export function shortPackageName(packageName: string): string {
 }
 
 export function getPropertiesToExport(properties: PropertyInfo[]): PropertyInfo[] {
-  return properties.filter((prop) => !(prop.flagsLower & EPropertyFlags.Transient));
+  return properties.filter((prop) => {
+    const flags = BigInt(prop.flagsLower) | (BigInt(prop.flagsUpper) << BigInt(32));
+    const isTransient = (flags & BigInt(EPropertyFlags.Transient)) != BigInt(0);
+    const skipSerialization = (flags & EPropertyFlags.SkipSerialization) != BigInt(0);
+    return !isTransient && !skipSerialization;
+  });
 }
 
 function isNameMap(property: ChildPropertyInfo) {
