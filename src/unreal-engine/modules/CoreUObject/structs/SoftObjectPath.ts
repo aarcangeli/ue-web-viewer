@@ -126,6 +126,10 @@ export class FSoftObjectPath {
     return result;
   }
 
+  get summary(): string {
+    return this.toString();
+  }
+
   toJson() {
     return this.toString();
   }

@@ -5,6 +5,9 @@
 FUE5MainStreamObjectVersion
 FEditorObjectVersion
 FEnterpriseObjectVersion
+FAnimPhysObjectVersion
+FFrameworkObjectVersion
+FAnimObjectVersion
 
 # Necessary for FSoftObjectPath serialization
 FFortniteMainBranchObjectVersion

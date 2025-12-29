@@ -80,6 +80,10 @@ export class FGuid {
   equals(other: FGuid) {
     return this.A === other.A && this.B === other.B && this.C === other.C && this.D === other.D;
   }
+
+  get summary(): string {
+    return this.toString();
+  }
 }
 
 export const GUID_None = FGuid.fromComponents(0, 0, 0, 0);
