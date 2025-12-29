@@ -2,6 +2,7 @@ import { ENaniteFallbackTarget } from "../enums/ENaniteFallbackTarget";
 import { ENaniteGenerateFallback } from "../enums/ENaniteGenerateFallback";
 import type { FMeshDisplacementMap } from "./MeshDisplacementMap";
 import { FNaniteAssemblyData } from "./NaniteAssemblyData";
+import { ENaniteShapePreservation } from "../enums/ENaniteShapePreservation";
 
 export class FMeshNaniteSettings {
   bEnabled: boolean = false;
@@ -29,4 +30,5 @@ export class FMeshNaniteSettings {
   DisplacementUVChannel: number = 0;
   DisplacementMaps: Array<FMeshDisplacementMap> = [];
   NaniteAssemblyData: FNaniteAssemblyData = new FNaniteAssemblyData();
+  ShapePreservation: ENaniteShapePreservation = ENaniteShapePreservation.None;
 }
