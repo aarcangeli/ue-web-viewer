@@ -105,7 +105,7 @@ export class FReferenceSkeleton {
 export class FMeshBoneInfo {
   Name: FName = NAME_None;
   ParentIndex: number = -1;
-  ExportName: string = "";
+  ExportName: string = ""; // Same as Name, but with the correct case.
 
   static fromStream(reader: AssetReader): FMeshBoneInfo {
     const result = new FMeshBoneInfo();
