@@ -89,6 +89,9 @@ function renderSpecificProperties(object: UObject) {
 }
 
 function getObjectSummary(value: object) {
+  if (Array.isArray(value)) {
+    return `size = ${value.length}`;
+  }
   if ("summary" in value) {
     return String(value.summary) || undefined;
   }

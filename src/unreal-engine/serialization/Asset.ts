@@ -380,11 +380,11 @@ export class Asset implements AssetApi {
       const subReader = this._reader.subReader(objectExport.SerialSize);
 
       const resolver: ObjectResolver = {
-        resolveObject: (reader: AssetReader) => {
+        readObjectPtr: (reader: AssetReader) => {
           const index = reader.readInt32();
           return index ? this.getObjectByIndex(index, false) : null;
         },
-        resolveSoftObject: (reader: AssetReader) => {
+        readSoftObjectPtr: (reader: AssetReader) => {
           if (this.softObjects.length) {
             const index = reader.readInt32();
             invariant(index >= 0 && index < this.softObjects.length, `Invalid soft object index ${index}`);

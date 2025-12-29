@@ -3,7 +3,7 @@ import { RegisterClass } from "../../../types/class-registry";
 import { type FBoneNode } from "../structs/BoneNode";
 import { FTransform } from "../../CoreUObject/structs/Transform";
 import { EAxis } from "../../CoreUObject/enums/EAxis";
-import type { FGuid } from "../../CoreUObject/structs/Guid";
+import { FGuid } from "../../CoreUObject/structs/Guid";
 import { GUID_None } from "../../CoreUObject/structs/Guid";
 import { type FVirtualBone } from "../structs/VirtualBone";
 import { FSoftObjectPath } from "../../CoreUObject/structs/SoftObjectPath";
@@ -17,6 +17,10 @@ import { type UAssetUserData } from "./AssetUserData";
 import type { AssetReader } from "../../../AssetReader";
 import { EUnrealEngineObjectUE4Version } from "../../../versioning/ue-versions";
 import { FColor } from "../../CoreUObject/structs/Color";
+import {
+  FAnimPhysObjectVersion,
+  FAnimPhysObjectVersionGuid,
+} from "../../../versioning/custom-versions-enums/FAnimPhysObjectVersion";
 
 @RegisterClass("/Script/Engine.Skeleton")
 export class USkeleton extends UObject {
@@ -45,7 +49,7 @@ export class USkeleton extends UObject {
     super.deserialize(reader, resolver);
 
     if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_REFERENCE_SKELETON_REFACTOR) {
-      this.ReferenceSkeleton = FReferenceSkeleton.fromStream(reader);
+      this.ReferenceSkeleton = FReferenceSkeleton.fromStream(reader, resolver);
     }
   }
 }
@@ -54,14 +58,24 @@ export class FReferenceSkeleton {
   RawRefBoneInfo: FMeshBoneInfo[] = [];
   RawRefBonePose: FTransform[] = [];
   RawNameToIndexMap: FNameMap<number> = new FNameMap<number>();
+  AnimRetargetSources: FNameMap<FReferencePose> = new FNameMap<FReferencePose>();
+  Guid: FGuid = GUID_None;
 
-  static fromStream(reader: AssetReader) {
+  static fromStream(reader: AssetReader, resolver: ObjectResolver) {
     const result = new FReferenceSkeleton();
     result.RawRefBoneInfo = reader.readArray(() => FMeshBoneInfo.fromStream(reader));
     result.RawRefBonePose = reader.readArray(() => FTransform.fromStream(reader));
 
     if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_REFERENCE_SKELETON_REFACTOR) {
       result.RawNameToIndexMap = reader.readNameMap(() => reader.readInt32());
+    }
+
+    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_FIX_ANIMATIONBASEPOSE_SERIALIZATION) {
+      result.AnimRetargetSources = reader.readNameMap(() => FReferencePose.fromStream(reader, resolver));
+    }
+
+    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_SKELETON_GUID_SERIALIZATION) {
+      result.Guid = FGuid.fromStream(reader);
     }
 
     // todo: continue
@@ -93,5 +107,31 @@ export class FMeshBoneInfo {
 
   get summary(): string {
     return this.ExportName || this.Name.toString();
+  }
+}
+
+export class FReferencePose {
+  PoseName: FName = NAME_None;
+  PoseBones: FTransform[] = [];
+  SourceReferenceMesh: FSoftObjectPath = new FSoftObjectPath(); // USkeletalMesh
+
+  static fromStream(reader: AssetReader, resolver: ObjectResolver): FReferencePose {
+    const result = new FReferencePose();
+    result.PoseName = reader.readName();
+    result.PoseBones = reader.readArray(() => FTransform.fromStream(reader));
+
+    if (
+      reader.getCustomVersion(FAnimPhysObjectVersionGuid) <
+      FAnimPhysObjectVersion.ChangeRetargetSourceReferenceToSoftObjectPtr
+    ) {
+      const sourceReferenceMesh = resolver.readObjectPtr(reader);
+      if (sourceReferenceMesh) {
+        result.SourceReferenceMesh = FSoftObjectPath.fromObject(sourceReferenceMesh);
+      }
+    } else {
+      result.SourceReferenceMesh = resolver.readSoftObjectPtr(reader);
+    }
+
+    return result;
   }
 }

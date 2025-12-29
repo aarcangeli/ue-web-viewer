@@ -21,8 +21,8 @@ import type { AssetApi } from "../../../serialization/Asset";
 const ValidObjectName = /^[^.:]+$/;
 
 export interface ObjectResolver {
-  resolveObject: (reader: AssetReader) => UObject | null;
-  resolveSoftObject: (reader: AssetReader) => FSoftObjectPath;
+  readObjectPtr: (reader: AssetReader) => UObject | null;
+  readSoftObjectPtr: (reader: AssetReader) => FSoftObjectPath;
 }
 
 export type ObjectConstructionParams = {

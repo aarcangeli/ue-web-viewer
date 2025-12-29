@@ -129,7 +129,7 @@ function makeStructReader(generator: (reader: AssetReader) => NativeStructs): Pr
 }
 
 function softObjectPathSerializer(reader: AssetReader, resolver: ObjectResolver): PropertyValue {
-  const softObject = resolver.resolveSoftObject(reader);
+  const softObject = resolver.readSoftObjectPtr(reader);
   return { type: "native-struct", value: softObject };
 }
 
@@ -465,7 +465,7 @@ const readerByPropertyType = (() => {
 
   table[EPropertyType.ObjectProperty] = (reader, resolver) => ({
     type: "object",
-    object: resolver.resolveObject(reader),
+    object: resolver.readObjectPtr(reader),
   });
 
   return table;
