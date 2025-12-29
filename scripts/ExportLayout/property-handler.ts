@@ -178,7 +178,12 @@ export function shortPackageName(packageName: string): string {
 }
 
 export function getPropertiesToExport(properties: PropertyInfo[]): PropertyInfo[] {
-  return properties.filter((prop) => !(prop.flagsLower & EPropertyFlags.Transient));
+  return properties.filter((prop) => {
+    const flags = BigInt(prop.flagsLower) | (BigInt(prop.flagsUpper) << BigInt(32));
+    const isTransient = (flags & BigInt(EPropertyFlags.Transient)) != BigInt(0);
+    const skipSerialization = (flags & EPropertyFlags.SkipSerialization) != BigInt(0);
+    return !isTransient && !skipSerialization;
+  });
 }
 
 function isNameMap(property: ChildPropertyInfo) {

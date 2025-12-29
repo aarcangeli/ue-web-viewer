@@ -9,7 +9,6 @@ const src_dir = path.resolve(repoRoot, "src");
 
 export const ExportLayoutOptions = {
   verbose: true,
-  enforcePropertyOrder: true,
   enforceEnumOrder: true,
   overrideJSDoc: false,
 
