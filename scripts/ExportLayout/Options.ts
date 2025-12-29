@@ -15,12 +15,12 @@ export const ExportLayoutOptions = {
   /**
    * Sort imports by file path.
    */
-  organizeImports: true,
+  organizeImports: false,
 
   /**
    * List of UCLASS that will be exported to TypeScript.
    */
-  interestingTypes: ["StaticMesh"],
+  interestingTypes: ["StaticMesh", "Skeleton"],
 
   repoRoot: repoRoot,
   layoutPath: path.join(dirname, "LayoutDump.json"),
@@ -60,7 +60,7 @@ export const ExportLayoutOptions = {
   ]),
 
   /**
-   * Applies naming conventions to improve consistency in generated code.
+   * This map converts unreal engine type names with TypeScript type names.
    */
   structRenames: new Map<string, string>([
     ["FVector2D", "FVector2"],
