@@ -24,6 +24,10 @@ import {
   FFrameworkObjectVersion,
   FFrameworkObjectVersionGuid,
 } from "../../../versioning/custom-versions-enums/FFrameworkObjectVersion";
+import {
+  FAnimObjectVersion,
+  FAnimObjectVersionGuid,
+} from "../../../versioning/custom-versions-enums/FAnimObjectVersion";
 
 @RegisterClass("/Script/Engine.Skeleton")
 export class USkeleton extends UObject {
@@ -47,12 +51,35 @@ export class USkeleton extends UObject {
 
   // Native serialized properties
   ReferenceSkeleton: FReferenceSkeleton = new FReferenceSkeleton();
+  AnimRetargetSources: FNameMap<FReferencePose> = new FNameMap<FReferencePose>();
+  Guid: FGuid = GUID_None;
+  ExistingMarkerNames: FName[] = [];
 
   deserialize(reader: AssetReader, resolver: ObjectResolver) {
     super.deserialize(reader, resolver);
 
     if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_REFERENCE_SKELETON_REFACTOR) {
-      this.ReferenceSkeleton = FReferenceSkeleton.fromStream(reader, resolver);
+      this.ReferenceSkeleton = FReferenceSkeleton.fromStream(reader);
+
+      if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_FIX_ANIMATIONBASEPOSE_SERIALIZATION) {
+        this.AnimRetargetSources = reader.readNameMap(() => FReferencePose.fromStream(reader, resolver));
+      }
+
+      if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_SKELETON_GUID_SERIALIZATION) {
+        this.Guid = FGuid.fromStream(reader);
+      }
+
+      if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_SKELETON_ADD_SMARTNAMES) {
+        // TODO: how? this field is already serialized as UPROPERTY?
+        this.SmartNames = reader.readNameMap(() => FSmartNameMapping.fromStream(reader));
+      }
+
+      if (reader.getCustomVersion(FAnimObjectVersionGuid) >= FAnimObjectVersion.StoreMarkerNamesOnSkeleton) {
+        // inlined FStripDataFlags
+        reader.readUInt8(); // GlobalStripFlags
+        reader.readUInt8(); // ClassStripFlags
+        this.ExistingMarkerNames = reader.readArray(() => reader.readName());
+      }
     }
   }
 }
@@ -61,11 +88,8 @@ export class FReferenceSkeleton {
   RawRefBoneInfo: FMeshBoneInfo[] = [];
   RawRefBonePose: FTransform[] = [];
   RawNameToIndexMap: FNameMap<number> = new FNameMap<number>();
-  AnimRetargetSources: FNameMap<FReferencePose> = new FNameMap<FReferencePose>();
-  Guid: FGuid = GUID_None;
-  SmartNames: FNameMap<FSmartNameMapping> = new FNameMap<FSmartNameMapping>();
 
-  static fromStream(reader: AssetReader, resolver: ObjectResolver) {
+  static fromStream(reader: AssetReader) {
     const result = new FReferenceSkeleton();
     result.RawRefBoneInfo = reader.readArray(() => FMeshBoneInfo.fromStream(reader));
     result.RawRefBonePose = reader.readArray(() => FTransform.fromStream(reader));
@@ -74,19 +98,6 @@ export class FReferenceSkeleton {
       result.RawNameToIndexMap = reader.readNameMap(() => reader.readInt32());
     }
 
-    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_FIX_ANIMATIONBASEPOSE_SERIALIZATION) {
-      result.AnimRetargetSources = reader.readNameMap(() => FReferencePose.fromStream(reader, resolver));
-    }
-
-    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_SKELETON_GUID_SERIALIZATION) {
-      result.Guid = FGuid.fromStream(reader);
-    }
-
-    if (reader.fileVersionUE4 >= EUnrealEngineObjectUE4Version.VER_UE4_SKELETON_ADD_SMARTNAMES) {
-      result.SmartNames = reader.readNameMap(() => FSmartNameMapping.fromStream(reader));
-    }
-
-    // todo: continue
     return result;
   }
 }

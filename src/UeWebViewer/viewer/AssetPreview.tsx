@@ -82,6 +82,10 @@ function renderSpecificProperties(object: UObject) {
     return (
       <CollapsableSection name={"Skeleton"}>
         {renderGenericProperty(0, "ReferenceSkeleton", object.ReferenceSkeleton)}
+        {renderGenericProperty(0, "AnimRetargetSources", object.AnimRetargetSources)}
+        {renderGenericProperty(0, "Guid", object.Guid)}
+        {renderGenericProperty(0, "SmartNames", object.SmartNames)}
+        {renderGenericProperty(0, "ExistingMarkerNames", object.ExistingMarkerNames)}
       </CollapsableSection>
     );
   }
