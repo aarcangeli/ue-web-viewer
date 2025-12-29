@@ -1,19 +1,19 @@
-import { UObject } from "../../CoreUObject/objects/Object";
+import { type ObjectResolver, UObject } from "../../CoreUObject/objects/Object";
 import { RegisterClass } from "../../../types/class-registry";
-import type { FBoneNode } from "../structs/BoneNode";
-import type { FTransform } from "../../CoreUObject/structs/Transform";
+import { type FBoneNode } from "../structs/BoneNode";
+import { type FTransform } from "../../CoreUObject/structs/Transform";
 import { EAxis } from "../../CoreUObject/enums/EAxis";
-import type { FGuid } from "../../CoreUObject/structs/Guid";
-import { GUID_None } from "../../CoreUObject/structs/Guid";
-import type { FVirtualBone } from "../structs/VirtualBone";
+import { type FGuid, GUID_None } from "../../CoreUObject/structs/Guid";
+import { type FVirtualBone } from "../structs/VirtualBone";
 import { FSoftObjectPath } from "../../CoreUObject/structs/SoftObjectPath";
-import type { USkeletalMeshSocket } from "./SkeletalMeshSocket";
+import { type USkeletalMeshSocket } from "./SkeletalMeshSocket";
 import { FSmartNameContainer } from "../structs/SmartNameContainer";
-import type { UBlendProfile } from "./BlendProfile";
-import type { FAnimSlotGroup } from "../structs/AnimSlotGroup";
-import type { FName } from "../../../types/Name";
+import { type UBlendProfile } from "./BlendProfile";
+import { type FAnimSlotGroup } from "../structs/AnimSlotGroup";
+import { type FName } from "../../../types/Name";
 import { FPreviewAssetAttachContainer } from "../structs/PreviewAssetAttachContainer";
-import type { UAssetUserData } from "./AssetUserData";
+import { type UAssetUserData } from "./AssetUserData";
+import type { AssetReader } from "../../../AssetReader";
 
 @RegisterClass("/Script/Engine.Skeleton")
 export class USkeleton extends UObject {
@@ -34,4 +34,8 @@ export class USkeleton extends UObject {
   PreviewAttachedAssetContainer: FPreviewAssetAttachContainer = new FPreviewAssetAttachContainer();
   AssetUserData: Array<UAssetUserData | null> = [];
   AssetUserDataEditorOnly: Array<UAssetUserData | null> = [];
+
+  deserialize(reader: AssetReader, resolver: ObjectResolver) {
+    super.deserialize(reader, resolver);
+  }
 }
