@@ -7,6 +7,7 @@ import { FAnimPhysObjectVersionGuid } from "./custom-versions-enums/FAnimPhysObj
 import { FEditorObjectVersionGuid } from "./custom-versions-enums/FEditorObjectVersion";
 import { FEnterpriseObjectVersionGuid } from "./custom-versions-enums/FEnterpriseObjectVersion";
 import { FFortniteMainBranchObjectVersionGuid } from "./custom-versions-enums/FFortniteMainBranchObjectVersion";
+import { FFrameworkObjectVersionGuid } from "./custom-versions-enums/FFrameworkObjectVersion";
 import { FUE5MainStreamObjectVersionGuid } from "./custom-versions-enums/FUE5MainStreamObjectVersion";
 import type { CustomVersionGuid } from "./CustomVersionGuid";
 
@@ -15,5 +16,6 @@ export const allCustomVersions: ReadonlyArray<CustomVersionGuid> = [
   FEditorObjectVersionGuid,
   FEnterpriseObjectVersionGuid,
   FFortniteMainBranchObjectVersionGuid,
+  FFrameworkObjectVersionGuid,
   FUE5MainStreamObjectVersionGuid,
 ];
