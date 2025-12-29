@@ -32,6 +32,24 @@ export class FTransform {
     return new FTransform(Translation, Rotation, Scale3D);
   }
 
+  static fromStream(reader: AssetReader) {
+    if (reader.isLargeWorldCoordinates) {
+      return FTransform.fromDouble(reader);
+    } else {
+      return FTransform.fromFloat(reader);
+    }
+  }
+
+  get summary(): string {
+    return (
+      `T:{${this.Translation.X.toFixed(2)}, ${this.Translation.Y.toFixed(2)}, ${this.Translation.Z.toFixed(2)}} ` +
+      `R:{${this.Rotation.X.toFixed(2)}, ${this.Rotation.Y.toFixed(2)}, ${this.Rotation.Z.toFixed(
+        2,
+      )}, ${this.Rotation.W.toFixed(2)}} ` +
+      `S:{${this.Scale3D.X.toFixed(2)}, ${this.Scale3D.Y.toFixed(2)}, ${this.Scale3D.Z.toFixed(2)}}`
+    );
+  }
+
   toString() {
     return `FTransform{Rotation: ${this.Rotation}, Translation: ${this.Translation}, Scale3D: ${this.Scale3D}}`;
   }

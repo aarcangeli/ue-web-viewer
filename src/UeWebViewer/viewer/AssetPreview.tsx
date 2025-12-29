@@ -14,6 +14,10 @@ import type { ITextData } from "../../unreal-engine/types/Text";
 import { ETextHistoryType, FTextHistory_Base } from "../../unreal-engine/types/Text";
 import { FPerPlatformFloat } from "../../unreal-engine/modules/CoreUObject/structs/PerPlatformProperties";
 import { isMissingImportedObject } from "../../unreal-engine/modules/error-elements";
+import { USkeleton } from "../../unreal-engine/modules/Engine/objects/Skeleton";
+import { FName, FNameMap } from "../../unreal-engine/types/Name";
+import type { NativeStructs } from "../../unreal-engine/properties/NativeStructs";
+import { FTransform } from "../../unreal-engine/modules/CoreUObject/structs/Transform";
 
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
@@ -29,7 +33,8 @@ export function ObjectPreview(props: { object: UObject }) {
           <IndentedRow title={"Class"}>{renderObjectName(exportedObjects.class)}</IndentedRow>
           <IndentedRow title={"Object Guid"}>{exportedObjects.objectGuid?.toString() || "None"}</IndentedRow>
         </CollapsableSection>
-        <CollapsableSection name={"Serialized Properties"}>
+        {renderSpecificProperties(exportedObjects)}
+        <CollapsableSection name={"Tagged Properties"}>
           {exportedObjects.properties.map((property, index) =>
             renderValue(index, property.nameString, property.value, makePropertyIcon(property.tag)),
           )}
@@ -72,6 +77,111 @@ function renderTextData(textData: ITextData) {
   return undefined;
 }
 
+function renderSpecificProperties(object: UObject) {
+  if (object instanceof USkeleton) {
+    return (
+      <CollapsableSection name={"Skeleton"}>
+        {renderGenericProperty(0, "ReferenceSkeleton", object.ReferenceSkeleton)}
+        {renderGenericProperty(0, "AnimRetargetSources", object.AnimRetargetSources)}
+        {renderGenericProperty(0, "Guid", object.Guid)}
+        {renderGenericProperty(0, "SmartNames", object.SmartNames)}
+        {renderGenericProperty(0, "ExistingMarkerNames", object.ExistingMarkerNames)}
+      </CollapsableSection>
+    );
+  }
+  return null;
+}
+
+function getObjectSummary(value: object) {
+  if (Array.isArray(value)) {
+    return `size = ${value.length}`;
+  }
+  if ("summary" in value) {
+    return String(value.summary) || undefined;
+  }
+  return undefined;
+}
+
+type GenericType = number | object | FNameMap<GenericType> | FName;
+
+/**
+ * Render an unknown type.
+ */
+function renderGenericProperty(key: number, title: string, value: GenericType, icon?: React.ReactElement) {
+  if (value instanceof FNameMap) {
+    return (
+      <CollapsableSection initialExpanded={false} key={key} title={title} name={`size = ${value.size}`}>
+        {value.map((mapKey, mapValue, mapIndex) => renderGenericProperty(mapIndex, mapKey.toString(), mapValue))}
+      </CollapsableSection>
+    );
+  }
+  if (value instanceof FName) {
+    return (
+      <IndentedRow key={key} title={title}>
+        {value.toString()}
+      </IndentedRow>
+    );
+  }
+  if (value instanceof FTransform) {
+    return renderNativeStructProperty(key, title, value);
+  }
+  if (typeof value === "object") {
+    return (
+      <CollapsableSection initialExpanded={false} key={key} icon={icon} title={title} name={getObjectSummary(value)}>
+        {Object.entries(value).map(([subKey, subValue], index) => {
+          return renderGenericProperty(index, subKey, subValue as GenericType);
+        })}
+      </CollapsableSection>
+    );
+  }
+  return (
+    <IndentedRow key={key} title={title}>
+      {String(value)}
+    </IndentedRow>
+  );
+}
+
+function renderNativeStructProperty(
+  key: number,
+  name: string,
+  value: NativeStructs,
+  icon?: React.ReactElement,
+): ReactNode {
+  if (value instanceof FMatrix44) {
+    return (
+      <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value)}>
+        {value.matrix.map((item, index) => (
+          <IndentedRow key={index} title={`M[${Math.floor(index / 4)}][${index % 4}]`}>
+            {String(item)}
+          </IndentedRow>
+        ))}
+      </CollapsableSection>
+    );
+  }
+  if (value instanceof FPerPlatformFloat) {
+    return (
+      <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value)}>
+        <IndentedRow title={"Default"}>{value.Default}</IndentedRow>
+        {value.PerPlatform.map((platform, value, index) => (
+          <IndentedRow key={index} title={`Override [ ${platform} ]`}>
+            {String(value)}
+          </IndentedRow>
+        ))}
+      </CollapsableSection>
+    );
+  }
+  const summary = value instanceof FTransform ? value.summary : String(value);
+  return (
+    <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={summary}>
+      {Object.entries(value).map(([subKey, subValue], index) => (
+        <IndentedRow key={index} title={subKey}>
+          {String(subValue)}
+        </IndentedRow>
+      ))}
+    </CollapsableSection>
+  );
+}
+
 function renderValue(key: number, name: string, value: PropertyValue, icon?: React.ReactElement) {
   switch (value.type) {
     case "numeric":
@@ -106,38 +216,7 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
         </CollapsableSection>
       );
     case "native-struct":
-      if (value.value instanceof FMatrix44) {
-        return (
-          <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value.value)}>
-            {value.value.matrix.map((item, index) => (
-              <IndentedRow key={index} title={`M[${Math.floor(index / 4)}][${index % 4}]`}>
-                {String(item)}
-              </IndentedRow>
-            ))}
-          </CollapsableSection>
-        );
-      }
-      if (value.value instanceof FPerPlatformFloat) {
-        return (
-          <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value.value)}>
-            <IndentedRow title={"Default"}>{value.value.Default}</IndentedRow>
-            {value.value.PerPlatform.map((platform, value, index) => (
-              <IndentedRow key={index} title={`Override [ ${platform} ]`}>
-                {String(value)}
-              </IndentedRow>
-            ))}
-          </CollapsableSection>
-        );
-      }
-      return (
-        <CollapsableSection initialExpanded={false} key={key} icon={icon} title={name} name={String(value.value)}>
-          {Object.entries(value.value).map(([subKey, subValue], index) => (
-            <IndentedRow key={index} title={subKey}>
-              {String(subValue)}
-            </IndentedRow>
-          ))}
-        </CollapsableSection>
-      );
+      return renderNativeStructProperty(key, name, value.value, icon);
     case "delegate":
       return (
         <IndentedRow key={key} icon={icon} title={name}>

@@ -38,7 +38,7 @@ export function extendJest() {
  *
  * @param object The object whose properties should be checked against snapshots.
  */
-export function matchSnapshots(object: UObject) {
+export function matchSnapshotProperties(object: UObject) {
   for (const property of object.properties) {
     expect(property).toMatchSnapshot();
   }
