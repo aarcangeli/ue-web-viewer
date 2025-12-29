@@ -2,7 +2,6 @@ import type { AssetReader } from "../../../AssetReader";
 
 /**
  * RGBA color on integer scale (sRGB).
- * LayoutGenerator: nosort
  */
 export class FColor {
   R: number = 0;

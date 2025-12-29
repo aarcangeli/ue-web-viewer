@@ -28,7 +28,7 @@ The generated output includes:
 3. Run the script using Yarn:
 
    ```shell
-   yarn run export-layout
+   yarn export-layout
    ```
 
 4. Check the generated files using git diff.

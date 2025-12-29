@@ -8,7 +8,11 @@ export class FTransform {
   Translation: FVector3 = new FVector3();
   Scale3D: FVector3 = new FVector3();
 
-  constructor(Rotation: FQuat, Translation: FVector3, Scale3D: FVector3) {
+  constructor(
+    Rotation: FQuat = new FQuat(),
+    Translation: FVector3 = new FVector3(0, 0, 0),
+    Scale3D: FVector3 = new FVector3(1, 1, 1),
+  ) {
     this.Rotation = Rotation;
     this.Translation = Translation;
     this.Scale3D = Scale3D;
