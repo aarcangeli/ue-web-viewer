@@ -18,6 +18,11 @@ export const ExportLayoutOptions = {
   organizeImports: false,
 
   /**
+   * If true, will warn about any properties found in TypeScript class, but not in UHT layout.
+   */
+  warnExtraProperties: false,
+
+  /**
    * List of UCLASS that will be exported to TypeScript.
    */
   interestingTypes: ["StaticMesh", "Skeleton"],

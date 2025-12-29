@@ -6,7 +6,6 @@ import { ENaniteShapePreservation } from "../enums/ENaniteShapePreservation";
 
 export class FMeshNaniteSettings {
   bEnabled: boolean = false;
-  bPreserveArea: boolean = false;
   bExplicitTangents: boolean = false;
   bLerpUVs: boolean = false;
   bSeparable: boolean = false;

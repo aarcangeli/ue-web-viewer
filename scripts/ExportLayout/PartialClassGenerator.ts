@@ -297,6 +297,17 @@ export class PartialClassGenerator {
         ensureBlankLineBefore(existingProperty);
       }
     }
+
+    if (ExportLayoutOptions.warnExtraProperties) {
+      const currentProperties = classDeclaration.getProperties().map((p) => p.getName());
+      for (const currentProperty of currentProperties) {
+        if (!properties.find((p) => p.name === currentProperty)) {
+          console.warn(
+            `Warning: Property "${currentProperty}" exists in class "${classDeclaration.getName()}" but not in layout dump.`,
+          );
+        }
+      }
+    }
   }
 
   /**
