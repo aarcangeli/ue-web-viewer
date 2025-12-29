@@ -3,6 +3,7 @@
 // noinspection JSUnusedGlobalSymbols
 //
 
+import { FAnimObjectVersionGuid } from "./custom-versions-enums/FAnimObjectVersion";
 import { FAnimPhysObjectVersionGuid } from "./custom-versions-enums/FAnimPhysObjectVersion";
 import { FEditorObjectVersionGuid } from "./custom-versions-enums/FEditorObjectVersion";
 import { FEnterpriseObjectVersionGuid } from "./custom-versions-enums/FEnterpriseObjectVersion";
@@ -12,6 +13,7 @@ import { FUE5MainStreamObjectVersionGuid } from "./custom-versions-enums/FUE5Mai
 import type { CustomVersionGuid } from "./CustomVersionGuid";
 
 export const allCustomVersions: ReadonlyArray<CustomVersionGuid> = [
+  FAnimObjectVersionGuid,
   FAnimPhysObjectVersionGuid,
   FEditorObjectVersionGuid,
   FEnterpriseObjectVersionGuid,
