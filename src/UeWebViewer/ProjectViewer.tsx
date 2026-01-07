@@ -5,9 +5,9 @@ import type { MinimalNode, TreeViewApi } from "./components/TreeView";
 import { TreeView } from "./components/TreeView";
 import { fakeWait } from "./config";
 import { FileViewer } from "./viewer/FileViewer";
-import { BiFileBlank, BiFolder } from "react-icons/bi";
 import { navigate, useHistoryState } from "../utils/useHistoryState";
 import { ProjectApi, ProjectApiProvider } from "./ProjectApi";
+import { BlueprintIcon, ConfigIcon, ContentDirIcon, DirectoryIcon, GenericFileIcon } from "./icons.gen";
 
 export interface Props {
   project: FileApi;
@@ -20,13 +20,40 @@ interface FileNode extends MinimalNode {
   isEmpty?: boolean;
 }
 
+function IsInContentDir(node: FileApi): boolean {
+  let current: FileApi | null = node;
+  while (current) {
+    if (current.name === "Content" && current.kind === "directory") {
+      return true;
+    }
+    current = current.parent;
+  }
+  return false;
+}
+
+function getIcon(node: FileApi) {
+  if (node.kind === "directory") {
+    if (node.name == "Config") {
+      return <ConfigIcon />;
+    }
+    if (node.name == "Content" || IsInContentDir(node)) {
+      return <ContentDirIcon />;
+    }
+    return <DirectoryIcon />;
+  }
+  if (node.name.toLowerCase().endsWith(".uasset")) {
+    return <BlueprintIcon />;
+  }
+  return <GenericFileIcon />;
+}
+
 function makeNode(node: FileApi): FileNode {
   return {
     file: node,
     name: node.name,
     isLeaf: node.kind === "file",
     isEmpty: node.kind === "directory" && node.isEmptyDirectory(),
-    icon: node.kind === "directory" ? <BiFolder /> : <BiFileBlank />,
+    icon: getIcon(node),
   };
 }
 
