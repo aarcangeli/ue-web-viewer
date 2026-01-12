@@ -4,6 +4,7 @@ import type { UClass } from "../modules/CoreUObject/objects/Class";
 import type { ObjectConstructionParams, UObject } from "../modules/CoreUObject/objects/Object";
 
 import { FName } from "./Name";
+import type { ObjectPtr } from "../modules/CoreUObject/structs/ObjectPtr";
 
 export interface ClassInfo {
   packageName: FName;
@@ -38,8 +39,8 @@ export function RegisterClass(fullClassName: string) {
   };
 }
 
-export function findClassOf(clazz: UClass): ObjectClass | null {
-  let currentClass: UClass | null = clazz;
+export function findClassOf(clazz: ObjectPtr<UClass>): ObjectClass | null {
+  let currentClass: UClass | null = clazz.getCached() || null;
 
   // Find the TS class with better match for the UObject class hierarchy
   while (currentClass) {
@@ -47,16 +48,10 @@ export function findClassOf(clazz: UClass): ObjectClass | null {
     if (constructor) {
       return constructor;
     }
-    currentClass = currentClass.superClazz;
+    currentClass = currentClass.superClazz?.getCached() || null;
   }
 
-  const constructor = classRegistry.get("/Script/CoreUObject.Object");
-  if (constructor) {
-    return constructor;
-  }
-
-  // Really strange, at least UObject should exist.
-  throw new Error(`No constructor found for class: ${clazz.fullName}`);
+  return null;
 }
 
 export function instantiateObject(params: ObjectConstructionParams): UObject {
@@ -66,7 +61,7 @@ export function instantiateObject(params: ObjectConstructionParams): UObject {
   }
 
   // Really strange, at least UObject should exist.
-  throw new Error(`No constructor found for class: ${params.clazz.fullName}`);
+  throw new Error(`No constructor found for class: ${params.clazz.getSoftObjectPath().toString()}`);
 }
 
 export function getClassName(objectClass: ObjectClassPrivate) {
@@ -78,6 +73,10 @@ export function getSuperClass(objectClass: ObjectClassPrivate) {
   return prototype?.[MY_KEY];
 }
 
+/**
+ * Get the sort of all registered classes.
+ * Ordering rule: The super class is always before the subclass.
+ */
 export function getAllClasses(): ClassInfo[] {
   return Array.from(classRegistry.values()).map((clazz) => {
     const [packageName, className] = getClassName(clazz)!.split(".");

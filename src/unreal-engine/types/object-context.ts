@@ -5,16 +5,21 @@ import invariant from "tiny-invariant";
 import type { EPackageFlags } from "../enums";
 import { UClass } from "../modules/CoreUObject/objects/Class";
 import type { UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
-import { LazyClass } from "../modules/CoreUObject/objects/Object";
 import { UPackage } from "../modules/CoreUObject/objects/Package";
-import { isMissingImportedObject } from "../modules/mock-object";
 import { NAME_Class, NAME_CoreUObject, NAME_Object, NAME_Package } from "../modules/names";
 
 import { getAllClasses, instantiateObject } from "./class-registry";
 import { FName } from "./Name";
+import { ObjectPtr } from "../modules/CoreUObject/structs/ObjectPtr";
+import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
+import { removeInPlace } from "../../utils/array-utils";
 
 /**
  * A context is a collection of all loaded objects in the application.
+ *
+ * Unreal Engine, has usually a single global object context, in this project we
+ * want to isolate different contexts for modularity and testing purposes.
+ *
  * Some objects are spawned synthetically (eg: classes and packages), other are loaded from assets.
  * Most of the objects are weak references, so they can be garbage collected.
  */
@@ -48,9 +53,10 @@ export interface IObjectContext {
    * Creates a new package or returns an existing one.
    * If a package with the given name already exists, it returns that package.
    * @param packageName The name of the package to find or create.
+   * @param flags Optional flags to set on the package if it is created.
    * @returns The existing or newly created package.
    */
-  findOrCreatePackage(packageName: FName): UPackage;
+  findOrCreatePackage(packageName: FName, flags?: EPackageFlags): UPackage;
 
   /**
    * Finds a class by its package and class name.
@@ -63,7 +69,13 @@ export interface IObjectContext {
   /*
    * Creates a new object of the specified class with the given name.
    */
-  newObject(outer: UObject, clazz: UClass, name: FName, flags?: EPackageFlags): UObject;
+  newObject(outer: UObject, clazz: UClass | ObjectPtr<UClass>, name: FName, flags?: EPackageFlags): UObject;
+
+  /**
+   * Removes a package from the context.
+   * @param uPackage The package to remove.
+   */
+  removePackage(uPackage: UPackage): void;
 }
 
 export function MakeObjectContext(): IObjectContext {
@@ -92,7 +104,7 @@ class ObjectContextImpl implements IObjectContext {
     this.CLASS_Object = this.getClass(NAME_CoreUObject, NAME_Object);
     this.CLASS_Class = this.getClass(NAME_CoreUObject, NAME_Class);
     this.CLASS_Package = this.getClass(NAME_CoreUObject, NAME_Package);
-    this.reloadClassHierarchy();
+    this.loadFromClassRegistry();
   }
 
   /**
@@ -121,7 +133,7 @@ class ObjectContextImpl implements IObjectContext {
   /**
    * Iterate over the class registry and populate the class hierarchy.
    */
-  private reloadClassHierarchy() {
+  private loadFromClassRegistry() {
     for (const classItem of getAllClasses()) {
       // Resolve the super class.
       // If specified, it must already be registered in the context.
@@ -136,10 +148,14 @@ class ObjectContextImpl implements IObjectContext {
       // Create the class object.
       const existingClass = this.resolveClass(classItem.packageName, classItem.className);
       if (existingClass) {
-        invariant(
-          existingClass.superClazz === superClazz,
-          `Class ${classItem.className} already exists with a different super class.`,
-        );
+        if (superClazz) {
+          const lhs = existingClass.superClazz?.toString();
+          const rhs = superClazz.fullName;
+          invariant(
+            lhs?.toLowerCase() === rhs?.toLowerCase(),
+            `Class ${classItem.className} already exists with a different super class. (expected: ${lhs}, actual: ${rhs})`,
+          );
+        }
         continue;
       }
 
@@ -148,9 +164,9 @@ class ObjectContextImpl implements IObjectContext {
       this.classes.push(
         new UClass({
           outer: outerPackage,
-          clazz: this.CLASS_Class,
+          clazz: ObjectPtr.fromObject(this.CLASS_Class),
           name: classItem.className,
-          superClazz: superClazz ?? undefined,
+          superClazz: ObjectPtr.fromObject(superClazz),
         }),
       );
     }
@@ -159,9 +175,10 @@ class ObjectContextImpl implements IObjectContext {
   findOrCreatePackage(packageName: FName, flags?: EPackageFlags): UPackage {
     let packageObject = this.findPackage(packageName);
     if (!packageObject) {
+      this.cleanStalePackages();
       packageObject = new UPackage({
         outer: null,
-        clazz: this.CLASS_Package,
+        clazz: ObjectPtr.fromObject(this.CLASS_Package),
         name: packageName,
         flags: flags,
       });
@@ -170,25 +187,23 @@ class ObjectContextImpl implements IObjectContext {
     return packageObject;
   }
 
-  newObject(outer: UObject, clazz: UClass, name: FName, flags?: EPackageFlags): UObject {
-    invariant(!this.CLASS_Class.isChildOf(clazz), `Cannot create an instance of UClass: ${clazz.fullName}`);
-    invariant(!this.CLASS_Package.isChildOf(clazz), `Cannot create an instance of UPackage: ${clazz.fullName}`);
-    invariant(!isMissingImportedObject(clazz), `This case must be managed by the caller. Class: ${clazz.fullName}`);
-
-    if (outer) {
-      // packages must be root objects
-      invariant(!clazz.name.equals(NAME_Package), "Outer must not be a package for non-package objects");
-    } else {
-      // only packages can have a null outer
-      invariant(clazz.name.equals(NAME_Package), "Outer can only be null for packages");
-      invariant(this.CLASS_Package.isChildOf(clazz));
-    }
+  newObject(outer: UObject, clazz: ObjectPtr<UClass>, name: FName, flags?: EPackageFlags): UObject {
+    invariant(outer !== null, "Outer cannot be null for non-package objects");
     invariant(
       outer.findInnerByFName(name) === null,
       `Object with name ${name} already exists in outer ${outer.fullName}`,
     );
 
     return instantiateObject({ outer, clazz, name, flags });
+  }
+
+  removePackage(uPackage: UPackage) {
+    const index = this.packages.findIndex((ref) => ref.deref() === uPackage);
+    if (index !== -1) {
+      this.packages.splice(index, 1);
+      // Mark all inner objects as detached
+      uPackage.markAsDetached();
+    }
   }
 
   private getClass(packageName: FName, className: FName): UClass {
@@ -221,7 +236,17 @@ class ObjectContextImpl implements IObjectContext {
    * as the system would otherwise recurse indefinitely.
    */
   private createInitialClasses() {
-    const createClass = (owner: UPackage, clazz: UClass, name: string, superClazz: UClass | undefined) => {
+    const createClassPtr = (ownerName: FName, className: string) => {
+      const softObjectPath = FSoftObjectPath.fromNameParts([ownerName, FName.fromString(className)]);
+      return ObjectPtr.fromSoftObjectPath<UClass>(softObjectPath);
+    };
+
+    const createClass = (
+      owner: UPackage,
+      clazz: ObjectPtr<UClass>,
+      name: string,
+      superClazz: ObjectPtr<UClass> | undefined,
+    ) => {
       const createdClass = new UClass({
         outer: owner,
         clazz: clazz,
@@ -232,28 +257,32 @@ class ObjectContextImpl implements IObjectContext {
       return createdClass;
     };
 
+    // Create class ptr
+    const ClassClass = createClassPtr(NAME_CoreUObject, "Class");
+    const ClassField = createClassPtr(NAME_CoreUObject, "Field");
+    const ClassStruct = createClassPtr(NAME_CoreUObject, "Struct");
+    const ClassObject = createClassPtr(NAME_CoreUObject, "Object");
+    const ClassPackage = createClassPtr(NAME_CoreUObject, "Package");
+
     // The "class" field forms a circular reference, so we use a special "lazy" class to break this cycle.
     // The actual class reference will be assigned immediately afterward.
     const PACKAGE_CoreUObject = new UPackage({
       outer: null,
-      clazz: LazyClass,
+      clazz: ClassPackage,
       name: NAME_CoreUObject,
     });
     this.packages.push(PACKAGE_CoreUObject.asWeakObject());
 
-    const CLASS_Object = createClass(PACKAGE_CoreUObject, LazyClass, "Object", undefined);
-    const CLASS_Field = createClass(PACKAGE_CoreUObject, LazyClass, "Field", CLASS_Object);
-    const CLASS_Struct = createClass(PACKAGE_CoreUObject, LazyClass, "Struct", CLASS_Field);
-    const CLASS_Class = createClass(PACKAGE_CoreUObject, LazyClass, "Class", CLASS_Struct);
-    const CLASS_Package = createClass(PACKAGE_CoreUObject, LazyClass, "Package", CLASS_Object);
-
-    PACKAGE_CoreUObject.replaceLazyClass(CLASS_Package);
-    CLASS_Object.replaceLazyClass(CLASS_Class);
-    CLASS_Field.replaceLazyClass(CLASS_Class);
-    CLASS_Struct.replaceLazyClass(CLASS_Class);
-    CLASS_Class.replaceLazyClass(CLASS_Class);
-    CLASS_Package.replaceLazyClass(CLASS_Class);
+    ClassObject.replaceObject(createClass(PACKAGE_CoreUObject, ClassClass, "Object", undefined));
+    ClassField.replaceObject(createClass(PACKAGE_CoreUObject, ClassClass, "Field", ClassObject));
+    ClassStruct.replaceObject(createClass(PACKAGE_CoreUObject, ClassClass, "Struct", ClassField));
+    ClassPackage.replaceObject(createClass(PACKAGE_CoreUObject, ClassClass, "Package", ClassObject));
+    ClassClass.replaceObject(createClass(PACKAGE_CoreUObject, ClassClass, "Class", ClassStruct));
 
     return PACKAGE_CoreUObject;
+  }
+
+  private cleanStalePackages() {
+    removeInPlace(this.packages, (ref) => ref.deref() === undefined);
   }
 }

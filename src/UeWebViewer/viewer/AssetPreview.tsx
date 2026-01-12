@@ -13,27 +13,44 @@ import { makePropertyIcon } from "./MakePropertyIcon";
 import type { ITextData } from "../../unreal-engine/types/Text";
 import { ETextHistoryType, FTextHistory_Base } from "../../unreal-engine/types/Text";
 import { FPerPlatformFloat } from "../../unreal-engine/modules/CoreUObject/structs/PerPlatformProperties";
-import { isMissingImportedObject } from "../../unreal-engine/modules/mock-object";
 import { USkeleton } from "../../unreal-engine/modules/Engine/objects/Skeleton";
 import { FName, FNameMap } from "../../unreal-engine/types/Name";
 import type { NativeStructs } from "../../unreal-engine/properties/NativeStructs";
 import { FTransform } from "../../unreal-engine/modules/CoreUObject/structs/Transform";
+import { renderObjectName, renderObjectPtr } from "./links";
+import type { ObjectPtr } from "../../unreal-engine/modules/CoreUObject/structs/ObjectPtr";
+import { removeExtension } from "../../utils/string-utils";
+import { useAsyncCompute } from "../../utils/async-compute";
 
-export function ObjectPreview(props: { object: UObject }) {
-  const exportedObjects = props.object;
+export function ObjectPtrPreview(props: { objectPtr: ObjectPtr }) {
+  const objectPtr = props.objectPtr;
+  const data = useAsyncCompute((abort) => objectPtr.load(abort), [objectPtr]);
 
-  // Reject mock objects
-  if (exportedObjects.isMockObject) {
+  if (objectPtr.isNull()) {
+    return <Box p={2}>Null Object</Box>;
+  }
+
+  if (data.isLoading) {
+    return <Box p={2}>Loading Object...</Box>;
+  }
+
+  if (data.error) {
     return (
-      <Box p={2}>
-        <Alert status="error">
-          <AlertIcon />
-          <AlertTitle>{isMissingImportedObject(exportedObjects) ? "Missing object" : "Invalid object"}</AlertTitle>
-          <AlertDescription>{exportedObjects.fullName}</AlertDescription>
-        </Alert>
+      <Box p={2} color={"red"}>
+        Error loading object: {data.error.message}
       </Box>
     );
   }
+
+  if (!data.data) {
+    return <Box p={2}>Missing Object</Box>;
+  }
+
+  return <ObjectPreview object={data.data} />;
+}
+
+export function ObjectPreview(props: { object: UObject }) {
+  const exportedObjects = props.object;
 
   const statistics = exportedObjects.serializationStatistics;
 
@@ -57,20 +74,22 @@ export function ObjectPreview(props: { object: UObject }) {
   );
 }
 
-function renderObjectName(object: UObject | null) {
-  if (!object) {
-    return "null";
+function findMainObject(asset: AssetApi): ObjectPtr | null {
+  const packageName = extractBaseName(asset.package.name);
+  const index = asset.exports.findIndex((exp) => exp.ObjectName.equals(packageName));
+  if (index !== -1) {
+    // Convert to export index
+    return asset.getObjectByIndex(index + 1);
   }
-  if (isMissingImportedObject(object)) {
-    return <Box color={"red"}>Missing object: {object.fullName}</Box>;
-  }
-  return object.fullName;
+  return null;
 }
 
 export function AssetPreview(props: { asset: AssetApi }) {
-  const exportedObjects = props.asset.mainObject;
+  // const exportedObjects = props.asset.mainObject;
+  const exportedObjects = findMainObject(props.asset);
+  console.log(exportedObjects);
 
-  return exportedObjects ? <ObjectPreview object={exportedObjects} /> : <Box>Asset not found</Box>;
+  return exportedObjects ? <ObjectPtrPreview objectPtr={exportedObjects} /> : <Box>Main asset not found</Box>;
 }
 
 function makeIndexLabel(index: number) {
@@ -217,12 +236,12 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
     case "object":
       return (
         <IndentedRow key={key} icon={icon} title={name}>
-          {renderObjectName(value.object)}
+          {renderObjectPtr(value.object)}
         </IndentedRow>
       );
     case "struct":
       return (
-        <CollapsableSection key={key} icon={icon} title={name} name={``}>
+        <CollapsableSection key={key} icon={icon} title={name} name={``} hasChildren={Boolean(value.value.length)}>
           {value.value.map((item, index) =>
             renderValue(index, item.nameString, item.value, makePropertyIcon(item.tag)),
           )}
@@ -233,12 +252,18 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
     case "delegate":
       return (
         <IndentedRow key={key} icon={icon} title={name}>
-          {renderObjectName(value.object)}::{value.function.text}
+          {renderObjectPtr(value.object)}::{value.function.text}
         </IndentedRow>
       );
     case "array":
       return (
-        <CollapsableSection key={key} icon={icon} title={name} name={`${value.value.length} Array elements`}>
+        <CollapsableSection
+          key={key}
+          icon={icon}
+          title={name}
+          name={`${value.value.length} Array elements`}
+          hasChildren={Boolean(value.value.length)}
+        >
           {value.value.map((item, index) => renderValue(index, makeIndexLabel(index), item))}
         </CollapsableSection>
       );
@@ -387,4 +412,10 @@ export function MakeHelpButtonTooltip(props: { label: string; onClick: () => voi
 function throwBadPropertyValue(value: never): never;
 function throwBadPropertyValue(value: PropertyValue): never {
   throw new Error(`Unexpected property value ${value.type}`);
+}
+
+function extractBaseName(packageName: FName) {
+  const baseName = removeExtension(packageName.toString());
+  const index = baseName.lastIndexOf("/");
+  return FName.fromString(index === -1 ? baseName : baseName.substring(index + 1));
 }

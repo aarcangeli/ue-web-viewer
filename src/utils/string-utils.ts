@@ -57,3 +57,7 @@ export function hexToArrayBuffer(hex: string): Uint8Array {
 export function toHex(n: number) {
   return "0x" + (n >>> 0).toString(16).padStart(8, "0").toUpperCase();
 }
+
+export function startsWithCaseInsensitive(str: string, search: string) {
+  return str.toLowerCase().startsWith(search.toLowerCase());
+}

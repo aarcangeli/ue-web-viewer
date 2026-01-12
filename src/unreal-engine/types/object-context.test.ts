@@ -162,7 +162,6 @@ describe("ObjectContext", () => {
     const myMesh = context.newObject(context.PACKAGE_CoreUObject, classStaticMesh, FName.fromString("MyStaticMesh"));
     expect(myMesh).toBeTruthy();
     expect(myMesh).toBeInstanceOf(UStaticMesh);
-    expect(myMesh.isA(classStaticMesh)).toBe(true);
     expect(myMesh.fullName).toBe("/Script/CoreUObject.MyStaticMesh");
     expect(myMesh.outer).toBe(context.PACKAGE_CoreUObject);
     expect(myMesh.class).toBe(classStaticMesh);

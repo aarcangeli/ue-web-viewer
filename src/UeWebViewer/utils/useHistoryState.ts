@@ -19,22 +19,25 @@ function stupidEncodePath(path: string): string {
     .replace(/\?/g, "%3F");
 }
 
-export function useHistoryState(onChoosePath: (path: string | undefined) => void) {
+export function useHistoryState(enabled: boolean, onChoosePath: (path: string | undefined) => void) {
   // We useMemo instead of useRef because useMemo discards the value during hot reload.
   const lastPathReported: { current: string | undefined } = useMemo(() => ({ current: undefined }), []);
 
   const reloadPath = useCallback(() => {
+    if (!enabled) {
+      return;
+    }
     const currentPath = getCurrentPath();
     if (currentPath !== lastPathReported.current) {
       onChoosePath(currentPath);
       lastPathReported.current = currentPath;
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [enabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     window.addEventListener("popstate", reloadPath);
     return () => window.removeEventListener("popstate", reloadPath);
-  }, [reloadPath]);
+  }, [reloadPath, enabled]);
 
   useEffect(reloadPath, [reloadPath]);
 }

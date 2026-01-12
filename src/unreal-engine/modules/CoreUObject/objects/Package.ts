@@ -7,4 +7,6 @@ import { UObject } from "./Object";
  * class already contains all the package information.
  */
 @RegisterClass("/Script/CoreUObject.Package")
-export class UPackage extends UObject {}
+export class UPackage extends UObject {
+  private readonly __type_UPackage!: UPackage;
+}

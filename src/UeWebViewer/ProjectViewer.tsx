@@ -1,5 +1,5 @@
-import { type FileApi, findChildCaseInsensitive } from "../unreal-engine/fileSystem/FileApi";
-import { Flex, useColorModeValue } from "@chakra-ui/react";
+import { type FileApi } from "../unreal-engine/fileSystem/FileApi";
+import { Center, Flex, Spinner, useColorModeValue } from "@chakra-ui/react";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import type { MinimalNode, TreeViewApi } from "./components/TreeView";
 import { TreeView } from "./components/TreeView";
@@ -8,11 +8,8 @@ import { FileViewer } from "./viewer/FileViewer";
 import { BiFileBlank, BiFolder } from "react-icons/bi";
 import { navigate, useHistoryState } from "./utils/useHistoryState";
 import { ProjectApi, ProjectApiProvider } from "./ProjectApi";
-import invariant from "tiny-invariant";
-import type { AssetApi } from "../unreal-engine/serialization/Asset";
-import { checkAborted, useAsyncCompute } from "../utils/async-compute";
+import { useAsyncCompute } from "../utils/async-compute";
 import { VirtualFileSystem } from "../unreal-engine/fileSystem/VirtualFileSystem";
-import { removeExtension } from "../utils/string-utils";
 
 interface FileNode extends MinimalNode {
   file: FileApi;
@@ -43,7 +40,7 @@ async function loadChildNodes(node: FileNode): Promise<FileNode[]> {
   return files.map(makeNode);
 }
 
-function useVFS(root: FileApi) {
+function useOpenVFS(root: FileApi) {
   return useAsyncCompute(
     async (aborted) => {
       const vfs = new VirtualFileSystem();
@@ -60,8 +57,7 @@ export function ProjectViewer(props: { project: FileApi }) {
   const [currentFile, setCurrentFile] = useState<FileApi | null>(null);
   const tree = useRef<TreeViewApi<FileNode>>(null);
 
-  const { data: vfs } = useVFS(props.project);
-  console.log(vfs);
+  const { data: vfs } = useOpenVFS(props.project);
 
   const project = props.project;
 
@@ -77,7 +73,7 @@ export function ProjectViewer(props: { project: FileApi }) {
     }
   }, []);
 
-  useHistoryState(onChoosePath);
+  useHistoryState(Boolean(vfs), onChoosePath);
 
   const onSelect = useCallback((node: FileNode[], isUserAction: boolean) => {
     if (node.length === 1) {
@@ -90,6 +86,14 @@ export function ProjectViewer(props: { project: FileApi }) {
     }
   }, []);
 
+  if (!vfs) {
+    return (
+      <Center flexGrow={1}>
+        <Spinner />
+      </Center>
+    );
+  }
+
   return (
     <ProjectApiProvider value={projectApi}>
       <Flex className={"project-viewer"} flex={1}>
@@ -97,7 +101,7 @@ export function ProjectViewer(props: { project: FileApi }) {
           <TreeView<FileNode> ref={tree} rootNodes={nodes} loadChildren={loadChildNodes} onSelect={onSelect} />
         </Flex>
         <Flex direction={"column"} grow={1} shrink={1}>
-          {currentFile && currentFile.kind === "file" && <FileViewer file={currentFile}></FileViewer>}
+          {currentFile && currentFile.kind === "file" && <FileViewer file={currentFile} vfs={vfs}></FileViewer>}
         </Flex>
       </Flex>
     </ProjectApiProvider>

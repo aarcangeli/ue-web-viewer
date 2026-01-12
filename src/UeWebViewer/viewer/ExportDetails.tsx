@@ -22,7 +22,7 @@ import invariant from "tiny-invariant";
 import { makeObjectTitle } from "./commons";
 import { removePrefix } from "../../utils/string-utils";
 import { IoOpenOutline, IoReload } from "react-icons/io5";
-import { ObjectPreview } from "./AssetPreview";
+import { ObjectPreview, ObjectPtrPreview } from "./AssetPreview";
 
 class Node {
   constructor(
@@ -145,7 +145,7 @@ function ObjectPreviewContent(props: { asset: AssetApi; index: number }) {
             icon={<IoReload />}
             onClick={() => {
               asset.reloadAsset().then(() => {
-                setObject(object.freshObject);
+                setObject(object);
                 setVersion((v) => v + 1);
               });
             }}
@@ -153,14 +153,17 @@ function ObjectPreviewContent(props: { asset: AssetApi; index: number }) {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <ObjectPreview object={object} />
+          <ObjectPtrPreview objectPtr={object} />
         </ModalBody>
       </ModalContent>
     </>
   );
 }
 
-function RenderNodes(props: { asset: AssetApi; tree: Node[] }) {
+function ExportTree(props: { asset: AssetApi }) {
+  const asset = props.asset;
+  const tree = useMemo(() => makeTree(asset), [asset]);
+
   const recursiveSection = (node: Node) => (
     <CollapsableSection
       key={node.index}
@@ -179,12 +182,11 @@ function RenderNodes(props: { asset: AssetApi; tree: Node[] }) {
     </CollapsableSection>
   );
 
-  return <SimpleDetailsView>{props.tree.map(recursiveSection)}</SimpleDetailsView>;
+  return <SimpleDetailsView>{tree.map(recursiveSection)}</SimpleDetailsView>;
 }
 
 export function ExportDetails(props: { asset: AssetApi }) {
   const asset = props.asset;
-  const tree = useMemo(() => makeTree(asset), [asset]);
 
   return (
     <Tabs isLazy>
@@ -194,10 +196,10 @@ export function ExportDetails(props: { asset: AssetApi }) {
       </TabList>
       <TabPanels>
         <TabPanel>
-          <RenderNodes asset={asset} tree={tree} />
+          <ExportTree asset={asset} />
         </TabPanel>
         <TabPanel>
-          <RawView asset={props.asset} />
+          <RawView asset={asset} />
         </TabPanel>
       </TabPanels>
     </Tabs>

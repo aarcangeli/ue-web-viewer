@@ -30,6 +30,7 @@ export function useAsyncCompute<R>(fn: (signal: AbortSignal) => Promise<R>, deps
       .catch((err) => {
         prevDepsRef.current = deps;
         if (err.name === "AbortError") return;
+        console.error("Error in useAsyncCompute:", err);
         setError(err);
         setData(null);
       });

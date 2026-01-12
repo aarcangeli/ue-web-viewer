@@ -47,12 +47,6 @@ describe("TestActorUE5-4-4", () => {
     expect(asset.exports).toMatchSnapshot("exports");
   });
 
-  test("getObjectName", () => {
-    expect(asset.getObjectName(0).toString()).toBe("None");
-    expect(asset.getObjectName(1).toString()).toBe("TestActorUE5-4-4");
-    expect(asset.getObjectName(-1).toString()).toBe("Default__Actor");
-  });
-
   test("makeFullName", () => {
     expect(asset.makeFullNameByIndex(0).toString()).toBe("None");
     expect(asset.makeFullNameByIndex(14).toString()).toBe(

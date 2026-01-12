@@ -9,43 +9,18 @@ import { ExportDetails } from "./ExportDetails";
 import { SummaryDetails } from "./SummaryDetails";
 import { AssetPreview } from "./AssetPreview";
 import { MakeObjectContext } from "../../unreal-engine/types/object-context";
+import type { VirtualFileSystem } from "../../unreal-engine/fileSystem/VirtualFileSystem";
 
-// async function resolvePath(file: FileApi, path: string) {
-//   for (const string of path.split("/")) {
-//     // Search child case-insensitive (UE assumes case-insensitive file systems).
-//     const children = await file.children();
-//     const child = children.find((child) => child.name.toLowerCase() === string.toLowerCase());
-//     if (!child) {
-//       return null;
-//     }
-//     file = child;
-//   }
-//
-//   return file;
-// }
-//
-// async function resolveVirtualFile(virtualPath: string, gameDirectory: FileApi): Promise<FileApi | null> {
-//   invariant(gameDirectory.kind === "directory");
-//   invariant(virtualPath.startsWith("/"));
-//
-//   const parts = virtualPath.slice(1).split("/");
-//
-//   if (parts.length > 0 && parts[0].toLowerCase() === "game") {
-//     const path = `Content/${parts.slice(1).join("/")}}`;
-//     return resolvePath(gameDirectory, path);
-//   }
-//
-//   return null;
-// }
-
-async function readAndParseFile(file: FileApi) {
+async function readAndParseFile(vfs: VirtualFileSystem, file: FileApi) {
+  const virtualPath = vfs.findVirtualPath(file);
+  const packageName = virtualPath ? virtualPath : `/Game/${file.name}`;
   const content = await file.read();
   // TODO: the name should be the virtual path of the file
-  return openAssetFromDataView(MakeObjectContext(), `/Game/${file.name}`, new DataView(content));
+  return openAssetFromDataView(vfs, MakeObjectContext(), packageName, new DataView(content));
 }
 
 const tabNames = [
-  { id: "preview", name: "Preview", component: AssetPreview, isFullSize: true },
+  { id: "preview", name: "Preview", component: AssetPreview },
   { id: "summary", name: "Summary", component: SummaryDetails },
   { id: "imports", name: "Imports", component: ImportDetails },
   { id: "exports", name: "Exports", component: ExportDetails },
@@ -59,7 +34,7 @@ function getTabIndexFromHash() {
   return 0;
 }
 
-export function FileViewer(props: { file: FileApi }) {
+export function FileViewer(props: { file: FileApi; vfs: VirtualFileSystem }) {
   invariant(props.file.kind === "file", "Expected a file");
   const [tabIndex, setTabIndex] = useState(getTabIndexFromHash);
 
@@ -67,12 +42,12 @@ export function FileViewer(props: { file: FileApi }) {
 
   useEffect(() => {
     setAsset(undefined);
-    readAndParseFile(props.file)
+    readAndParseFile(props.vfs, props.file)
       .then((asset) => setAsset(asset))
       .catch((error) => {
         console.error(error);
       });
-  }, [props.file]);
+  }, [props.vfs, props.file]);
 
   useEffect(() => {
     const hashChange = () => {
@@ -110,7 +85,7 @@ export function FileViewer(props: { file: FileApi }) {
             {tabNames.map((tab, index) => (
               <TabPanel
                 key={index}
-                p={tab.isFullSize ? 0 : undefined}
+                p={0}
                 minHeight={0}
                 flex={1}
                 height={"100%"}

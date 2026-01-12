@@ -2,18 +2,19 @@ import invariant from "tiny-invariant";
 
 import type { AssetReader } from "../../../AssetReader";
 import type { EPackageFlags } from "../../../enums";
-import { makeNameFromParts } from "../../../path-utils";
+import { makeNameFromParts } from "../../../../utils/path-utils";
 import type { TaggedProperty } from "../../../properties/TaggedProperty";
 import { EObjectFlags } from "../../../serialization/ObjectExport";
 import { readTaggedProperties } from "../../../serialization/properties-serialization";
 import { type SerializationStatistics } from "../../../serialization/SerializationStatistics";
 import { RegisterClass } from "../../../types/class-registry";
-import type { FName } from "../../../types/Name";
+import { FName } from "../../../types/Name";
 import { FGuid } from "../structs/Guid";
 import type { FSoftObjectPath } from "../structs/SoftObjectPath";
 
 import type { UClass } from "./Class";
 import type { AssetApi } from "../../../serialization/Asset";
+import type { ObjectPtr } from "../structs/ObjectPtr";
 
 /**
  * All characters are allowed except for '.' and ':'.
@@ -21,13 +22,13 @@ import type { AssetApi } from "../../../serialization/Asset";
 const ValidObjectName = /^[^.:]+$/;
 
 export interface ObjectResolver {
-  readObjectPtr: (reader: AssetReader) => UObject | null;
+  readObjectPtr: (reader: AssetReader) => ObjectPtr;
   readSoftObjectPtr: (reader: AssetReader) => FSoftObjectPath;
 }
 
 export type ObjectConstructionParams = {
   outer?: UObject | null;
-  clazz: UClass;
+  clazz: ObjectPtr<UClass>;
   name: FName;
   flags?: EPackageFlags;
 };
@@ -53,11 +54,6 @@ export enum ELoadingPhase {
  * - Some instances are loaded from asset files.
  * - Root objects are always packages (instances of {@link UPackage}).
  *
- * In our implementation we also add some functionalities:
- * - An instance may be mocked (eg: for missing asset, lazy loading, etc.).
- * - An instance may be dynamically swapped to another instance (eg: for hot-reloading external changes).
- *   - Use the method {@link freshObject} to get the most up-to-date instance.
- *
  * We're only implementing the minimal UObject functionality needed to read properties.
  *
  * In C++, UObject inherits from UObjectBaseUtility, which in turn inherits from UObjectBase.
@@ -69,7 +65,7 @@ export enum ELoadingPhase {
 @RegisterClass("/Script/CoreUObject.Object")
 export class UObject {
   private _outer: UObject | null = null;
-  private /*readonly*/ _class: UClass;
+  private readonly _class: ObjectPtr<UClass>;
   private readonly _flags: EPackageFlags;
   private readonly _name: FName;
 
@@ -98,6 +94,8 @@ export class UObject {
 
   assetApi: AssetApi | null = null;
 
+  detached: boolean = false;
+
   constructor(params: ObjectConstructionParams) {
     // Invariants
     invariant(params.clazz, "Class cannot be null");
@@ -125,8 +123,7 @@ export class UObject {
    * This field is always set and cannot be changed.
    * The class of UClass is itself.
    */
-  get class(): UClass {
-    invariant(this._class !== LazyClass, "Class not initialized");
+  get class(): ObjectPtr<UClass> {
     return this._class;
   }
 
@@ -135,7 +132,7 @@ export class UObject {
   }
 
   get outer(): UObject | null {
-    return this._outer?.freshObject ?? null;
+    return this._outer;
   }
 
   get nameParts(): FName[] {
@@ -161,7 +158,7 @@ export class UObject {
    * Inner objects are weakly referenced, so they can be collected if there are no other references to them.
    */
   get innerObjects(): ReadonlyArray<UObject> {
-    return this._innerObjects.map((ref) => ref.deref()?.freshObject).filter((obj) => obj) as UObject[];
+    return this._innerObjects.map((ref) => ref.deref()).filter((obj) => obj) as UObject[];
   }
 
   /**
@@ -208,58 +205,38 @@ export class UObject {
   }
 
   findInnerByFName(name: FName): UObject | null {
-    for (const child of this.innerObjects) {
-      if (child.name.equals(name)) {
-        return child;
-      }
+    return this.innerObjects.find((child) => child.name.equals(name)) || null;
+  }
+
+  getRootObject(): UObject {
+    let it: UObject | null = this.outer;
+    if (it === null) {
+      return this;
     }
-    return null;
-  }
-
-  replaceLazyClass(clazz: UClass) {
-    invariant(this._class === LazyClass, "Class already initialized");
-    this._class = clazz;
-  }
-
-  isA(clazz: UClass): boolean {
-    return clazz.isChildOf(this._class);
-  }
-
-  /**
-   * Returns the most up-to-date instance of this object.
-   * The instance may be swapped for multiple reasons:
-   * - The asset file has changed on disk.
-   * - The file was missing, and became available later.
-   * - The file was intentionally not loaded at first, and was loaded later.
-   *
-   * The new instance must have the same outer, name and class as this instance.
-   * The JavaScript class may be different, for the following reasons:
-   * - For mock objects, it may be replaced with a real object.
-   * - Real objects may become mock objects.
-   */
-  get freshObject(): this {
-    // TODO: implement
-    return this;
+    while (it !== null) {
+      const itOuter: UObject | null = it.outer;
+      if (itOuter === null) {
+        return it;
+      }
+      it = itOuter;
+    }
+    throw new Error(`Object ${this.fullName} is not contained in a package`);
   }
 
   asWeakObject(): WeakObjectRef<this> {
     return new WeakObjectRef(this);
   }
 
-  /**
-   * Returns true if this object is a mock object.
-   */
-  get isMockObject(): boolean {
-    return false;
+  markAsDetached() {
+    invariant(!this.detached);
+    this.innerObjects.forEach((child) => child.markAsDetached());
+    this.detached = true;
+
+    // Modify the name to indicate it's detached, useful for debugging
+    const self = this as any;
+    self._name = FName.fromString(`${this._name.text}_detached`);
   }
 }
-
-/**
- * Hack to allow cyclic dependencies between UClass and UObject.
- * Do not use for anything else.
- * see object-context.ts
- */
-export const LazyClass = {} as UClass;
 
 function validateAddInner(parent: UObject, child: UObject) {
   invariant((child as unknown) instanceof UObject, "Child must be an instance of UObject");
@@ -299,6 +276,10 @@ export class WeakObjectRef<T extends UObject = UObject> {
    * Retrieve the referenced object or null if it has been garbage collected.
    */
   deref(): T | null {
-    return this._ref.deref()?.freshObject ?? null;
+    const object = this._ref.deref();
+    if (object && !object.detached) {
+      return object;
+    }
+    return null;
   }
 }

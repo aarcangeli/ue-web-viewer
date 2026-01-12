@@ -2,6 +2,9 @@ import { type FileApi, findChildCaseInsensitive } from "./FileApi";
 import invariant from "tiny-invariant";
 import { removeExtension } from "../../utils/string-utils";
 import { checkAborted } from "../../utils/async-compute";
+import { scanPluginsDirectory } from "./ue-directory-structure";
+import { combinePath } from "../../utils/path-utils";
+import { removeInPlace } from "../../utils/array-utils";
 
 const assetFiles = [".uasset", ".umap"];
 
@@ -44,6 +47,21 @@ export class VirtualFileSystem {
     checkValidVirtualPath(virtualPath);
     this._mountPoints.push({ mountPath: virtualPath, fileApi, type });
     this.sortMountPoints();
+  }
+
+  findVirtualPath(file: FileApi): string | null {
+    let current: FileApi | null = file;
+    let accumulatedPath = "";
+    while (current) {
+      // Find if this path matches any mount point
+      const foundMount = this._mountPoints.find(({ fileApi }) => fileApi.fullPath === current?.fullPath);
+      if (foundMount) {
+        return combineVirtualPath(foundMount.mountPath, accumulatedPath);
+      }
+      accumulatedPath = combinePath(current.name, accumulatedPath);
+      current = current.parent;
+    }
+    return null;
   }
 
   /**
@@ -150,25 +168,11 @@ async function scanGameContentDirectories(gameDir: FileApi, aborted: AbortSignal
   return allMappings;
 }
 
-async function scanPluginsDirectory(pluginsDir: FileApi): Promise<FileApi[]> {
-  const children = await pluginsDir.children();
-
-  // Find plugins in this directory
-  const inThisDir = children.filter((c) => c.kind === "file" && c.name.toLowerCase().endsWith(".uplugin"));
-  if (inThisDir.length) {
-    return inThisDir;
-  }
-
-  // if no plugins found, scan subdirectories
-  const subDirs = children.filter((c) => c.kind === "directory");
-  const results = await Promise.all(subDirs.map((d) => scanPluginsDirectory(d)));
-  return results.flat();
-}
-
-function removeInPlace<T>(array: T[], predicate: (value: T, index: number, array: T[]) => boolean): void {
-  for (let i = array.length - 1; i >= 0; i--) {
-    if (predicate(array[i], i, array)) {
-      array.splice(i, 1);
-    }
-  }
+/**
+ * Combine two paths into a single virtual path, and validate it.
+ */
+function combineVirtualPath(lhs: string, rhs: string) {
+  const fullVirtualPath = removeExtension("/" + combinePath(lhs, rhs));
+  checkValidVirtualPath(fullVirtualPath);
+  return fullVirtualPath;
 }

@@ -1,5 +1,5 @@
 import type { AssetReader } from "../../../AssetReader";
-import { isShortPackageName, tryParseExportTextPath } from "../../../path-utils";
+import { isShortPackageName, tryParseExportTextPath } from "../../../../utils/path-utils";
 import { FName, NAME_None } from "../../../types/Name";
 import {
   FFortniteMainBranchObjectVersion,
@@ -10,8 +10,10 @@ import type { UObject } from "../objects/Object";
 
 /**
  * Represents the full path to an object, so that it can be loaded on demand.
+ *
  * This class is usually serialized with virtual operator<< from FArchive.
  * The specific implementation of FArchive is responsible for reading/writing the data.
+ *
  * LayoutGenerator: ignore
  */
 export class FSoftObjectPath {
@@ -66,7 +68,11 @@ export class FSoftObjectPath {
 
   static fromObject(object: UObject): FSoftObjectPath {
     const parts = object.nameParts;
-    const packageName = parts[0];
+    return this.fromNameParts(parts);
+  }
+
+  public static fromNameParts(parts: FName[]) {
+    const packageName = parts?.[0] ?? NAME_None;
     const assetName = parts?.[1] ?? NAME_None;
     const subPathString = parts.slice(2).join(".");
     return new FSoftObjectPath(packageName, assetName, subPathString);
@@ -113,17 +119,26 @@ export class FSoftObjectPath {
   }
 
   toString() {
+    if (this.isNull()) {
+      return "null";
+    }
     let result = "";
-    if (!this.isNull()) {
-      result += this.packageName.text;
-      if (!this.assetName.isNone) {
-        result += "." + this.assetName.text;
-        if (this.subPathString.length > 0) {
-          result += ":" + this.subPathString;
-        }
+    result += this.packageName.text;
+    if (!this.assetName.isNone) {
+      result += "." + this.assetName.text;
+      if (this.subPathString.length > 0) {
+        result += ":" + this.subPathString;
       }
     }
     return result;
+  }
+
+  equals(other: FSoftObjectPath): boolean {
+    return (
+      this.packageName.equals(other.packageName) &&
+      this.assetName.equals(other.assetName) &&
+      this.subPathString.toLowerCase() === other.subPathString.toLowerCase()
+    );
   }
 
   get summary(): string {

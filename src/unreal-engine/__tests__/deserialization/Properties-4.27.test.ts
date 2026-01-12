@@ -10,30 +10,32 @@ const version = "ue-4.27";
 describe("BP_BasicProperties", () => {
   test("Properties", () => {
     const asset = readAsset(`${version}/Content/BP_BasicProperties.uasset`);
-    const object = asset.getByFullName("BP_BasicProperties.Default__BP_BasicProperties_C");
-    matchSnapshotProperties(object);
+    const object = asset.getObjectByFullName("BP_BasicProperties.Default__BP_BasicProperties_C");
+    matchSnapshotProperties(object.getCached()!);
   });
 });
 
 describe("BP_ContainerProperties", () => {
   test("Properties", () => {
     const asset = readAsset(`${version}/Content/BP_ContainerProperties.uasset`);
-    const object = asset.getByFullName("BP_ContainerProperties.Default__BP_ContainerProperties_C");
-    matchSnapshotProperties(object);
+    const object = asset.getObjectByFullName("BP_ContainerProperties.Default__BP_ContainerProperties_C");
+    matchSnapshotProperties(object.getCached()!);
   });
 });
 
 describe("SK_MeshY_Skeleton", () => {
   test("Properties", () => {
     const asset = readAsset(`${version}/Content/SK_MeshY_Skeleton.uasset`);
-    const object = asset.mainObject as USkeleton;
+    const object = asset.getObjectByFullName("SK_MeshY_Skeleton.SK_MeshY_Skeleton");
     expect(object).toBeDefined();
-    expect(object).toBeInstanceOf(USkeleton);
-    matchSnapshotProperties(object);
-    expect(object.SmartNames).toMatchSnapshot("SmartNames");
-    expect(object.ReferenceSkeleton).toMatchSnapshot("ReferenceSkeleton");
-    expect(object.AnimRetargetSources).toMatchSnapshot("AnimRetargetSources");
-    expect(object.Guid).toMatchSnapshot("Guid");
-    expect(object.ExistingMarkerNames).toMatchSnapshot("ExistingMarkerNames");
+    expect(object.isNull()).toBe(false);
+    const skeleton = object.getCached() as USkeleton;
+    expect(skeleton).toBeInstanceOf(USkeleton);
+    matchSnapshotProperties(skeleton);
+    expect(skeleton.SmartNames).toMatchSnapshot("SmartNames");
+    expect(skeleton.ReferenceSkeleton).toMatchSnapshot("ReferenceSkeleton");
+    expect(skeleton.AnimRetargetSources).toMatchSnapshot("AnimRetargetSources");
+    expect(skeleton.Guid).toMatchSnapshot("Guid");
+    expect(skeleton.ExistingMarkerNames).toMatchSnapshot("ExistingMarkerNames");
   });
 });
