@@ -35,7 +35,7 @@ export function ObjectPreview(props: { object: UObject }) {
     );
   }
 
-  const statistics = exportedObjects.objectSource?.serializationStatistics;
+  const statistics = exportedObjects.serializationStatistics;
 
   return (
     <Box>

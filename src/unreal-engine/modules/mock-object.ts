@@ -14,17 +14,17 @@ const allowedProperties = new Set([
 
 const MissingImportedObjectSymbol = Symbol("MissingImportedObject");
 
-type MissingImportedObject2<T> = T & {
+type MissingImportedObject<T> = T & {
   [MissingImportedObjectSymbol]: true;
 };
 
-export function createMissingImportedObject<T extends UObject, V extends ObjectConstructionParams>(
+export function createMock<T extends UObject, V extends ObjectConstructionParams>(
   originalClass: new (params: V) => T,
   params: V,
 ): T {
   const MissingImportedObjectClass = class MissingImportObject extends originalClass {};
   (MissingImportedObjectClass.prototype as any)[MissingImportedObjectSymbol] = true;
-  const result = new MissingImportedObjectClass(params) as MissingImportedObject2<T>;
+  const result = new MissingImportedObjectClass(params) as MissingImportedObject<T>;
 
   return new Proxy(result, {
     get(target, prop) {
@@ -42,6 +42,13 @@ export function createMissingImportedObject<T extends UObject, V extends ObjectC
   });
 }
 
-export function isMissingImportedObject(obj: UObject): boolean {
+export function createMissingImportedObject<T extends UObject, V extends ObjectConstructionParams>(
+  originalClass: new (params: V) => T,
+  params: V,
+): T {
+  return createMock(originalClass, params);
+}
+
+export function isMissingImportedObject(obj: UObject): obj is MissingImportedObject<UObject> {
   return MissingImportedObjectSymbol in obj;
 }

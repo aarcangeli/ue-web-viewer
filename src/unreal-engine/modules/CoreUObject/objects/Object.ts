@@ -6,7 +6,6 @@ import { makeNameFromParts } from "../../../path-utils";
 import type { TaggedProperty } from "../../../properties/TaggedProperty";
 import { EObjectFlags } from "../../../serialization/ObjectExport";
 import { readTaggedProperties } from "../../../serialization/properties-serialization";
-import type { ObjectSource } from "../../../serialization/SerializationStatistics";
 import { type SerializationStatistics } from "../../../serialization/SerializationStatistics";
 import { RegisterClass } from "../../../types/class-registry";
 import type { FName } from "../../../types/Name";
@@ -74,7 +73,8 @@ export class UObject {
   private readonly _flags: EPackageFlags;
   private readonly _name: FName;
 
-  public properties: TaggedProperty[] = [];
+  properties: TaggedProperty[] = [];
+  objectGuid: FGuid | null = null;
 
   /**
    * Unreal Engine doesn't use a strong reference to the children objects.
@@ -91,15 +91,12 @@ export class UObject {
    */
   serializationStatistics: SerializationStatistics | null = null;
 
-  objectSource: ObjectSource | null = null;
-
   /**
    * The loading phase of the object.
    */
   loadingPhase: ELoadingPhase = ELoadingPhase.None;
 
   assetApi: AssetApi | null = null;
-  objectGuid: FGuid | null = null;
 
   constructor(params: ObjectConstructionParams) {
     // Invariants
@@ -302,6 +299,6 @@ export class WeakObjectRef<T extends UObject = UObject> {
    * Retrieve the referenced object or null if it has been garbage collected.
    */
   deref(): T | null {
-    return this._ref.deref() ?? null;
+    return this._ref.deref()?.freshObject ?? null;
   }
 }

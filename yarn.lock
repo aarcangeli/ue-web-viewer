@@ -1341,7 +1341,7 @@
     "@types/prop-types" "*"
     csstype "^3.2.2"
 
-"@types/wicg-file-system-access@^2023.10.5":
+"@types/wicg-file-system-access@^2023.10.7":
   version "2023.10.7"
   resolved "https://registry.yarnpkg.com/@types/wicg-file-system-access/-/wicg-file-system-access-2023.10.7.tgz#fab9868dfe0743003be6cb8c37ae480c9ce8537b"
   integrity sha512-g49ijasEJvCd7ifmAY2D0wdEtt1xRjBbA33PJTiv8mKBr7DoMsPeISoJ8oQOTopSRi+FBWPpPW5ouDj2QPKtGA==

@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
-import { FullAssetReader } from "../AssetReader";
-import { MakeSimpleAsset } from "../serialization/Asset";
+import { MakeObjectContext } from "../types/object-context";
+import { openAssetFromDataView } from "../serialization/Asset";
 
 /**
  * Contains the path of __tests__ directory.
@@ -28,7 +28,7 @@ export function getFixturePath(filename: string) {
 export function readAsset(filename: string) {
   const fullPath = getFixturePath(filename);
   const fileData = fs.readFileSync(fullPath);
-  const reader = new FullAssetReader(new DataView(fileData.buffer, 0, fileData.byteLength));
+  const dataView = new DataView(fileData.buffer, 0, fileData.byteLength);
   const packageName = path.basename(filename, path.extname(filename));
-  return MakeSimpleAsset(packageName, reader);
+  return openAssetFromDataView(MakeObjectContext(), packageName, dataView);
 }

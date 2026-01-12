@@ -38,7 +38,7 @@ export interface TreeViewApi<T> {
 }
 
 interface Props<T extends MinimalNode> {
-  nodes: T[];
+  rootNodes: T[];
   loadChildren: (node: T) => Promise<T[]>;
   onSelect?: (nodes: T[], isUserAction: boolean) => void;
 }
@@ -80,7 +80,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
   const isUserAction = useRef(true);
 
   const loadChildren = props.loadChildren;
-  const nodes = props.nodes;
+  const nodes = props.rootNodes;
 
   const generateId = useCallback(() => {
     return String(nextId.current++);

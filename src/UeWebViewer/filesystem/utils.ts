@@ -1,14 +1,15 @@
-import type { FileApi } from "./FileApi";
+import type { FileApi } from "../../unreal-engine/fileSystem/FileApi";
 import { fromHandle } from "./FileSystemHandleApi";
 
 export async function getFilesFromItems(items: DataTransferItem[]): Promise<FileApi[]> {
   // Try to get the file handle
-  let fileHandles = await Promise.all(
-    items.map((item) => {
-      return item.getAsFileSystemHandle && item.getAsFileSystemHandle();
-    }),
-  );
-  fileHandles = fileHandles.filter((handle) => handle);
+  const fileHandles = (
+    await Promise.all(
+      items.map((item) => {
+        return item.getAsFileSystemHandle && item.getAsFileSystemHandle();
+      }),
+    )
+  ).filter((handle) => handle);
   if (fileHandles.length > 0) {
     return Promise.all(fileHandles.map((handle) => fromHandle(handle!)));
   }

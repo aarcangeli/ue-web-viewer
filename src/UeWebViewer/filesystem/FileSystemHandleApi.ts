@@ -1,13 +1,12 @@
-import type { FileApi } from "./FileApi";
+import type { FileApi } from "../../unreal-engine/fileSystem/FileApi";
 
 export class FileHandleApi implements FileApi {
   readonly kind: "file" | "directory";
-  readonly isWritable = true;
 
   constructor(
     private fileHandle: FileSystemHandle,
     public parent: FileApi | null,
-    public fullPath: string,
+    public readonly fullPath: string,
     private isEmptyDir: boolean,
   ) {
     this.kind = this.fileHandle.kind;
@@ -40,55 +39,21 @@ export class FileHandleApi implements FileApi {
     return file.arrayBuffer();
   }
 
-  async write(data: ArrayBuffer | string): Promise<void> {
-    if (this.fileHandle.kind === "directory") {
-      throw new Error("Cannot write to a directory");
-    }
-    const fileHandle = this.fileHandle as FileSystemFileHandle;
-    const writable = await fileHandle.createWritable();
-    await writable.write(data);
-    await writable.close();
-  }
-
   async lastModifiedDate(): Promise<Date> {
     const file = await (this.fileHandle as FileSystemFileHandle).getFile();
     return new Date(file.lastModified);
   }
+}
 
-  async createFile(name: string): Promise<FileApi> {
-    if (this.fileHandle.kind !== "directory") {
-      throw new Error("Cannot create a file in a file");
-    }
-    const directoryHandle = this.fileHandle as FileSystemDirectoryHandle;
-    const fileHandle = await directoryHandle.getFileHandle(name, {
-      create: true,
-    });
-    return await fromHandle(fileHandle, this);
+async function isEmptyDirectory(handle: FileSystemHandle): Promise<boolean> {
+  if (handle.kind === "directory") {
+    const iterator = await (handle as FileSystemDirectoryHandle).entries().next();
+    return iterator.done === true;
   }
-
-  async createDirectory(name: string): Promise<FileApi> {
-    if (this.fileHandle.kind !== "directory") {
-      throw new Error("Cannot create a directory in a file");
-    }
-    const directoryHandle = this.fileHandle as FileSystemDirectoryHandle;
-    const fileHandle = await directoryHandle.getDirectoryHandle(name, {
-      create: true,
-    });
-    return await fromHandle(fileHandle, this);
-  }
-
-  async remove(): Promise<void> {
-    if (this.parent === null) {
-      throw new Error("Cannot remove the root directory");
-    }
-    const parentApi = this.parent as FileHandleApi;
-    const directoryHandle = parentApi.fileHandle as FileSystemDirectoryHandle;
-    await directoryHandle.removeEntry(this.name);
-  }
+  return false;
 }
 
 export async function fromHandle(handle: FileSystemHandle, parent: FileApi | null = null): Promise<FileApi> {
   const fullPath = parent ? `${parent.fullPath}/${handle.name}` : handle.name;
-  const isEmptyDir = handle.kind === "directory" && (await (handle as FileSystemDirectoryHandle).entries().next()).done;
-  return new FileHandleApi(handle as FileSystemFileHandle, parent, fullPath, isEmptyDir || false);
+  return new FileHandleApi(handle, parent, fullPath, await isEmptyDirectory(handle));
 }

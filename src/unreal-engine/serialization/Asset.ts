@@ -3,7 +3,7 @@ import "../modules/all-objects";
 import invariant from "tiny-invariant";
 
 import { removeExtension } from "../../utils/string-utils";
-import { type AssetReader, type FullAssetReader } from "../AssetReader";
+import { type AssetReader, FullAssetReader } from "../AssetReader";
 import { UClass } from "../modules/CoreUObject/objects/Class";
 import { ELoadingPhase, type ObjectResolver, UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
 import { type UPackage } from "../modules/CoreUObject/objects/Package";
@@ -41,14 +41,11 @@ export interface AssetApi {
  * The created asset retains a reference to the reader to lazily load objects when needed.
  * @param context The object context where to create the package and resolve external references.
  * @param packageName The name of the package.
- * @param reader The reader to read the package content.
+ * @param dataView The data view containing the asset data.
  */
-export function MakeAssetFromStream(context: IObjectContext, packageName: string, reader: FullAssetReader) {
-  return new Asset(context, FName.fromString(removeExtension(packageName)), reader);
-}
-
-export function MakeSimpleAsset(packageName: string, reader: FullAssetReader): AssetApi {
-  return new Asset(MakeObjectContext(), FName.fromString(removeExtension(packageName)), reader);
+export function openAssetFromDataView(context: IObjectContext, packageName: string, dataView: DataView): AssetApi {
+  console.log(removeExtension(packageName));
+  return new Asset(context, FName.fromString(removeExtension(packageName)), new FullAssetReader(dataView));
 }
 
 /**
@@ -168,13 +165,7 @@ class Asset implements AssetApi {
    */
   get mainObject() {
     const exportName = extractFileName(this._packageName.toString());
-    let exportIndex = this.findRootExportByName(exportName);
-
-    // If not found, try with the compiled version
-    if (!exportIndex && !exportName.endsWith("_C")) {
-      exportIndex = this.findRootExportByName(exportName + "_C");
-    }
-
+    const exportIndex = this.findRootExportByName(FName.fromString(exportName));
     return exportIndex ? this.getObjectByIndex(exportIndex) : null;
   }
 
@@ -182,6 +173,7 @@ class Asset implements AssetApi {
     invariant(this.isIndexValid(index), `Invalid export index ${index}`);
     invariant(index != 0, `Expected a valid export index`);
 
+    // First, check if we have it cached
     const currentObject = this.getCachedObjectByIndex(index);
     if (currentObject) {
       if (full && currentObject.loadingPhase === ELoadingPhase.None) {
@@ -226,10 +218,10 @@ class Asset implements AssetApi {
   }
 
   reloadObject(object: UObject) {
-    const index = this._exportedObjects.findIndex((e) => e instanceof WeakObjectRef && e.deref() === object) + 1;
-    if (index > 0) {
+    const i = this._exportedObjects.findIndex((e) => e instanceof WeakObjectRef && e.deref() === object);
+    if (i >= 0) {
       object.loadingPhase = ELoadingPhase.None;
-      this.serializeObject(this._exports[index - 1], object);
+      this.serializeObject(this._exports[i], object);
     }
   }
 
@@ -238,8 +230,8 @@ class Asset implements AssetApi {
    * I found, returns the index of the export.
    * If not found, returns 0.
    */
-  private findRootExportByName(exportName: string) {
-    const number = this._exports.findIndex((e) => e.OuterIndex == 0 && e.ObjectName.text === exportName);
+  private findRootExportByName(exportName: FName) {
+    const number = this._exports.findIndex((e) => e.OuterIndex == 0 && e.ObjectName.equals(exportName));
     return number + 1;
   }
 
@@ -336,8 +328,7 @@ class Asset implements AssetApi {
 
     const importObject = this.getObjectImport(index);
 
-    // TODO: We should load the object if it's from another package.
-    const object = this.createFakeObject(importObject);
+    const object = this.loadImportedObject(importObject);
     this._importedObjects[-index - 1] = object.asWeakObject();
     return object;
   }
@@ -348,13 +339,13 @@ class Asset implements AssetApi {
    * - For packages, we create a package object (if not already existing in the context).
    * - For other objects, we create a child item of the outer, with the same name and class.
    */
-  private createFakeObject(importObject: FObjectImport): UObject {
+  private loadImportedObject(importObject: FObjectImport): UObject {
     // Create a fallback object if the import is not found
-    if (
-      importObject.OuterIndex === 0 &&
-      importObject.ClassPackage.equals(NAME_CoreUObject) &&
-      importObject.ClassName.equals(NAME_Package)
-    ) {
+    if (importObject.OuterIndex === 0) {
+      // Root objects must be packages
+      invariant(importObject.ClassPackage.equals(NAME_CoreUObject));
+      invariant(importObject.ClassName.equals(NAME_Package));
+
       // Create the package object, without loading it from file.
       return this._context.findOrCreatePackage(importObject.ObjectName);
     }

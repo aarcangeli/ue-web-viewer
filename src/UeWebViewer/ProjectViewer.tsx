@@ -1,4 +1,4 @@
-import type { FileApi } from "./filesystem/FileApi";
+import { type FileApi, findChildCaseInsensitive } from "../unreal-engine/fileSystem/FileApi";
 import { Flex, useColorModeValue } from "@chakra-ui/react";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import type { MinimalNode, TreeViewApi } from "./components/TreeView";
@@ -8,10 +8,11 @@ import { FileViewer } from "./viewer/FileViewer";
 import { BiFileBlank, BiFolder } from "react-icons/bi";
 import { navigate, useHistoryState } from "./utils/useHistoryState";
 import { ProjectApi, ProjectApiProvider } from "./ProjectApi";
-
-export interface Props {
-  project: FileApi;
-}
+import invariant from "tiny-invariant";
+import type { AssetApi } from "../unreal-engine/serialization/Asset";
+import { checkAborted, useAsyncCompute } from "../utils/async-compute";
+import { VirtualFileSystem } from "../unreal-engine/fileSystem/VirtualFileSystem";
+import { removeExtension } from "../utils/string-utils";
 
 interface FileNode extends MinimalNode {
   file: FileApi;
@@ -42,11 +43,25 @@ async function loadChildNodes(node: FileNode): Promise<FileNode[]> {
   return files.map(makeNode);
 }
 
-export function ProjectViewer(props: Props) {
+function useVFS(root: FileApi) {
+  return useAsyncCompute(
+    async (aborted) => {
+      const vfs = new VirtualFileSystem();
+      await vfs.mapGameDirectory(root, aborted);
+      return vfs;
+    },
+    [root],
+  );
+}
+
+export function ProjectViewer(props: { project: FileApi }) {
   const borderColor = useColorModeValue("gray.200", "gray.700");
   // TODO: avoid re-rendering the whole viewer when the file changes
   const [currentFile, setCurrentFile] = useState<FileApi | null>(null);
   const tree = useRef<TreeViewApi<FileNode>>(null);
+
+  const { data: vfs } = useVFS(props.project);
+  console.log(vfs);
 
   const project = props.project;
 
@@ -79,7 +94,7 @@ export function ProjectViewer(props: Props) {
     <ProjectApiProvider value={projectApi}>
       <Flex className={"project-viewer"} flex={1}>
         <Flex direction={"column"} w={"400px"} borderRight="1px" borderColor={borderColor} p={2} gap={1}>
-          <TreeView<FileNode> ref={tree} nodes={nodes} loadChildren={loadChildNodes} onSelect={onSelect} />
+          <TreeView<FileNode> ref={tree} rootNodes={nodes} loadChildren={loadChildNodes} onSelect={onSelect} />
         </Flex>
         <Flex direction={"column"} grow={1} shrink={1}>
           {currentFile && currentFile.kind === "file" && <FileViewer file={currentFile}></FileViewer>}
