@@ -1,0 +1,82 @@
+diff --git a/dist/main/components/provider.js b/dist/main/components/provider.js
+index b58346ebf08f754147e9522d2461ee70203a6565..f586f3d250c7ace083574e0c9b6bccbe1d9ecd90 100644
+--- a/dist/main/components/provider.js
++++ b/dist/main/components/provider.js
+@@ -33,14 +33,15 @@ function TreeProvider({ treeProps, imperativeHandle, children, }) {
+     /* Expose the tree api */
+     (0, react_1.useImperativeHandle)(imperativeHandle, () => api);
+     /* Change selection based on props */
+-    (0, react_1.useEffect)(() => {
+-        if (api.props.selection) {
+-            api.select(api.props.selection, { focus: false });
+-        }
+-        else {
+-            api.deselectAll();
+-        }
+-    }, [api.props.selection]);
++    // PATCH: Disabled to prevent problems with StrictMode
++    // (0, react_1.useEffect)(() => {
++    //     if (api.props.selection) {
++    //         api.select(api.props.selection, { focus: false });
++    //     }
++    //     else {
++    //         api.deselectAll();
++    //     }
++    // }, [api.props.selection]);
+     /* Clear visability for filtered nodes */
+     (0, react_1.useEffect)(() => {
+         if (!api.props.searchTerm) {
+diff --git a/dist/module/components/provider.js b/dist/module/components/provider.js
+index 454aac47f63f8ea9c6648095ef6ffd74271e66ad..a9e3d4b26940c17a0dfee0a533ad1416a784de1e 100644
+--- a/dist/module/components/provider.js
++++ b/dist/module/components/provider.js
+@@ -30,14 +30,15 @@ export function TreeProvider({ treeProps, imperativeHandle, children, }) {
+     /* Expose the tree api */
+     useImperativeHandle(imperativeHandle, () => api);
+     /* Change selection based on props */
+-    useEffect(() => {
+-        if (api.props.selection) {
+-            api.select(api.props.selection, { focus: false });
+-        }
+-        else {
+-            api.deselectAll();
+-        }
+-    }, [api.props.selection]);
++    // PATCH: Disabled to prevent problems with StrictMode
++    // useEffect(() => {
++    //     if (api.props.selection) {
++    //         api.select(api.props.selection, { focus: false });
++    //     }
++    //     else {
++    //         api.deselectAll();
++    //     }
++    // }, [api.props.selection]);
+     /* Clear visability for filtered nodes */
+     useEffect(() => {
+         if (!api.props.searchTerm) {
+diff --git a/src/components/provider.tsx b/src/components/provider.tsx
+index 0326c82a065eebf4913cddcec26a117aeea9a787..801a5011d6c628686d28939a80b0d411013179a3 100644
+--- a/src/components/provider.tsx
++++ b/src/components/provider.tsx
+@@ -63,13 +63,14 @@ export function TreeProvider<T>({
+   useImperativeHandle(imperativeHandle, () => api);
+ 
+   /* Change selection based on props */
+-  useEffect(() => {
+-    if (api.props.selection) {
+-      api.select(api.props.selection, { focus: false });
+-    } else {
+-      api.deselectAll();
+-    }
+-  }, [api.props.selection]);
++  // PATCH: Disabled to prevent problems with StrictMode
++  // useEffect(() => {
++  //   if (api.props.selection) {
++  //     api.select(api.props.selection, { focus: false });
++  //   } else {
++  //     api.deselectAll();
++  //   }
++  // }, [api.props.selection]);
+ 
+   /* Clear visability for filtered nodes */
+   useEffect(() => {

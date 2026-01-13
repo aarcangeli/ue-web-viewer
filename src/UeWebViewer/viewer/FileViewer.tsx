@@ -1,23 +1,13 @@
-import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { Center, Flex, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import type { FileApi } from "../../unreal-engine/fileSystem/FileApi";
 import React, { useEffect, useState } from "react";
 import invariant from "tiny-invariant";
-import type { AssetApi } from "../../unreal-engine/serialization/Asset";
-import { openAssetFromDataView } from "../../unreal-engine/serialization/Asset";
 import { ImportDetails } from "./ImportDetails";
 import { ExportDetails } from "./ExportDetails";
 import { SummaryDetails } from "./SummaryDetails";
 import { AssetPreview } from "./AssetPreview";
-import { MakeObjectContext } from "../../unreal-engine/types/object-context";
-import type { VirtualFileSystem } from "../../unreal-engine/fileSystem/VirtualFileSystem";
-
-async function readAndParseFile(vfs: VirtualFileSystem, file: FileApi) {
-  const virtualPath = vfs.findVirtualPath(file);
-  const packageName = virtualPath ? virtualPath : `/Game/${file.name}`;
-  const content = await file.read();
-  // TODO: the name should be the virtual path of the file
-  return openAssetFromDataView(vfs, MakeObjectContext(), packageName, new DataView(content));
-}
+import type { Container } from "../../unreal-engine/container";
+import { useAsyncCompute } from "../../utils/async-compute";
 
 const tabNames = [
   { id: "preview", name: "Preview", component: AssetPreview },
@@ -34,20 +24,15 @@ function getTabIndexFromHash() {
   return 0;
 }
 
-export function FileViewer(props: { file: FileApi; vfs: VirtualFileSystem }) {
-  invariant(props.file.kind === "file", "Expected a file");
+export function FileViewer(props: { file: FileApi; container: Container }) {
+  const file = props.file;
+  const container = props.container;
+
+  invariant(file.kind === "file", "Expected a file");
   const [tabIndex, setTabIndex] = useState(getTabIndexFromHash);
 
-  const [asset, setAsset] = React.useState<AssetApi>();
-
-  useEffect(() => {
-    setAsset(undefined);
-    readAndParseFile(props.vfs, props.file)
-      .then((asset) => setAsset(asset))
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [props.vfs, props.file]);
+  const asset = useAsyncCompute(() => container.objectLoader.loadPackage(file), [container, file]);
+  const assetApi = asset.data?.assetApi;
 
   useEffect(() => {
     const hashChange = () => {
@@ -62,9 +47,23 @@ export function FileViewer(props: { file: FileApi; vfs: VirtualFileSystem }) {
     setTabIndex(index);
   };
 
+  const isNull = !assetApi && !asset.isLoading && !asset.error;
+
   return (
     <Flex grow={1} direction={"column"} alignItems={"stretch"} overflowY={"auto"}>
-      {asset && (
+      {asset.error && (
+        <Flex color={"red.500"} p={4}>
+          Error loading asset: {asset.error.message}
+        </Flex>
+      )}
+
+      {asset.isLoading && (
+        <Center flexGrow={1}>
+          <Spinner />
+        </Center>
+      )}
+
+      {assetApi && (
         <Tabs
           isLazy
           index={tabIndex}
@@ -92,12 +91,14 @@ export function FileViewer(props: { file: FileApi; vfs: VirtualFileSystem }) {
                 display={"flex"}
                 flexDirection={"column"}
               >
-                <tab.component asset={asset} />
+                <tab.component asset={assetApi} />
               </TabPanel>
             ))}
           </TabPanels>
         </Tabs>
       )}
+
+      {isNull && <Flex p={4}>Cannot display this file.</Flex>}
     </Flex>
   );
 }

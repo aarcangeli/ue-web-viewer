@@ -60,7 +60,7 @@ export function ObjectPreview(props: { object: UObject }) {
       <SimpleDetailsView>
         <CollapsableSection name={"Asset"}>
           <IndentedRow title={"Object"}>{renderObjectName(exportedObjects)}</IndentedRow>
-          <IndentedRow title={"Class"}>{renderObjectName(exportedObjects.class)}</IndentedRow>
+          <IndentedRow title={"Class"}>{renderObjectPtr(exportedObjects.class)}</IndentedRow>
           <IndentedRow title={"Object Guid"}>{exportedObjects.objectGuid?.toString() || "None"}</IndentedRow>
         </CollapsableSection>
         {renderSpecificProperties(exportedObjects)}
@@ -87,7 +87,6 @@ function findMainObject(asset: AssetApi): ObjectPtr | null {
 export function AssetPreview(props: { asset: AssetApi }) {
   // const exportedObjects = props.asset.mainObject;
   const exportedObjects = findMainObject(props.asset);
-  console.log(exportedObjects);
 
   return exportedObjects ? <ObjectPtrPreview objectPtr={exportedObjects} /> : <Box>Main asset not found</Box>;
 }

@@ -92,6 +92,10 @@ export class UObject {
    */
   loadingPhase: ELoadingPhase = ELoadingPhase.None;
 
+  /**
+   * The asset API associated with this object.
+   * Only set if the object was deserialized from an asset.
+   */
   assetApi: AssetApi | null = null;
 
   detached: boolean = false;

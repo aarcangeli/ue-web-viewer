@@ -69,7 +69,7 @@ export interface IObjectContext {
   /*
    * Creates a new object of the specified class with the given name.
    */
-  newObject(outer: UObject, clazz: UClass | ObjectPtr<UClass>, name: FName, flags?: EPackageFlags): UObject;
+  newObject(outer: UObject, clazz: ObjectPtr<UClass>, name: FName, flags?: EPackageFlags): UObject;
 
   /**
    * Removes a package from the context.

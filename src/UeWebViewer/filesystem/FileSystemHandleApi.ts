@@ -1,4 +1,5 @@
 import type { FileApi } from "../../unreal-engine/fileSystem/FileApi";
+import { fakeWait } from "../config";
 
 export class FileHandleApi implements FileApi {
   readonly kind: "file" | "directory";
@@ -35,6 +36,7 @@ export class FileHandleApi implements FileApi {
     if (this.fileHandle.kind === "directory") {
       throw new Error("Cannot read a directory");
     }
+    await fakeWait();
     const file = await (this.fileHandle as FileSystemFileHandle).getFile();
     return file.arrayBuffer();
   }

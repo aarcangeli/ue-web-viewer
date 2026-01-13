@@ -11,7 +11,8 @@ import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
 import { NAME_CoreUObject, NAME_Package } from "../modules/names";
 import { makeNameFromParts } from "../../utils/path-utils";
 import { findClassOf } from "../types/class-registry";
-import { FName, NAME_None } from "../types/Name";
+import type { FName } from "../types/Name";
+import { NAME_None } from "../types/Name";
 import { type IObjectContext } from "../types/object-context";
 import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
 
@@ -20,7 +21,6 @@ import { FObjectImport } from "./ObjectImport";
 import { FPackageFileSummary } from "./PackageFileSummary";
 import { SerializationStatistics } from "./SerializationStatistics";
 import { ObjectPtr } from "../modules/CoreUObject/structs/ObjectPtr";
-import type { VirtualFileSystem } from "../fileSystem/VirtualFileSystem";
 
 const RecursiveCheck = Symbol("RecursiveCheck");
 
@@ -53,18 +53,12 @@ export interface AssetApi {
 /**
  * Construct an asset from the given package name and reader.
  * The created asset retains a reference to the reader to lazily load objects when needed.
- * @param vfs The virtual file system, or null if not needed.
  * @param context The object context where to create the package and resolve external references.
  * @param packageName The name of the package.
  * @param dataView The data view containing the asset data.
  */
-export function openAssetFromDataView(
-  vfs: VirtualFileSystem | null,
-  context: IObjectContext,
-  packageName: string,
-  dataView: DataView,
-): AssetApi {
-  return new Asset(vfs, context, FName.fromString(removeExtension(packageName)), new FullAssetReader(dataView));
+export function openAssetFromDataView(context: IObjectContext, packageName: FName, dataView: DataView): AssetApi {
+  return new Asset(context, packageName, new FullAssetReader(dataView));
 }
 
 /**
@@ -77,7 +71,6 @@ export function openAssetFromDataView(
  * The root object is always an instance of {@link UPackage}.
  */
 class Asset implements AssetApi {
-  private readonly _vfs: VirtualFileSystem | null;
   private readonly _context: IObjectContext;
 
   private readonly _packageName: FName;
@@ -99,11 +92,10 @@ class Asset implements AssetApi {
    */
   readonly _package: UPackage;
 
-  constructor(vfs: VirtualFileSystem | null, context: IObjectContext, packageName: FName, reader: FullAssetReader) {
+  constructor(context: IObjectContext, packageName: FName, reader: FullAssetReader) {
     invariant(packageName, "Expected a package name");
     invariant(reader.tell() === 0, "Expected to be at the beginning of the stream");
 
-    this._vfs = vfs;
     this._context = context;
     this._packageName = packageName;
     this._reader = reader;
@@ -340,23 +332,25 @@ class Asset implements AssetApi {
 
       // Get class object
       invariant(objectExport.ClassIndex != 0, `Expected a valid class index`);
-      const clazz = this.getObjectByIndex(objectExport.ClassIndex);
+      const classPtr = this.getObjectByIndex(objectExport.ClassIndex);
 
-      if (clazz.isNull()) {
+      // Recursively load the class, this is needed otherwise we cannot use the correct constructor
+      let classObject = await classPtr.load(new AbortSignal());
+
+      if (!classObject || !(classObject instanceof UClass)) {
         console.warn(
-          `Object ${objectExport.ObjectName} is based on an unknown class ${this.getObjectName(
-            objectExport.ClassIndex,
-          )}, using UObject as fallback`,
+          `Object ${objectExport.ObjectName} is based on an unknown class ${classPtr}, using UObject as fallback`,
         );
-        return new UObject({
-          outer: outer,
-          clazz: clazz,
-          name: objectExport.ObjectName,
-          flags: objectExport.objectFlags,
-        });
+        classObject = this.context.CLASS_Object;
       }
 
-      return this._context.newObject(outer, clazz, objectExport.ObjectName, objectExport.objectFlags);
+      invariant(classObject instanceof UClass);
+      return this._context.newObject(
+        outer,
+        ObjectPtr.fromObject(classObject),
+        objectExport.ObjectName,
+        objectExport.objectFlags,
+      );
     });
   }
 

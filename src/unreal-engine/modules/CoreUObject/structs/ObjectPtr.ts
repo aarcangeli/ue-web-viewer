@@ -11,7 +11,7 @@ import invariant from "tiny-invariant";
  * Do not ue "==" to compare ObjectPtr instances, use equals() instead.
  */
 export class ObjectPtr<T extends UObject = UObject> {
-  private listeners = new Set<(value: T) => void>();
+  private readonly listeners = new Set<(value: T) => void>();
   private strongRef: T | null = null;
   private readonly softObjectPath: FSoftObjectPath;
 

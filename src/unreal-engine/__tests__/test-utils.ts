@@ -2,6 +2,8 @@ import path from "path";
 import fs from "fs";
 import { MakeObjectContext } from "../types/object-context";
 import { openAssetFromDataView } from "../serialization/Asset";
+import { FName } from "../types/Name";
+import { removeExtension } from "../../utils/string-utils";
 
 /**
  * Contains the path of __tests__ directory.
@@ -30,5 +32,5 @@ export function readAsset(filename: string) {
   const fileData = fs.readFileSync(fullPath);
   const dataView = new DataView(fileData.buffer, 0, fileData.byteLength);
   const packageName = path.basename(filename, path.extname(filename));
-  return openAssetFromDataView(null, MakeObjectContext(), packageName, dataView);
+  return openAssetFromDataView(MakeObjectContext(), FName.fromString(packageName), dataView);
 }

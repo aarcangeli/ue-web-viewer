@@ -39,10 +39,6 @@ type MountPoint = { mountPath: string; fileApi: FileApi; type: MountType };
 export class VirtualFileSystem {
   private readonly _mountPoints: MountPoint[] = [];
 
-  constructor() {
-    console.log("VirtualFileSystem created");
-  }
-
   mountDirectory(virtualPath: string, fileApi: FileApi, type: MountType) {
     checkValidVirtualPath(virtualPath);
     this._mountPoints.push({ mountPath: virtualPath, fileApi, type });

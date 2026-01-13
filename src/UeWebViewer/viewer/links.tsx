@@ -7,7 +7,7 @@ import type { ObjectPtr } from "../../unreal-engine/modules/CoreUObject/structs/
 /**
  * Render a reference to an object.
  */
-export function renderObjectPtr(object: ObjectPtr): ReactNode {
+export function renderObjectPtr<T extends UObject>(object: ObjectPtr<T>): ReactNode {
   if (object.isNull()) {
     return <i>null</i>;
   }

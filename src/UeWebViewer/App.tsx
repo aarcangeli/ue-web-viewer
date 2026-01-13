@@ -102,7 +102,7 @@ function App() {
 
       <Flex flex={1} minHeight={0}>
         {!error && !loading && !currentContent && (
-          <Box py={10} flexGrow={1}>
+          <Box p={10} flexGrow={1}>
             Drop a directory containing a .uproject
           </Box>
         )}
