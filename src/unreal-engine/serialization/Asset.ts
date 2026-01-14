@@ -3,12 +3,11 @@ import "../modules/all-objects";
 import invariant from "tiny-invariant";
 import { type AssetReader, FullAssetReader } from "../AssetReader";
 import { UClass } from "../modules/CoreUObject/objects/Class";
-import { UObject } from "../modules/CoreUObject/objects/Object";
-import { ELoadingPhase, type ObjectResolver, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
+import { ELoadingPhase, type ObjectResolver, UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
 import { type UPackage } from "../modules/CoreUObject/objects/Package";
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
 import { makeNameFromParts } from "../../utils/path-utils";
-import { type FName, NAME_None } from "../types/Name";
+import { type FName } from "../types/Name";
 import { type IObjectContext } from "../types/object-context";
 import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
 
