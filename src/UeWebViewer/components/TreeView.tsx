@@ -9,6 +9,7 @@ import React, {
   useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import { Box, IconButton, Text } from "@chakra-ui/react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
@@ -29,16 +30,14 @@ export interface MinimalNode {
   isEmpty?: boolean;
 }
 
-export interface TreeViewApi<T> {
+export interface TreeViewApi {
   selectPath(path: string): Promise<boolean>;
 
   clearSelection(): void;
-
-  get root(): T;
 }
 
 interface Props<T extends MinimalNode> {
-  nodes: T[];
+  rootNodes: T[];
   loadChildren: (node: T) => Promise<T[]>;
   onSelect?: (nodes: T[], isUserAction: boolean) => void;
 }
@@ -49,13 +48,14 @@ interface Node<T extends MinimalNode> {
   children?: Node<T>[];
   currentLoading?: Promise<void>;
   isLoaded?: boolean;
+  isFakeLoading?: boolean;
 }
 
 // Big number, so when a scroll is performed quickly, the tree doesn't flicker
 const OVERSCAN_COUNT = 20;
 
 function useWindowSize() {
-  const [size, setSize] = React.useState({ width: window.innerWidth, height: window.innerHeight });
+  const [size, setSize] = useState({ width: window.innerWidth, height: window.innerHeight });
 
   React.useLayoutEffect(() => {
     function updateSize() {
@@ -72,15 +72,16 @@ function useWindowSize() {
 /**
  * This tree-view manages the scroll and resize of the component.
  */
-function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeViewApi<T> | undefined>) {
+function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeViewApi | undefined>) {
   const { height } = useWindowSize();
-  const [version, setVersion] = React.useState(0);
-  const nextId = React.useRef(0);
+  const [version, setVersion] = useState(0);
+  const nextId = useRef(1);
   const treeRef = useRef<TreeApi<Node<T>> | null>(null);
   const isUserAction = useRef(true);
+  const loadingOperation = useRef<symbol>();
 
   const loadChildren = props.loadChildren;
-  const nodes = props.nodes;
+  const nodes = props.rootNodes;
 
   const generateId = useCallback(() => {
     return String(nextId.current++);
@@ -144,6 +145,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
           id: generateId(),
           value: { name: "Loading...", isEmpty: true } as T,
           isLoaded: false,
+          isFakeLoading: true,
         },
       ];
 
@@ -178,32 +180,50 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
   }, []);
 
   useImperativeHandle(ref, () => ({
-    async selectPath(path: string) {
-      let nodeList = convertedNodes;
-      let foundElement: Node<T> | null = null;
-      for (const part of path.split("/")) {
-        if (foundElement) {
-          treeRef.current?.open(foundElement.id);
-        }
-        const content = nodeList.find((child) => child.value.name === part);
-        if (!content) {
+    async selectPath(path: string): Promise<boolean> {
+      if (!treeRef.current) {
+        console.warn("TreeView: selectPath called before tree is mounted");
+        return false;
+      }
+
+      const findChild = (nodeList: Node<T>[], name: string) => nodeList.find((child) => child.value.name === name);
+
+      const parts = path.split("/");
+      if (parts.length === 0) {
+        return false;
+      }
+      // The root element doesn't need to be waited
+      let foundElement = findChild(convertedNodes, parts[0]);
+      if (!foundElement) {
+        return false;
+      }
+
+      const id = Symbol("loadingOperation");
+      loadingOperation.current = id;
+      for (const part of parts.slice(1)) {
+        // Open the node
+        treeRef.current.open(foundElement.id);
+        // Ensure children are loaded
+        await loadChildrenIfRequired(foundElement);
+        if (loadingOperation.current !== id) {
+          // A new loading operation has started, cancel this one
           return false;
         }
-        await loadChildrenIfRequired(content);
-        foundElement = content;
-        nodeList = content.children || [];
+
+        // Find the next part
+        foundElement = findChild(foundElement.children || [], part);
+        if (!foundElement) {
+          return false;
+        }
       }
-      if (foundElement) {
-        selectWithoutUserAction(foundElement.id);
-        return true;
-      }
-      return false;
+      // Ensure the tree is up to date, otherwise the onSelect might be called with an empty selection
+      treeRef.current.update(treeRef.current.props);
+
+      selectWithoutUserAction(foundElement.id);
+      return true;
     },
     clearSelection() {
       treeRef.current?.deselectAll();
-    },
-    get root() {
-      return convertedNodes[0].value;
     },
   }));
 
@@ -225,8 +245,10 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
   const propsOnSelect = props.onSelect;
   const onSelect = useCallback(
     (nodes: NodeApi<Node<T>>[]) => {
-      const selectedNodes = nodes.map((n) => n.data.value);
-      propsOnSelect?.(selectedNodes || [], isUserAction.current);
+      if (propsOnSelect) {
+        const selectedNodes = nodes.filter((n) => !n.data.isFakeLoading).map((n) => n.data.value);
+        propsOnSelect(selectedNodes || [], isUserAction.current);
+      }
     },
     [propsOnSelect],
   );
@@ -407,5 +429,5 @@ function HighlightedText(props: { text: string; query: PatternQuery; isSelected:
 }
 
 export const TreeView = memo(forwardRef(TreeViewFn)) as <T extends MinimalNode>(
-  props: Props<T> & { ref?: React.ForwardedRef<TreeViewApi<T> | undefined> },
+  props: Props<T> & { ref?: React.ForwardedRef<TreeViewApi | undefined> },
 ) => ReturnType<typeof TreeViewFn>;

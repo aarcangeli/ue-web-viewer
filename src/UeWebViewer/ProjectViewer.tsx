@@ -46,7 +46,7 @@ export function ProjectViewer(props: Props) {
   const borderColor = useColorModeValue("gray.200", "gray.700");
   // TODO: avoid re-rendering the whole viewer when the file changes
   const [currentFile, setCurrentFile] = useState<FileApi | null>(null);
-  const tree = useRef<TreeViewApi<FileNode>>(null);
+  const tree = useRef<TreeViewApi>(null);
 
   const project = props.project;
 
@@ -79,7 +79,7 @@ export function ProjectViewer(props: Props) {
     <ProjectApiProvider value={projectApi}>
       <Flex className={"project-viewer"} flex={1}>
         <Flex direction={"column"} w={"400px"} borderRight="1px" borderColor={borderColor} p={2} gap={1}>
-          <TreeView<FileNode> ref={tree} nodes={nodes} loadChildren={loadChildNodes} onSelect={onSelect} />
+          <TreeView<FileNode> ref={tree} rootNodes={nodes} loadChildren={loadChildNodes} onSelect={onSelect} />
         </Flex>
         <Flex direction={"column"} grow={1} shrink={1}>
           {currentFile && currentFile.kind === "file" && <FileViewer file={currentFile}></FileViewer>}

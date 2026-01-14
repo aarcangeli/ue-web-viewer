@@ -18,7 +18,10 @@ jobs:
         with:
           lfs: true
 
-      - name: Set up Node.js ${{ matrix.node-version }} ☕️
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Set up Node.js ☕️
         uses: actions/setup-node@v4
         with:
           node-version: "latest"
