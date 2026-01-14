@@ -2,24 +2,33 @@ import { readAsset } from "../test-utils";
 import { extendJest, matchSnapshotProperties } from "./property-tests-utils";
 import { describe, expect, test } from "vitest";
 import { USkeleton } from "../../modules/Engine/objects/Skeleton";
+import { FSoftObjectPath } from "../../modules/CoreUObject/structs/SoftObjectPath";
 
 extendJest();
 
 const version = "ue-4.27";
 
 describe("BP_BasicProperties", () => {
-  test("Properties", () => {
+  test("Properties", async () => {
     const asset = readAsset(`${version}/Content/BP_BasicProperties.uasset`);
-    const object = asset.getObjectByFullName("BP_BasicProperties.Default__BP_BasicProperties_C");
-    matchSnapshotProperties(object.getCached()!);
+    const object = await asset.resolveObject(
+      FSoftObjectPath.fromPathString("BP_BasicProperties.Default__BP_BasicProperties_C"),
+      new AbortController().signal,
+    );
+    expect(object).toBeDefined();
+    matchSnapshotProperties(object!);
   });
 });
 
 describe("BP_ContainerProperties", () => {
-  test("Properties", () => {
+  test("Properties", async () => {
     const asset = readAsset(`${version}/Content/BP_ContainerProperties.uasset`);
-    const object = asset.getObjectByFullName("BP_ContainerProperties.Default__BP_ContainerProperties_C");
-    matchSnapshotProperties(object.getCached()!);
+    const object = await asset.resolveObject(
+      FSoftObjectPath.fromPathString("BP_ContainerProperties.Default__BP_ContainerProperties_C"),
+      new AbortController().signal,
+    );
+    expect(object).toBeDefined();
+    matchSnapshotProperties(object!);
   });
 });
 

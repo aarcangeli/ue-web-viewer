@@ -51,9 +51,10 @@ export class ObjectPtr<T extends UObject = UObject> {
   /**
    * Load the object if it's not already loaded and return the reference.
    */
-  async load(abort: AbortSignal): Promise<T | null> {
+  async load(abort?: AbortSignal): Promise<T | null> {
     let object = this.getCached();
     if (object === null) {
+      abort = abort ?? new AbortController().signal;
       checkAborted(abort);
       object = (await globalContainer.objectLoader.loadObject(this.softObjectPath, abort)) as T | null;
       this.replaceObject(object);
