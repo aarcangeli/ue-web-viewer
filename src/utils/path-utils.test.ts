@@ -1,4 +1,4 @@
-import { combinePath, tryParseExportTextPath } from "./path-utils";
+import { combinePath, isScriptPackage, tryParseExportTextPath } from "./path-utils";
 import { describe, it, expect } from "vitest";
 
 describe("tryParseExportTextPath", () => {
@@ -92,5 +92,14 @@ describe("combinePath", () => {
     it("throws if a segment contains backslashes", () => {
       expect(() => combinePath("a\\b", "c")).toThrow();
     });
+  });
+});
+
+describe("isScriptPackage", () => {
+  it("should identify script packages", () => {
+    expect(isScriptPackage("/Script/Engine")).toBe(true);
+    expect(isScriptPackage("/script/engine")).toBe(true);
+    expect(isScriptPackage("/SCRIPT/ENGINE")).toBe(true);
+    expect(isScriptPackage("/Game/Meshes/SK_Mannequin")).toBe(false);
   });
 });

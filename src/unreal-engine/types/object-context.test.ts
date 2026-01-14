@@ -17,16 +17,21 @@ describe("ObjectContext", () => {
     expect(coreUObject).toBeTruthy();
     expect(coreUObject).toBeInstanceOf(UPackage);
     expect(coreUObject.fullName).toBe("/Script/CoreUObject");
+    expect(coreUObject.nameString).toBe("/Script/CoreUObject");
     expect(coreUObject.outer).toBeNull();
     expect(coreUObject.class.toString()).toBe("/Script/CoreUObject.Package");
+    expect(coreUObject.getRootObject()).toBe(coreUObject);
+    expect(context.allPackages).toContain(coreUObject);
 
     // Class
     const classClass = context.CLASS_Class;
     expect(classClass).toBeTruthy();
     expect(classClass).toBeInstanceOf(UClass);
     expect(classClass.fullName).toBe("/Script/CoreUObject.Class");
+    expect(classClass.nameString).toBe("Class");
     expect(classClass.outer).toBe(coreUObject);
     expect(classClass.class.getCached()).toBe(classClass);
+    expect(classClass.getRootObject()).toBe(coreUObject);
     expect(coreUObject.innerObjects).toContain(classClass);
 
     // Class Object
@@ -34,8 +39,10 @@ describe("ObjectContext", () => {
     expect(classObject).toBeTruthy();
     expect(classObject).toBeInstanceOf(UClass);
     expect(classObject.fullName).toBe("/Script/CoreUObject.Object");
+    expect(classObject.nameString).toBe("Object");
     expect(classObject.outer).toBe(coreUObject);
     expect(classObject.class.getCached()).toBe(classClass);
+    expect(classObject.getRootObject()).toBe(coreUObject);
     expect(coreUObject.innerObjects).toContain(classObject);
 
     // Class Package
@@ -43,8 +50,10 @@ describe("ObjectContext", () => {
     expect(classPackage).toBeTruthy();
     expect(classPackage).toBeInstanceOf(UClass);
     expect(classPackage.fullName).toBe("/Script/CoreUObject.Package");
+    expect(classPackage.nameString).toBe("Package");
     expect(classPackage.outer).toBe(coreUObject);
     expect(classPackage.class.getCached()).toBe(classClass);
+    expect(classPackage.getRootObject()).toBe(coreUObject);
     expect(coreUObject.innerObjects).toContain(classPackage);
     expect(coreUObject.class.getCached()).toBe(classPackage);
 
@@ -63,15 +72,19 @@ describe("ObjectContext", () => {
     const packageEngine = context.findPackage(FName.fromString("/Script/Engine"))!;
     expect(packageEngine).toBeTruthy();
     expect(packageEngine.fullName).toBe("/Script/Engine");
+    expect(packageEngine.nameString).toBe("/Script/Engine");
     expect(packageEngine.outer).toBeNull();
     expect(packageEngine.class.getCached()).toBe(classPackage);
+    expect(packageEngine.getRootObject()).toBe(packageEngine);
 
     // Verify other classes
     const classStaticMesh = context.findClass(packageEngine.name, FName.fromString("StaticMesh"))!;
     expect(classStaticMesh).toBeTruthy();
     expect(classStaticMesh.fullName).toBe("/Script/Engine.StaticMesh");
+    expect(classStaticMesh.nameString).toBe("StaticMesh");
     expect(classStaticMesh.outer).toBe(packageEngine);
     expect(classStaticMesh.class.getCached()).toBe(classClass);
+    expect(classStaticMesh.getRootObject()).toBe(packageEngine);
   });
 
   test("class hierarchy", () => {
@@ -129,6 +142,37 @@ describe("ObjectContext", () => {
 
     expect(context.allPackages).toContain(testPackage);
     expect(context.findPackage(FName.fromString("/Script/TestPackage"))).toBe(testPackage);
+  });
+
+  test("remove package", () => {
+    const context = MakeObjectContext();
+
+    // Create a package and a object in it
+    const testPackage = context.findOrCreatePackage(FName.fromString("/Script/TestPackageToRemove"));
+    const packageObjectPtr = ObjectPtr.fromObject(testPackage);
+    const packageWeakRef = testPackage.asWeakObject();
+
+    // Create an object in the package
+    const object = context.newObject(testPackage, context.CLASS_Object, FName.fromString("TestObjectInPackage"));
+    const objectPtr = ObjectPtr.fromObject(object);
+    const objectWeakRef = object.asWeakObject();
+
+    // All should be valid
+    expect(packageObjectPtr.getCached()).toBe(testPackage);
+    expect(packageWeakRef.deref()).toBe(testPackage);
+    expect(objectPtr.getCached()).toBe(object);
+    expect(objectWeakRef.deref()).toBe(object);
+
+    // Remove the package
+    context.removePackage(testPackage);
+    expect(context.allPackages).not.toContain(testPackage);
+    expect(context.findPackage(FName.fromString("/Script/TestPackageToRemove"))).toBeNull();
+
+    // Package and contained object should be gone
+    expect(packageObjectPtr.getCached()).toBeNull();
+    expect(packageWeakRef.deref()).toBeNull();
+    expect(objectPtr.getCached()).toBeNull();
+    expect(objectWeakRef.deref()).toBeNull();
   });
 
   test("class creation", () => {

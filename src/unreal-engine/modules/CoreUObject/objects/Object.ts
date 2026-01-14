@@ -59,8 +59,14 @@ export enum ELoadingPhase {
  * In C++, UObject inherits from UObjectBaseUtility, which in turn inherits from UObjectBase.
  * However, UHT only handles UObject (see NoExportTypes.h).
  *
- * Do not use vanilla WeakRef to weakly reference UObject instances.
  * Instead, use {@link asWeakObject()} to obtain a WeakObject.
+ *
+ * There are three ways to reference UObjects:
+ * - Directly, only for local variables and function parameters.
+ * - {@link ObjectPtr}, strong object reference, support hot reloading,
+ * - {@link WeakObjectRef}, weak object reference, support hot reloading.
+ *
+ * Do not use vanilla WeakRef as it doesn't support detached objects.
  */
 @RegisterClass("/Script/CoreUObject.Object")
 export class UObject {

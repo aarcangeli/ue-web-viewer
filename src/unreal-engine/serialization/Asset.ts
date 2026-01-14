@@ -166,13 +166,12 @@ class Asset implements AssetApi {
 
   getObjectName(index: number): FName {
     invariant(this.isIndexValid(index), `Invalid index ${index}`);
+    invariant(index !== 0, `Index 0 does not have a name`);
 
     if (index < 0) {
       return this._imports[-index - 1].ObjectName;
-    } else if (index > 0) {
-      return this._exports[index - 1].ObjectName;
     } else {
-      return NAME_None;
+      return this._exports[index - 1].ObjectName;
     }
   }
 
