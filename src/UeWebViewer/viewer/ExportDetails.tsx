@@ -22,7 +22,7 @@ import invariant from "tiny-invariant";
 import { makeObjectTitle } from "./commons";
 import { removePrefix } from "../../utils/string-utils";
 import { IoOpenOutline, IoReload } from "react-icons/io5";
-import { ObjectPreview, ObjectPtrPreview } from "./AssetPreview";
+import { ObjectPtrPreview } from "./AssetPreview";
 
 class Node {
   constructor(

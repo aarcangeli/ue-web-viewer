@@ -3,7 +3,6 @@ import fs from "fs";
 import { MakeObjectContext } from "../types/object-context";
 import { openAssetFromDataView } from "../serialization/Asset";
 import { FName } from "../types/Name";
-import { removeExtension } from "../../utils/string-utils";
 
 /**
  * Contains the path of __tests__ directory.

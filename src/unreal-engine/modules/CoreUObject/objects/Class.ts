@@ -1,5 +1,3 @@
-import invariant from "tiny-invariant";
-
 import { RegisterClass } from "../../../types/class-registry";
 
 import type { ObjectConstructionParams } from "./Object";

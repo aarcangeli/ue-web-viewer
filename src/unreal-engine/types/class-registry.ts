@@ -1,7 +1,7 @@
 import invariant from "tiny-invariant";
 
 import type { UClass } from "../modules/CoreUObject/objects/Class";
-import { type ObjectConstructionParams, UObject } from "../modules/CoreUObject/objects/Object";
+import type { ObjectConstructionParams, UObject } from "../modules/CoreUObject/objects/Object";
 
 import { FName } from "./Name";
 
@@ -50,8 +50,8 @@ export function findClassOf(classObject: UClass): ObjectClass {
     currentClass = currentClass.superClazz?.getCached() || null;
   }
 
-  // No specific class found, return the base UObject class
-  return UObject;
+  // Really strange, at least UObject should exist.
+  throw new Error(`No constructor found for class: ${classObject}`);
 }
 
 export function getClassName(objectClass: ObjectClassPrivate) {

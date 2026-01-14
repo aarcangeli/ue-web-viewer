@@ -1,4 +1,3 @@
-import type { UObject } from "../modules/CoreUObject/objects/Object";
 import type { FName } from "../types/Name";
 import type { FText } from "../types/Text";
 

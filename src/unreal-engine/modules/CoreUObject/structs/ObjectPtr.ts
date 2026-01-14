@@ -2,7 +2,6 @@ import { type UObject } from "../objects/Object";
 import { FSoftObjectPath } from "./SoftObjectPath";
 import { checkAborted } from "../../../../utils/async-compute";
 import invariant from "tiny-invariant";
-import type { IObjectLoader } from "../../../types/object-loader";
 import { globalContainer } from "../../../global-container";
 
 /**

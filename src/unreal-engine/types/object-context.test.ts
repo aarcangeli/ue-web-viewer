@@ -160,11 +160,7 @@ describe("ObjectContext", () => {
     const classStaticMesh = context.findClass(FName.fromString("/Script/Engine"), FName.fromString("StaticMesh"))!;
     expect(classStaticMesh).toBeTruthy();
 
-    const myMesh = context.newObject(
-      context.PACKAGE_CoreUObject,
-      ObjectPtr.fromObject(classStaticMesh),
-      FName.fromString("MyStaticMesh"),
-    );
+    const myMesh = context.newObject(context.PACKAGE_CoreUObject, classStaticMesh, FName.fromString("MyStaticMesh"));
     expect(myMesh).toBeTruthy();
     expect(myMesh).toBeInstanceOf(UStaticMesh);
     expect(myMesh.fullName).toBe("/Script/CoreUObject.MyStaticMesh");

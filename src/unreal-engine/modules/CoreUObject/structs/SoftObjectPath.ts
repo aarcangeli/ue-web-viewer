@@ -139,7 +139,7 @@ export class FSoftObjectPath {
 
   toString() {
     if (this.isNull()) {
-      return "null";
+      return "";
     }
     let result = "";
     result += this.packageName.text;

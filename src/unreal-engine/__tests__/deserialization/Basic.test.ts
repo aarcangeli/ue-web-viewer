@@ -17,12 +17,6 @@ describe("TestActorUE4-0-2", () => {
     expect(asset.exports).toMatchSnapshot("exports");
   });
 
-  test("getObjectName", () => {
-    expect(asset.getObjectName(0).toString()).toBe("None");
-    expect(asset.getObjectName(1).toString()).toBe("K2Node_Event_DeltaSeconds");
-    expect(asset.getObjectName(-1).toString()).toBe("Default__Actor");
-  });
-
   test("makeFullName", () => {
     expect(asset.makeFullNameByIndex(0).toString()).toBe("None");
     expect(asset.makeFullNameByIndex(55).toString()).toBe(

@@ -1,6 +1,5 @@
 import type { FName } from "../unreal-engine/types/Name";
 import invariant from "tiny-invariant";
-import type { UObject } from "../unreal-engine/modules/CoreUObject/objects/Object";
 import { startsWithCaseInsensitive } from "./string-utils";
 
 /**
