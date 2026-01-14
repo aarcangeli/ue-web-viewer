@@ -231,7 +231,7 @@ class Asset implements AssetApi {
     if (exportedObject === 0) {
       throw new Error(`Object with full name ${fullName} not found`);
     }
-    return this.getObjectByIndex(exportedObject + 1);
+    return this.getObjectByIndex(exportedObject);
   }
 
   async resolveObject(objectPath: FSoftObjectPath, abort: AbortSignal): Promise<UObject | null> {
