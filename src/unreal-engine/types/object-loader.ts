@@ -74,7 +74,11 @@ class ObjectLoaderImpl implements IObjectLoader {
       return existingObject;
     }
 
-    return this.lookupObject(softObjectPath);
+    const lookupObject = this.lookupObject(softObjectPath);
+    if (lookupObject) {
+      this.setWithListener(status, lookupObject);
+    }
+    return lookupObject;
   }
 
   subscribeEvents<T extends UObject>(softObjectPath: FSoftObjectPath, listener: (value: T) => void): () => void {
