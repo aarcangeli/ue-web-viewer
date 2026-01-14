@@ -4,11 +4,12 @@ import invariant from "tiny-invariant";
 
 import type { EPackageFlags } from "../enums";
 import { UClass } from "../modules/CoreUObject/objects/Class";
-import type { UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
+import type { UObject } from "../modules/CoreUObject/objects/Object";
+import { type WeakObjectRef } from "../modules/CoreUObject/objects/Object";
 import { UPackage } from "../modules/CoreUObject/objects/Package";
 import { NAME_Class, NAME_CoreUObject, NAME_Object, NAME_Package } from "../modules/names";
 
-import { getAllClasses, instantiateObject } from "./class-registry";
+import { findClassOf, getAllClasses } from "./class-registry";
 import { FName } from "./Name";
 import { ObjectPtr } from "../modules/CoreUObject/structs/ObjectPtr";
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
@@ -72,10 +73,10 @@ export interface IObjectContext {
    */
   findClass(packageName: FName, className: FName): UClass | null;
 
-  /*
+  /**
    * Creates a new object of the specified class with the given name.
    */
-  newObject(outer: UObject, clazz: ObjectPtr<UClass>, name: FName, flags?: EPackageFlags): UObject;
+  newObject(outer: UObject, clazz: UClass, name: FName, flags?: EPackageFlags): UObject;
 }
 
 export function MakeObjectContext(): IObjectContext {
@@ -187,14 +188,15 @@ class ObjectContextImpl implements IObjectContext {
     return packageObject;
   }
 
-  newObject(outer: UObject, clazz: ObjectPtr<UClass>, name: FName, flags?: EPackageFlags): UObject {
+  newObject(outer: UObject, clazz: UClass, name: FName, flags?: EPackageFlags): UObject {
     invariant(outer !== null, "Outer cannot be null for non-package objects");
     invariant(
       outer.findInnerByFName(name) === null,
       `Object with name ${name} already exists in outer ${outer.fullName}`,
     );
 
-    return instantiateObject({ outer, clazz, name, flags });
+    const constructor = findClassOf(clazz);
+    return new constructor({ outer, clazz: ObjectPtr.fromObject(clazz), name, flags });
   }
 
   removePackage(uPackage: UPackage) {

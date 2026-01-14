@@ -1,10 +1,9 @@
 import invariant from "tiny-invariant";
 
 import type { UClass } from "../modules/CoreUObject/objects/Class";
-import type { ObjectConstructionParams, UObject } from "../modules/CoreUObject/objects/Object";
+import { type ObjectConstructionParams, UObject } from "../modules/CoreUObject/objects/Object";
 
 import { FName } from "./Name";
-import type { ObjectPtr } from "../modules/CoreUObject/structs/ObjectPtr";
 
 export interface ClassInfo {
   packageName: FName;
@@ -39,8 +38,8 @@ export function RegisterClass(fullClassName: string) {
   };
 }
 
-export function findClassOf(classObject: ObjectPtr<UClass>): ObjectClass | null {
-  let currentClass: UClass | null = classObject.getCached() || null;
+export function findClassOf(classObject: UClass): ObjectClass {
+  let currentClass: UClass | null = classObject || null;
 
   // Find the TS class with better match for the UObject class hierarchy
   while (currentClass) {
@@ -51,17 +50,8 @@ export function findClassOf(classObject: ObjectPtr<UClass>): ObjectClass | null 
     currentClass = currentClass.superClazz?.getCached() || null;
   }
 
-  return null;
-}
-
-export function instantiateObject(params: ObjectConstructionParams): UObject {
-  const constructor = findClassOf(params.clazz);
-  if (constructor) {
-    return new constructor(params);
-  }
-
-  // Really strange, at least UObject should exist.
-  throw new Error(`No constructor found for class: ${params.clazz.getSoftObjectPath().toString()}`);
+  // No specific class found, return the base UObject class
+  return UObject;
 }
 
 export function getClassName(objectClass: ObjectClassPrivate) {

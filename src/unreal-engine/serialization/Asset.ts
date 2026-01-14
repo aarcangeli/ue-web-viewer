@@ -3,7 +3,7 @@ import "../modules/all-objects";
 import invariant from "tiny-invariant";
 import { type AssetReader, FullAssetReader } from "../AssetReader";
 import { UClass } from "../modules/CoreUObject/objects/Class";
-import type { UObject } from "../modules/CoreUObject/objects/Object";
+import { UObject } from "../modules/CoreUObject/objects/Object";
 import { ELoadingPhase, type ObjectResolver, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
 import { type UPackage } from "../modules/CoreUObject/objects/Package";
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
@@ -335,22 +335,21 @@ class Asset implements AssetApi {
       const classPtr = this.getObjectByIndex(objectExport.ClassIndex);
 
       // Recursively load the class, this is needed otherwise we cannot use the correct constructor
-      let classObject = await classPtr.load(abort);
-
+      const classObject = await classPtr.load(abort);
       if (!classObject || !(classObject instanceof UClass)) {
+        // Without a full class, we don't know the correct hierarchy, and we cannot instantiate the correct JS class.
         console.warn(
           `Object ${objectExport.ObjectName} is based on an unknown class ${classPtr}, using UObject as fallback`,
         );
-        classObject = this.context.CLASS_Object;
+        return new UObject({
+          outer,
+          clazz: classPtr as unknown as ObjectPtr<UClass>,
+          name: objectExport.ObjectName,
+          flags: objectExport.objectFlags,
+        });
       }
 
-      invariant(classObject instanceof UClass);
-      return this._context.newObject(
-        outer,
-        ObjectPtr.fromObject(classObject),
-        objectExport.ObjectName,
-        objectExport.objectFlags,
-      );
+      return this._context.newObject(outer, classObject, objectExport.ObjectName, objectExport.objectFlags);
     });
   }
 
