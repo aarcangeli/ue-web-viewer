@@ -1,6 +1,6 @@
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
 import { type UObject, type WeakObjectRef } from "../modules/CoreUObject/objects/Object";
-import type { VirtualFileSystem } from "../fileSystem/VirtualFileSystem";
+import { type VirtualFileSystem } from "../fileSystem/VirtualFileSystem";
 import type { FileApi } from "../fileSystem/FileApi";
 import { UPackage } from "../modules/CoreUObject/objects/Package";
 import invariant from "tiny-invariant";
@@ -8,10 +8,12 @@ import { FName } from "./Name";
 import { type AssetApi, openAssetFromDataView } from "../serialization/Asset";
 import type { IObjectContext } from "./object-context";
 import { isScriptPackage } from "../../utils/path-utils";
+import { checkAborted } from "../../utils/async-compute";
 
 export interface IObjectLoader {
   loadObject(objectPath: FSoftObjectPath, abort: AbortSignal): Promise<UObject | null>;
   loadPackage(file: FileApi): Promise<UPackage | null>;
+  subscribeEvents<T extends UObject>(softObjectPath: FSoftObjectPath, listener: (value: T) => void): () => void;
 }
 
 export function createObjectLoader(vfs: VirtualFileSystem, context: IObjectContext): IObjectLoader {
@@ -59,6 +61,12 @@ class ObjectLoaderImpl implements IObjectLoader {
     return this.doLoadPackage(softObjectPath, file).then((asset) => asset.package);
   }
 
+  subscribeEvents<T extends UObject>(softObjectPath: FSoftObjectPath, listener: (value: T) => void): () => void {
+    const objectStatus = this.getObjectStatus<T>(softObjectPath);
+    objectStatus.listeners.add(listener);
+    return () => objectStatus.listeners.delete(listener);
+  }
+
   private async doLoadPackage(packagePath: FSoftObjectPath, file: FileApi): Promise<AssetApi> {
     invariant(packagePath.assetName.isNone);
     const status = this.getObjectStatus(packagePath);
@@ -84,43 +92,49 @@ class ObjectLoaderImpl implements IObjectLoader {
   }
 
   async loadObject(objectPath: FSoftObjectPath, abort: AbortSignal): Promise<UObject | null> {
+    const object = await this.doLoadObject(objectPath, abort);
+    if (object) {
+      this.setWithListener(this.getObjectStatus(objectPath), object);
+    }
+    return object;
+  }
+
+  private async doLoadObject(objectPath: FSoftObjectPath, abort: AbortSignal) {
     if (objectPath.isNull()) {
       return null;
     }
 
-    if (isScriptPackage(objectPath.packageName.toString())) {
-      return this.loadScriptObject(objectPath);
+    // Check cache
+    const status = this.getObjectStatus(objectPath);
+    const existingObject = status.deref();
+    if (existingObject) {
+      return existingObject;
     }
 
-    console.log("Loading object:", objectPath.toString());
-    const packageStatus = this.getObjectStatus(new FSoftObjectPath(objectPath.packageName));
+    // Try to load the package asset
+    if (!isScriptPackage(objectPath.packageName.toString())) {
+      const asset = await this.loadPackageAsset(objectPath.packageName);
+      checkAborted(abort);
+      if (asset) {
+        return await asset.resolveObject(objectPath, abort);
+      }
+    }
 
-    // Find an existing package with the same name
-    if (!packageStatus.asset) {
-      const existingPackage = this.context.findPackage(objectPath.packageName);
-      if (existingPackage) {
-        if (!existingPackage.assetApi) {
-          // Really strange, a package exists without an assetApi
-          console.warn(`Package found without assetApi: ${objectPath.packageName.toString()}`);
-          return null;
+    return this.lookupObject(objectPath);
+  }
+
+  private setWithListener(packageStatus: ObjectStatus, object: UObject) {
+    const currentObject = packageStatus.deref();
+    if (currentObject !== object) {
+      packageStatus.weakRef = object.asWeakObject();
+      for (const listener of packageStatus.listeners) {
+        try {
+          listener(object);
+        } catch (e) {
+          console.error("Error in object load listener", e);
         }
-        packageStatus.asset = existingPackage.assetApi;
       }
     }
-
-    // Load from vfs
-    if (!packageStatus.asset) {
-      const resolvedFile = await this.vfs.resolveFile(objectPath.packageName.toString());
-      if (resolvedFile) {
-        await this.doLoadPackage(new FSoftObjectPath(objectPath.packageName), resolvedFile);
-      }
-    }
-
-    if (!packageStatus.asset) {
-      return null;
-    }
-
-    return packageStatus.asset.resolveObject(objectPath, abort);
   }
 
   private async doLoadPackageFromFile(softObjectPath: FSoftObjectPath, file: FileApi): Promise<AssetApi> {
@@ -128,10 +142,10 @@ class ObjectLoaderImpl implements IObjectLoader {
     return openAssetFromDataView(this.context, softObjectPath.packageName, new DataView(content));
   }
 
-  private loadScriptObject(objectPath: FSoftObjectPath) {
+  private lookupObject(objectPath: FSoftObjectPath) {
     // Get package
-    const uPackage = this.context.findOrCreatePackage(objectPath.packageName);
-    if (objectPath.assetName.isNone) {
+    const uPackage = this.context.findPackage(objectPath.packageName);
+    if (!uPackage || objectPath.assetName.isNone) {
       return uPackage;
     }
 
@@ -150,15 +164,15 @@ class ObjectLoaderImpl implements IObjectLoader {
     return current;
   }
 
-  getObjectStatus(softObjectPath: FSoftObjectPath): ObjectStatus {
+  getObjectStatus<T extends UObject>(softObjectPath: FSoftObjectPath): ObjectStatus<T> {
     const normalizedKey = softObjectPath.toString().toLowerCase();
     const status = this.cachedObjects.get(normalizedKey);
     if (status) {
       return status;
     }
 
-    const newStatus = new ObjectStatus(softObjectPath);
-    this.cachedObjects.set(normalizedKey, newStatus);
+    const newStatus = new ObjectStatus<T>(softObjectPath);
+    this.cachedObjects.set(normalizedKey, newStatus as ObjectStatus);
     return newStatus;
   }
 
@@ -173,15 +187,38 @@ class ObjectLoaderImpl implements IObjectLoader {
 
   removeGarbage() {
     for (const [key, status] of this.cachedObjects.entries()) {
-      if (status.asset == null && status.deref() === null) {
+      if (status.asset == null && status.deref() === null && status.listeners.size === 0) {
         status.close();
         this.cachedObjects.delete(key);
       }
     }
   }
+
+  private async loadPackageAsset(packageName: FName): Promise<AssetApi | null> {
+    const status = this.getObjectStatus(new FSoftObjectPath(packageName));
+    if (status.asset) {
+      return status.asset;
+    }
+
+    // Find an existing package with the same name
+    const existingPackage = this.context.findPackage(packageName);
+    if (existingPackage?.assetApi) {
+      status.asset = existingPackage.assetApi;
+      return status.asset;
+    }
+
+    // Load from vfs
+    const resolvedFile = await this.vfs.resolveFile(packageName.toString());
+    if (resolvedFile) {
+      status.asset = await this.doLoadPackage(new FSoftObjectPath(packageName), resolvedFile);
+      return status.asset;
+    }
+
+    return null;
+  }
 }
 
-class ObjectStatus {
+class ObjectStatus<T extends UObject = UObject> {
   recursionCheck: boolean = false;
   readonly softObjectPath?: FSoftObjectPath;
 
@@ -191,6 +228,9 @@ class ObjectStatus {
 
   // keep it strong?
   asset?: AssetApi;
+
+  // listeners to notify when the object is loaded
+  listeners: Set<(value: T) => void> = new Set();
 
   constructor(softObjectPath: FSoftObjectPath) {
     this.softObjectPath = softObjectPath;

@@ -112,7 +112,7 @@ export class UObject {
     invariant(params.name, "Object name cannot be null");
     invariant(!params.name.isNone, "Name cannot be None");
     invariant(ValidObjectName.test(params.name.text), `Invalid object name: ${params.name.text}`);
-    invariant(!params.outer?.detached, "Outer object cannot be detached");
+    invariant(!params.outer?.detached, "Outer object is detached");
 
     this._class = params.clazz;
     this._name = params.name;

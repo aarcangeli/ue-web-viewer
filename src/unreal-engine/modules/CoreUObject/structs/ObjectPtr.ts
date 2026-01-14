@@ -12,7 +12,6 @@ import { globalContainer } from "../../../global-container";
  * Do not ue "==" to compare ObjectPtr instances, use equals() instead.
  */
 export class ObjectPtr<T extends UObject = UObject> {
-  private readonly listeners = new Set<(value: T) => void>();
   private strongRef: T | null = null;
   private readonly softObjectPath: FSoftObjectPath;
 
@@ -52,11 +51,12 @@ export class ObjectPtr<T extends UObject = UObject> {
    * Load the object if it's not already loaded and return the reference.
    */
   async load(abort?: AbortSignal): Promise<T | null> {
+    invariant(globalContainer, "Global container is not initialized");
+
     let object = this.getCached();
     if (object === null) {
       abort = abort ?? new AbortController().signal;
       checkAborted(abort);
-      invariant(globalContainer, "Global container is not initialized");
       object = (await globalContainer.objectLoader.loadObject(this.softObjectPath, abort)) as T | null;
       this.replaceObject(object);
     }
@@ -76,15 +76,7 @@ export class ObjectPtr<T extends UObject = UObject> {
       );
     }
 
-    const oldObject = this.getCached();
-    if (oldObject !== newObject) {
-      // Update the weak reference
-      this.strongRef = newObject;
-      // Notify listeners
-      for (const listener of this.listeners) {
-        listener(newObject as T);
-      }
-    }
+    this.strongRef = newObject;
   }
 
   getSoftObjectPath(): FSoftObjectPath {
@@ -93,11 +85,11 @@ export class ObjectPtr<T extends UObject = UObject> {
 
   /**
    * Fire the listener when the object reference changes.
+   * @return A function to unsubscribe the listener.
    */
   subscribe(l: (value: T) => void): () => void {
-    throw new Error("TODO: attach to global object loader");
-    this.listeners.add(l);
-    return () => this.listeners.delete(l);
+    invariant(globalContainer, "Global container is not initialized");
+    return globalContainer.objectLoader.subscribeEvents(this.softObjectPath, l);
   }
 
   equals(other: ObjectPtr<T>): boolean {
