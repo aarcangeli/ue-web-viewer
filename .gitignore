@@ -35,3 +35,4 @@ yarn-error.log*
 /src/externals
 __pycache__
 *.blend1
+.yarn/install-state.gz
