@@ -55,13 +55,6 @@ jobs:
           yarn build
           cp -r .github/start-template/* dist/
 
-      - name: Upload coverage as artifacts ⬆️
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: coverage/lcov-report
-
       - name: Upload "dist" artifacts ⬆️
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4

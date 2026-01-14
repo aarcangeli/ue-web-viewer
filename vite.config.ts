@@ -24,6 +24,7 @@ export default defineConfig({
       bundleName: "ue-web-viewer",
       uploadToken: process.env.CODECOV_TOKEN,
       gitService: "github",
+      telemetry: false,
     }),
   ],
   base: "",
