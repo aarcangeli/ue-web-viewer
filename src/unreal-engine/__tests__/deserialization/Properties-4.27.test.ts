@@ -1,18 +1,21 @@
-import { readAsset } from "../test-utils";
+import { readAsset, withGlobalEnv } from "../test-utils";
 import { extendJest, matchSnapshotProperties } from "./property-tests-utils";
 import { describe, expect, test } from "vitest";
 import { USkeleton } from "../../modules/Engine/objects/Skeleton";
 import { FSoftObjectPath } from "../../modules/CoreUObject/structs/SoftObjectPath";
+import invariant from "tiny-invariant";
 
 extendJest();
 
 const version = "ue-4.27";
 
+withGlobalEnv();
+
 describe("BP_BasicProperties", () => {
   test("Properties", async () => {
     const asset = readAsset(`${version}/Content/BP_BasicProperties.uasset`);
     const object = await asset.resolveObject(
-      FSoftObjectPath.fromPathString("BP_BasicProperties.Default__BP_BasicProperties_C"),
+      FSoftObjectPath.fromPathString("/Game/BP_BasicProperties.Default__BP_BasicProperties_C"),
       new AbortController().signal,
     );
     expect(object).toBeDefined();
@@ -24,7 +27,7 @@ describe("BP_ContainerProperties", () => {
   test("Properties", async () => {
     const asset = readAsset(`${version}/Content/BP_ContainerProperties.uasset`);
     const object = await asset.resolveObject(
-      FSoftObjectPath.fromPathString("BP_ContainerProperties.Default__BP_ContainerProperties_C"),
+      FSoftObjectPath.fromPathString("/Game/BP_ContainerProperties.Default__BP_ContainerProperties_C"),
       new AbortController().signal,
     );
     expect(object).toBeDefined();
@@ -33,18 +36,20 @@ describe("BP_ContainerProperties", () => {
 });
 
 describe("SK_MeshY_Skeleton", () => {
-  test("Properties", () => {
+  test("Properties", async () => {
     const asset = readAsset(`${version}/Content/SK_MeshY_Skeleton.uasset`);
-    const object = asset.getObjectByFullName("SK_MeshY_Skeleton.SK_MeshY_Skeleton");
+    const object = await asset.resolveObject(
+      FSoftObjectPath.fromPathString("/Game/SK_MeshY_Skeleton.SK_MeshY_Skeleton"),
+      new AbortController().signal,
+    );
     expect(object).toBeDefined();
-    expect(object.isNull()).toBe(false);
-    const skeleton = object.getCached() as USkeleton;
-    expect(skeleton).toBeInstanceOf(USkeleton);
-    matchSnapshotProperties(skeleton);
-    expect(skeleton.SmartNames).toMatchSnapshot("SmartNames");
-    expect(skeleton.ReferenceSkeleton).toMatchSnapshot("ReferenceSkeleton");
-    expect(skeleton.AnimRetargetSources).toMatchSnapshot("AnimRetargetSources");
-    expect(skeleton.Guid).toMatchSnapshot("Guid");
-    expect(skeleton.ExistingMarkerNames).toMatchSnapshot("ExistingMarkerNames");
+    expect(object).toBeInstanceOf(USkeleton);
+    invariant(object instanceof USkeleton);
+    matchSnapshotProperties(object);
+    expect(object.SmartNames).toMatchSnapshot("SmartNames");
+    expect(object.ReferenceSkeleton).toMatchSnapshot("ReferenceSkeleton");
+    expect(object.AnimRetargetSources).toMatchSnapshot("AnimRetargetSources");
+    expect(object.Guid).toMatchSnapshot("Guid");
+    expect(object.ExistingMarkerNames).toMatchSnapshot("ExistingMarkerNames");
   });
 });

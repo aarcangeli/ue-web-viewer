@@ -111,7 +111,6 @@ class ObjectLoaderImpl implements IObjectLoader {
     // Load from vfs
     if (!packageStatus.asset) {
       const resolvedFile = await this.vfs.resolveFile(objectPath.packageName.toString());
-      console.log("Resolved file:", resolvedFile);
       if (resolvedFile) {
         await this.doLoadPackage(new FSoftObjectPath(objectPath.packageName), resolvedFile);
       }

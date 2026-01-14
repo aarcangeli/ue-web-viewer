@@ -62,6 +62,7 @@ function ensureValidCombinePaths(paths: unknown[]) {
     invariant(path != "." && path != "..", `Path segments cannot be '.' or '..': ${path}`);
   }
 }
+
 export function isScriptPackage(exportedObjects: string) {
   return startsWithCaseInsensitive(exportedObjects, "/Script/");
 }

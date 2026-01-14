@@ -514,7 +514,7 @@ TaggedProperty {
     "typeName": "ObjectProperty",
   },
   "value": {
-    "object": [ref] /Script/Engine.ActorChannel,
+    "object": [ObjectPtr] /Script/Engine.ActorChannel,
     "type": "object",
   },
 }
@@ -1657,11 +1657,11 @@ TaggedProperty {
     "type": "array",
     "value": [
       {
-        "object": [ref] /Script/SampleProject.BasicProperties,
+        "object": [ObjectPtr] /Script/SampleProject.BasicProperties,
         "type": "object",
       },
       {
-        "object": [ref] BP_ContainerProperties.BP_ContainerProperties,
+        "object": [ObjectPtr] /Game/BP_ContainerProperties.BP_ContainerProperties,
         "type": "object",
       },
     ],
@@ -1868,11 +1868,11 @@ TaggedProperty {
     "type": "set",
     "value": [
       {
-        "object": [ref] /Script/SampleProject.BasicProperties,
+        "object": [ObjectPtr] /Script/SampleProject.BasicProperties,
         "type": "object",
       },
       {
-        "object": [ref] BP_ContainerProperties.BP_ContainerProperties,
+        "object": [ObjectPtr] /Game/BP_ContainerProperties.BP_ContainerProperties,
         "type": "object",
       },
     ],
@@ -2051,7 +2051,7 @@ TaggedProperty {
     "value": [
       [
         {
-          "object": [ref] /Game/BP_BasicProperties.BP_BasicProperties,
+          "object": [ObjectPtr] /Game/BP_BasicProperties.BP_BasicProperties,
           "type": "object",
         },
         {
@@ -2061,7 +2061,7 @@ TaggedProperty {
       ],
       [
         {
-          "object": [ref] BP_ContainerProperties.BP_ContainerProperties,
+          "object": [ObjectPtr] /Game/BP_ContainerProperties.BP_ContainerProperties,
           "type": "object",
         },
         {
@@ -2780,7 +2780,7 @@ TaggedProperty {
     "type": "array",
     "value": [
       {
-        "object": [ref] SK_MeshY_Skeleton.SK_MeshY_Skeleton:BlendProfile,
+        "object": [ObjectPtr] /Game/SK_MeshY_Skeleton.SK_MeshY_Skeleton:BlendProfile,
         "type": "object",
       },
     ],
@@ -2922,7 +2922,7 @@ TaggedProperty {
           "typeName": "ObjectProperty",
         },
         "value": {
-          "object": [ref] /Engine/EngineMeshes/Humanoid.Humanoid,
+          "object": [ObjectPtr] /Engine/EngineMeshes/Humanoid.Humanoid,
           "type": "object",
         },
       },

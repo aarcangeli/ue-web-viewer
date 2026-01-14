@@ -11,12 +11,7 @@ function getCurrentPath(): string | undefined {
  * And we want a readable URL.
  */
 function stupidEncodePath(path: string): string {
-  return path
-    .replace(/ /g, "%20") //
-    .replace(/#/g, "%23")
-    .replace(/%/g, "%25")
-    .replace(/&/g, "%26")
-    .replace(/\?/g, "%3F");
+  return path.replace(/ /g, "%20").replace(/#/g, "%23").replace(/%/g, "%25").replace(/&/g, "%26").replace(/\?/g, "%3F");
 }
 
 export function useHistoryState(enabled: boolean, onChoosePath: (path: string | undefined) => void) {

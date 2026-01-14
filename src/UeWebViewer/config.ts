@@ -1,4 +1,4 @@
-export const FAKE_LOADING_TIME = 200;
+export const FAKE_LOADING_TIME = 0;
 
 /**
  * A fake wait function to simulate loading time.

@@ -1,6 +1,7 @@
 import type { TaggedProperty } from "../../properties/TaggedProperty";
 import { UObject } from "../../modules/CoreUObject/objects/Object";
 import { expect } from "vitest";
+import { ObjectPtr } from "../../modules/CoreUObject/structs/ObjectPtr";
 
 /**
  * Add matchers and serializer for properties testing
@@ -28,6 +29,14 @@ export function extendJest() {
     test: (val) => val instanceof UObject,
     serialize: (obj: UObject) => {
       return "[ref] " + obj.fullName;
+    },
+  });
+
+  // UObject references should be serialized using their full name
+  expect.addSnapshotSerializer({
+    test: (val) => val instanceof ObjectPtr,
+    serialize: (obj: ObjectPtr) => {
+      return "[ObjectPtr] " + obj.toString();
     },
   });
 }

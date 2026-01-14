@@ -56,6 +56,7 @@ export class ObjectPtr<T extends UObject = UObject> {
     if (object === null) {
       abort = abort ?? new AbortController().signal;
       checkAborted(abort);
+      invariant(globalContainer, "Global container is not initialized");
       object = (await globalContainer.objectLoader.loadObject(this.softObjectPath, abort)) as T | null;
       this.replaceObject(object);
     }
