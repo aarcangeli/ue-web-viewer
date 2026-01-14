@@ -13,7 +13,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage --reporter=junit --outputFile=junit.xml",
+    "test:coverage": "vitest run --coverage --reporter=default --reporter=junit --outputFile=junit.xml",
     "test:update-snapshots": "vitest run -u",
     "typecheck": "tsc --noEmit",
     "eslint": "eslint . --fix",
