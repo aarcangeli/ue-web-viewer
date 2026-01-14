@@ -13,6 +13,7 @@ import { checkAborted } from "../../utils/async-compute";
 export interface IObjectLoader {
   loadObject(objectPath: FSoftObjectPath, abort: AbortSignal): Promise<UObject | null>;
   loadPackage(file: FileApi): Promise<UPackage | null>;
+  getCached(softObjectPath: FSoftObjectPath): UObject | null;
   subscribeEvents<T extends UObject>(softObjectPath: FSoftObjectPath, listener: (value: T) => void): () => void;
 }
 
@@ -61,6 +62,21 @@ class ObjectLoaderImpl implements IObjectLoader {
     return this.doLoadPackage(softObjectPath, file).then((asset) => asset.package);
   }
 
+  getCached(softObjectPath: FSoftObjectPath): UObject | null {
+    if (softObjectPath.isNull()) {
+      return null;
+    }
+
+    // Check cache
+    const status = this.getObjectStatus(softObjectPath);
+    const existingObject = status.deref();
+    if (existingObject) {
+      return existingObject;
+    }
+
+    return this.lookupObject(softObjectPath);
+  }
+
   subscribeEvents<T extends UObject>(softObjectPath: FSoftObjectPath, listener: (value: T) => void): () => void {
     const objectStatus = this.getObjectStatus<T>(softObjectPath);
     objectStatus.listeners.add(listener);
@@ -92,35 +108,30 @@ class ObjectLoaderImpl implements IObjectLoader {
   }
 
   async loadObject(objectPath: FSoftObjectPath, abort: AbortSignal): Promise<UObject | null> {
-    const object = await this.doLoadObject(objectPath, abort);
-    if (object) {
-      this.setWithListener(this.getObjectStatus(objectPath), object);
-    }
-    return object;
-  }
-
-  private async doLoadObject(objectPath: FSoftObjectPath, abort: AbortSignal) {
     if (objectPath.isNull()) {
       return null;
     }
 
-    // Check cache
-    const status = this.getObjectStatus(objectPath);
-    const existingObject = status.deref();
-    if (existingObject) {
-      return existingObject;
+    const cachedValue = this.getCached(objectPath);
+    if (cachedValue) {
+      return cachedValue;
     }
 
-    // Try to load the package asset
     if (!isScriptPackage(objectPath.packageName.toString())) {
-      const asset = await this.loadPackageAsset(objectPath.packageName);
-      checkAborted(abort);
-      if (asset) {
-        return await asset.resolveObject(objectPath, abort);
+      const object = await this.doLoadObject(objectPath, abort);
+      if (object) {
+        this.setWithListener(this.getObjectStatus(objectPath), object);
       }
+      return object;
     }
 
-    return this.lookupObject(objectPath);
+    return null;
+  }
+
+  private async doLoadObject(objectPath: FSoftObjectPath, abort: AbortSignal) {
+    const asset = await this.loadPackageAsset(objectPath.packageName);
+    checkAborted(abort);
+    return asset ? await asset.resolveObject(objectPath, abort) : null;
   }
 
   private setWithListener(packageStatus: ObjectStatus, object: UObject) {

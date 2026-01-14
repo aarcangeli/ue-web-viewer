@@ -44,6 +44,13 @@ export class ObjectPtr<T extends UObject = UObject> {
     if (this.strongRef && !this.strongRef.detached) {
       return this.strongRef;
     }
+
+    // try to resolve a live object, without loading it
+    const liveObject = globalContainer?.objectLoader.getCached(this.softObjectPath) as T | null;
+    if (liveObject) {
+      this.replaceObject(liveObject);
+      return liveObject;
+    }
     return null;
   }
 

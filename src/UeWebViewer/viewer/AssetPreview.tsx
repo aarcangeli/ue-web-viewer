@@ -17,7 +17,7 @@ import { USkeleton } from "../../unreal-engine/modules/Engine/objects/Skeleton";
 import { FName, FNameMap } from "../../unreal-engine/types/Name";
 import type { NativeStructs } from "../../unreal-engine/properties/NativeStructs";
 import { FTransform } from "../../unreal-engine/modules/CoreUObject/structs/Transform";
-import { renderObjectName, renderObjectPtr } from "./links";
+import { renderObjectName, LinkObjectPtr } from "./links";
 import type { ObjectPtr } from "../../unreal-engine/modules/CoreUObject/structs/ObjectPtr";
 import { removeExtension } from "../../utils/string-utils";
 import { useAsyncCompute } from "../../utils/async-compute";
@@ -60,7 +60,9 @@ export function ObjectPreview(props: { object: UObject }) {
       <SimpleDetailsView>
         <CollapsableSection name={"Asset"}>
           <IndentedRow title={"Object"}>{renderObjectName(exportedObjects)}</IndentedRow>
-          <IndentedRow title={"Class"}>{renderObjectPtr(exportedObjects.class)}</IndentedRow>
+          <IndentedRow title={"Class"}>
+            <LinkObjectPtr objectPtr={exportedObjects.class} />
+          </IndentedRow>
           <IndentedRow title={"Object Guid"}>{exportedObjects.objectGuid?.toString() || "None"}</IndentedRow>
         </CollapsableSection>
         {renderSpecificProperties(exportedObjects)}
@@ -235,7 +237,7 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
     case "object":
       return (
         <IndentedRow key={key} icon={icon} title={name}>
-          {renderObjectPtr(value.object)}
+          <LinkObjectPtr objectPtr={value.object} />
         </IndentedRow>
       );
     case "struct":
@@ -251,7 +253,8 @@ function renderValue(key: number, name: string, value: PropertyValue, icon?: Rea
     case "delegate":
       return (
         <IndentedRow key={key} icon={icon} title={name}>
-          {renderObjectPtr(value.object)}::{value.function.text}
+          <LinkObjectPtr objectPtr={value.object} />
+          ::{value.function.text}
         </IndentedRow>
       );
     case "array":
