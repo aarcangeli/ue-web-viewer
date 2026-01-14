@@ -49,7 +49,7 @@ describe("ObjectContext", () => {
     expect(coreUObject.class.getCached()).toBe(classPackage);
 
     // Check root objects
-    const rootObjects = context.rootObjects;
+    const rootObjects = context.allPackages;
     expect(rootObjects).toBeTruthy();
     expect(rootObjects).toContain(coreUObject);
 
@@ -127,7 +127,7 @@ describe("ObjectContext", () => {
     // The package should be empty initially
     expect(testPackage.innerObjects).toHaveLength(0);
 
-    expect(context.rootObjects).toContain(testPackage);
+    expect(context.allPackages).toContain(testPackage);
     expect(context.findPackage(FName.fromString("/Script/TestPackage"))).toBe(testPackage);
   });
 

@@ -9,7 +9,8 @@ import { BiFileBlank, BiFolder } from "react-icons/bi";
 import { navigate, useHistoryState } from "./utils/useHistoryState";
 import { ProjectApi, ProjectApiProvider } from "./ProjectApi";
 import { useAsyncCompute } from "../utils/async-compute";
-import { createContainer } from "../unreal-engine/container-factory";
+import { createContainer } from "../unreal-engine/container";
+import { setGlobalContainer } from "../unreal-engine/global-container";
 
 interface FileNode extends MinimalNode {
   file: FileApi;
@@ -45,6 +46,7 @@ function useGlobalContainer(root: FileApi) {
     async (aborted) => {
       const container = createContainer();
       await container.vfs.mapGameDirectory(root, aborted);
+      setGlobalContainer(container);
       return container;
     },
     [root],

@@ -2,6 +2,8 @@ import { type UObject } from "../objects/Object";
 import { FSoftObjectPath } from "./SoftObjectPath";
 import { checkAborted } from "../../../../utils/async-compute";
 import invariant from "tiny-invariant";
+import type { IObjectLoader } from "../../../types/object-loader";
+import { globalContainer } from "../../../global-container";
 
 /**
  * A smart pointer to a UObject (similar to TObjectPtr in Unreal Engine).
@@ -51,11 +53,11 @@ export class ObjectPtr<T extends UObject = UObject> {
    * Load the object if it's not already loaded and return the reference.
    */
   async load(abort: AbortSignal): Promise<T | null> {
-    const object = this.getCached();
+    let object = this.getCached();
     if (object === null) {
       checkAborted(abort);
-      // TODO
-      throw new Error("Not implemented");
+      object = (await globalContainer.objectLoader.loadObject(this.softObjectPath, abort)) as T | null;
+      this.replaceObject(object);
     }
     return object;
   }
@@ -92,6 +94,7 @@ export class ObjectPtr<T extends UObject = UObject> {
    * Fire the listener when the object reference changes.
    */
   subscribe(l: (value: T) => void): () => void {
+    throw new Error("TODO: attach to global object loader");
     this.listeners.add(l);
     return () => this.listeners.delete(l);
   }

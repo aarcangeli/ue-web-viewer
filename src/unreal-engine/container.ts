@@ -1,6 +1,6 @@
-import type { IObjectContext } from "./types/object-context";
-import type { IObjectLoader } from "./types/object-loader";
-import type { VirtualFileSystem } from "./fileSystem/VirtualFileSystem";
+import { type IObjectContext, MakeObjectContext } from "./types/object-context";
+import { createObjectLoader, type IObjectLoader } from "./types/object-loader";
+import { VirtualFileSystem } from "./fileSystem/VirtualFileSystem";
 
 export class Container {
   readonly vfs: VirtualFileSystem;
@@ -12,4 +12,10 @@ export class Container {
     this.context = context;
     this.objectLoader = objectLoader;
   }
+}
+
+export function createContainer(): Container {
+  const vfs = new VirtualFileSystem();
+  const context = MakeObjectContext();
+  return new Container(vfs, context, createObjectLoader(vfs, context));
 }

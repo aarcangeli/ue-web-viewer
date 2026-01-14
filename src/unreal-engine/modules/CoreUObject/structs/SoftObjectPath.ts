@@ -7,6 +7,7 @@ import {
 } from "../../../versioning/custom-versions-enums/FFortniteMainBranchObjectVersion";
 import { EUnrealEngineObjectUE4Version, EUnrealEngineObjectUE5Version } from "../../../versioning/ue-versions";
 import type { UObject } from "../objects/Object";
+import invariant from "tiny-invariant";
 
 /**
  * Represents the full path to an object, so that it can be loaded on demand.
@@ -25,6 +26,24 @@ export class FSoftObjectPath {
     this.packageName = packageName;
     this.assetName = assetName;
     this.subPathString = subPathString;
+
+    // Assertions
+    if (this.packageName.isNone) {
+      invariant(
+        this.assetName.isNone,
+        `Invalid FSoftObjectPath: packageName is None but assetName is ${this.assetName}`,
+      );
+    }
+    if (this.assetName.isNone) {
+      invariant(
+        !this.subPathString,
+        `Invalid FSoftObjectPath: assetName is None but subPathString is ${this.subPathString}`,
+      );
+    }
+    invariant(
+      this.subPathString.trim() === this.subPathString,
+      "subPathString should not have leading or trailing spaces",
+    );
   }
 
   // This is not used ATM, but may be used in the future.

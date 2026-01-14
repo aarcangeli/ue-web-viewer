@@ -40,7 +40,7 @@ export interface IObjectContext {
    * Returns all root objects in the context.
    * These are the top-level packages that contain all other objects.
    */
-  readonly rootObjects: Array<UPackage>;
+  readonly allPackages: Array<UPackage>;
 
   /**
    * Finds a package by its name.
@@ -59,6 +59,12 @@ export interface IObjectContext {
   findOrCreatePackage(packageName: FName, flags?: EPackageFlags): UPackage;
 
   /**
+   * Removes a package from the context.
+   * @param uPackage The package to remove.
+   */
+  removePackage(uPackage: UPackage): void;
+
+  /**
    * Finds a class by its package and class name.
    * @param packageName The name of the package containing the class.
    * @param className The name of the class to find.
@@ -70,12 +76,6 @@ export interface IObjectContext {
    * Creates a new object of the specified class with the given name.
    */
   newObject(outer: UObject, clazz: ObjectPtr<UClass>, name: FName, flags?: EPackageFlags): UObject;
-
-  /**
-   * Removes a package from the context.
-   * @param uPackage The package to remove.
-   */
-  removePackage(uPackage: UPackage): void;
 }
 
 export function MakeObjectContext(): IObjectContext {
@@ -110,14 +110,14 @@ class ObjectContextImpl implements IObjectContext {
   /**
    * Returns all objects in the context.
    */
-  get rootObjects(): Array<UPackage> {
+  get allPackages(): Array<UPackage> {
     return this.packages //
       .map((ref) => ref.deref())
       .filter((obj) => obj) as UPackage[];
   }
 
   findPackage(name: FName): UPackage | null {
-    for (const child of this.rootObjects) {
+    for (const child of this.allPackages) {
       if (child.name.equals(name)) {
         return child;
       }

@@ -7,9 +7,10 @@ import invariant from "tiny-invariant";
 import { FName } from "./Name";
 import { type AssetApi, openAssetFromDataView } from "../serialization/Asset";
 import type { IObjectContext } from "./object-context";
+import { isScriptPackage } from "../../utils/path-utils";
 
 export interface IObjectLoader {
-  loadObject(objectPath: FSoftObjectPath): Promise<UObject | null>;
+  loadObject(objectPath: FSoftObjectPath, abort: AbortSignal): Promise<UObject | null>;
   loadPackage(file: FileApi): Promise<UPackage | null>;
 }
 
@@ -28,7 +29,7 @@ class ObjectLoaderImpl implements IObjectLoader {
     this.context = context;
   }
 
-  async loadPackage(file: FileApi): Promise<UPackage | null> {
+  loadPackage(file: FileApi): Promise<UPackage | null> {
     invariant(file);
     if (file.kind !== "file") {
       return Promise.resolve(null);
@@ -36,13 +37,13 @@ class ObjectLoaderImpl implements IObjectLoader {
 
     this.removeGarbage();
 
-    // Step 1: find a package with the same file
+    // Find a package with the same file
     const existingStatus = this.findFromFile(file);
     if (existingStatus) {
       const existingPackage = existingStatus.deref();
       if (existingPackage) {
         invariant(existingPackage instanceof UPackage, "Expected a UPackage");
-        return existingPackage;
+        return Promise.resolve(existingPackage);
       }
     }
 
@@ -55,46 +56,99 @@ class ObjectLoaderImpl implements IObjectLoader {
     }
 
     const softObjectPath = FSoftObjectPath.fromNameParts([FName.fromString(virtualPath)]);
-    const status = this.getObjectStatus(softObjectPath);
-    status.fileApi = file;
+    return this.doLoadPackage(softObjectPath, file).then((asset) => asset.package);
+  }
 
-    if (!status.promise) {
-      status.promise = this.doLoadPackageFromFile(status, softObjectPath, file);
+  private async doLoadPackage(packagePath: FSoftObjectPath, file: FileApi): Promise<AssetApi> {
+    invariant(packagePath.assetName.isNone);
+    const status = this.getObjectStatus(packagePath);
+
+    if (status.asset) {
+      return status.asset;
+    }
+    if (status.assetLoadPromise) {
+      return status.assetLoadPromise;
     }
 
-    const object = await status.promise;
-    if (!(object instanceof UPackage)) {
-      console.warn(`Loaded object is not a UPackage: path: ${softObjectPath} (${object})`);
+    status.fileApi = file;
+
+    const promise = this.doLoadPackageFromFile(packagePath, file);
+    status.assetLoadPromise = promise;
+
+    const asset = await promise;
+    if (promise === status.assetLoadPromise) {
+      status.assetLoadPromise = undefined;
+    }
+
+    return asset;
+  }
+
+  async loadObject(objectPath: FSoftObjectPath, abort: AbortSignal): Promise<UObject | null> {
+    if (objectPath.isNull()) {
       return null;
     }
 
-    return object;
+    if (isScriptPackage(objectPath.packageName.toString())) {
+      return this.loadScriptObject(objectPath);
+    }
 
-    // const virtualPath = container.vfs.findVirtualPath(file);
-    // if (virtualPath) {
-    //   const softObjectPath = FSoftObjectPath.fromNameParts([FName.fromString(virtualPath)]);
-    //   const loadedObject = await container.objectLoader.loadObject(softObjectPath);
-    //   console.log(softObjectPath);
-    // }
-    // const packageName = virtualPath ? virtualPath : `/Game/${file.name}`;
-    // const content = await file.read();
-    // return openAssetFromDataView(container.context, packageName, new DataView(content));
+    console.log("Loading object:", objectPath.toString());
+    const packageStatus = this.getObjectStatus(new FSoftObjectPath(objectPath.packageName));
+
+    // Find an existing package with the same name
+    if (!packageStatus.asset) {
+      const existingPackage = this.context.findPackage(objectPath.packageName);
+      if (existingPackage) {
+        if (!existingPackage.assetApi) {
+          // Really strange, a package exists without an assetApi
+          console.warn(`Package found without assetApi: ${objectPath.packageName.toString()}`);
+          return null;
+        }
+        packageStatus.asset = existingPackage.assetApi;
+      }
+    }
+
+    // Load from vfs
+    if (!packageStatus.asset) {
+      const resolvedFile = await this.vfs.resolveFile(objectPath.packageName.toString());
+      console.log("Resolved file:", resolvedFile);
+      if (resolvedFile) {
+        await this.doLoadPackage(new FSoftObjectPath(objectPath.packageName), resolvedFile);
+      }
+    }
+
+    if (!packageStatus.asset) {
+      return null;
+    }
+
+    return packageStatus.asset.resolveObject(objectPath, abort);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async loadObject(objectPath: FSoftObjectPath): Promise<UPackage | null> {
-    throw new Error("Method not implemented.");
-  }
-
-  private async doLoadPackageFromFile(
-    status: ObjectStatus,
-    softObjectPath: FSoftObjectPath,
-    file: FileApi,
-  ): Promise<UObject | null> {
-    console.log("Loading package from file:", softObjectPath.toString());
+  private async doLoadPackageFromFile(softObjectPath: FSoftObjectPath, file: FileApi): Promise<AssetApi> {
     const content = await file.read();
-    status.asset = openAssetFromDataView(this.context, softObjectPath.packageName, new DataView(content));
-    return status.asset.package;
+    return openAssetFromDataView(this.context, softObjectPath.packageName, new DataView(content));
+  }
+
+  private loadScriptObject(objectPath: FSoftObjectPath) {
+    // Get package
+    const uPackage = this.context.findOrCreatePackage(objectPath.packageName);
+    if (objectPath.assetName.isNone) {
+      return uPackage;
+    }
+
+    let current = uPackage.findInnerByFName(objectPath.assetName);
+    if (!objectPath.subPathString || !current) {
+      return current;
+    }
+
+    for (const path of objectPath.subPathString) {
+      current = current.findInnerByFName(FName.fromString(path));
+      if (!current) {
+        return null;
+      }
+    }
+
+    return current;
   }
 
   getObjectStatus(softObjectPath: FSoftObjectPath): ObjectStatus {
@@ -134,7 +188,7 @@ class ObjectStatus {
 
   fileApi?: FileApi;
   weakRef?: WeakObjectRef | null;
-  promise?: Promise<UObject | null>;
+  assetLoadPromise?: Promise<AssetApi>;
 
   // keep it strong?
   asset?: AssetApi;

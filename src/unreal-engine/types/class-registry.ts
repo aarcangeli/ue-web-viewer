@@ -39,8 +39,8 @@ export function RegisterClass(fullClassName: string) {
   };
 }
 
-export function findClassOf(clazz: ObjectPtr<UClass>): ObjectClass | null {
-  let currentClass: UClass | null = clazz.getCached() || null;
+export function findClassOf(classObject: ObjectPtr<UClass>): ObjectClass | null {
+  let currentClass: UClass | null = classObject.getCached() || null;
 
   // Find the TS class with better match for the UObject class hierarchy
   while (currentClass) {

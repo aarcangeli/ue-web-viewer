@@ -1,18 +1,14 @@
 import "../modules/all-objects";
 
 import invariant from "tiny-invariant";
-
-import { removeExtension } from "../../utils/string-utils";
 import { type AssetReader, FullAssetReader } from "../AssetReader";
 import { UClass } from "../modules/CoreUObject/objects/Class";
-import { ELoadingPhase, type ObjectResolver, UObject, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
+import type { UObject } from "../modules/CoreUObject/objects/Object";
+import { ELoadingPhase, type ObjectResolver, WeakObjectRef } from "../modules/CoreUObject/objects/Object";
 import { type UPackage } from "../modules/CoreUObject/objects/Package";
 import { FSoftObjectPath } from "../modules/CoreUObject/structs/SoftObjectPath";
-import { NAME_CoreUObject, NAME_Package } from "../modules/names";
 import { makeNameFromParts } from "../../utils/path-utils";
-import { findClassOf } from "../types/class-registry";
-import type { FName } from "../types/Name";
-import { NAME_None } from "../types/Name";
+import { type FName, NAME_None } from "../types/Name";
 import { type IObjectContext } from "../types/object-context";
 import { EUnrealEngineObjectUE4Version } from "../versioning/ue-versions";
 
@@ -21,6 +17,7 @@ import { FObjectImport } from "./ObjectImport";
 import { FPackageFileSummary } from "./PackageFileSummary";
 import { SerializationStatistics } from "./SerializationStatistics";
 import { ObjectPtr } from "../modules/CoreUObject/structs/ObjectPtr";
+import { checkAborted } from "../../utils/async-compute";
 
 const RecursiveCheck = Symbol("RecursiveCheck");
 
@@ -44,6 +41,8 @@ export interface AssetApi {
   makeFullNameByIndex(index: number): string;
   getObjectByIndex(index: number): ObjectPtr;
   getObjectByFullName(fullName: string): ObjectPtr;
+
+  resolveObject(objectPath: FSoftObjectPath, abort: AbortSignal): Promise<UObject | null>;
 
   reloadAsset(): Promise<void>;
 
@@ -83,9 +82,6 @@ class Asset implements AssetApi {
 
   /// Cache of exported objects.
   private readonly _exportedObjects: Array<WeakObjectRef | symbol> = [];
-
-  /// Cache of imported objects.
-  private readonly _importedObjects: Array<WeakObjectRef> = [];
 
   /**
    * The root package loaded from this asset.
@@ -180,31 +176,20 @@ class Asset implements AssetApi {
     }
   }
 
-  private async resolveObject(index: number, full: boolean): Promise<UObject | null> {
-    invariant(this.isIndexValid(index), `Invalid export index ${index}`);
+  private async resolveExportObjectByIndex(index: number, full: boolean, abort: AbortSignal): Promise<UObject | null> {
     invariant(index != 0, `Expected a valid export index`);
+    invariant(isExportIndex(index), `Index ${index} must be an export index`);
+    invariant(this.isIndexValid(index), `Invalid export index ${index}`);
 
     // First, check if we have it cached
     let object = this.getCachedObjectByIndex(index);
 
     // If not, create it
     if (object === null) {
-      if (isExportIndex(index)) {
-        // Load the object
-        object = await this.doCreateExportObject(index);
-        if (!object) {
-          return null;
-        }
+      // Load the object
+      object = await this.doCreateExportObject(index, abort);
+      if (object) {
         object.assetApi = this;
-      } else if (isImportIndex(index)) {
-        object = this.doResolveImportedObject(index);
-        if (!object) {
-          return null;
-        }
-        this._importedObjects[-index - 1] = object.asWeakObject();
-      } else {
-        // This should never happen, as we already check the index is not 0
-        throw new Error(`Invalid index ${index}`);
       }
     }
 
@@ -242,17 +227,31 @@ class Asset implements AssetApi {
   }
 
   getObjectByFullName(fullName: string) {
-    const exportedObject = this.findIndexByFullName(fullName);
-    if (exportedObject === -1) {
+    const exportedObject = this.findObjectIndexByFullName(fullName);
+    if (exportedObject === 0) {
       throw new Error(`Object with full name ${fullName} not found`);
     }
     return this.getObjectByIndex(exportedObject + 1);
   }
 
-  private findIndexByFullName(fullName: string) {
-    return this._exports.findIndex(
+  async resolveObject(objectPath: FSoftObjectPath, abort: AbortSignal): Promise<UObject | null> {
+    invariant(objectPath.packageName.equals(this._packageName), `Object ${objectPath} is from a different package`);
+
+    const exportedObject = this.findObjectIndexByFullName(objectPath.toString());
+    if (exportedObject === 0) {
+      return null;
+    }
+
+    return this.resolveExportObjectByIndex(exportedObject, true, abort);
+  }
+
+  private findObjectIndexByFullName(fullName: string) {
+    const arrayIndex = this._exports.findIndex(
       (_, index) => this.makeFullNameByIndex(index + 1).toLowerCase() === fullName.toLowerCase(),
     );
+    // Not found (-1) became 0
+    // Found index is incremented by 1 to convert to export index
+    return arrayIndex + 1;
   }
 
   reloadObject(object: UObject) {
@@ -296,15 +295,13 @@ class Asset implements AssetApi {
    */
   private getCachedObjectByIndex(index: number) {
     invariant(this.isIndexValid(index), `Invalid index ${index}`);
+    invariant(!isImportIndex(index), `Invalid index ${index}`);
 
     let value: WeakObjectRef | symbol;
     if (index == 0) {
       return null;
-    } else if (index > 0) {
-      value = this._exportedObjects[index - 1];
     } else {
-      invariant(index < 0);
-      value = this._importedObjects[-index - 1];
+      value = this._exportedObjects[index - 1];
     }
 
     // The recursion can only happen when serializing outer or class.
@@ -316,7 +313,7 @@ class Asset implements AssetApi {
     return (value as WeakObjectRef)?.deref() ?? null;
   }
 
-  private doCreateExportObject(index: number): Promise<UObject> {
+  private doCreateExportObject(index: number, abort: AbortSignal): Promise<UObject> {
     invariant(this.isIndexValid(index), `Invalid export index ${index}`);
     invariant(isExportIndex(index), `Index ${index} must be an export index`);
 
@@ -327,15 +324,18 @@ class Asset implements AssetApi {
       if (isImportIndex(objectExport.OuterIndex)) {
         throw new Error(`Exported object ${objectExport.ObjectName} has an imported outer, which is not supported`);
       }
-      const outer = objectExport.OuterIndex ? await this.resolveObject(objectExport.OuterIndex, false) : this._package;
+      const outer = objectExport.OuterIndex
+        ? await this.resolveExportObjectByIndex(objectExport.OuterIndex, false, abort)
+        : this._package;
       invariant(outer); // Exported classes should always be created
+      checkAborted(abort);
 
       // Get class object
       invariant(objectExport.ClassIndex != 0, `Expected a valid class index`);
       const classPtr = this.getObjectByIndex(objectExport.ClassIndex);
 
       // Recursively load the class, this is needed otherwise we cannot use the correct constructor
-      let classObject = await classPtr.load(new AbortSignal());
+      let classObject = await classPtr.load(abort);
 
       if (!classObject || !(classObject instanceof UClass)) {
         console.warn(
@@ -352,72 +352,6 @@ class Asset implements AssetApi {
         objectExport.objectFlags,
       );
     });
-  }
-
-  /**
-   * At the moment, we don't load imported objects from other assets.
-   * So, we create a fake object with the following rules:
-   * - For packages, we create a package object (if not already existing in the context).
-   * - For other objects, we create a child item of the outer, with the same name and class.
-   */
-  private doResolveImportedObject(index: number): UObject | null {
-    invariant(this.isIndexValid(index), `Invalid export index ${index}`);
-    invariant(isImportIndex(index), `Index ${index} must be an export index`);
-
-    const importObject = this.getObjectImport(index);
-
-    // Create a fallback object if the import is not found
-    if (importObject.OuterIndex === 0) {
-      // Root objects must be packages
-      invariant(importObject.ClassPackage.equals(NAME_CoreUObject));
-      invariant(importObject.ClassName.equals(NAME_Package));
-
-      // Create the package object, without loading it from file.
-      const existingPackage = this._context.findPackage(importObject.ObjectName);
-      if (existingPackage) {
-        return existingPackage;
-      }
-
-      // Load or create the package
-      console.log(`Loading ${importObject.ObjectName}`);
-      return null;
-    }
-
-    // Lookup for an existing child object with the same name and class
-    const outer = this.resolveObject(importObject.OuterIndex, false);
-    if (!outer) {
-      // Cannot resolve the outer, return null
-      return null;
-    }
-
-    // There is already an object with the same name, return it
-    const existingChild = outer.findInnerByFName(importObject.ObjectName);
-    if (existingChild) {
-      return existingChild;
-    }
-
-    // Find or create the class
-    const classPackage = this._context.findOrCreatePackage(importObject.ClassPackage);
-    let classInstance = classPackage.findInnerByFName(importObject.ClassName);
-    if (!classInstance) {
-      classInstance = new UClass({
-        outer: classPackage,
-        clazz: this._context.CLASS_Class,
-        name: importObject.ClassName,
-        // We don't have this information for imported objects
-        superClazz: this._context.CLASS_Class,
-      });
-    }
-    invariant(classInstance instanceof UClass, `Expected a class for import ${importObject.ObjectName}`);
-
-    const isClass = classInstance == this._context.CLASS_Class;
-    const myClass = findClassOf(classInstance) ?? (isClass ? UClass : UObject);
-    return null;
-    // return createMissingImportedObject(myClass, {
-    //   outer: outer,
-    //   clazz: classInstance,
-    //   name: importObject.ObjectName,
-    // });
   }
 
   private deserializeObject(objectExport: FObjectExport, object: UObject) {
