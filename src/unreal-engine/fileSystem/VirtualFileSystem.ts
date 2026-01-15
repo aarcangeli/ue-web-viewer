@@ -61,9 +61,9 @@ export class VirtualFileSystem {
   }
 
   /**
-   * Scan the game directory for content and plugin directories,
-   * @param gameDir
-   * @param aborted
+   * Scan the game directory for content and plugin directories.
+   * @param gameDir - Root game directory to scan for content and plugins.
+   * @param aborted - AbortSignal to cancel the scanning operation.
    */
   async mapGameDirectory(gameDir: FileApi, aborted: AbortSignal) {
     const allMappings = await scanGameContentDirectories(gameDir, aborted);
