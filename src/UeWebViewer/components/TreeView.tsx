@@ -1,20 +1,11 @@
 import type { NodeApi, NodeRendererProps, TreeApi } from "react-arborist";
 import { Tree } from "react-arborist";
-import React, {
-  forwardRef,
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { Box, IconButton, Text } from "@chakra-ui/react";
 import { BiChevronDown, BiChevronRight } from "react-icons/bi";
-import { searchCtx, SpeedSearch } from "./SpeedSearch";
+import { SpeedSearch } from "./SpeedSearch";
 import type { PatternQuery } from "../../utils/PatternQuery";
+import { useSearchQuery } from "./SpeedSearch-hooks";
 
 const LINE_HEIGHT = 32;
 const GAP = 1;
@@ -117,7 +108,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
             // If the new list is empty, select the parent node
             if (node.children?.length === 1) {
               const loadingMockId = node.children[0].id;
-              if (children.length == 0) {
+              if (children.length === 0) {
                 // select the parent node, so that the user doesn't lose the selection
                 if (treeRef.current?.isSelected(loadingMockId)) {
                   treeRef.current?.select(node.id);
@@ -165,7 +156,7 @@ function TreeViewFn<T extends MinimalNode>(props: Props<T>, ref: React.Ref<TreeV
   }, [generateId, nodes]);
 
   useEffect(() => {
-    if (treeRef.current && convertedNodes.length == 1) {
+    if (treeRef.current && convertedNodes.length === 1) {
       treeRef.current.open(convertedNodes[0].id);
     }
   }, [convertedNodes]);
@@ -346,7 +337,7 @@ function NodeView<T extends MinimalNode>(props: NodeRendererProps<Node<T>>) {
 
   const isEmptyFolder = node.isLeaf || value.isEmpty;
 
-  const query = useContext(searchCtx);
+  const query = useSearchQuery();
 
   return (
     <Box mx={1} ref={props.dragHandle} pb={`${GAP}px`} display={"flex"} flexDirection={"row"}>

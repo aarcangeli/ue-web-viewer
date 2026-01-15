@@ -14,6 +14,10 @@ export function removeSuffix(value: string, suffix: string, caseInsensitive = fa
   return value;
 }
 
+export function startsWithCaseInsensitive(str: string, search: string) {
+  return str.toLowerCase().startsWith(search.toLowerCase());
+}
+
 export function removeExtension(value: string) {
   const index = value.lastIndexOf(".");
   if (index !== -1) {
@@ -54,6 +58,6 @@ export function hexToArrayBuffer(hex: string): Uint8Array {
   return array;
 }
 
-export function toHex(n: number) {
+export function toU32Hex(n: number) {
   return "0x" + (n >>> 0).toString(16).padStart(8, "0").toUpperCase();
 }

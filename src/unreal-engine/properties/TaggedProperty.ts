@@ -1,9 +1,9 @@
-import type { UObject } from "../modules/CoreUObject/objects/Object";
 import type { FName } from "../types/Name";
 import type { FText } from "../types/Text";
 
 import type { NativeStructs } from "./NativeStructs";
 import type { FPropertyTag } from "./PropertyTag";
+import type { ObjectPtr } from "../modules/CoreUObject/structs/ObjectPtr";
 
 export class TaggedProperty {
   public readonly tag: FPropertyTag;
@@ -54,7 +54,7 @@ export interface TextValue {
 
 export interface ObjectValue {
   type: "object";
-  object: UObject | null;
+  object: ObjectPtr;
 }
 
 export interface TaggedStructValue {
@@ -72,7 +72,7 @@ export interface StructValue {
 
 export interface ScriptDelegate {
   type: "delegate";
-  object: UObject | null;
+  object: ObjectPtr;
   function: FName;
 }
 

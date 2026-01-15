@@ -38,8 +38,8 @@ export function RegisterClass(fullClassName: string) {
   };
 }
 
-export function findClassOf(clazz: UClass): ObjectClass | null {
-  let currentClass: UClass | null = clazz;
+export function findClassOf(classObject: UClass): ObjectClass {
+  let currentClass: UClass | null = classObject || null;
 
   // Find the TS class with better match for the UObject class hierarchy
   while (currentClass) {
@@ -47,26 +47,11 @@ export function findClassOf(clazz: UClass): ObjectClass | null {
     if (constructor) {
       return constructor;
     }
-    currentClass = currentClass.superClazz;
-  }
-
-  const constructor = classRegistry.get("/Script/CoreUObject.Object");
-  if (constructor) {
-    return constructor;
+    currentClass = currentClass.superClazz?.getCached() || null;
   }
 
   // Really strange, at least UObject should exist.
-  throw new Error(`No constructor found for class: ${clazz.fullName}`);
-}
-
-export function instantiateObject(params: ObjectConstructionParams): UObject {
-  const constructor = findClassOf(params.clazz);
-  if (constructor) {
-    return new constructor(params);
-  }
-
-  // Really strange, at least UObject should exist.
-  throw new Error(`No constructor found for class: ${params.clazz.fullName}`);
+  throw new Error(`No constructor found for class: ${classObject}`);
 }
 
 export function getClassName(objectClass: ObjectClassPrivate) {
@@ -78,6 +63,10 @@ export function getSuperClass(objectClass: ObjectClassPrivate) {
   return prototype?.[MY_KEY];
 }
 
+/**
+ * Get the sort of all registered classes.
+ * Ordering rule: The super class is always before the subclass.
+ */
 export function getAllClasses(): ClassInfo[] {
   return Array.from(classRegistry.values()).map((clazz) => {
     const [packageName, className] = getClassName(clazz)!.split(".");

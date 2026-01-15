@@ -8,7 +8,6 @@ export interface FileApi {
   name: string;
   fullPath: string;
   parent: FileApi | null;
-  isWritable: boolean;
 
   children(): Promise<FileApi[]>;
 
@@ -21,12 +20,9 @@ export interface FileApi {
   read(): Promise<ArrayBuffer>;
 
   lastModifiedDate(): Promise<Date>;
+}
 
-  write(data: ArrayBuffer | string): Promise<void>;
-
-  createFile(name: string): Promise<FileApi>;
-
-  createDirectory(name: string): Promise<FileApi>;
-
-  remove(): Promise<void>;
+export async function findChildCaseInsensitive(file: FileApi, filename: string) {
+  const children = await file.children();
+  return children.find((child) => child.name.toLowerCase() === filename.toLowerCase());
 }

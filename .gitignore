@@ -36,3 +36,4 @@ yarn-error.log*
 __pycache__
 *.blend1
 .yarn/install-state.gz
+tsconfig.tsbuildinfo

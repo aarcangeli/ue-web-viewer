@@ -3,7 +3,7 @@ import invariant from "tiny-invariant";
 import { FBlake3Hash } from "./hash/Blake3Hash";
 import { decompress } from "../../externals";
 import { computeCrc } from "./hash/crc32";
-import { toHex } from "../../utils/string-utils";
+import { toU32Hex } from "../../utils/string-utils";
 
 const HeaderSize = 64;
 const MagicNumber = 0xb7756362;
@@ -52,7 +52,7 @@ export async function uncompressData(reader: AssetReader): Promise<Uint8Array> {
   // Verify the magic number
   const crc = computeHeaderCrc(header, originalReader);
   if (header.crc32 !== crc) {
-    throw new Error(`CRC32 mismatch: expected ${toHex(header.crc32)}, got ${toHex(crc)}`);
+    throw new Error(`CRC32 mismatch: expected ${toU32Hex(header.crc32)}, got ${toU32Hex(crc)}`);
   }
 
   // If the file is not compressed, read and return the raw bytes

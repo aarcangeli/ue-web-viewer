@@ -16,11 +16,12 @@
     "test:coverage": "vitest run --coverage --reporter=default --reporter=junit --outputFile=junit.xml",
     "test:update-snapshots": "vitest run -u",
     "typecheck": "tsc --noEmit",
-    "eslint": "eslint . --fix",
+    "eslint:check": "eslint .",
+    "eslint:fix": "eslint . --fix",
     "eslint:dump-config": "node eslint.config.js --dump",
-    "eslint:inspector": "eslint-config-inspector",
+    "eslint:inspector": "eslint-config-inspector --open false",
     "export-layout": "tsx scripts/ExportLayout/export-layout.ts",
-    "pre-commit": "yarn typecheck && yarn eslint && vitest run && pre-commit run -a"
+    "check": "yarn typecheck && yarn eslint:fix && yarn test && pre-commit run -a"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -28,7 +29,7 @@
     "@codecov/vite-plugin": "^1.9.1",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@eslint/config-inspector": "^0.5.4",
+    "@eslint/config-inspector": "^1.4.2",
     "@eslint/js": "^9.12.0",
     "@swc/core": "^1.7.35",
     "@testing-library/dom": "^10.4.1",

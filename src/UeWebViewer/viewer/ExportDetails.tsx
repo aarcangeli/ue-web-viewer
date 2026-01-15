@@ -1,4 +1,4 @@
-import type { Asset } from "../../unreal-engine/serialization/Asset";
+import type { AssetApi } from "../../unreal-engine/serialization/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React, { useMemo } from "react";
 import {
@@ -22,7 +22,7 @@ import invariant from "tiny-invariant";
 import { makeObjectTitle } from "./commons";
 import { removePrefix } from "../../utils/string-utils";
 import { IoOpenOutline, IoReload } from "react-icons/io5";
-import { ObjectPreview } from "./AssetPreview";
+import { ObjectPtrPreview } from "./AssetPreview";
 
 class Node {
   constructor(
@@ -33,7 +33,7 @@ class Node {
   ) {}
 }
 
-function makeTree(asset: Asset): Node[] {
+function makeTree(asset: AssetApi): Node[] {
   const sortNodesRecursively = (convertedTable: Node[]) => {
     convertedTable.sort((a: Node, b: Node) => {
       return a.objectExport.ObjectName.localeCompare(b.objectExport.ObjectName);
@@ -65,7 +65,7 @@ function makeTree(asset: Asset): Node[] {
   return convertedTable.filter((value) => value.objectExport.OuterIndex === 0);
 }
 
-function RawView(props: { asset: Asset }) {
+function RawView(props: { asset: AssetApi }) {
   const exports = props.asset.exports;
 
   return (
@@ -113,7 +113,7 @@ function RawView(props: { asset: Asset }) {
   );
 }
 
-function OpenObjectPreviewButton(props: { asset: Asset; index: number }) {
+function OpenObjectPreviewButton(props: { asset: AssetApi; index: number }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -127,9 +127,10 @@ function OpenObjectPreviewButton(props: { asset: Asset; index: number }) {
   );
 }
 
-function ObjectPreviewContent(props: { asset: Asset; index: number }) {
-  const [asset, setAsset] = React.useState(props.asset);
+function ObjectPreviewContent(props: { asset: AssetApi; index: number }) {
+  const [asset] = React.useState(props.asset);
   const [object, setObject] = React.useState(() => props.asset.getObjectByIndex(props.index));
+  const [, setVersion] = React.useState(0);
 
   return (
     <>
@@ -143,24 +144,26 @@ function ObjectPreviewContent(props: { asset: Asset; index: number }) {
             variant={"ghost"}
             icon={<IoReload />}
             onClick={() => {
-              asset.reloadAsset().then((asset) => {
-                console.log("Reloaded asset", asset);
-                setAsset(asset);
-                setObject(asset.getByFullName(object.fullName));
+              asset.reloadAsset().then(() => {
+                setObject(object);
+                setVersion((v) => v + 1);
               });
             }}
           />
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <ObjectPreview object={object} />
+          <ObjectPtrPreview objectPtr={object} />
         </ModalBody>
       </ModalContent>
     </>
   );
 }
 
-function RenderNodes(props: { asset: Asset; tree: Node[] }) {
+function ExportTree(props: { asset: AssetApi }) {
+  const asset = props.asset;
+  const tree = useMemo(() => makeTree(asset), [asset]);
+
   const recursiveSection = (node: Node) => (
     <CollapsableSection
       key={node.index}
@@ -179,12 +182,11 @@ function RenderNodes(props: { asset: Asset; tree: Node[] }) {
     </CollapsableSection>
   );
 
-  return <SimpleDetailsView>{props.tree.map(recursiveSection)}</SimpleDetailsView>;
+  return <SimpleDetailsView>{tree.map(recursiveSection)}</SimpleDetailsView>;
 }
 
-export function ExportDetails(props: { asset: Asset }) {
+export function ExportDetails(props: { asset: AssetApi }) {
   const asset = props.asset;
-  const tree = useMemo(() => makeTree(asset), [asset]);
 
   return (
     <Tabs isLazy>
@@ -194,10 +196,10 @@ export function ExportDetails(props: { asset: Asset }) {
       </TabList>
       <TabPanels>
         <TabPanel>
-          <RenderNodes asset={asset} tree={tree} />
+          <ExportTree asset={asset} />
         </TabPanel>
         <TabPanel>
-          <RawView asset={props.asset} />
+          <RawView asset={asset} />
         </TabPanel>
       </TabPanels>
     </Tabs>

@@ -65,13 +65,13 @@ function getStructColor(parameter: FPropertyTypeName) {
 
 function getColor(typeName: FPropertyTypeName) {
   const propertyType = typeName.propertyType;
-  if (propertyType == EPropertyType.StructProperty) {
+  if (propertyType === EPropertyType.StructProperty) {
     const parameter = typeName.getOptionalParameter(0);
     if (parameter) {
       return getStructColor(parameter);
     }
   }
-  if (propertyType == EPropertyType.EnumProperty) {
+  if (propertyType === EPropertyType.EnumProperty) {
     return COLOR_ENUM;
   }
   return colors.get(propertyType) ?? "#ffffff";

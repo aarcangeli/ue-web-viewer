@@ -1,0 +1,120 @@
+import { type UObject } from "../objects/Object";
+import { FSoftObjectPath } from "./SoftObjectPath";
+import { checkAborted } from "../../../../utils/async-compute";
+import invariant from "tiny-invariant";
+import { globalContainer } from "../../../global-container";
+
+/**
+ * A smart pointer to a {@link UObject}, similar in concept to Unreal Engine's TObjectPtr.
+ *
+ * {@link ObjectPtr} stores both a reference to a UObject instance and its asset path.
+ * This allows the object to be lazily loaded, reloaded, or hot-swapped at runtime
+ * while preserving a stable reference.
+ *
+ * Do not use the "==" or "===" operators to compare {@link ObjectPtr} instances.
+ * These operators only compare the wrapper instances, not the underlying objects.
+ * Use {@link ObjectPtr.equals} to perform a semantic comparison based on the object paths.
+ *
+ * @typeParam T - The type of {@link UObject} being referenced.
+ */
+export class ObjectPtr<T extends UObject = UObject> {
+  private strongRef: T | null = null;
+  private readonly softObjectPath: FSoftObjectPath;
+
+  private constructor(softObjectPath: FSoftObjectPath = new FSoftObjectPath()) {
+    this.softObjectPath = softObjectPath;
+  }
+
+  static makeNull<T extends UObject>() {
+    return new ObjectPtr<T>();
+  }
+
+  static fromSoftObjectPath<T extends UObject = UObject>(softObjectPath: FSoftObjectPath): ObjectPtr<T> {
+    return softObjectPath.isNull() ? this.makeNull() : new ObjectPtr<T>(softObjectPath);
+  }
+
+  static fromObject<T extends UObject>(obj: T | null): ObjectPtr<T> {
+    if (!obj) {
+      return this.makeNull();
+    }
+    const softObjectPath = FSoftObjectPath.fromObject(obj);
+    const ptr = this.fromSoftObjectPath<T>(softObjectPath);
+    ptr.strongRef = obj;
+    return ptr;
+  }
+
+  /**
+   * Retrieve the current cached object reference, it may be null if the object was never loaded.
+   */
+  getCached(): T | null {
+    if (this.strongRef && !this.strongRef.detached) {
+      return this.strongRef;
+    }
+
+    // Lookup the object in the context
+    const liveObject = globalContainer?.objectLoader.getCached(this.softObjectPath) as T | null;
+    if (liveObject) {
+      this.replaceObject(liveObject);
+      return liveObject;
+    }
+
+    return null;
+  }
+
+  /**
+   * Load the object if it's not already loaded and return the reference.
+   */
+  async load(abort?: AbortSignal): Promise<T | null> {
+    invariant(globalContainer, "Global container is not initialized");
+
+    let object = this.getCached();
+    if (object === null) {
+      abort = abort ?? new AbortController().signal;
+      checkAborted(abort);
+      object = (await globalContainer.objectLoader.loadObject(this.softObjectPath, abort)) as T | null;
+      this.replaceObject(object);
+    }
+    return object;
+  }
+
+  /**
+   * Replace the current object reference with a new one.
+   * The new object must match the soft object path and the class of the ObjectPtr.
+   */
+  replaceObject(newObject: T | null) {
+    if (newObject) {
+      invariant(!this.isNull(), "Cannot replace object on a null ObjectPtr");
+      invariant(
+        this.softObjectPath.equals(FSoftObjectPath.fromObject(newObject)),
+        "The new object must match the soft object path",
+      );
+    }
+
+    this.strongRef = newObject;
+  }
+
+  getSoftObjectPath(): FSoftObjectPath {
+    return this.softObjectPath;
+  }
+
+  /**
+   * Fire the listener when the object reference changes.
+   * @return A function to unsubscribe the listener.
+   */
+  subscribe(l: (value: T) => void): () => void {
+    invariant(globalContainer, "Global container is not initialized");
+    return globalContainer.objectLoader.subscribeEvents(this.softObjectPath, l);
+  }
+
+  equals(other: ObjectPtr<T>): boolean {
+    return this.softObjectPath.equals(other.softObjectPath);
+  }
+
+  isNull(): boolean {
+    return this.softObjectPath.isNull();
+  }
+
+  toString(): string {
+    return this.softObjectPath.toString();
+  }
+}

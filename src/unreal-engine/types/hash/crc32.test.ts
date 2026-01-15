@@ -1,5 +1,5 @@
 import { computeCrc } from "./crc32";
-import { hexToArrayBuffer, toHex } from "../../../utils/string-utils";
+import { hexToArrayBuffer, toU32Hex } from "../../../utils/string-utils";
 import { describe, expect, test } from "vitest";
 
 const tests: Array<[string, number]> = [
@@ -29,7 +29,7 @@ describe("crc32", () => {
       const data = hexToArrayBuffer(hex);
       const crc32 = computeCrc(data);
       if (crc32 !== expected) {
-        console.error(`crc32 of '${hex}' is ${toHex(crc32)}, expected ${toHex(expected)}`);
+        console.error(`crc32 of '${hex}' is ${toU32Hex(crc32)}, expected ${toU32Hex(expected)}`);
         expect(crc32).toBe(expected);
       }
     });

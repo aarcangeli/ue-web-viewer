@@ -3,7 +3,7 @@ import path from "path";
 import url from "url";
 
 /**
- * Generates a TypeScript file that exports the decompressor function based on the presence of the Oodle library.
+ * Generates a TypeScript file that exports the decompressor function based on the presence of the decompressor library.
  * The output is generated in src/external/index.ts.
  */
 async function main() {
@@ -25,7 +25,7 @@ function generateFile(externalDir: string) {
   if (withDecompressor) {
     output += `export { decompress } from "./decompressor/decompressor-api";\n`;
   } else {
-    output += "// oodle is not included in the build.\n";
+    output += "// decompressor is not included in the build.\n";
     output += `type DecompressFn = (data: Uint8Array, size: number) => Promise<Uint8Array>;\n`;
     output += `const decompress: DecompressFn | null = null;\n`;
     output += `export { decompress };\n`;

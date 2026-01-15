@@ -147,10 +147,7 @@ export class FReferencePose {
       reader.getCustomVersion(FAnimPhysObjectVersionGuid) <
       FAnimPhysObjectVersion.ChangeRetargetSourceReferenceToSoftObjectPtr
     ) {
-      const sourceReferenceMesh = resolver.readObjectPtr(reader);
-      if (sourceReferenceMesh) {
-        result.SourceReferenceMesh = FSoftObjectPath.fromObject(sourceReferenceMesh);
-      }
+      result.SourceReferenceMesh = resolver.readObjectPtr(reader).getSoftObjectPath();
     } else {
       result.SourceReferenceMesh = resolver.readSoftObjectPtr(reader);
     }

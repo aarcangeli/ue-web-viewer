@@ -1,4 +1,4 @@
-import type { Asset } from "../../unreal-engine/serialization/Asset";
+import type { AssetApi } from "../../unreal-engine/serialization/Asset";
 import { CollapsableSection, IndentedRow, SimpleDetailsView } from "../components/SimpleDetailsView";
 import React from "react";
 import { allCustomVersions } from "../../unreal-engine/versioning/ue-custom-versions";
@@ -13,7 +13,7 @@ type ResolvedVersion = {
   value: number;
 };
 
-export function SummaryDetails(props: { asset: Asset }) {
+export function SummaryDetails(props: { asset: AssetApi }) {
   const summary = props.asset.summary;
 
   const customVersions = summary.CustomVersionContainer.Versions.map(findCustomVersion).toSorted((a, b) => {

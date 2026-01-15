@@ -134,7 +134,7 @@ export function getInitializer(property: ChildPropertyInfo, resolver: TypeResolv
     case "SetProperty":
       break;
     case "StructProperty":
-      if (property.structType.struct == "Guid") {
+      if (property.structType.struct === "Guid") {
         return resolver.resolveSymbol("GUID_None", false);
       }
       return `new ${resolver.resolveStructRef(property.structType, false)}()`;
@@ -181,13 +181,13 @@ export function shortPackageName(packageName: string): string {
 
 export function getPropertiesToExport(properties: PropertyInfo[]): PropertyInfo[] {
   return properties.filter((prop) => {
-    const flags = BigInt(prop.flagsLower) | (BigInt(prop.flagsUpper) << BigInt(32));
-    const isTransient = (flags & BigInt(EPropertyFlags.Transient)) != BigInt(0);
-    const skipSerialization = (flags & EPropertyFlags.SkipSerialization) != BigInt(0);
+    const flags = BigInt(prop.flagsLower) | (BigInt(prop.flagsUpper) << 32n);
+    const isTransient = (flags & BigInt(EPropertyFlags.Transient)) !== 0n;
+    const skipSerialization = (flags & EPropertyFlags.SkipSerialization) !== 0n;
     return !isTransient && !skipSerialization;
   });
 }
 
 function isNameMap(property: ChildPropertyInfo) {
-  return property.type == "MapProperty" && property.keyType.type == "NameProperty";
+  return property.type === "MapProperty" && property.keyType.type === "NameProperty";
 }

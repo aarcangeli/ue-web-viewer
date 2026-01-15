@@ -1,8 +1,7 @@
 import { Box, Input } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { PatternQuery } from "../../utils/PatternQuery";
-
-export const searchCtx = React.createContext<PatternQuery | undefined>(undefined);
+import { searchCtx } from "./SpeedSearch-hooks";
 
 // Excluded characters:
 //   \p{Control} matches any control character.

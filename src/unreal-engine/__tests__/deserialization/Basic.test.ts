@@ -1,14 +1,19 @@
-import type { Asset } from "../../serialization/Asset";
-import { readAsset } from "../test-utils";
-import { describe, test, beforeAll, expect } from "vitest";
+import type { AssetApi } from "../../serialization/Asset";
+import { readAsset, withGlobalEnv } from "../test-utils";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
+
+withGlobalEnv();
 
 // Try to load an asset saved with UE4.0.2
 describe("TestActorUE4-0-2", () => {
-  let asset: Asset;
+  let asset: AssetApi;
 
   // Load asset file once
   beforeAll(() => {
     asset = readAsset("TestActorUE4-0-2.uasset");
+  });
+  afterAll(() => {
+    asset.close();
   });
 
   test("Read MyBasicActor", () => {
@@ -17,16 +22,10 @@ describe("TestActorUE4-0-2", () => {
     expect(asset.exports).toMatchSnapshot("exports");
   });
 
-  test("getObjectName", () => {
-    expect(asset.getObjectName(0).toString()).toBe("None");
-    expect(asset.getObjectName(1).toString()).toBe("K2Node_Event_DeltaSeconds");
-    expect(asset.getObjectName(-1).toString()).toBe("Default__Actor");
-  });
-
   test("makeFullName", () => {
     expect(asset.makeFullNameByIndex(0).toString()).toBe("None");
     expect(asset.makeFullNameByIndex(55).toString()).toBe(
-      "TestActorUE4-0-2.TestActorUE4-0-2:CustomFunction.K2Node_CallFunction_7631",
+      "/Game/TestActorUE4-0-2.TestActorUE4-0-2:CustomFunction.K2Node_CallFunction_7631",
     );
     expect(asset.makeFullNameByIndex(-36).toString()).toBe("/Script/CoreUObject.Object:LinearColor");
   });
@@ -34,7 +33,7 @@ describe("TestActorUE4-0-2", () => {
 
 // Try to load an asset saved with UE4.0.2
 describe("TestActorUE5-4-4", () => {
-  let asset: Asset;
+  let asset: AssetApi;
 
   // Load asset file once
   beforeAll(() => {
@@ -47,16 +46,10 @@ describe("TestActorUE5-4-4", () => {
     expect(asset.exports).toMatchSnapshot("exports");
   });
 
-  test("getObjectName", () => {
-    expect(asset.getObjectName(0).toString()).toBe("None");
-    expect(asset.getObjectName(1).toString()).toBe("TestActorUE5-4-4");
-    expect(asset.getObjectName(-1).toString()).toBe("Default__Actor");
-  });
-
   test("makeFullName", () => {
     expect(asset.makeFullNameByIndex(0).toString()).toBe("None");
     expect(asset.makeFullNameByIndex(14).toString()).toBe(
-      "TestActorUE5-4-4.TestActorUE5-4-4:CustomGraph.K2Node_CallFunction_0",
+      "/Game/TestActorUE5-4-4.TestActorUE5-4-4:CustomGraph.K2Node_CallFunction_0",
     );
     expect(asset.makeFullNameByIndex(-21).toString()).toBe("/Script/Engine.KismetSystemLibrary:PrintString");
   });

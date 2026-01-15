@@ -1,4 +1,4 @@
-import pluginJs from "@eslint/js";
+import eslintJs from "@eslint/js";
 import { defineFlatConfig } from "eslint-define-config";
 import reactPlugin from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -9,36 +9,48 @@ import eslint from "typescript-eslint";
 const config = defineFlatConfig([
   {
     name: "Globally ignored files",
-    ignores: ["dist/**", "src/externals/**"],
+    ignores: ["dist", "src/externals"],
   },
   {
+    name: "Globally included files",
+    files: ["**/*.{js,mjs,cjs,jsx,ts,tsx}"],
+  },
+  {
+    name: "React settings",
     settings: {
       react: {
         version: "detect",
       },
     },
   },
-  pluginJs.configs.recommended,
-  ...eslint.configs.recommended,
-  reactPlugin.configs.flat.recommended,
   {
     name: "Browser globals",
     files: ["src/**"],
     languageOptions: { globals: globals.browser },
   },
   {
-    name: "JavaScript & TypeScript",
-    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
-    ...reactPlugin.configs.flat.recommended,
+    name: "Node.js globals",
+    files: ["eslint.config.js"],
+    languageOptions: { globals: globals.node },
   },
   {
-    name: "React hooks",
+    name: "@eslint/js/recommended",
+    ...eslintJs.configs.recommended,
+  },
+  ...eslint.configs.recommended,
+  {
+    name: "eslint-plugin-react/recommended",
+    ...reactPlugin.configs.flat.recommended,
+  },
+  reactRefresh.configs.vite,
+  {
+    // react-hooks https://react.dev/reference/eslint-plugin-react-hooks
+    name: "React rules",
     plugins: {
       "react-hooks": reactHooks,
-      "react-refresh": reactRefresh,
     },
     rules: {
-      "react-hooks/rules-of-hooks": "error",
+      ...reactHooks.configs.recommended.rules,
       "react-hooks/exhaustive-deps": [
         "warn",
         {
@@ -48,16 +60,15 @@ const config = defineFlatConfig([
     },
   },
   {
-    name: "Node.js globals",
-    files: ["eslint.config.js", "scripts/**"],
-    languageOptions: { globals: globals.node },
-  },
-  {
     name: "Custom rules",
     rules: {
       // Allow the use of `any` in TypeScript
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/consistent-type-imports": "error",
+      // Enforce strict equality ("===" and "!==")
+      eqeqeq: "error",
+      // Allow aliasing `this` in TS files
+      "@typescript-eslint/no-this-alias": "off",
     },
   },
 ]);

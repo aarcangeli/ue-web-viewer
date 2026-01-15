@@ -2,18 +2,19 @@ import invariant from "tiny-invariant";
 
 import type { AssetReader } from "../../../AssetReader";
 import type { EPackageFlags } from "../../../enums";
-import { makeNameFromParts } from "../../../path-utils";
+import { makeNameFromParts } from "../../../../utils/path-utils";
 import type { TaggedProperty } from "../../../properties/TaggedProperty";
 import { EObjectFlags } from "../../../serialization/ObjectExport";
 import { readTaggedProperties } from "../../../serialization/properties-serialization";
-import type { SerializationStatistics } from "../../../serialization/SerializationStatistics";
+import { type SerializationStatistics } from "../../../serialization/SerializationStatistics";
 import { RegisterClass } from "../../../types/class-registry";
-import type { FName } from "../../../types/Name";
+import { FName } from "../../../types/Name";
 import { FGuid } from "../structs/Guid";
 import type { FSoftObjectPath } from "../structs/SoftObjectPath";
 
 import type { UClass } from "./Class";
 import type { AssetApi } from "../../../serialization/Asset";
+import type { ObjectPtr } from "../structs/ObjectPtr";
 
 /**
  * All characters are allowed except for '.' and ':'.
@@ -21,13 +22,13 @@ import type { AssetApi } from "../../../serialization/Asset";
 const ValidObjectName = /^[^.:]+$/;
 
 export interface ObjectResolver {
-  readObjectPtr: (reader: AssetReader) => UObject | null;
+  readObjectPtr: (reader: AssetReader) => ObjectPtr;
   readSoftObjectPtr: (reader: AssetReader) => FSoftObjectPath;
 }
 
 export type ObjectConstructionParams = {
   outer?: UObject | null;
-  clazz: UClass;
+  clazz: ObjectPtr<UClass>;
   name: FName;
   flags?: EPackageFlags;
 };
@@ -47,30 +48,35 @@ export enum ELoadingPhase {
  * Base class for all Unreal Engine objects.
  *
  * Each instance represents a single object in the UE runtime:
- * - Can have an outer object and may contain inner objects.
- * - Has a unique name within its outer object.
- * - Has a class, represented by a {@link UClass} instance.
+ * - Can have an outer object {@link outer} (strongly referenced) and may contain inner objects {@link innerObjects} (weakly referenced).
+ * - Has a unique name within its outer object {@link name}.
+ * - Has a class, represented by a {@link UClass} instance {@link class}.
  * - Some instances are loaded from asset files.
- * - Asset files contain a hierarchy of objects, rooted in a {@link UPackage} instance.
+ * - Root objects are always packages (instances of {@link UPackage}).
  *
  * We're only implementing the minimal UObject functionality needed to read properties.
  *
  * In C++, UObject inherits from UObjectBaseUtility, which in turn inherits from UObjectBase.
  * However, UHT only handles UObject (see NoExportTypes.h).
  *
- * Do not use vanilla WeakRef to weakly reference UObject instances.
  * Instead, use {@link asWeakObject()} to obtain a WeakObject.
+ *
+ * There are three ways to reference UObjects:
+ * - Directly, only for local variables and function parameters.
+ * - {@link ObjectPtr}, strong object reference, support hot reloading,
+ * - {@link WeakObjectRef}, weak object reference, support hot reloading.
+ *
+ * Do not use vanilla WeakRef as it doesn't support detached objects.
  */
 @RegisterClass("/Script/CoreUObject.Object")
 export class UObject {
-  private readonly __type_UObject!: UObject;
-
   private _outer: UObject | null = null;
-  private /*readonly*/ _class: UClass;
+  private readonly _class: ObjectPtr<UClass>;
   private readonly _flags: EPackageFlags;
   private readonly _name: FName;
 
-  public properties: TaggedProperty[] = [];
+  properties: TaggedProperty[] = [];
+  objectGuid: FGuid | null = null;
 
   /**
    * Unreal Engine doesn't use a strong reference to the children objects.
@@ -92,8 +98,13 @@ export class UObject {
    */
   loadingPhase: ELoadingPhase = ELoadingPhase.None;
 
+  /**
+   * The asset API associated with this object.
+   * Only set if the object was deserialized from an asset.
+   */
   assetApi: AssetApi | null = null;
-  objectGuid: FGuid | null = null;
+
+  private _detached: boolean = false;
 
   constructor(params: ObjectConstructionParams) {
     // Invariants
@@ -101,6 +112,7 @@ export class UObject {
     invariant(params.name, "Object name cannot be null");
     invariant(!params.name.isNone, "Name cannot be None");
     invariant(ValidObjectName.test(params.name.text), `Invalid object name: ${params.name.text}`);
+    invariant(!params.outer?.detached, "Outer object is detached");
 
     this._class = params.clazz;
     this._name = params.name;
@@ -114,25 +126,28 @@ export class UObject {
    * This is unique within the outer object.
    */
   get name(): FName {
-    return this._name;
+    return this.detached ? FName.fromString(`DETACHED_${this._name.text}`) : this._name;
   }
 
   /**
    * Returns the class of the object.
    * This field is always set and cannot be changed.
-   * The class of Class is itself.
+   * The class of UClass is itself.
    */
-  get class(): UClass {
-    invariant(this._class !== LazyClass, "Class not initialized");
+  get class(): ObjectPtr<UClass> {
     return this._class;
   }
 
   get nameString(): string {
-    return this._name.text;
+    return this.name.text;
   }
 
   get outer(): UObject | null {
     return this._outer;
+  }
+
+  get detached(): boolean {
+    return this._detached;
   }
 
   get nameParts(): FName[] {
@@ -165,7 +180,7 @@ export class UObject {
    * Adds an inner object to this object.
    */
   addInner(inner: UObject) {
-    if (inner.outer == this) {
+    if (inner.outer === this) {
       // Nothing to do
       return;
     }
@@ -205,34 +220,30 @@ export class UObject {
   }
 
   findInnerByFName(name: FName): UObject | null {
-    for (const child of this.innerObjects) {
-      if (child.name.equals(name)) {
-        return child;
-      }
+    return this.innerObjects.find((child) => child.name.equals(name)) || null;
+  }
+
+  getRootObject(): UObject {
+    let it: UObject | null = this;
+    if (it === null) {
+      return this;
     }
-    return null;
-  }
-
-  replaceLazyClass(clazz: UClass) {
-    invariant(this._class === LazyClass, "Class already initialized");
-    this._class = clazz;
-  }
-
-  isA(clazz: UClass): boolean {
-    return clazz.isChildOf(this._class);
+    while (it.outer) {
+      it = it.outer;
+    }
+    return it;
   }
 
   asWeakObject(): WeakObjectRef<this> {
     return new WeakObjectRef(this);
   }
-}
 
-/**
- * Hack to allow cyclic dependencies between UClass and UObject.
- * Do not use for anything else.
- * see object-context.ts
- */
-export const LazyClass = {} as UClass;
+  markAsDetached() {
+    invariant(!this.detached);
+    this.innerObjects.forEach((child) => child.markAsDetached());
+    this._detached = true;
+  }
+}
 
 function validateAddInner(parent: UObject, child: UObject) {
   invariant((child as unknown) instanceof UObject, "Child must be an instance of UObject");
@@ -272,6 +283,10 @@ export class WeakObjectRef<T extends UObject = UObject> {
    * Retrieve the referenced object or null if it has been garbage collected.
    */
   deref(): T | null {
-    return this._ref.deref() ?? null;
+    const object = this._ref.deref();
+    if (object && !object.detached) {
+      return object;
+    }
+    return null;
   }
 }

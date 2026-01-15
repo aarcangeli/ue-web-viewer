@@ -46,9 +46,9 @@ export class SymbolStorage {
     this.enumDumpByName = new Map(flatEnums.map((enm) => [enm.enumName, enm]));
 
     // For UBT, class names are unique, even across packages.
-    console.assert(this.classDumpByName.size == flatClasses.length, "Duplicate class names found in dump.");
-    console.assert(this.structDumpByName.size == flatStructs.length, "Duplicate struct names found in dump.");
-    console.assert(this.enumDumpByName.size == flatEnums.length, "Duplicate enum names found in dump.");
+    console.assert(this.classDumpByName.size === flatClasses.length, "Duplicate class names found in dump.");
+    console.assert(this.structDumpByName.size === flatStructs.length, "Duplicate struct names found in dump.");
+    console.assert(this.enumDumpByName.size === flatEnums.length, "Duplicate enum names found in dump.");
 
     this.scanExistingClasses();
 
@@ -127,11 +127,11 @@ export class SymbolStorage {
    * @param symbolName Object name, e.g. "StaticMesh" or "Vector" (without "U" or "F" prefix).
    */
   getOrCreateSymbol(packageName: string, type: SymbolType, symbolName: string): ClassDeclaration | EnumDeclaration {
-    if (type == "enum") {
+    if (type === "enum") {
       return this.getOrCreateEnum(packageName, symbolName);
     }
 
-    let existingClass = type == "class" ? this.classByName.get(symbolName) : this.structByName.get(symbolName);
+    let existingClass = type === "class" ? this.classByName.get(symbolName) : this.structByName.get(symbolName);
 
     // Create the class if it doesn't exist
     if (!existingClass) {
@@ -233,7 +233,7 @@ export class SymbolStorage {
       if (variableDeclaration && variableDeclaration.hasExportKeyword()) {
         const statement = variableDeclaration.getVariableStatement();
         // The variable must be declared as const
-        if (statement && statement.getDeclarationKind() == VariableDeclarationKind.Const) {
+        if (statement && statement.getDeclarationKind() === VariableDeclarationKind.Const) {
           return variableDeclaration;
         }
       }

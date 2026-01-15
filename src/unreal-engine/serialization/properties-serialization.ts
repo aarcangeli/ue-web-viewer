@@ -41,7 +41,7 @@ function readTaggedProperty(tag: FPropertyTag, reader: AssetReader, resolver: Ob
 
   // bool values are stored in the tag itself.
   // if the bool is in a container, it is stored normally.
-  if (tag.typeName.propertyType == EPropertyType.BoolProperty) {
+  if (tag.typeName.propertyType === EPropertyType.BoolProperty) {
     if (tag.size > 0) {
       value = makeError(`Expected bool property stored in tag, but found extra bytes ${tag.size}.`);
     } else {
@@ -63,7 +63,7 @@ function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: Obj
   } catch (e) {
     if (e instanceof UnknownPropertyType) {
       const message =
-        typeName.toString() != e.typeName.toString()
+        typeName.toString() !== e.typeName.toString()
           ? `Unknown property type '${e.typeName}' (FULL signature: '${typeName}')`
           : `Unknown property type '${typeName}'`;
       return makeError(message);
@@ -80,7 +80,7 @@ function readPropertyValue(tag: FPropertyTag, reader: AssetReader, resolver: Obj
 
     // Check that the reader has read all the bytes.
     // Properties are easy to read, if there are extra bytes, it's likely a bug.
-    if (result.type != "error" && reader.getRemaining() > 0) {
+    if (result.type !== "error" && reader.getRemaining() > 0) {
       console.warn("Extra bytes found at the end of property value.");
       return makeError(`Found ${reader.getRemaining()} bytes found at the end of property value (type: ${typeName}).`);
     }
