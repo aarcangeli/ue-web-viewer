@@ -14,7 +14,7 @@ export function makeNameFromParts(parts: Array<string | FName>) {
   let result = "";
   parts.forEach((part, index) => {
     if (index > 0) {
-      result += index == 2 ? ":" : ".";
+      result += index === 2 ? ":" : ".";
     }
     result += part;
   });
@@ -59,10 +59,10 @@ function ensureValidCombinePaths(paths: unknown[]) {
   for (const path of paths) {
     invariant(typeof path === "string", "All arguments to combinePath must be strings");
     invariant(!path.includes("\\"), `Path segments must use forward slashes: ${path}`);
-    invariant(path != "." && path != "..", `Path segments cannot be '.' or '..': ${path}`);
+    invariant(path !== "." && path !== "..", `Path segments cannot be '.' or '..': ${path}`);
   }
 }
 
-export function isScriptPackage(exportedObjects: string) {
-  return startsWithCaseInsensitive(exportedObjects, "/Script/");
+export function isScriptPackage(packageName: string) {
+  return startsWithCaseInsensitive(packageName, "/Script/");
 }

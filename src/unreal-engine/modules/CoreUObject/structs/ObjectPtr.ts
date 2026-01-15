@@ -5,11 +5,17 @@ import invariant from "tiny-invariant";
 import { globalContainer } from "../../../global-container";
 
 /**
- * A smart pointer to a UObject (similar to TObjectPtr in Unreal Engine).
+ * A smart pointer to a {@link UObject}, similar in concept to Unreal Engine's TObjectPtr.
  *
- * This class stores a reference together with his path, so that it can be loaded and hot swapped at runtime.
+ * {@link ObjectPtr} stores both a reference to a UObject instance and its asset path.
+ * This allows the object to be lazily loaded, reloaded, or hot-swapped at runtime
+ * while preserving a stable reference.
  *
- * Do not ue "==" to compare ObjectPtr instances, use equals() instead.
+ * Do not use the "==" or "===" operators to compare {@link ObjectPtr} instances.
+ * These operators only compare the wrapper instances, not the underlying objects.
+ * Use {@link ObjectPtr.equals} to perform a semantic comparison based on the object paths.
+ *
+ * @typeParam T - The type of {@link UObject} being referenced.
  */
 export class ObjectPtr<T extends UObject = UObject> {
   private strongRef: T | null = null;
@@ -45,12 +51,13 @@ export class ObjectPtr<T extends UObject = UObject> {
       return this.strongRef;
     }
 
-    // try to resolve a live object, without loading it
+    // Lookup the object in the context
     const liveObject = globalContainer?.objectLoader.getCached(this.softObjectPath) as T | null;
     if (liveObject) {
       this.replaceObject(liveObject);
       return liveObject;
     }
+
     return null;
   }
 

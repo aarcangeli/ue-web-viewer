@@ -18,7 +18,7 @@ jobs:
         with:
           lfs: true
 
-      - name: Enable Corepack
+      - name: Enable Corepack ⚙️
         run: corepack enable
 
       - name: Set up Node.js ☕️
@@ -41,14 +41,14 @@ jobs:
       - name: ESLint 🧹
         id: eslint
         if: ${{ success() || steps.typecheck.outcome == 'failure' }}
-        run: yarn eslint
+        run: yarn eslint:check
 
       - name: Run the tests and generate coverage report 🧪
         id: test
         if: ${{ success() || steps.typecheck.outcome == 'failure' || steps.eslint.outcome == 'failure' }}
         run: yarn test:coverage
 
-      - name: Build 🏗️
+      - name: Build 🏗️ and upload codecov bundle data 📊
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |

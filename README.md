@@ -22,6 +22,14 @@ yarn preview
 yarn dev
 ```
 
+After a patch, verify that everything is working correctly by running:
+
+```bash
+yarn check
+```
+
+This single command executes type checking, linting, tests and pre-commit hooks.
+
 ## Useful stuff
 
 ```

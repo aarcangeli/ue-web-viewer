@@ -45,7 +45,7 @@ export class FName {
    * Note: FNames are case-insensitive, do not use the string representation for comparison.
    */
   get text() {
-    return this.name + (this.number != 0 ? `_${this.number - 1}` : "");
+    return this.name + (this.number !== 0 ? `_${this.number - 1}` : "");
   }
 
   get isEmpty() {

@@ -91,8 +91,8 @@ export class FSoftObjectPath {
   }
 
   public static fromNameParts(parts: FName[]) {
-    const packageName = parts?.[0] ?? NAME_None;
-    const assetName = parts?.[1] ?? NAME_None;
+    const packageName = parts[0] ?? NAME_None;
+    const assetName = parts[1] ?? NAME_None;
     const subPathString = parts.slice(2).join(".");
     return new FSoftObjectPath(packageName, assetName, subPathString);
   }

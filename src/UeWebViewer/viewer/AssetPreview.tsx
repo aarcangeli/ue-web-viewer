@@ -17,7 +17,7 @@ import { USkeleton } from "../../unreal-engine/modules/Engine/objects/Skeleton";
 import { FName, FNameMap } from "../../unreal-engine/types/Name";
 import type { NativeStructs } from "../../unreal-engine/properties/NativeStructs";
 import { FTransform } from "../../unreal-engine/modules/CoreUObject/structs/Transform";
-import { renderObjectName, LinkObjectPtr } from "./links";
+import { LinkObjectName, LinkObjectPtr } from "./links";
 import type { ObjectPtr } from "../../unreal-engine/modules/CoreUObject/structs/ObjectPtr";
 import { removeExtension } from "../../utils/string-utils";
 import { useAsyncCompute } from "../../utils/async-compute";
@@ -52,14 +52,14 @@ export function ObjectPtrPreview(props: { objectPtr: ObjectPtr }) {
 export function ObjectPreview(props: { object: UObject }) {
   const exportedObjects = props.object;
 
-  const statistics = exportedObjects.serializationStatistics;
-
   return (
     <Box>
-      {statistics && renderStatistics(statistics)}
+      {exportedObjects.serializationStatistics && renderStatistics(exportedObjects.serializationStatistics)}
       <SimpleDetailsView>
         <CollapsableSection name={"Asset"}>
-          <IndentedRow title={"Object"}>{renderObjectName(exportedObjects)}</IndentedRow>
+          <IndentedRow title={"Object"}>
+            <LinkObjectName object={exportedObjects} />
+          </IndentedRow>
           <IndentedRow title={"Class"}>
             <LinkObjectPtr objectPtr={exportedObjects.class} />
           </IndentedRow>

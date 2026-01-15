@@ -104,7 +104,7 @@ export class UObject {
    */
   assetApi: AssetApi | null = null;
 
-  detached: boolean = false;
+  private _detached: boolean = false;
 
   constructor(params: ObjectConstructionParams) {
     // Invariants
@@ -126,7 +126,7 @@ export class UObject {
    * This is unique within the outer object.
    */
   get name(): FName {
-    return this._name;
+    return this.detached ? FName.fromString(`DETACHED_${this._name.text}`) : this._name;
   }
 
   /**
@@ -139,11 +139,15 @@ export class UObject {
   }
 
   get nameString(): string {
-    return this._name.text;
+    return this.name.text;
   }
 
   get outer(): UObject | null {
     return this._outer;
+  }
+
+  get detached(): boolean {
+    return this._detached;
   }
 
   get nameParts(): FName[] {
@@ -176,7 +180,7 @@ export class UObject {
    * Adds an inner object to this object.
    */
   addInner(inner: UObject) {
-    if (inner.outer == this) {
+    if (inner.outer === this) {
       // Nothing to do
       return;
     }
@@ -220,18 +224,14 @@ export class UObject {
   }
 
   getRootObject(): UObject {
-    let it: UObject | null = this.outer;
+    let it: UObject | null = this;
     if (it === null) {
       return this;
     }
-    while (it !== null) {
-      const itOuter: UObject | null = it.outer;
-      if (itOuter === null) {
-        return it;
-      }
-      it = itOuter;
+    while (it.outer) {
+      it = it.outer;
     }
-    throw new Error(`Object ${this.fullName} is not contained in a package`);
+    return it;
   }
 
   asWeakObject(): WeakObjectRef<this> {
@@ -241,11 +241,7 @@ export class UObject {
   markAsDetached() {
     invariant(!this.detached);
     this.innerObjects.forEach((child) => child.markAsDetached());
-    this.detached = true;
-
-    // Modify the name to indicate it's detached, useful for debugging
-    const self = this as any;
-    self._name = FName.fromString(`${this._name.text}_detached`);
+    this._detached = true;
   }
 }
 

@@ -266,8 +266,7 @@ class ObjectContextImpl implements IObjectContext {
     const ClassObject = createClassPtr(NAME_CoreUObject, "Object");
     const ClassPackage = createClassPtr(NAME_CoreUObject, "Package");
 
-    // The "class" field forms a circular reference, so we use a special "lazy" class to break this cycle.
-    // The actual class reference will be assigned immediately afterward.
+    // Create the instance from an unresolved package, and replace it later.
     const PACKAGE_CoreUObject = new UPackage({
       outer: null,
       clazz: ClassPackage,

@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { removeExtension, removePrefix, toU32Hex } from "./string-utils";
+import { removeExtension, removePrefix, startsWithCaseInsensitive, toU32Hex } from "./string-utils";
 
 test("removePrefix", () => {
   expect(removePrefix("unreal_engine", "unreal_")).toBe("engine");
@@ -18,6 +18,14 @@ test("removeExtension", () => {
   expect(removeExtension(".hiddenfile")).toBe("");
   expect(removeExtension("multiple.dots.in.name.ext")).toBe("multiple.dots.in.name");
   expect(removeExtension("")).toBe("");
+});
+
+test("startsWithCaseInsensitive", () => {
+  expect(startsWithCaseInsensitive("HelloWorld", "hello")).toBe(true);
+  expect(startsWithCaseInsensitive("HelloWorld", "WORLD")).toBe(false);
+  expect(startsWithCaseInsensitive("JavaScript", "java")).toBe(true);
+  expect(startsWithCaseInsensitive("TypeScript", "script")).toBe(false);
+  expect(startsWithCaseInsensitive("CaseInsensitive", "CASE")).toBe(true);
 });
 
 test("toU32Hex", () => {

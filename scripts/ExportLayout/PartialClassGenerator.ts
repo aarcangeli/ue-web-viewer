@@ -178,7 +178,7 @@ export class PartialClassGenerator {
 
           const isAFound = aIndex !== -1;
           const isBFound = bIndex !== -1;
-          if (isAFound != isBFound) {
+          if (isAFound !== isBFound) {
             // If one of them is not found, we want to push it to the end
             return isAFound ? -1 : 1;
           }
@@ -187,7 +187,7 @@ export class PartialClassGenerator {
         });
         for (let i = 0; i < members.length; i++) {
           // For some reason, the child index is always even, so we divide by 2
-          if (members[i].getChildIndex() / 2 != i) {
+          if (members[i].getChildIndex() / 2 !== i) {
             const structure = members[i].getStructure();
             members[i].remove();
             enumDeclaration.insertMember(i, structure);

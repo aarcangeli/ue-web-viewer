@@ -144,7 +144,7 @@ class Asset implements AssetApi {
   makeFullNameByIndex(index: number): string {
     invariant(this.isIndexValid(index), `Invalid index ${index}`);
 
-    if (index == 0) {
+    if (index === 0) {
       return "None";
     }
 
@@ -175,7 +175,7 @@ class Asset implements AssetApi {
   }
 
   private async resolveExportObjectByIndex(index: number, full: boolean, abort: AbortSignal): Promise<UObject | null> {
-    invariant(index != 0, `Expected a valid export index`);
+    invariant(index !== 0, `Expected a valid export index`);
     invariant(isExportIndex(index), `Index ${index} must be an export index`);
     invariant(this.isIndexValid(index), `Invalid export index ${index}`);
 
@@ -296,7 +296,7 @@ class Asset implements AssetApi {
     invariant(!isImportIndex(index), `Invalid index ${index}`);
 
     let value: WeakObjectRef | symbol;
-    if (index == 0) {
+    if (index === 0) {
       return null;
     } else {
       value = this._exportedObjects[index - 1];
@@ -329,7 +329,7 @@ class Asset implements AssetApi {
       checkAborted(abort);
 
       // Get class object
-      invariant(objectExport.ClassIndex != 0, `Expected a valid class index`);
+      invariant(objectExport.ClassIndex !== 0, `Expected a valid class index`);
       const classPtr = this.getObjectByIndex(objectExport.ClassIndex);
 
       // Recursively load the class, this is needed otherwise we cannot use the correct constructor

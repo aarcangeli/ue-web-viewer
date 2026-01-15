@@ -33,7 +33,7 @@ type MountPoint = { mountPath: string; fileApi: FileApi; type: MountType };
  * A virtual file system that maps virtual paths to actual file APIs.
  *
  * Functionalities:
- * - Mount directories to virtual paths (like /Game, /PluginName, /Game, etc.)
+ * - Mount directories to virtual paths (like /Game, /PluginName, /Engine, etc.)
  * - Resolve files and directories based on virtual paths (e.g., /Game/Maps/Level1)
  */
 export class VirtualFileSystem {

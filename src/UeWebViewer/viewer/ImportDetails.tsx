@@ -68,7 +68,7 @@ function makeTree(imports: ReadonlyArray<FObjectImport>): Node[] {
 function makeTitle(projectApi: ProjectApi, node: Node) {
   let onClick: (() => void) | undefined = undefined;
 
-  if (node.OuterIndex == 0 && node.ObjectName.startsWith("/Game/")) {
+  if (node.OuterIndex === 0 && node.ObjectName.startsWith("/Game/")) {
     onClick = () => projectApi.openAsset(node.ObjectName);
   }
 

@@ -88,27 +88,27 @@ export function getPropertySerializer(
 ): PropertySerializer {
   const propertyType = typeName.propertyType;
 
-  if (propertyType == EPropertyType.StructProperty) {
+  if (propertyType === EPropertyType.StructProperty) {
     return getStructSerializer(fileVersionUE5, typeName.getParameter(0));
   }
 
-  if (propertyType == EPropertyType.ArrayProperty) {
+  if (propertyType === EPropertyType.ArrayProperty) {
     return getArraySerializer(typeName.getParameter(0), fileVersionUE5);
   }
 
-  if (propertyType == EPropertyType.SetProperty) {
+  if (propertyType === EPropertyType.SetProperty) {
     return getSetSerializer(typeName.getParameter(0), fileVersionUE5);
   }
 
-  if (propertyType == EPropertyType.MapProperty) {
+  if (propertyType === EPropertyType.MapProperty) {
     return getMapSerializer(typeName.getParameter(0), typeName.getParameter(1), fileVersionUE5);
   }
 
-  if (propertyType == EPropertyType.SoftObjectProperty) {
+  if (propertyType === EPropertyType.SoftObjectProperty) {
     return softObjectPathSerializer;
   }
 
-  if (propertyType == EPropertyType.ByteProperty) {
+  if (propertyType === EPropertyType.ByteProperty) {
     return getBytePropertyReader(fileVersionUE5, typeName);
   }
 
@@ -438,10 +438,10 @@ const readerByPropertyType = (() => {
 
   table[EPropertyType.BoolProperty] = (reader: AssetReader) => {
     const number = reader.readInt8();
-    if (number != 0 && number != 1) {
+    if (number !== 0 && number !== 1) {
       console.warn("Boolean type should be 0 or 1, but got", number);
     }
-    return { type: "boolean", value: number != 0 };
+    return { type: "boolean", value: number !== 0 };
   };
 
   table[EPropertyType.EnumProperty] = enumPropertyReader;

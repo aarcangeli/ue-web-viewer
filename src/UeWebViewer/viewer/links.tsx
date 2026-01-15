@@ -27,7 +27,8 @@ export function LinkObjectPtr(props: { objectPtr: ObjectPtr }): ReactNode {
   );
 }
 
-// TODO: make it coherent with renderObjectPtr
-export function renderObjectName(object: UObject | null): ReactNode {
+// TODO: make it coherent with LinkObjectPtr
+export function LinkObjectName(props: { object: UObject | null }): ReactNode {
+  const object = props.object;
   return object ? object.fullName : "null";
 }

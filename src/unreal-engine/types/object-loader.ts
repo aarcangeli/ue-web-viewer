@@ -202,7 +202,7 @@ class ObjectLoaderImpl implements IObjectLoader {
 
   removeGarbage() {
     for (const [key, status] of this.cachedObjects.entries()) {
-      if (status.asset == null && status.deref() === null && status.listeners.size === 0) {
+      if (!status.asset && status.deref() === null && status.listeners.size === 0) {
         status.close();
         this.cachedObjects.delete(key);
       }
