@@ -4,24 +4,27 @@ import { Box, Link, Spinner } from "@chakra-ui/react";
 import { LuSearch } from "react-icons/lu";
 import type { ObjectPtr } from "../../unreal-engine/modules/CoreUObject/structs/ObjectPtr";
 import { useAsyncCompute } from "../../utils/async-compute";
+import { useProjectApi } from "../ProjectApi";
 
 /**
  * Render a reference to an object.
  */
 export function LinkObjectPtr(props: { objectPtr: ObjectPtr }): ReactNode {
-  const object = props.objectPtr;
+  const api = useProjectApi();
 
-  const value = useAsyncCompute((abort) => object.load(abort), [object]);
+  const objectPtr = props.objectPtr;
 
-  if (object.isNull()) {
+  const value = useAsyncCompute((abort) => objectPtr.load(abort), [objectPtr]);
+
+  if (objectPtr.isNull()) {
     return <i>null</i>;
   }
   if (!value.isLoading && !value.error && !value.data) {
-    return <Box color={"red"}>Missing object: {object.toString()}</Box>;
+    return <Box color={"red"}>Missing object: {objectPtr.toString()}</Box>;
   }
   return (
-    <Link href="#" display={"inline-flex"} alignItems={"center"} gap={1}>
-      <span>{object.getSoftObjectPath().toString()}</span>
+    <Link display={"inline-flex"} alignItems={"center"} gap={1}>
+      <span>{objectPtr.getSoftObjectPath().toString()}</span>
       {value.isLoading ? <Spinner size={"xs"} /> : <LuSearch />}
     </Link>
   );
