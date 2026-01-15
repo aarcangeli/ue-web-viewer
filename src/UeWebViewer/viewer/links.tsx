@@ -4,14 +4,11 @@ import { Box, Link, Spinner } from "@chakra-ui/react";
 import { LuSearch } from "react-icons/lu";
 import type { ObjectPtr } from "../../unreal-engine/modules/CoreUObject/structs/ObjectPtr";
 import { useAsyncCompute } from "../../utils/async-compute";
-import { useProjectApi } from "../ProjectApi";
 
 /**
  * Render a reference to an object.
  */
 export function LinkObjectPtr(props: { objectPtr: ObjectPtr }): ReactNode {
-  const api = useProjectApi();
-
   const objectPtr = props.objectPtr;
 
   const value = useAsyncCompute((abort) => objectPtr.load(abort), [objectPtr]);
